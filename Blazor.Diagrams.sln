@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.128
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE32E278-A887-454E-987D-FFE9E37169FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Diagrams.Core", "src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj", "{1A70B637-9EF8-4C25-970E-A681DEC9061C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A70B637-9EF8-4C25-970E-A681DEC9061C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A70B637-9EF8-4C25-970E-A681DEC9061C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A70B637-9EF8-4C25-970E-A681DEC9061C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A70B637-9EF8-4C25-970E-A681DEC9061C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1A70B637-9EF8-4C25-970E-A681DEC9061C} = {EE32E278-A887-454E-987D-FFE9E37169FE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {969540A2-8162-4063-A4E3-B488F69BD582}
+	EndGlobalSection
+EndGlobal

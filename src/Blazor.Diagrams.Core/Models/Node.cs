@@ -1,16 +1,47 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Blazor.Diagrams.Core.Models
 {
     public class Node : Model
     {
-        public Node() { }
+        private List<Port> _ports = new List<Port>();
 
-        public Node(string id) : base(id) { }
+        public Node(Point position = null)
+        {
+            Position = position ?? Point.Zero;
+        }
+
+        public Node(string id, Point position = null) : base(id)
+        {
+            Position = position ?? Point.Zero;
+        }
 
         public Point Offset { get; set; }
         public Point Position { get; set; }
-        public List<Port> Ports { get; } = new List<Port>();
+        public ReadOnlyCollection<Port> Ports => _ports.AsReadOnly();
         public bool Selected { get; set; }
+
+        public Port AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
+        {
+            var port = new Port(alignment, Position);
+            _ports.Add(port);
+            return port;
+        }
+
+        public void UpdatePosition(double clientX, double clientY)
+        {
+            Position = new Point(clientX + Offset.X, clientY + Offset.Y);
+            foreach (var port in _ports)
+            {
+                port.Position = new Point(Position.X + port.Offset.X, Position.Y + port.Offset.Y);
+            }
+        }
+
+        public void RefreshAll()
+        {
+            Refresh();
+            _ports.ForEach(p => p.RefreshAll());
+        }
     }
 }

@@ -1,0 +1,13 @@
+﻿div.node {
+    width: 100px;
+    height: 100px;
+    color: white;
+    background-color: black;
+    position: absolute;
+    border-radius: 10px;
+    border-color: black;
+}
+
+    div.node.selected {
+        border: 2px solid red;
+    }

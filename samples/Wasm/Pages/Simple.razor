@@ -1,0 +1,18 @@
+﻿@page "/simple"
+
+<CascadingValue Name="DiagramManager" Value="_diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>
+
+@code {
+
+    private readonly DiagramManager _diagramManager = new DiagramManager();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _diagramManager.AddNode(new Node());
+    }
+
+}

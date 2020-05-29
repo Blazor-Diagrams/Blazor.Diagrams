@@ -4,9 +4,10 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class Port : Model
     {
-        public Port(PortAlignment alignment = PortAlignment.BOTTOM)
+        public Port(PortAlignment alignment = PortAlignment.BOTTOM, Point position = null)
         {
             Alignment = alignment;
+            Position = position ?? Point.Zero;
         }
 
         public Port(string id, PortAlignment alignment = PortAlignment.BOTTOM, Point position = null) : base(id)
@@ -29,5 +30,11 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         internal void AddLink(Link link) => Links.Add(link);
+
+        public void RefreshAll()
+        {
+            Refresh();
+            Links.ForEach(l => l.Refresh());
+        }
     }
 }

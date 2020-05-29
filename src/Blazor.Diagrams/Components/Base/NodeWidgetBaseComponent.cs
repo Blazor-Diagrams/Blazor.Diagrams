@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Components.Base
 {
     public class NodeWidgetBaseComponent : ComponentBase, IDisposable
     {
-        [CascadingParameter]
+        [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]

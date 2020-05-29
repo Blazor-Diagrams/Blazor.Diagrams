@@ -1,3 +1,10 @@
 ﻿@inherits Blazor.Diagrams.Components.Base.NodeWidgetBaseComponent
 
-<div class="node"></div>
+<div class="node @(Node.Selected ? "selected" : "")"
+     @onmousedown="OnMouseDown"
+     @onmousedown:stopPropagation
+     @ref="element"
+     style="top: @(Node.Position.Y)px;
+            left: @(Node.Position.X)px">
+    node
+</div>

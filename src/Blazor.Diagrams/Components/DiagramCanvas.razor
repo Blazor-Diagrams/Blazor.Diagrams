@@ -1,0 +1,27 @@
+﻿@inherits DiagramCanvasComponent
+
+<div class="diagram-canvas">
+    <svg class="diagram-links">
+        @foreach (var link in DiagramManager.AllLinks)
+        {
+            <g>
+                <line x1="@link.SourcePort.Position.X"
+                      y1="@link.SourcePort.Position.Y"
+                      x2="@link.TargetPort.Position.X"
+                      y2="@link.TargetPort.Position.Y"
+                      stroke="black" />
+            </g>
+        }
+    </svg>
+
+    <div class="diagram-nodes"
+         @onmousedown="OnMouseDown"
+         @onmousemove="OnMouseMove"
+         @onmousemove:preventDefault
+         @onmouseup="OnMouseUp">
+        @foreach (var node in DiagramManager.Nodes)
+        {
+            <NodeWidget Node="node" />
+        }
+    </div>
+</div>

@@ -4,13 +4,7 @@
     <svg class="diagram-links">
         @foreach (var link in DiagramManager.AllLinks)
         {
-            <g>
-                <line x1="@link.SourcePort.Position.X"
-                      y1="@link.SourcePort.Position.Y"
-                      x2="@link.TargetPort.Position.X"
-                      y2="@link.TargetPort.Position.Y"
-                      stroke="black" />
-            </g>
+            <LineLink Link="link" />
         }
     </svg>
 

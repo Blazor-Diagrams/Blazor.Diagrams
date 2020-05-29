@@ -12,7 +12,18 @@
     {
         base.OnInitialized();
 
-        _diagramManager.AddNode(new Node());
+        var node1 = NewNode(0, 0);
+        var node2 = NewNode(300, 300);
+        node1.Ports[0].AddLink(node2.Ports[0]);
+        _diagramManager.AddNode(node1);
+        _diagramManager.AddNode(node2);
+    }
+
+    private Node NewNode(double x, double y)
+    {
+        var node = new Node(new Point(x, y));
+        node.AddPort(PortAlignment.BOTTOM);
+        return node;
     }
 
 }

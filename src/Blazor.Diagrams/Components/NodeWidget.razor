@@ -6,5 +6,11 @@
      @ref="element"
      style="top: @(Node.Position.Y)px;
             left: @(Node.Position.X)px">
-    node
+    <div class="node-content">
+        node
+        @foreach (var port in Node.Ports)
+        {
+            <PortWidget Port="port" />
+        }
+    </div>
 </div>

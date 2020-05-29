@@ -1,13 +1,31 @@
-﻿div.node {
+﻿.node {
     width: 100px;
     height: 100px;
     color: white;
     background-color: black;
-    position: absolute;
-    border-radius: 10px;
+    border-radius: 20px;
     border-color: black;
 }
 
-    div.node.selected {
+    .node.selected {
         border: 2px solid red;
+    }
+
+    .node .port {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: red;
+    }
+
+        .node .port.bottom {
+            position: absolute;
+            bottom: -10px;
+            left: 38px;
+        }
+
+    .node > .node-content {
+        width: 100%;
+        height: 100%;
+        position: relative;
     }

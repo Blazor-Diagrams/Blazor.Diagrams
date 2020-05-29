@@ -1,13 +1,19 @@
-﻿div.diagram-canvas {
+﻿.diagram-canvas {
     width: 100%;
     height: 100%;
     position: relative;
 }
 
-svg.diagram-links, div.diagram-nodes {
+.diagram-links, .diagram-nodes {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.node {
+    position: absolute;
+    user-select: none;
+    cursor: move;
 }

@@ -11,5 +11,6 @@ namespace Blazor.Diagrams.Core.Models
         public Point Offset { get; set; }
         public Point Position { get; set; }
         public List<Port> Ports { get; } = new List<Port>();
+        public bool Selected { get; set; }
     }
 }

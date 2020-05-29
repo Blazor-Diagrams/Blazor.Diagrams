@@ -18,6 +18,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public ReadOnlyCollection<Node> Nodes => _nodes.AsReadOnly();
+        public Node SelectedNode { get; private set; }
 
         public void AddNode(Node node)
         {
@@ -31,6 +32,27 @@ namespace Blazor.Diagrams.Core
             {
                 NodeRemoved?.Invoke(node);
             }
+        }
+
+        public void OnMouseDown(Node node, double[] offsets, double clientX, double clientY)
+        {
+            node.Selected = true;
+            node.Offset = new Point(offsets[0] - clientX, offsets[1] - clientY);
+            SelectNode(node);
+        }
+
+        public void SelectNode(Node node)
+        {
+            if (SelectedNode == node)
+                return;
+
+            if (SelectedNode != null)
+            {
+                SelectedNode.Selected = false;
+                SelectedNode.Refresh();
+            }
+
+            SelectedNode = node;
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿@inherits LinkWidgetBaseComponent
+
+<g>
+    <path d="@GenerateCurvedPath()" stroke-width="3" fill="none" stroke="black" />
+</g>
+
+@code {
+
+    private string GenerateCurvedPath()
+    {
+        // MsX sY CsX + 50 sY, tX - 50 tY, tX tY
+        double dist = Math.Abs(Link.SourcePort.Position.X - Link.TargetPort.Position.X);
+        return $"M {Link.SourcePort.Position.X} {Link.SourcePort.Position.Y} " +
+            $"C {Link.SourcePort.Position.X + (dist / 2)} {Link.SourcePort.Position.Y}, " +
+            $"{Link.TargetPort.Position.X - (dist / 2)} {Link.TargetPort.Position.Y}, " +
+            $"{Link.TargetPort.Position.X} {Link.TargetPort.Position.Y}";
+    }
+
+}

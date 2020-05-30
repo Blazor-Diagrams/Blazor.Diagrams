@@ -21,7 +21,25 @@
         .node .port.bottom {
             position: absolute;
             bottom: -10px;
-            left: 38px;
+            left: 40px;
+        }
+
+        .node .port.top {
+            position: absolute;
+            top: -10px;
+            left: 40px;
+        }
+
+        .node .port.left {
+            position: absolute;
+            left: -10px;
+            top: 40px;
+        }
+
+        .node .port.right {
+            position: absolute;
+            right: -10px;
+            top: 40px;
         }
 
     .node > .node-content {

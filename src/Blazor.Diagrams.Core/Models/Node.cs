@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
@@ -28,6 +29,8 @@ namespace Blazor.Diagrams.Core.Models
             _ports.Add(port);
             return port;
         }
+
+        public Port GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
         public void UpdatePosition(double clientX, double clientY)
         {

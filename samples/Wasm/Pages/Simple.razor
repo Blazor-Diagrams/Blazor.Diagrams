@@ -1,29 +1,6 @@
 ﻿@page "/simple"
+@inherits SimpleComponent
 
-<CascadingValue Name="DiagramManager" Value="_diagramManager">
+<CascadingValue Name="DiagramManager" Value="diagramManager">
     <DiagramCanvas></DiagramCanvas>
 </CascadingValue>
-
-@code {
-
-    private readonly DiagramManager _diagramManager = new DiagramManager();
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        var node1 = NewNode(0, 0);
-        var node2 = NewNode(300, 300);
-        node1.Ports[0].AddLink(node2.Ports[0]);
-        _diagramManager.AddNode(node1);
-        _diagramManager.AddNode(node2);
-    }
-
-    private Node NewNode(double x, double y)
-    {
-        var node = new Node(new Point(x, y));
-        node.AddPort(PortAlignment.BOTTOM);
-        return node;
-    }
-
-}

@@ -30,8 +30,9 @@ namespace Blazor.Diagrams.Components.Base
 
             if (firstRender)
             {
-                var offsets = await JSRuntime.GetOffset(element);
-                Port.Offset = new Point(offsets[0], offsets[1]);
+                var offsetAndSize = await JSRuntime.GetOffsetWithSize(element);
+                Port.Offset = new Point(offsetAndSize[0], offsetAndSize[1]);
+                Port.Size = new Size(offsetAndSize[2], offsetAndSize[3]);
                 Port.Position = new Point(Port.Position.X + Port.Offset.X, Port.Position.Y + Port.Offset.Y);
                 Port.RefreshAll();
             }

@@ -8,12 +8,12 @@
 
     private string GenerateCurvedPath()
     {
-        // MsX sY CsX + 50 sY, tX - 50 tY, tX tY
-        double dist = Math.Abs(Link.SourcePort.Position.X - Link.TargetPort.Position.X);
-        return $"M {Link.SourcePort.Position.X} {Link.SourcePort.Position.Y} " +
-            $"C {Link.SourcePort.Position.X + (dist / 2)} {Link.SourcePort.Position.Y}, " +
-            $"{Link.TargetPort.Position.X - (dist / 2)} {Link.TargetPort.Position.Y}, " +
-            $"{Link.TargetPort.Position.X} {Link.TargetPort.Position.Y}";
+        var sX = Link.SourcePort.Position.X + (Link.SourcePort.Size.Width / 2);
+        var sY = Link.SourcePort.Position.Y + (Link.SourcePort.Size.Height / 2);
+        var tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
+        var tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
+        var dist = Math.Abs(Link.SourcePort.Position.X - Link.TargetPort.Position.X);
+        return $"M {sX} {sY} C {sX + (dist / 2)} {sY}, {tX - (dist / 2)} {tY}, {tX} {tY}";
     }
 
 }

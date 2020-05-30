@@ -2,7 +2,7 @@
 {
     public class Point
     {
-        public static readonly Point Zero = new Point(0, 0);
+        public static Point Zero { get; } = new Point(0, 0);
 
         public Point(double x, double y)
         {

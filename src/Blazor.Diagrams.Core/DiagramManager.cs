@@ -20,7 +20,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public ReadOnlyCollection<Node> Nodes => _nodes.AsReadOnly();
-        public IEnumerable<Link> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links));
+        public IEnumerable<Link> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
         public Node SelectedNode { get; private set; }
 
         public void AddNode(Node node)
@@ -40,9 +40,12 @@ namespace Blazor.Diagrams.Core
         public void OnMouseDown()
         {
             _mouseDownOnNode = false;
-            SelectedNode.Selected = false;
-            SelectedNode.Refresh();
-            SelectedNode = null;
+            if (SelectedNode != null)
+            {
+                SelectedNode.Selected = false;
+                SelectedNode.Refresh();
+                SelectedNode = null;
+            }
         }
 
         public void OnMouseDown(Node node, double[] offsets, double clientX, double clientY)

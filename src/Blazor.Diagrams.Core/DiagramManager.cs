@@ -13,6 +13,7 @@ namespace Blazor.Diagrams.Core
 
         public event Action<Node> NodeAdded;
         public event Action<Node> NodeRemoved;
+        public event Action<Node, bool> NodeSelectionChanged;
 
         public DiagramManager()
         {
@@ -40,12 +41,7 @@ namespace Blazor.Diagrams.Core
         public void OnMouseDown()
         {
             _mouseDownOnNode = false;
-            if (SelectedNode != null)
-            {
-                SelectedNode.Selected = false;
-                SelectedNode.Refresh();
-                SelectedNode = null;
-            }
+            UnselectNode();
         }
 
         public void OnMouseDown(Node node, double[] offsets, double clientX, double clientY)
@@ -74,14 +70,22 @@ namespace Blazor.Diagrams.Core
             if (SelectedNode == node)
                 return;
 
-            if (SelectedNode != null)
-            {
-                SelectedNode.Selected = false;
-                SelectedNode.Refresh();
-            }
-
+            UnselectNode();
             SelectedNode = node;
             SelectedNode.Selected = true;
+            NodeSelectionChanged?.Invoke(SelectedNode, true);
+        }
+
+        public void UnselectNode()
+        {
+            if (SelectedNode == null)
+                return;
+
+            var node = SelectedNode;
+            node.Selected = false;
+            node.Refresh();
+            SelectedNode = null;
+            NodeSelectionChanged?.Invoke(node, false);
         }
     }
 }

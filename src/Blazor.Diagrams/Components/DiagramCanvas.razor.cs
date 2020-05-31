@@ -14,17 +14,17 @@ namespace Blazor.Diagrams.Components
 
         protected void OnMouseDown(MouseEventArgs e)
         {
-            DiagramManager.OnMouseDown();
+            DiagramManager.OnMouseDown(null, e);
         }
 
         protected void OnMouseMove(MouseEventArgs e)
         {
-            DiagramManager.OnMouseMove(e.ClientX, e.ClientY);
+            DiagramManager.OnMouseMove(null, e);
         }
 
         protected void OnMouseUp(MouseEventArgs e)
         {
-            DiagramManager.OnMouseUp();
+            DiagramManager.OnMouseUp(null, e);
         }
     }
 }

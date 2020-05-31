@@ -1,15 +1,23 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Default;
+using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Blazor.Diagrams")]
 namespace Blazor.Diagrams.Core
 {
     public class DiagramManager
     {
         private readonly List<Node> _nodes;
-        private bool _mouseDownOnNode;
+        private readonly List<DiagramSubManager> _subManagers;
+
+        public event Action<Model, MouseEventArgs> MouseDown;
+        public event Action<Model, MouseEventArgs> MouseMove;
+        public event Action<Model, MouseEventArgs> MouseUp;
 
         public event Action<Node> NodeAdded;
         public event Action<Node> NodeRemoved;
@@ -18,6 +26,9 @@ namespace Blazor.Diagrams.Core
         public DiagramManager()
         {
             _nodes = new List<Node>();
+            _subManagers = new List<DiagramSubManager>();
+
+            RegisterSubManager<DragNodeSubManager>();
         }
 
         public ReadOnlyCollection<Node> Nodes => _nodes.AsReadOnly();
@@ -36,33 +47,6 @@ namespace Blazor.Diagrams.Core
             {
                 NodeRemoved?.Invoke(node);
             }
-        }
-
-        public void OnMouseDown()
-        {
-            _mouseDownOnNode = false;
-            UnselectNode();
-        }
-
-        public void OnMouseDown(Node node, double[] offsets, double clientX, double clientY)
-        {
-            node.Offset = new Point(offsets[0] - clientX, offsets[1] - clientY);
-            SelectNode(node);
-            _mouseDownOnNode = true;
-        }
-
-        public void OnMouseMove(double clientX, double clientY)
-        {
-            if (!_mouseDownOnNode)
-                return;
-
-            SelectedNode.UpdatePosition(clientX, clientY);
-            SelectedNode.RefreshAll();
-        }
-
-        public void OnMouseUp()
-        {
-            _mouseDownOnNode = false;
         }
 
         public void SelectNode(Node node)
@@ -87,5 +71,31 @@ namespace Blazor.Diagrams.Core
             SelectedNode = null;
             NodeSelectionChanged?.Invoke(node, false);
         }
+
+        public void RegisterSubManager<T>() where T : DiagramSubManager
+        {
+            var type = typeof(T);
+            if (_subManagers.Any(sm => sm.GetType() == type))
+                throw new Exception($"SubManager '{type.Name}' already registered.");
+
+            var instance = (DiagramSubManager)Activator.CreateInstance(type, this);
+            _subManagers.Add(instance);
+        }
+
+        public void UnregisterSubManager<T>() where T : DiagramSubManager
+        {
+            var subManager = _subManagers.FirstOrDefault(sm => sm.GetType() == typeof(T));
+            if (subManager == null)
+                return;
+
+            subManager.Dispose();
+            _subManagers.Remove(subManager);
+        }
+
+        internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
+
+        internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
+
+        internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
     }
 }

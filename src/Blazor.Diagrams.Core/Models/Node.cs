@@ -18,7 +18,7 @@ namespace Blazor.Diagrams.Core.Models
             Position = position ?? Point.Zero;
         }
 
-        public Point Offset { get; set; }
+        public Point LastOffset { get; set; }
         public Point Position { get; set; }
         public ReadOnlyCollection<Port> Ports => _ports.AsReadOnly();
         public bool Selected { get; set; }
@@ -34,7 +34,7 @@ namespace Blazor.Diagrams.Core.Models
 
         public void UpdatePosition(double clientX, double clientY)
         {
-            Position = new Point(clientX + Offset.X, clientY + Offset.Y);
+            Position = new Point(clientX + LastOffset.X, clientY + LastOffset.Y);
             foreach (var port in _ports)
             {
                 port.Position = new Point(Position.X + port.Offset.X, Position.Y + port.Offset.Y);

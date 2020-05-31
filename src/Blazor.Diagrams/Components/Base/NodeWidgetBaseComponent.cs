@@ -32,7 +32,8 @@ namespace Blazor.Diagrams.Components.Base
         protected async Task OnMouseDown(MouseEventArgs e)
         {
             var offsets = await JSRuntime.GetOffset(element);
-            DiagramManager.OnMouseDown(Node, offsets, e.ClientX, e.ClientY);
+            Node.LastOffset = new Point(offsets[0] - e.ClientX, offsets[1] - e.ClientY);
+            DiagramManager.OnMouseDown(Node, e);
         }
 
         private void OnNodeChanged()

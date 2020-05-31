@@ -29,6 +29,7 @@ namespace Blazor.Diagrams.Core
             _subManagers = new List<DiagramSubManager>();
 
             RegisterSubManager<DragNodeSubManager>();
+            RegisterSubManager<SelectionSubManager>();
         }
 
         public ReadOnlyCollection<Node> Nodes => _nodes.AsReadOnly();

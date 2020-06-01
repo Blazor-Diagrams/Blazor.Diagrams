@@ -2,7 +2,7 @@
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 
-namespace Wasm.Pages
+namespace TestComponents
 {
     public class SimpleComponent : ComponentBase
     {

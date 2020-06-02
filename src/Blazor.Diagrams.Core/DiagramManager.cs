@@ -22,6 +22,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Node> NodeAdded;
         public event Action<Node> NodeRemoved;
         public event Action<Node, bool> NodeSelectionChanged;
+        public event Action<Link> LinkAdded;
 
         public DiagramManager()
         {
@@ -48,6 +49,15 @@ namespace Blazor.Diagrams.Core
             {
                 NodeRemoved?.Invoke(node);
             }
+        }
+
+        public Link AddLink(Port source, Port target)
+        {
+            var link = new Link(source, target);
+            source.AddLink(link);
+            target.AddLink(link);
+            LinkAdded?.Invoke(link);
+            return link;
         }
 
         public void SelectNode(Node node)

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Blazor.Diagrams.Core.Models
 {
     public class Port : Model
     {
+        private List<Link> _links = new List<Link>(4);
+
         public Port(PortAlignment alignment = PortAlignment.BOTTOM, Point position = null, Size size = null)
         {
             Alignment = alignment;
@@ -23,22 +26,14 @@ namespace Blazor.Diagrams.Core.Models
         public Point Offset { get; set; }
         public Point Position { get; set; }
         public Size Size { get; set; }
-        public List<Link> Links { get; } = new List<Link>();
-
-        public Link AddLink(Port targetPort)
-        {
-            var link = new Link(this, targetPort);
-            AddLink(link);
-            targetPort.AddLink(link);
-            return link;
-        }
-
-        internal void AddLink(Link link) => Links.Add(link);
+        public ReadOnlyCollection<Link> Links => _links.AsReadOnly();
 
         public void RefreshAll()
         {
             Refresh();
-            Links.ForEach(l => l.Refresh());
+            _links.ForEach(l => l.Refresh());
         }
+
+        internal void AddLink(Link link) => _links.Add(link);
     }
 }

@@ -15,7 +15,7 @@ namespace Blazor.Diagrams.Components.Base
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]
-        public Node Node { get; set; }
+        public NodeModel Node { get; set; }
 
         [Inject]
         private IJSRuntime JSRuntime { get; set; }

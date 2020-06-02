@@ -19,9 +19,9 @@ namespace TestComponents
             diagramManager.AddNode(node2);
         }
 
-        private Node NewNode(double x, double y)
+        private NodeModel NewNode(double x, double y)
         {
-            var node = new Node(new Point(x, y));
+            var node = new NodeModel(new Point(x, y));
             node.AddPort(PortAlignment.BOTTOM);
             node.AddPort(PortAlignment.TOP);
             node.AddPort(PortAlignment.LEFT);

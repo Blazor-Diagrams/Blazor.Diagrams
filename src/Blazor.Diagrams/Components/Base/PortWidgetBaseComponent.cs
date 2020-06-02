@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Components.Base
         private IJSRuntime JSRuntime { get; set; }
 
         [Parameter]
-        public Port Port { get; set; }
+        public PortModel Port { get; set; }
 
         protected ElementReference element;
 

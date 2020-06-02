@@ -4,33 +4,33 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class Node : Model
+    public class NodeModel : Model
     {
-        private List<Port> _ports = new List<Port>();
+        private List<PortModel> _ports = new List<PortModel>();
 
-        public Node(Point position = null)
+        public NodeModel(Point position = null)
         {
             Position = position ?? Point.Zero;
         }
 
-        public Node(string id, Point position = null) : base(id)
+        public NodeModel(string id, Point position = null) : base(id)
         {
             Position = position ?? Point.Zero;
         }
 
         public Point LastOffset { get; set; }
         public Point Position { get; set; }
-        public ReadOnlyCollection<Port> Ports => _ports.AsReadOnly();
+        public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public bool Selected { get; set; }
 
-        public Port AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
+        public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {
-            var port = new Port(alignment, Position);
+            var port = new PortModel(alignment, Position);
             _ports.Add(port);
             return port;
         }
 
-        public Port GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
+        public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
         public void UpdatePosition(double clientX, double clientY)
         {

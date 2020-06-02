@@ -5,7 +5,7 @@ namespace Blazor.Diagrams.Core.Default
 {
     public class DragNodeSubManager : DiagramSubManager
     {
-        private Node _draggedNode;
+        private NodeModel _draggedNode;
 
         public DragNodeSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is Node node))
+            if (!(model is NodeModel node))
                 return;
 
             _draggedNode = node;

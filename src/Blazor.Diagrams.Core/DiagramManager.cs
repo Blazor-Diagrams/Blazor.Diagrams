@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Default;
 using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
@@ -12,38 +13,40 @@ namespace Blazor.Diagrams.Core
 {
     public class DiagramManager
     {
-        private readonly List<Node> _nodes;
+        private readonly List<NodeModel> _nodes;
         private readonly List<DiagramSubManager> _subManagers;
+        private readonly Dictionary<Type, Type> _componentByModelMapping;
 
         public event Action<Model, MouseEventArgs> MouseDown;
         public event Action<Model, MouseEventArgs> MouseMove;
         public event Action<Model, MouseEventArgs> MouseUp;
 
-        public event Action<Node> NodeAdded;
-        public event Action<Node> NodeRemoved;
-        public event Action<Node, bool> NodeSelectionChanged;
-        public event Action<Link> LinkAdded;
+        public event Action<NodeModel> NodeAdded;
+        public event Action<NodeModel> NodeRemoved;
+        public event Action<NodeModel, bool> NodeSelectionChanged;
+        public event Action<LinkModel> LinkAdded;
 
         public DiagramManager()
         {
-            _nodes = new List<Node>();
+            _nodes = new List<NodeModel>();
             _subManagers = new List<DiagramSubManager>();
+            _componentByModelMapping = new Dictionary<Type, Type>();
 
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<SelectionSubManager>();
         }
 
-        public ReadOnlyCollection<Node> Nodes => _nodes.AsReadOnly();
-        public IEnumerable<Link> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
-        public Node SelectedNode { get; private set; }
+        public ReadOnlyCollection<NodeModel> Nodes => _nodes.AsReadOnly();
+        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
+        public NodeModel SelectedNode { get; private set; }
 
-        public void AddNode(Node node)
+        public void AddNode(NodeModel node)
         {
             _nodes.Add(node);
             NodeAdded?.Invoke(node);
         }
 
-        public void RemoveNode(Node node)
+        public void RemoveNode(NodeModel node)
         {
             if (_nodes.Remove(node))
             {
@@ -51,16 +54,16 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public Link AddLink(Port source, Port target)
+        public LinkModel AddLink(PortModel source, PortModel target)
         {
-            var link = new Link(source, target);
+            var link = new LinkModel(source, target);
             source.AddLink(link);
             target.AddLink(link);
             LinkAdded?.Invoke(link);
             return link;
         }
 
-        public void SelectNode(Node node)
+        public void SelectNode(NodeModel node)
         {
             if (SelectedNode == node)
                 return;
@@ -101,6 +104,21 @@ namespace Blazor.Diagrams.Core
 
             subManager.Dispose();
             _subManagers.Remove(subManager);
+        }
+
+        public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
+        {
+            var modelType = typeof(M);
+            if (_componentByModelMapping.ContainsKey(modelType))
+                throw new Exception($"Component already registered for model '{modelType.Name}'.");
+
+            _componentByModelMapping.Add(modelType, typeof(C));
+        }
+
+        public Type GetComponentForModel<M>(M model) where M : Model
+        {
+            var modelType = model.GetType();
+            return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
         }
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);

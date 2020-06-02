@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Core.Default
             {
                 DiagramManager.UnselectNode();
             }
-            else if (model is Node node)
+            else if (model is NodeModel node)
             {
                 DiagramManager.SelectNode(node);
             }

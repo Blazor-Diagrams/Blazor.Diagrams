@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Components.Base
     public class LinkWidgetBaseComponent : ComponentBase, IDisposable
     {
         [Parameter]
-        public Link Link { get; set; }
+        public LinkModel Link { get; set; }
 
         protected override void OnInitialized()
         {

@@ -3,18 +3,18 @@ using System.Collections.ObjectModel;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class Port : Model
+    public class PortModel : Model
     {
-        private List<Link> _links = new List<Link>(4);
+        private List<LinkModel> _links = new List<LinkModel>(4);
 
-        public Port(PortAlignment alignment = PortAlignment.BOTTOM, Point position = null, Size size = null)
+        public PortModel(PortAlignment alignment = PortAlignment.BOTTOM, Point position = null, Size size = null)
         {
             Alignment = alignment;
             Position = position ?? Point.Zero;
             Size = size ?? Size.Zero;
         }
 
-        public Port(string id, PortAlignment alignment = PortAlignment.BOTTOM, Point position = null,
+        public PortModel(string id, PortAlignment alignment = PortAlignment.BOTTOM, Point position = null,
             Size size = null) : base(id)
         {
             Alignment = alignment;
@@ -26,7 +26,7 @@ namespace Blazor.Diagrams.Core.Models
         public Point Offset { get; set; }
         public Point Position { get; set; }
         public Size Size { get; set; }
-        public ReadOnlyCollection<Link> Links => _links.AsReadOnly();
+        public ReadOnlyCollection<LinkModel> Links => _links.AsReadOnly();
 
         public void RefreshAll()
         {
@@ -34,6 +34,6 @@ namespace Blazor.Diagrams.Core.Models
             _links.ForEach(l => l.Refresh());
         }
 
-        internal void AddLink(Link link) => _links.Add(link);
+        internal void AddLink(LinkModel link) => _links.Add(link);
     }
 }

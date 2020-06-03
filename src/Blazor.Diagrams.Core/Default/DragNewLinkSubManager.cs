@@ -1,13 +1,14 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 
 namespace Blazor.Diagrams.Core.Default
 {
-    public class DragNodeSubManager : DiagramSubManager
+    public class DragNewLinkSubManager : DiagramSubManager
     {
-        private NodeModel? _draggedNode;
+        private LinkModel? _ongoingLink;
 
-        public DragNodeSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public DragNewLinkSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
             DiagramManager.MouseMove += DiagramManager_MouseMove;
@@ -16,24 +17,35 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is NodeModel node))
+            if (!(model is PortModel port))
                 return;
 
-            _draggedNode = node;
+            _ongoingLink = DiagramManager.AddLink(port);
         }
 
         private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
         {
-            if (_draggedNode == null)
+            if (_ongoingLink == null)
                 return;
 
-            _draggedNode.UpdatePosition(e.ClientX, e.ClientY);
-            _draggedNode.RefreshAll();
+            _ongoingLink.OnGoingPosition = new Point(e.ClientX, e.ClientY);
+            _ongoingLink.Refresh();
+            Console.WriteLine("Refresing link " + _ongoingLink.Id);
         }
 
         private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
         {
-            _draggedNode = null;
+            if (_ongoingLink == null)
+                return;
+
+            if (!(model is PortModel port))
+            {
+                DiagramManager.RemoveLink(_ongoingLink);
+                return;
+            }
+
+            DiagramManager.AttachLink(_ongoingLink, port);
+            _ongoingLink = null;
         }
 
         public override void Dispose()

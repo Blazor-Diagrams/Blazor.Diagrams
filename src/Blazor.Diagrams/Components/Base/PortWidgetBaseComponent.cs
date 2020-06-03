@@ -1,6 +1,8 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +11,9 @@ namespace Blazor.Diagrams.Components.Base
 {
     public class PortWidgetBaseComponent : ComponentBase, IDisposable
     {
+        [CascadingParameter(Name = "DiagramManager")]
+        public DiagramManager DiagramManager { get; set; }
+
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
 
@@ -37,6 +42,10 @@ namespace Blazor.Diagrams.Components.Base
                 Port.RefreshAll();
             }
         }
+
+        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Port, e);
+
+        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Port, e);
 
         private void OnPortChanged()
         {

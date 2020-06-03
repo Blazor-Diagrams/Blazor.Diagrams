@@ -1,6 +1,8 @@
 ﻿@inherits PortWidgetBaseComponent
 
 <div class="port @(Port.Alignment.ToString().ToLower())"
-     @ref="element">
-
+     @ref="element"
+     @onmousedown="OnMouseDown"
+     @onmousedown:stopPropagation
+     @onmouseup="OnMouseUp">
 </div>

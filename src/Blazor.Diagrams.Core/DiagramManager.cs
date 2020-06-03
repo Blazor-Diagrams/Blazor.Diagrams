@@ -25,6 +25,8 @@ namespace Blazor.Diagrams.Core
         public event Action<NodeModel> NodeRemoved;
         public event Action<NodeModel, bool> NodeSelectionChanged;
         public event Action<LinkModel> LinkAdded;
+        public event Action<LinkModel> LinkAttached;
+        public event Action<LinkModel> LinkRemoved;
 
         public DiagramManager()
         {
@@ -34,6 +36,7 @@ namespace Blazor.Diagrams.Core
 
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<SelectionSubManager>();
+            RegisterSubManager<DragNewLinkSubManager>();
         }
 
         public ReadOnlyCollection<NodeModel> Nodes => _nodes.AsReadOnly();
@@ -54,13 +57,37 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public LinkModel AddLink(PortModel source, PortModel target)
+        public LinkModel AddLink(PortModel source, PortModel? target = null)
         {
             var link = new LinkModel(source, target);
             source.AddLink(link);
-            target.AddLink(link);
+            target?.AddLink(link);
+
+            if (target == null)
+            {
+                link.OnGoingPosition = Point.Zero;
+            }
+
             LinkAdded?.Invoke(link);
             return link;
+        }
+
+        public void AttachLink(LinkModel link, PortModel targetPort)
+        {
+            if (link.IsAttached)
+                throw new Exception("Link already attached.");
+
+            link.SetTargetPort(targetPort);
+            targetPort.AddLink(link);
+            link.Refresh();
+            LinkAttached?.Invoke(link);
+        }
+
+        public void RemoveLink(LinkModel link)
+        {
+            link.SourcePort.RemoveLink(link);
+            link.TargetPort?.RemoveLink(link);
+            LinkRemoved?.Invoke(link);
         }
 
         public void SelectNode(NodeModel node)

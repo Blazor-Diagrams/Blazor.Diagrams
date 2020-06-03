@@ -10,9 +10,20 @@
     {
         var sX = Link.SourcePort.Position.X + (Link.SourcePort.Size.Width / 2);
         var sY = Link.SourcePort.Position.Y + (Link.SourcePort.Size.Height / 2);
-        var tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
-        var tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
-        var dist = Math.Abs(Link.SourcePort.Position.X - Link.TargetPort.Position.X);
+        double tX, tY;
+
+        if (Link.IsAttached)
+        {
+            tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
+            tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
+        }
+        else
+        {
+            tX = Link.OnGoingPosition.X;
+            tY = Link.OnGoingPosition.Y;
+        }
+
+        var dist = Math.Abs(sX - tX);
         return $"M {sX} {sY} C {sX + (dist / 2)} {sY}, {tX - (dist / 2)} {tY}, {tX} {tY}";
     }
 

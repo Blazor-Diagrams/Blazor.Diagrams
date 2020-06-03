@@ -5,13 +5,13 @@ namespace Blazor.Diagrams.Core.Default
 {
     public class DragNodeSubManager : DiagramSubManager
     {
-        private NodeModel _draggedNode;
+        private NodeModel? _draggedNode;
 
         public DragNodeSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
-            diagramManager.MouseDown += DiagramManager_MouseDown;
-            diagramManager.MouseMove += DiagramManager_MouseMove;
-            diagramManager.MouseUp += DiagramManager_MouseUp;
+            DiagramManager.MouseDown += DiagramManager_MouseDown;
+            DiagramManager.MouseMove += DiagramManager_MouseMove;
+            DiagramManager.MouseUp += DiagramManager_MouseUp;
         }
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)

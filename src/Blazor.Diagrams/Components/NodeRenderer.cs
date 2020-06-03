@@ -15,8 +15,8 @@ namespace Blazor.Diagrams.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var component = DiagramManager.GetComponentForModel(Node) ?? typeof(NodeWidget);
-            builder.OpenComponent(0, component);
+            var componentType = DiagramManager.GetComponentForModel(Node) ?? typeof(NodeWidget);
+            builder.OpenComponent(0, componentType);
             builder.AddAttribute(1, "Node", Node);
             builder.CloseComponent();
         }

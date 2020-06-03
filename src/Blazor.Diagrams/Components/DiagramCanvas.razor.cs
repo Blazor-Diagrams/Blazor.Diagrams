@@ -1,8 +1,11 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using System;
+using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components
 {
@@ -12,6 +15,10 @@ namespace Blazor.Diagrams.Components
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
+        protected ElementReference elementReference;
         private bool _shouldReRender;
 
         protected override void OnInitialized()
@@ -19,8 +26,17 @@ namespace Blazor.Diagrams.Components
             base.OnInitialized();
 
             DiagramManager.LinkAdded += DiagramManager_LinkRelatedOperation;
-            DiagramManager.LinkAttached += DiagramManager_LinkRelatedOperation;
             DiagramManager.LinkRemoved += DiagramManager_LinkRelatedOperation;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
+            }
         }
 
         protected override bool ShouldRender()
@@ -58,7 +74,6 @@ namespace Blazor.Diagrams.Components
         public void Dispose()
         {
             DiagramManager.LinkAdded -= DiagramManager_LinkRelatedOperation;
-            DiagramManager.LinkAttached -= DiagramManager_LinkRelatedOperation;
             DiagramManager.LinkRemoved -= DiagramManager_LinkRelatedOperation;
         }
     }

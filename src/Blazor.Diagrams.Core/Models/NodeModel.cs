@@ -6,26 +6,26 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class NodeModel : Model
     {
-        private List<PortModel> _ports = new List<PortModel>();
+        private readonly List<PortModel> _ports = new List<PortModel>();
 
-        public NodeModel(Point position = null)
+        public NodeModel(Point? position = null)
         {
             Position = position ?? Point.Zero;
         }
 
-        public NodeModel(string id, Point position = null) : base(id)
+        public NodeModel(string id, Point? position = null) : base(id)
         {
             Position = position ?? Point.Zero;
         }
 
-        public Point LastOffset { get; set; }
+        public Point LastOffset { get; set; } = Point.Zero;
         public Point Position { get; set; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public bool Selected { get; set; }
 
         public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {
-            var port = new PortModel(alignment, Position);
+            var port = new PortModel(this, alignment, Position);
             _ports.Add(port);
             return port;
         }

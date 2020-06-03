@@ -1,10 +1,10 @@
 ﻿@inherits DiagramCanvasComponent
 
-<div class="diagram-canvas">
+<div class="diagram-canvas" @ref="elementReference">
     <svg class="diagram-links">
         @foreach (var link in DiagramManager.AllLinks)
         {
-            <CurvedLink Link="link" />
+            <CurvedLink @key="link.Id" Link="link" />
         }
     </svg>
 
@@ -15,7 +15,7 @@
          @onmouseup="OnMouseUp">
         @foreach (var node in DiagramManager.Nodes)
         {
-            <NodeRenderer Node="node" />
+            <NodeRenderer @key="node.Id" Node="node" />
         }
     </div>
 </div>

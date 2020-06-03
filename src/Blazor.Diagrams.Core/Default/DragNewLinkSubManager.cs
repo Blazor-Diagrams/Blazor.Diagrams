@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components.Web;
-using System;
 
 namespace Blazor.Diagrams.Core.Default
 {
@@ -20,17 +19,18 @@ namespace Blazor.Diagrams.Core.Default
             if (!(model is PortModel port))
                 return;
 
-            _ongoingLink = DiagramManager.AddLink(port);
+            _ongoingLink = DiagramManager.AddLink(port, null, onGoingPosition: new Point(
+                e.ClientX - DiagramManager.Container.Left, e.ClientY - DiagramManager.Container.Top));
         }
 
         private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
         {
-            if (_ongoingLink == null)
+            if (_ongoingLink == null || model != null)
                 return;
 
-            _ongoingLink.OnGoingPosition = new Point(e.ClientX, e.ClientY);
+            _ongoingLink.OnGoingPosition = new Point(e.ClientX - DiagramManager.Container.Left,
+                e.ClientY - DiagramManager.Container.Top);
             _ongoingLink.Refresh();
-            Console.WriteLine("Refresing link " + _ongoingLink.Id);
         }
 
         private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
@@ -41,6 +41,7 @@ namespace Blazor.Diagrams.Core.Default
             if (!(model is PortModel port))
             {
                 DiagramManager.RemoveLink(_ongoingLink);
+                _ongoingLink = null;
                 return;
             }
 

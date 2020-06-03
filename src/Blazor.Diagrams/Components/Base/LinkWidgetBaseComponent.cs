@@ -18,7 +18,6 @@ namespace Blazor.Diagrams.Components.Base
 
         private void OnLinkChanged()
         {
-            Console.WriteLine("Changed " + Link.Id);
             StateHasChanged();
         }
 

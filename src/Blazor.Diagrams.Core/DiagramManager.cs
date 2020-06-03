@@ -41,7 +41,8 @@ namespace Blazor.Diagrams.Core
 
         public ReadOnlyCollection<NodeModel> Nodes => _nodes.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
-        public NodeModel SelectedNode { get; private set; }
+        public NodeModel? SelectedNode { get; private set; }
+        public Rectangle Container { get; internal set; }
 
         public void AddNode(NodeModel node)
         {
@@ -57,7 +58,7 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public LinkModel AddLink(PortModel source, PortModel? target = null)
+        public LinkModel AddLink(PortModel source, PortModel? target = null, Point? onGoingPosition = null)
         {
             var link = new LinkModel(source, target);
             source.AddLink(link);
@@ -65,7 +66,7 @@ namespace Blazor.Diagrams.Core
 
             if (target == null)
             {
-                link.OnGoingPosition = Point.Zero;
+                link.OnGoingPosition = onGoingPosition ?? Point.Zero;
             }
 
             LinkAdded?.Invoke(link);

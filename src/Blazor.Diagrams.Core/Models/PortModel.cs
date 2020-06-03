@@ -8,21 +8,24 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<LinkModel> _links = new List<LinkModel>(4);
 
-        public PortModel(PortAlignment alignment = PortAlignment.BOTTOM, Point? position = null, Size? size = null)
+        public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.BOTTOM, Point? position = null, Size? size = null)
         {
+            Parent = parent;
             Alignment = alignment;
             Position = position ?? Point.Zero;
             Size = size ?? Size.Zero;
         }
 
-        public PortModel(string id, PortAlignment alignment = PortAlignment.BOTTOM, Point? position = null,
+        public PortModel(string id, NodeModel parent, PortAlignment alignment = PortAlignment.BOTTOM, Point? position = null,
             Size? size = null) : base(id)
         {
+            Parent = parent;
             Alignment = alignment;
             Position = position ?? Point.Zero;
             Size = size ?? Size.Zero;
         }
 
+        public NodeModel Parent { get; }
         public PortAlignment Alignment { get; }
         public Point Offset { get; set; } = Point.Zero;
         public Point Position { get; set; }

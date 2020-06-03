@@ -23,8 +23,6 @@
             tY = Link.OnGoingPosition.Y;
         }
 
-        Console.WriteLine("{0} {1}", tX, tY);
-
         var dist = Math.Abs(sX - tX);
         return $"M {sX} {sY} C {sX + (dist / 2)} {sY}, {tX - (dist / 2)} {tY}, {tX} {tY}";
     }

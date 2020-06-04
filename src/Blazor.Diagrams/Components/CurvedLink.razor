@@ -1,7 +1,11 @@
 ﻿@inherits LinkWidgetBaseComponent
 
 <g>
-    <path d="@GenerateCurvedPath()" stroke-width="3" fill="none" stroke="black" />
+    <path d="@GenerateCurvedPath()"
+          stroke-width="3"
+          fill="none"
+          @onmousedown="OnMouseDown"
+          stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
 </g>
 
 @code {

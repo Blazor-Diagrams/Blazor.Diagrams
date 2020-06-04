@@ -1,6 +1,8 @@
-﻿namespace Blazor.Diagrams.Core.Models
+﻿using Blazor.Diagrams.Core.Models.Base;
+
+namespace Blazor.Diagrams.Core.Models
 {
-    public class LinkModel : Model
+    public class LinkModel : SelectableModel
     {
         public LinkModel(PortModel sourcePort, PortModel? targetPort = null)
         {

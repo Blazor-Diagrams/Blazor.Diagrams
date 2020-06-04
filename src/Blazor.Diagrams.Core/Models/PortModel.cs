@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.Diagrams.Core.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 

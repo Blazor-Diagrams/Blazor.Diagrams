@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Default;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -16,6 +17,7 @@ namespace Blazor.Diagrams.Core
         private readonly List<NodeModel> _nodes;
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
+        private readonly HashSet<SelectableModel> _selectedModels;
 
         public event Action<Model, MouseEventArgs> MouseDown;
         public event Action<Model, MouseEventArgs> MouseMove;
@@ -23,7 +25,7 @@ namespace Blazor.Diagrams.Core
 
         public event Action<NodeModel> NodeAdded;
         public event Action<NodeModel> NodeRemoved;
-        public event Action<NodeModel, bool> NodeSelectionChanged;
+        public event Action<SelectableModel, bool> SelectionChanged;
         public event Action<LinkModel> LinkAdded;
         public event Action<LinkModel> LinkAttached;
         public event Action<LinkModel> LinkRemoved;
@@ -33,6 +35,7 @@ namespace Blazor.Diagrams.Core
             _nodes = new List<NodeModel>();
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
+            _selectedModels = new HashSet<SelectableModel>();
 
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<SelectionSubManager>();
@@ -41,7 +44,6 @@ namespace Blazor.Diagrams.Core
 
         public ReadOnlyCollection<NodeModel> Nodes => _nodes.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
-        public NodeModel? SelectedNode { get; private set; }
         public Rectangle Container { get; internal set; }
 
         public void AddNode(NodeModel node)
@@ -91,27 +93,42 @@ namespace Blazor.Diagrams.Core
             LinkRemoved?.Invoke(link);
         }
 
-        public void SelectNode(NodeModel node)
+        public void SelectModel(SelectableModel model, bool unselectOthers)
         {
-            if (SelectedNode == node)
+            if (_selectedModels.Contains(model))
                 return;
 
-            UnselectNode();
-            SelectedNode = node;
-            SelectedNode.Selected = true;
-            NodeSelectionChanged?.Invoke(SelectedNode, true);
+            if (unselectOthers)
+                UnselectAll();
+
+            model.Selected = true;
+            _selectedModels.Add(model);
+            model.Refresh();
+            SelectionChanged?.Invoke(model, true);
         }
 
-        public void UnselectNode()
+        public void UnselectModel(SelectableModel model)
         {
-            if (SelectedNode == null)
+            if (!_selectedModels.Contains(model))
                 return;
 
-            var node = SelectedNode;
-            node.Selected = false;
-            node.Refresh();
-            SelectedNode = null;
-            NodeSelectionChanged?.Invoke(node, false);
+            model.Selected = false;
+            _selectedModels.Remove(model);
+            model.Refresh();
+            SelectionChanged?.Invoke(model, false);
+        }
+
+        public void UnselectAll()
+        {
+            foreach (var model in _selectedModels)
+            {
+                model.Selected = false;
+                model.Refresh();
+                // Todo: will result in many events, maybe one event for all of them?
+                SelectionChanged?.Invoke(model, false);
+            }
+
+            _selectedModels.Clear();
         }
 
         public void RegisterSubManager<T>() where T : DiagramSubManager

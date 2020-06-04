@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.Diagrams.Core.Default
@@ -14,11 +14,11 @@ namespace Blazor.Diagrams.Core.Default
         {
             if (model == null)
             {
-                DiagramManager.UnselectNode();
+                DiagramManager.UnselectAll();
             }
-            else if (model is NodeModel node)
+            else if (model is SelectableModel sm)
             {
-                DiagramManager.SelectNode(node);
+                DiagramManager.SelectModel(sm, e.CtrlKey == false);
             }
         }
 

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Blazor.Diagrams.Core.Models.Base;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : Model
+    public class NodeModel : SelectableModel
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
 
@@ -21,7 +22,6 @@ namespace Blazor.Diagrams.Core.Models
         public Point LastOffset { get; set; } = Point.Zero;
         public Point Position { get; set; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
-        public bool Selected { get; set; }
 
         public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {

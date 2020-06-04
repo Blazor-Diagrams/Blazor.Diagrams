@@ -24,7 +24,9 @@
         }
 
         var dist = Math.Abs(sX - tX);
-        return $"M {sX} {sY} C {sX + (dist / 2)} {sY}, {tX - (dist / 2)} {tY}, {tX} {tY}";
+        return $"M {sX} {sY} C {PrepNumber(sX + (dist / 2))} {sY}, {PrepNumber(tX - (dist / 2))} {tY}, {tX} {tY}";
     }
+
+    private static string PrepNumber(double n) => n.ToString().Replace(',', '.');
 
 }

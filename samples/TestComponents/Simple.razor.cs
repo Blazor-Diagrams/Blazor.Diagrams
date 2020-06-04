@@ -17,7 +17,7 @@ namespace TestComponents
             diagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
             diagramManager.AddNode(node1);
             diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(200, 50));
+            diagramManager.AddNode(NewNode(300, 50));
         }
 
         private NodeModel NewNode(double x, double y)

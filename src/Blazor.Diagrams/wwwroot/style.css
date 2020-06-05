@@ -22,4 +22,5 @@
 
 .link {
     pointer-events: all;
+    cursor: pointer;
 }

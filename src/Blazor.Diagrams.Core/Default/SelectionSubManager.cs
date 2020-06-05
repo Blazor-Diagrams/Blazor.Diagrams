@@ -18,7 +18,14 @@ namespace Blazor.Diagrams.Core.Default
             }
             else if (model is SelectableModel sm)
             {
-                DiagramManager.SelectModel(sm, e.CtrlKey == false);
+                if (e.CtrlKey && sm.Selected)
+                {
+                    DiagramManager.UnselectModel(sm);
+                }
+                else
+                {
+                    DiagramManager.SelectModel(sm, e.CtrlKey == false);
+                }
             }
         }
 

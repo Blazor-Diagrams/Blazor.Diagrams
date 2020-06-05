@@ -1,10 +1,11 @@
 ﻿@inherits LinkWidgetBaseComponent
 
-<g>
+<g class="link"
+   @onmousedown="OnMouseDown"
+   @onmousedown:stopPropagation>
     <path d="@GenerateCurvedPath()"
           stroke-width="3"
           fill="none"
-          @onmousedown="OnMouseDown"
           stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
 </g>
 

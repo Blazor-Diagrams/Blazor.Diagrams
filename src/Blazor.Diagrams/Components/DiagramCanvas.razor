@@ -1,6 +1,13 @@
 ﻿@inherits DiagramCanvasComponent
 
-<div class="diagram-canvas" @ref="elementReference">
+<div class="diagram-canvas"
+     @ref="elementReference"
+     @onmousedown="OnMouseDown"
+     @onmousemove="OnMouseMove"
+     @onmousemove:preventDefault
+     @onmouseup="OnMouseUp">
+
+    @* Links *@
     <svg class="diagram-links">
         @foreach (var link in DiagramManager.AllLinks)
         {
@@ -8,11 +15,8 @@
         }
     </svg>
 
-    <div class="diagram-nodes"
-         @onmousedown="OnMouseDown"
-         @onmousemove="OnMouseMove"
-         @onmousemove:preventDefault
-         @onmouseup="OnMouseUp">
+    @* Nodes *@
+    <div class="diagram-nodes">
         @foreach (var node in DiagramManager.Nodes)
         {
             <NodeRenderer @key="node.Id" Node="node" />

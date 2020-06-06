@@ -21,6 +21,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Model, MouseEventArgs> MouseDown;
         public event Action<Model, MouseEventArgs> MouseMove;
         public event Action<Model, MouseEventArgs> MouseUp;
+        public event Action<KeyboardEventArgs> KeyDown;
 
         public event Action<NodeModel> NodeAdded;
         public event Action<NodeModel> NodeRemoved;
@@ -171,5 +172,7 @@ namespace Blazor.Diagrams.Core
         internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
 
         internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
+
+        internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
     }
 }

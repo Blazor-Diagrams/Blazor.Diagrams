@@ -7,11 +7,6 @@ namespace Blazor.Diagrams.Extensions
 {
     public static class JSRuntimeExtensions
     {
-        public static async Task<double[]> GetOffset(this IJSRuntime jsRuntime, ElementReference element)
-        {
-            return await jsRuntime.InvokeAsync<double[]>("getOffset", element);
-        }
-
         public static async Task<double[]> GetOffsetWithSize(this IJSRuntime jsRuntime, ElementReference element)
         {
             return await jsRuntime.InvokeAsync<double[]>("getOffsetWithSize", element);

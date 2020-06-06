@@ -50,20 +50,13 @@ namespace Blazor.Diagrams.Components
             return false;
         }
 
-        protected void OnMouseDown(MouseEventArgs e)
-        {
-            DiagramManager.OnMouseDown(null, e);
-        }
+        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(null, e);
 
-        protected void OnMouseMove(MouseEventArgs e)
-        {
-            DiagramManager.OnMouseMove(null, e);
-        }
+        protected void OnMouseMove(MouseEventArgs e) => DiagramManager.OnMouseMove(null, e);
 
-        protected void OnMouseUp(MouseEventArgs e)
-        {
-            DiagramManager.OnMouseUp(null, e);
-        }
+        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(null, e);
+
+        protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
 
         private void DiagramManager_LinkRelatedOperation(LinkModel link)
         {

@@ -1,11 +1,13 @@
 ﻿@inherits DiagramCanvasComponent
 
 <div class="diagram-canvas"
+     tabindex="-1"
      @ref="elementReference"
      @onmousedown="OnMouseDown"
      @onmousemove="OnMouseMove"
      @onmousemove:preventDefault
-     @onmouseup="OnMouseUp">
+     @onmouseup="OnMouseUp"
+     @onkeydown="OnKeyDown">
 
     @* Links *@
     <svg class="diagram-links">

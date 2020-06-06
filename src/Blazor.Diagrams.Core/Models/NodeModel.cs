@@ -21,6 +21,7 @@ namespace Blazor.Diagrams.Core.Models
 
         public Point Position { get; set; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
+        public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
         public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {

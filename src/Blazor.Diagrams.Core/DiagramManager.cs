@@ -45,7 +45,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
-        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
+        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
 
@@ -57,9 +57,17 @@ namespace Blazor.Diagrams.Core
 
         public void RemoveNode(NodeModel node, bool triggerEvent = true)
         {
-            if (_nodes.Remove(node) && triggerEvent)
+            if (_nodes.Remove(node))
             {
-                NodeRemoved?.Invoke(node);
+                foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
+                {
+                    RemoveLink(link, triggerEvent);
+                }
+
+                if (triggerEvent)
+                {
+                    NodeRemoved?.Invoke(node);
+                }
             }
         }
 

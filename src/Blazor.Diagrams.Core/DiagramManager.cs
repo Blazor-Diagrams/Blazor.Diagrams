@@ -23,6 +23,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Model, MouseEventArgs> MouseUp;
         public event Action<KeyboardEventArgs> KeyDown;
 
+        public event Action Changed;
         public event Action<NodeModel> NodeAdded;
         public event Action<NodeModel> NodeRemoved;
         public event Action<SelectableModel, bool> SelectionChanged;
@@ -40,6 +41,7 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<SelectionSubManager>();
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
+            RegisterSubManager<DeleteSelectionSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
@@ -53,9 +55,9 @@ namespace Blazor.Diagrams.Core
             NodeAdded?.Invoke(node);
         }
 
-        public void RemoveNode(NodeModel node)
+        public void RemoveNode(NodeModel node, bool triggerEvent = true)
         {
-            if (_nodes.Remove(node))
+            if (_nodes.Remove(node) && triggerEvent)
             {
                 NodeRemoved?.Invoke(node);
             }
@@ -87,11 +89,13 @@ namespace Blazor.Diagrams.Core
             LinkAttached?.Invoke(link);
         }
 
-        public void RemoveLink(LinkModel link)
+        public void RemoveLink(LinkModel link, bool triggerEvent = true)
         {
             link.SourcePort.RemoveLink(link);
             link.TargetPort?.RemoveLink(link);
-            LinkRemoved?.Invoke(link);
+
+            if (triggerEvent)
+                LinkRemoved?.Invoke(link);
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)
@@ -166,6 +170,8 @@ namespace Blazor.Diagrams.Core
             var modelType = model.GetType();
             return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
         }
+
+        public void Refresh() => Changed?.Invoke();
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 

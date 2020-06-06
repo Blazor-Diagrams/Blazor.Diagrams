@@ -1,12 +1,16 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Extensions;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Default
 {
     public class DragNodeSubManager : DiagramSubManager
     {
-        private NodeModel? _draggedNode;
+        private Point[]? _initialPositions;
+        private double? _lastClientX;
+        private double? _lastClientY;
 
         public DragNodeSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
@@ -17,24 +21,45 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is NodeModel node))
+            if (!(model is NodeModel))
                 return;
 
-            _draggedNode = node;
+            // Don't link this linq
+            _initialPositions = DiagramManager.SelectedModels
+                .Where(m => m is NodeModel)
+                .Select(m => (m as NodeModel).Position)
+                .ToArray();
+
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
         }
 
         private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
         {
-            if (_draggedNode == null)
+            if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
                 return;
 
-            _draggedNode.UpdatePosition(e.ClientX, e.ClientY);
-            _draggedNode.RefreshAll();
+            double deltaX = e.ClientX - _lastClientX.Value;
+            double deltaY = e.ClientY - _lastClientY.Value;
+
+            foreach ((var i, var sm) in DiagramManager.SelectedModels.LoopWithIndex())
+            {
+                if (!(sm is NodeModel node))
+                    continue;
+
+                // The order shouldn't change between MouseDown & MouseMove
+                var initialPosition = _initialPositions[i];
+                node.UpdatePosition(deltaX - (node.Position.X - initialPosition.X),
+                    deltaY - (node.Position.Y - initialPosition.Y));
+                node.RefreshAll();
+            }
         }
 
         private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
         {
-            _draggedNode = null;
+            _initialPositions = null;
+            _lastClientX = null;
+            _lastClientY = null;
         }
 
         public override void Dispose()

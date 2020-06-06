@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -37,13 +36,14 @@ namespace Blazor.Diagrams.Core
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
 
-            RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<SelectionSubManager>();
+            RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
         }
 
-        public ReadOnlyCollection<NodeModel> Nodes => _nodes.AsReadOnly();
+        public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct();
+        public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
 
         public void AddNode(NodeModel node)
@@ -160,7 +160,7 @@ namespace Blazor.Diagrams.Core
             _componentByModelMapping.Add(modelType, typeof(C));
         }
 
-        public Type GetComponentForModel<M>(M model) where M : Model
+        public Type? GetComponentForModel<M>(M model) where M : Model
         {
             var modelType = model.GetType();
             return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;

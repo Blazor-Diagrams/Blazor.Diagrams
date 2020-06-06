@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -31,8 +30,6 @@ namespace Blazor.Diagrams.Components.Base
 
         protected async Task OnMouseDown(MouseEventArgs e)
         {
-            var offsets = await JSRuntime.GetOffset(element);
-            Node.LastOffset = new Point(offsets[0] - e.ClientX, offsets[1] - e.ClientY);
             DiagramManager.OnMouseDown(Node, e);
         }
 

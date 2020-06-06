@@ -19,7 +19,6 @@ namespace Blazor.Diagrams.Core.Models
             Position = position ?? Point.Zero;
         }
 
-        public Point LastOffset { get; set; } = Point.Zero;
         public Point Position { get; set; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
 
@@ -32,9 +31,9 @@ namespace Blazor.Diagrams.Core.Models
 
         public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
-        public void UpdatePosition(double clientX, double clientY)
+        public void UpdatePosition(double deltaX, double deltaY)
         {
-            Position = new Point(clientX + LastOffset.X, clientY + LastOffset.Y);
+            Position = new Point(Position.X + deltaX, Position.Y + deltaY);
             foreach (var port in _ports)
             {
                 port.Position = new Point(Position.X + port.Offset.X, Position.Y + port.Offset.Y);

@@ -42,17 +42,20 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
+            RegisterSubManager<PanSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
+        public Point Pan { get; internal set; } = Point.Zero;
 
         public void AddNode(NodeModel node)
         {
             _nodes.Add(node);
             NodeAdded?.Invoke(node);
+            Changed?.Invoke();
         }
 
         public void RemoveNode(NodeModel node, bool triggerEvent = true)
@@ -61,12 +64,13 @@ namespace Blazor.Diagrams.Core
             {
                 foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
                 {
-                    RemoveLink(link, triggerEvent);
+                    RemoveLink(link, false);
                 }
 
                 if (triggerEvent)
                 {
                     NodeRemoved?.Invoke(node);
+                    Changed?.Invoke();
                 }
             }
         }
@@ -83,6 +87,7 @@ namespace Blazor.Diagrams.Core
             }
 
             LinkAdded?.Invoke(link);
+            Changed?.Invoke();
             return link;
         }
 
@@ -103,7 +108,10 @@ namespace Blazor.Diagrams.Core
             link.TargetPort?.RemoveLink(link);
 
             if (triggerEvent)
+            {
                 LinkRemoved?.Invoke(link);
+                Changed?.Invoke();
+            }
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)

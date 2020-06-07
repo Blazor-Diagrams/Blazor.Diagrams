@@ -10,7 +10,8 @@
      @onkeydown="OnKeyDown">
 
     @* Links *@
-    <svg class="diagram-links">
+    <svg class="diagram-links"
+         style="transform: translate(@(DiagramManager.Pan.X)px, @(DiagramManager.Pan.Y)px);">
         @foreach (var link in DiagramManager.AllLinks)
         {
             <CurvedLink @key="link.Id" Link="link" />
@@ -18,7 +19,8 @@
     </svg>
 
     @* Nodes *@
-    <div class="diagram-nodes">
+    <div class="diagram-nodes"
+         style="transform: translate(@(DiagramManager.Pan.X)px, @(DiagramManager.Pan.Y)px);">
         @foreach (var node in DiagramManager.Nodes)
         {
             <NodeRenderer @key="node.Id" Node="node" />

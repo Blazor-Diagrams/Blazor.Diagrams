@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -26,8 +25,6 @@ namespace Blazor.Diagrams.Components
             base.OnInitialized();
 
             DiagramManager.Changed += DiagramManager_Changed;
-            DiagramManager.LinkAdded += DiagramManager_LinkRelatedOperation;
-            DiagramManager.LinkRemoved += DiagramManager_LinkRelatedOperation;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -59,11 +56,7 @@ namespace Blazor.Diagrams.Components
 
         protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
 
-        private void DiagramManager_Changed() => ReRender();
-
-        private void DiagramManager_LinkRelatedOperation(LinkModel link) => ReRender();
-
-        private void ReRender()
+        private void DiagramManager_Changed()
         {
             _shouldReRender = true;
             StateHasChanged();
@@ -72,8 +65,6 @@ namespace Blazor.Diagrams.Components
         public void Dispose()
         {
             DiagramManager.Changed -= DiagramManager_Changed;
-            DiagramManager.LinkAdded -= DiagramManager_LinkRelatedOperation;
-            DiagramManager.LinkRemoved -= DiagramManager_LinkRelatedOperation;
         }
     }
 }

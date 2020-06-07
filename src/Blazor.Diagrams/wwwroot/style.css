@@ -3,6 +3,7 @@
     height: 100%;
     position: relative;
     outline: none;
+    overflow: hidden;
 }
 
 .diagram-links, .diagram-nodes {

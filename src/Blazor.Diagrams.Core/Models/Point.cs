@@ -13,6 +13,9 @@
         public double X { get; }
         public double Y { get; }
 
+        // Maybe just make Points mutable?
+        public Point Add(double x, double y) => new Point(X + x, Y + y);
+
         public override string ToString() => $"Point(x={X}, y={Y})";
     }
 }

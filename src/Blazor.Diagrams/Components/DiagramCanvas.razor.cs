@@ -1,30 +1,79 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using System;
+using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components
 {
-    public class DiagramCanvasComponent : ComponentBase
+    public class DiagramCanvasComponent : ComponentBase, IDisposable
     {
 
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
-        protected override bool ShouldRender() => false;
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
 
-        protected void OnMouseDown(MouseEventArgs e)
+        protected ElementReference elementReference;
+        private bool _shouldReRender;
+
+        protected override void OnInitialized()
         {
-            DiagramManager.OnMouseDown();
+            base.OnInitialized();
+
+            DiagramManager.Changed += DiagramManager_Changed;
+            DiagramManager.LinkAdded += DiagramManager_LinkRelatedOperation;
+            DiagramManager.LinkRemoved += DiagramManager_LinkRelatedOperation;
         }
 
-        protected void OnMouseMove(MouseEventArgs e)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            DiagramManager.OnMouseMove(e.ClientX, e.ClientY);
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
+            }
         }
 
-        protected void OnMouseUp(MouseEventArgs e)
+        protected override bool ShouldRender()
         {
-            DiagramManager.OnMouseUp();
+            if (_shouldReRender)
+            {
+                _shouldReRender = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(null, e);
+
+        protected void OnMouseMove(MouseEventArgs e) => DiagramManager.OnMouseMove(null, e);
+
+        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(null, e);
+
+        protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
+
+        private void DiagramManager_Changed() => ReRender();
+
+        private void DiagramManager_LinkRelatedOperation(LinkModel link) => ReRender();
+
+        private void ReRender()
+        {
+            _shouldReRender = true;
+            StateHasChanged();
+        }
+
+        public void Dispose()
+        {
+            DiagramManager.Changed -= DiagramManager_Changed;
+            DiagramManager.LinkAdded -= DiagramManager_LinkRelatedOperation;
+            DiagramManager.LinkRemoved -= DiagramManager_LinkRelatedOperation;
         }
     }
 }

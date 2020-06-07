@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazor.Diagrams.Core.Models
+namespace Blazor.Diagrams.Core.Models.Base
 {
     public abstract class Model
     {

@@ -12,16 +12,17 @@ namespace TestComponents
         {
             base.OnInitialized();
 
-            var node1 = NewNode(0, 0);
+            var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            node1.GetPort(PortAlignment.RIGHT).AddLink(node2.GetPort(PortAlignment.LEFT));
+            diagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
             diagramManager.AddNode(node1);
             diagramManager.AddNode(node2);
+            diagramManager.AddNode(NewNode(300, 50));
         }
 
-        private Node NewNode(double x, double y)
+        private NodeModel NewNode(double x, double y)
         {
-            var node = new Node(new Point(x, y));
+            var node = new NodeModel(new Point(x, y));
             node.AddPort(PortAlignment.BOTTOM);
             node.AddPort(PortAlignment.TOP);
             node.AddPort(PortAlignment.LEFT);

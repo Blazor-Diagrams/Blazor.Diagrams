@@ -12,5 +12,7 @@
 
         public double X { get; }
         public double Y { get; }
+
+        public override string ToString() => $"Point(x={X}, y={Y})";
     }
 }

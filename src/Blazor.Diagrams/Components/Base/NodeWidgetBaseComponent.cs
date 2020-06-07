@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -15,7 +14,7 @@ namespace Blazor.Diagrams.Components.Base
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]
-        public Node Node { get; set; }
+        public NodeModel Node { get; set; }
 
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
@@ -31,8 +30,7 @@ namespace Blazor.Diagrams.Components.Base
 
         protected async Task OnMouseDown(MouseEventArgs e)
         {
-            var offsets = await JSRuntime.GetOffset(element);
-            DiagramManager.OnMouseDown(Node, offsets, e.ClientX, e.ClientY);
+            DiagramManager.OnMouseDown(Node, e);
         }
 
         private void OnNodeChanged()

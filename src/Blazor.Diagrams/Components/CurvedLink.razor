@@ -1,7 +1,12 @@
 ﻿@inherits LinkWidgetBaseComponent
 
-<g>
-    <path d="@GenerateCurvedPath()" stroke-width="3" fill="none" stroke="black" />
+<g class="link"
+   @onmousedown="OnMouseDown"
+   @onmousedown:stopPropagation>
+    <path d="@GenerateCurvedPath()"
+          stroke-width="3"
+          fill="none"
+          stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
 </g>
 
 @code {
@@ -10,10 +15,23 @@
     {
         var sX = Link.SourcePort.Position.X + (Link.SourcePort.Size.Width / 2);
         var sY = Link.SourcePort.Position.Y + (Link.SourcePort.Size.Height / 2);
-        var tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
-        var tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
-        var dist = Math.Abs(Link.SourcePort.Position.X - Link.TargetPort.Position.X);
-        return $"M {sX} {sY} C {sX + (dist / 2)} {sY}, {tX - (dist / 2)} {tY}, {tX} {tY}";
+        double tX, tY;
+
+        if (Link.IsAttached)
+        {
+            tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
+            tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
+        }
+        else
+        {
+            tX = Link.OnGoingPosition.X;
+            tY = Link.OnGoingPosition.Y;
+        }
+
+        var dist = Math.Abs(sX - tX);
+        return $"M {sX} {sY} C {PrepNumber(sX + (dist / 2))} {sY}, {PrepNumber(tX - (dist / 2))} {tY}, {tX} {tY}";
     }
+
+    private static string PrepNumber(double n) => n.ToString().Replace(',', '.');
 
 }

@@ -53,6 +53,7 @@ namespace Blazor.Diagrams.Core
         {
             _nodes.Add(node);
             NodeAdded?.Invoke(node);
+            Changed?.Invoke();
         }
 
         public void RemoveNode(NodeModel node, bool triggerEvent = true)
@@ -61,12 +62,13 @@ namespace Blazor.Diagrams.Core
             {
                 foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
                 {
-                    RemoveLink(link, triggerEvent);
+                    RemoveLink(link, false);
                 }
 
                 if (triggerEvent)
                 {
                     NodeRemoved?.Invoke(node);
+                    Changed?.Invoke();
                 }
             }
         }
@@ -83,6 +85,7 @@ namespace Blazor.Diagrams.Core
             }
 
             LinkAdded?.Invoke(link);
+            Changed?.Invoke();
             return link;
         }
 
@@ -103,7 +106,10 @@ namespace Blazor.Diagrams.Core
             link.TargetPort?.RemoveLink(link);
 
             if (triggerEvent)
+            {
                 LinkRemoved?.Invoke(link);
+                Changed?.Invoke();
+            }
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)

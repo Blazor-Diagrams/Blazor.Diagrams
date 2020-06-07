@@ -2,9 +2,7 @@
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 using System;
-using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components.Base
 {
@@ -16,9 +14,6 @@ namespace Blazor.Diagrams.Components.Base
         [Parameter]
         public NodeModel Node { get; set; }
 
-        [Inject]
-        private IJSRuntime JSRuntime { get; set; }
-
         protected ElementReference element;
 
         protected override void OnInitialized()
@@ -28,7 +23,7 @@ namespace Blazor.Diagrams.Components.Base
             Node.Changed += OnNodeChanged;
         }
 
-        protected async Task OnMouseDown(MouseEventArgs e)
+        protected void OnMouseDown(MouseEventArgs e)
         {
             DiagramManager.OnMouseDown(Node, e);
         }

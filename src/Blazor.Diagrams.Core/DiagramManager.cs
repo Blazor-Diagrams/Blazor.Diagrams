@@ -42,12 +42,14 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<DragNodeSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
+            RegisterSubManager<PanSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
+        public Point Pan { get; internal set; } = Point.Zero;
 
         public void AddNode(NodeModel node)
         {

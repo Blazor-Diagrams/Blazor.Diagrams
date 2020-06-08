@@ -96,6 +96,9 @@ namespace Blazor.Diagrams.Core
             if (link.IsAttached)
                 throw new Exception("Link already attached.");
 
+            if (!link.SourcePort.CanAttachTo(targetPort))
+                return;
+
             link.SetTargetPort(targetPort);
             targetPort.AddLink(link);
             link.Refresh();

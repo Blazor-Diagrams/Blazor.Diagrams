@@ -39,7 +39,7 @@ namespace Blazor.Diagrams.Core.Default
             if (_ongoingLink == null)
                 return;
 
-            if (!(model is PortModel port))
+            if (!(model is PortModel port) || !_ongoingLink.SourcePort.CanAttachTo(port))
             {
                 DiagramManager.RemoveLink(_ongoingLink);
                 _ongoingLink = null;

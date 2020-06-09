@@ -12,8 +12,19 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_Wheel(WheelEventArgs e)
         {
+            var oldZoom = DiagramManager.Zoom;
             var sign = Math.Sign(e.DeltaY);
-            DiagramManager.Zoom += 0.05f* sign;
+            var newZoom = oldZoom + 0.05f * sign;
+
+            if (newZoom < 0)
+                return;
+
+            var scale = newZoom - oldZoom;
+            var x = e.ClientX - DiagramManager.Container.Left;
+            var y = e.ClientY - DiagramManager.Container.Top;
+            DiagramManager.Pan = DiagramManager.Pan.Add(scale * x, scale * y);
+
+            DiagramManager.Zoom = newZoom;
             DiagramManager.Refresh();
         }
 

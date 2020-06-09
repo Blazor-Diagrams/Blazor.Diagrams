@@ -21,6 +21,8 @@ namespace Blazor.Diagrams.Components
         protected ElementReference elementReference;
         private bool _shouldReRender;
 
+        public string PanX => DiagramManager.Pan.X.ToString(CultureInfo.InvariantCulture);
+        public string PanY => DiagramManager.Pan.Y.ToString(CultureInfo.InvariantCulture);
         public string Zoom => DiagramManager.Zoom.ToString(CultureInfo.InvariantCulture);
 
         protected override void OnInitialized()

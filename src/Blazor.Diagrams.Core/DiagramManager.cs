@@ -22,6 +22,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Model, MouseEventArgs> MouseMove;
         public event Action<Model, MouseEventArgs> MouseUp;
         public event Action<KeyboardEventArgs> KeyDown;
+        public event Action<WheelEventArgs> Wheel;
 
         public event Action Changed;
         public event Action<NodeModel> NodeAdded;
@@ -43,6 +44,7 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
             RegisterSubManager<PanSubManager>();
+            RegisterSubManager<ZoomSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
@@ -50,6 +52,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
+        public float Zoom { get; internal set; } = 1;
 
         public void AddNode(NodeModel node)
         {
@@ -199,5 +202,7 @@ namespace Blazor.Diagrams.Core
         internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
 
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
+
+        internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
     }
 }

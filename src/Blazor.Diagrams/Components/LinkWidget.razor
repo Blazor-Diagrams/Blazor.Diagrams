@@ -1,0 +1,22 @@
+﻿@inherits LinkWidgetComponent
+
+<g class="link"
+   @onmousedown="OnMouseDown"
+   @onmousedown:stopPropagation>
+    @switch (Link.Type)
+    {
+        case Core.Models.LinkType.Line:
+            <line x1="@Link.SourcePort.Position.X"
+                  y1="@Link.SourcePort.Position.Y"
+                  x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
+                  y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
+                  stroke="black" />
+            break;
+        case Core.Models.LinkType.Curved:
+            <path d="@GenerateCurvedPath()"
+                  stroke-width="3"
+                  fill="none"
+                  stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
+            break;
+    }
+</g>

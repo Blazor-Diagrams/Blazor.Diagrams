@@ -16,7 +16,7 @@
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var link in DiagramManager.AllLinks)
         {
-            <CurvedLink @key="link.Id" Link="link" />
+            <LinkWidget @key="link.Id" Link="link" />
         }
     </svg>
 

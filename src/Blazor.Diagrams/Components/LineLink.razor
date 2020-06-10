@@ -1,9 +1,0 @@
-﻿@inherits LinkWidgetBaseComponent
-
-<g>
-    <line x1="@Link.SourcePort.Position.X"
-          y1="@Link.SourcePort.Position.Y"
-          x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
-          y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
-          stroke="black" />
-</g>

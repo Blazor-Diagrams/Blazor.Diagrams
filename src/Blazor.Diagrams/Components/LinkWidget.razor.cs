@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Components.Base;
+using Blazor.Diagrams.Core.Extensions;
 using System;
 using System.Globalization;
 
@@ -6,16 +7,32 @@ namespace Blazor.Diagrams.Components
 {
     public class LinkWidgetComponent : LinkWidgetBaseComponent
     {
+        protected string GetTargetX()
+        {
+            if (!Link.IsAttached)
+                return Link.OnGoingPosition.X.ToInvariantString();
+
+            return MiddleTargetX.ToInvariantString();
+        }
+
+        protected string GetTargetY()
+        {
+            if (!Link.IsAttached)
+                return Link.OnGoingPosition.Y.ToInvariantString();
+
+            return MiddleTargetY.ToInvariantString();
+        }
+
         protected string GenerateCurvedPath()
         {
-            var sX = Link.SourcePort.Position.X + (Link.SourcePort.Size.Width / 2);
-            var sY = Link.SourcePort.Position.Y + (Link.SourcePort.Size.Height / 2);
+            var sX = MiddleSourceX;
+            var sY = MiddleSourceY;
             double tX, tY;
 
             if (Link.IsAttached)
             {
-                tX = Link.TargetPort.Position.X + (Link.TargetPort.Size.Width / 2);
-                tY = Link.TargetPort.Position.Y + (Link.TargetPort.Size.Height / 2);
+                tX = MiddleTargetX;
+                tY = MiddleTargetY;
             }
             else
             {
@@ -24,17 +41,40 @@ namespace Blazor.Diagrams.Components
             }
 
             var dist = Math.Abs(sX - tX);
-            return $"M {sX} {sY} C {PrepNumber(sX + (dist / 2))} {sY}, {PrepNumber(tX - (dist / 2))} {tY}, {tX} {tY}";
+            return $"M {sX} {sY} C {(sX + (dist / 2)).ToInvariantString()} {sY}, {(tX - (dist / 2)).ToInvariantString()} {tY}, {tX} {tY}";
         }
 
         protected string CalculateAngleForTargetArrow()
         {
-            var p1 = Link.SourcePort.Position;
-            var p2 = Link.IsAttached ? Link.TargetPort.Position : Link.OnGoingPosition;
-            var angle = 90 + Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+            var sX = MiddleSourceX;
+            var sY = MiddleSourceY;
+            double tX, tY;
+
+            if (Link.IsAttached)
+            {
+                tX = MiddleTargetX;
+                tY = MiddleTargetY;
+            }
+            else
+            {
+                tX = Link.OnGoingPosition.X;
+                tY = Link.OnGoingPosition.Y;
+            }
+
+            var angle = 90 + Math.Atan2(tY - sY, tX - sX) * 180 / Math.PI;
             return angle.ToString(CultureInfo.InvariantCulture);
         }
 
-        private static string PrepNumber(double n) => n.ToString(CultureInfo.InvariantCulture);
+        protected double MiddleSourceX
+            => Link.SourcePort.Position.X + (Link.SourcePort.Size.Width / 2);
+
+        protected double MiddleSourceY
+            => Link.SourcePort.Position.Y + (Link.SourcePort.Size.Height / 2);
+
+        protected double MiddleTargetX
+            => Link.TargetPort.Position.X + (Link.SourcePort.Size.Width / 2);
+
+        protected double MiddleTargetY
+            => Link.TargetPort.Position.Y + (Link.SourcePort.Size.Height / 2);
     }
 }

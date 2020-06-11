@@ -7,11 +7,11 @@
     @switch (Link.Type)
     {
         case Core.Models.LinkType.Line:
-            <line x1="@Link.SourcePort.Position.X"
-                  y1="@Link.SourcePort.Position.Y"
-                  x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
-                  y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
-                  stroke="black"
+            <line x1="@MiddleSourceX.ToInvariantString()"
+                  y1="@MiddleSourceY.ToInvariantString()"
+                  x2="@GetTargetX()"
+                  y2="@GetTargetY()"
+                  stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
                   stroke-width="4" />
             break;
         case Core.Models.LinkType.Curved:
@@ -22,20 +22,25 @@
             break;
         case Core.Models.LinkType.LineWithArrowToTarget:
             <g>
-                <line x1="@Link.SourcePort.Position.X"
-                      y1="@Link.SourcePort.Position.Y"
-                      x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
-                      y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
-                      stroke="black"
+                <line x1="@MiddleSourceX.ToInvariantString()"
+                      y1="@MiddleSourceY.ToInvariantString()"
+                      x2="@GetTargetX()"
+                      y2="@GetTargetY()"
+                      stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
                       stroke-width="4" />
             </g>
-            <g transform="translate(@Link.TargetPort.Position.X, @Link.TargetPort.Position.Y)">
+            <g transform="translate(@GetTargetX(), @GetTargetY())">
                 <g style="transform: rotate(@(CalculateAngleForTargetArrow())deg);">
-                    <g transform="translate(0, -18)">
-                        <polygon points="0,10 8,30 -8,30" fill="black"></polygon>
+                    <g transform="translate(0, -4)">
+                        <polygon points="0,10 8,30 -8,30"
+                                 fill="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"></polygon>
                     </g>
                 </g>
             </g>
             break;
     }
 </g>
+
+@code {
+
+}

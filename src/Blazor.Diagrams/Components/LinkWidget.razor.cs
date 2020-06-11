@@ -27,6 +27,19 @@ namespace Blazor.Diagrams.Components
             return $"M {sX} {sY} C {PrepNumber(sX + (dist / 2))} {sY}, {PrepNumber(tX - (dist / 2))} {tY}, {tX} {tY}";
         }
 
+        protected string GenerateArrowToTargetPath()
+        {
+            return "";
+        }
+
+        protected string CalculateAngleForTargetArrow()
+        {
+            var p1 = Link.SourcePort.Position;
+            var p2 = Link.IsAttached ? Link.TargetPort.Position : Link.OnGoingPosition;
+            var angle = 90 + Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+            return angle.ToString(CultureInfo.InvariantCulture);
+        }
+
         private static string PrepNumber(double n) => n.ToString(CultureInfo.InvariantCulture);
     }
 }

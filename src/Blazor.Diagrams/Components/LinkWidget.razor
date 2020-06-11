@@ -1,4 +1,5 @@
 ﻿@inherits LinkWidgetComponent
+@* Maybe we can use markers? *@
 
 <g class="link"
    @onmousedown="OnMouseDown"
@@ -10,13 +11,31 @@
                   y1="@Link.SourcePort.Position.Y"
                   x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
                   y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
-                  stroke="black" />
+                  stroke="black"
+                  stroke-width="4" />
             break;
         case Core.Models.LinkType.Curved:
             <path d="@GenerateCurvedPath()"
                   stroke-width="3"
                   fill="none"
                   stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
+            break;
+        case Core.Models.LinkType.LineWithArrowToTarget:
+            <g>
+                <line x1="@Link.SourcePort.Position.X"
+                      y1="@Link.SourcePort.Position.Y"
+                      x2="@(Link.IsAttached ? Link.TargetPort.Position.X : Link.OnGoingPosition.X)"
+                      y2="@(Link.IsAttached ? Link.TargetPort.Position.Y : Link.OnGoingPosition.Y)"
+                      stroke="black"
+                      stroke-width="4" />
+            </g>
+            <g transform="translate(@Link.TargetPort.Position.X, @Link.TargetPort.Position.Y)">
+                <g style="transform: rotate(@(CalculateAngleForTargetArrow())deg);">
+                    <g transform="translate(0, -18)">
+                        <polygon points="0,10 8,30 -8,30" fill="black"></polygon>
+                    </g>
+                </g>
+            </g>
             break;
     }
 </g>

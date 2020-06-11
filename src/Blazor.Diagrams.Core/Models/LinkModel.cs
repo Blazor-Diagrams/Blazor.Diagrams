@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Core.Models
             TargetPort = targetPort;
         }
 
-        public LinkType Type { get; set; } = LinkType.LineWithArrowToTarget;
+        public LinkType Type { get; set; }
         public PortModel SourcePort { get; }
         public PortModel? TargetPort { get; private set; }
         public bool IsAttached => TargetPort != null;
@@ -33,8 +33,8 @@ namespace Blazor.Diagrams.Core.Models
 
     public enum LinkType
     {
-        Line,
         Curved,
+        Line,
         LineWithArrowToTarget
     }
 }

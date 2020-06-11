@@ -4,8 +4,8 @@
      @onmousedown="OnMouseDown"
      @onmousedown:stopPropagation
      @ref="element"
-     style="top: @(Node.Position.Y)px;
-            left: @(Node.Position.X)px">
+     style="top: @(Node.Position.Y.ToInvariantString())px;
+            left: @(Node.Position.X.ToInvariantString())px">
     <div class="node-content">
         NodeTitle
         @foreach (var port in Node.Ports)

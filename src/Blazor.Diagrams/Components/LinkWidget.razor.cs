@@ -41,7 +41,9 @@ namespace Blazor.Diagrams.Components
             }
 
             var dist = Math.Abs(sX - tX);
-            return $"M {sX} {sY} C {(sX + (dist / 2)).ToInvariantString()} {sY}, {(tX - (dist / 2)).ToInvariantString()} {tY}, {tX} {tY}";
+            return $"M {sX.ToInvariantString()} {sY.ToInvariantString()} " +
+                $"C {(sX + (dist / 2)).ToInvariantString()} {sY.ToInvariantString()}, " +
+                $"{(tX - (dist / 2)).ToInvariantString()} {tY.ToInvariantString()}, {tX.ToInvariantString()} {tY.ToInvariantString()}";
         }
 
         protected string CalculateAngleForTargetArrow()

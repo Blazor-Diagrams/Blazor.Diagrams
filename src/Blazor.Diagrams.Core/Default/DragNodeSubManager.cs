@@ -39,8 +39,8 @@ namespace Blazor.Diagrams.Core.Default
             if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
                 return;
 
-            double deltaX = e.ClientX - _lastClientX.Value;
-            double deltaY = e.ClientY - _lastClientY.Value;
+            double deltaX = (e.ClientX - _lastClientX.Value) / DiagramManager.Zoom;
+            double deltaY = (e.ClientY - _lastClientY.Value) / DiagramManager.Zoom;
 
             foreach ((var i, var sm) in DiagramManager.SelectedModels.LoopWithIndex())
             {

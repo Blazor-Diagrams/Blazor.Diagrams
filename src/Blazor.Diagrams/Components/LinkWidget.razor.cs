@@ -27,11 +27,6 @@ namespace Blazor.Diagrams.Components
             return $"M {sX} {sY} C {PrepNumber(sX + (dist / 2))} {sY}, {PrepNumber(tX - (dist / 2))} {tY}, {tX} {tY}";
         }
 
-        protected string GenerateArrowToTargetPath()
-        {
-            return "";
-        }
-
         protected string CalculateAngleForTargetArrow()
         {
             var p1 = Link.SourcePort.Position;

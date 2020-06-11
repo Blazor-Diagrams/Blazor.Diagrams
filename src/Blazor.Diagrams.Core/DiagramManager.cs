@@ -78,15 +78,19 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public LinkModel AddLink(PortModel source, PortModel? target = null, Point? onGoingPosition = null)
+        public LinkModel AddLink(PortModel source, PortModel? target = null)
         {
             var link = new LinkModel(source, target);
             source.AddLink(link);
-            target?.AddLink(link);
 
             if (target == null)
             {
-                link.OnGoingPosition = onGoingPosition ?? Point.Zero;
+                link.OnGoingPosition = new Point(source.Position.X + source.Size.Width / 2,
+                    source.Position.Y + source.Size.Height / 2);
+            }
+            else
+            {
+                target.AddLink(link);
             }
 
             LinkAdded?.Invoke(link);

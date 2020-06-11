@@ -6,6 +6,8 @@ namespace Blazor.Diagrams.Core.Default
 {
     public class DragNewLinkSubManager : DiagramSubManager
     {
+        private double _initialX;
+        private double _initialY;
         private LinkModel? _ongoingLink;
 
         public DragNewLinkSubManager(DiagramManager diagramManager) : base(diagramManager)
@@ -20,8 +22,9 @@ namespace Blazor.Diagrams.Core.Default
             if (!(model is PortModel port))
                 return;
 
-            _ongoingLink = DiagramManager.AddLink(port, null, onGoingPosition: new Point(
-                e.ClientX - DiagramManager.Container.Left, e.ClientY - DiagramManager.Container.Top));
+            _initialX = e.ClientX;
+            _initialY = e.ClientY;
+            _ongoingLink = DiagramManager.AddLink(port, null);
         }
 
         private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
@@ -29,8 +32,11 @@ namespace Blazor.Diagrams.Core.Default
             if (_ongoingLink == null || model != null)
                 return;
 
-            _ongoingLink.OnGoingPosition = new Point(e.ClientX - DiagramManager.Container.Left,
-                e.ClientY - DiagramManager.Container.Top);
+            var deltaX = (e.ClientX - _initialX) / DiagramManager.Zoom;
+            var deltaY = (e.ClientY - _initialY) / DiagramManager.Zoom;
+            var sX = _ongoingLink.SourcePort.Position.X + _ongoingLink.SourcePort.Size.Width / 2;
+            var sY = _ongoingLink.SourcePort.Position.Y + _ongoingLink.SourcePort.Size.Height / 2;
+            _ongoingLink.OnGoingPosition = new Point(sX + deltaX, sY + deltaY);
             _ongoingLink.Refresh();
         }
 
@@ -41,7 +47,7 @@ namespace Blazor.Diagrams.Core.Default
 
             if (!(model is PortModel port) || !_ongoingLink.SourcePort.CanAttachTo(port))
             {
-                DiagramManager.RemoveLink(_ongoingLink);
+                //DiagramManager.RemoveLink(_ongoingLink);
                 _ongoingLink = null;
                 return;
             }

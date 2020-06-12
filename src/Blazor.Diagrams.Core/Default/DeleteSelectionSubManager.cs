@@ -21,6 +21,9 @@ namespace Blazor.Diagrams.Core.Default
 
             foreach (var sm in DiagramManager.SelectedModels)
             {
+                if (sm.Locked)
+                    continue;
+
                 if (sm is NodeModel node)
                 {
                     DiagramManager.RemoveNode(node, false);

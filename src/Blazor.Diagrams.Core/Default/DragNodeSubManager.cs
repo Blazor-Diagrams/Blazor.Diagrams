@@ -44,7 +44,7 @@ namespace Blazor.Diagrams.Core.Default
 
             foreach ((var i, var sm) in DiagramManager.SelectedModels.LoopWithIndex())
             {
-                if (!(sm is NodeModel node))
+                if (!(sm is NodeModel node) || node.Locked)
                     continue;
 
                 // The order shouldn't change between MouseDown & MouseMove

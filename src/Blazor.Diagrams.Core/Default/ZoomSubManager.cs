@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components.Web;
-using System.ComponentModel.DataAnnotations;
 
 namespace Blazor.Diagrams.Core.Default
 {

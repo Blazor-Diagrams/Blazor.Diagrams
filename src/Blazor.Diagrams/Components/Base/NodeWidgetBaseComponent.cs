@@ -23,7 +23,7 @@ namespace Blazor.Diagrams.Components.Base
             Node.Changed += OnNodeChanged;
         }
 
-        protected void OnMouseDown(MouseEventArgs e)
+        protected virtual void OnMouseDown(MouseEventArgs e)
         {
             DiagramManager.OnMouseDown(Node, e);
         }

@@ -43,9 +43,9 @@ namespace Blazor.Diagrams.Components.Base
             }
         }
 
-        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Port, e);
+        protected virtual void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Port, e);
 
-        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Port, e);
+        protected virtual void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Port, e);
 
         private void OnPortChanged()
         {

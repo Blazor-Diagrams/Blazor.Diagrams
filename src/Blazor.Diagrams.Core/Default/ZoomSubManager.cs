@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-using System;
+﻿using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blazor.Diagrams.Core.Default
 {
     public class ZoomSubManager : DiagramSubManager
     {
+        private const float _scaleBy = 1.05f;
+
         public ZoomSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.Wheel += DiagramManager_Wheel;
@@ -13,16 +16,16 @@ namespace Blazor.Diagrams.Core.Default
         private void DiagramManager_Wheel(WheelEventArgs e)
         {
             var oldZoom = DiagramManager.Zoom;
-            var sign = Math.Sign(e.DeltaY);
-            var newZoom = oldZoom + 0.05f * sign;
+            var newZoom = e.DeltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
 
             if (newZoom < 0)
                 return;
 
-            var scale = newZoom - oldZoom;
-            var x = e.ClientX - DiagramManager.Container.Left;
-            var y = e.ClientY - DiagramManager.Container.Top;
-            DiagramManager.Pan = DiagramManager.Pan.Add(scale * x, scale * y);
+            var cuX = e.ClientX - DiagramManager.Container.Left;
+            var cuY = e.ClientY - DiagramManager.Container.Top;
+            var cX = DiagramManager.Pan.X + cuX / oldZoom;
+            var cY = DiagramManager.Pan.Y + cuY / oldZoom;
+            DiagramManager.Pan = new Point(cX - cuX / newZoom, cY - cuY / newZoom);
 
             DiagramManager.Zoom = newZoom;
             DiagramManager.Refresh();

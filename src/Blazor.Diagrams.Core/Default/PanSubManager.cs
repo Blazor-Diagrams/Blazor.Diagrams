@@ -37,8 +37,8 @@ namespace Blazor.Diagrams.Core.Default
             DiagramManager.Pan = DiagramManager.Pan.Add(deltaX, deltaY);
 
             // Update this while we're at it
-            DiagramManager.Container.Left += deltaX;
-            DiagramManager.Container.Top += deltaY;
+            //DiagramManager.Container.Left += deltaX;
+            //DiagramManager.Container.Top += deltaY;
 
             DiagramManager.Refresh();
         }

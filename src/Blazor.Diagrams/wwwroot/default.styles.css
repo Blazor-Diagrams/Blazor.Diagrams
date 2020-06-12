@@ -21,9 +21,10 @@
         border-radius: 50%;
         background-color: #f5f5f5;
         border: 1px solid #d4d4d4;
+        cursor: pointer;
     }
 
-        .node .port.has-links {
+        .node .port:hover, .node .port.has-links {
             background-color: black;
         }
 

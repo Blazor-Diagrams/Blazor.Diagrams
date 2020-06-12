@@ -7,20 +7,22 @@
      @onmousemove="OnMouseMove"
      @onmousemove:preventDefault
      @onmouseup="OnMouseUp"
-     @onkeydown="OnKeyDown">
+     @onkeydown="OnKeyDown"
+     @onwheel="OnWheel"
+     @onwheel:stopPropagation>
 
     @* Links *@
     <svg class="diagram-links"
-         style="transform: translate(@(DiagramManager.Pan.X)px, @(DiagramManager.Pan.Y)px);">
+         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var link in DiagramManager.AllLinks)
         {
-            <CurvedLink @key="link.Id" Link="link" />
+            <LinkRenderer @key="link.Id" Link="link" />
         }
     </svg>
 
     @* Nodes *@
     <div class="diagram-nodes"
-         style="transform: translate(@(DiagramManager.Pan.X)px, @(DiagramManager.Pan.Y)px);">
+         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var node in DiagramManager.Nodes)
         {
             <NodeRenderer @key="node.Id" Node="node" />

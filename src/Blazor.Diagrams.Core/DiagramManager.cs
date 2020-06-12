@@ -22,6 +22,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Model, MouseEventArgs> MouseMove;
         public event Action<Model, MouseEventArgs> MouseUp;
         public event Action<KeyboardEventArgs> KeyDown;
+        public event Action<WheelEventArgs> Wheel;
 
         public event Action Changed;
         public event Action<NodeModel> NodeAdded;
@@ -43,6 +44,7 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
             RegisterSubManager<PanSubManager>();
+            RegisterSubManager<ZoomSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
@@ -50,6 +52,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
+        public float Zoom { get; internal set; } = 1;
 
         public void AddNode(NodeModel node)
         {
@@ -75,15 +78,19 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public LinkModel AddLink(PortModel source, PortModel? target = null, Point? onGoingPosition = null)
+        public LinkModel AddLink(PortModel source, PortModel? target = null)
         {
             var link = new LinkModel(source, target);
             source.AddLink(link);
-            target?.AddLink(link);
 
             if (target == null)
             {
-                link.OnGoingPosition = onGoingPosition ?? Point.Zero;
+                link.OnGoingPosition = new Point(source.Position.X + source.Size.Width / 2,
+                    source.Position.Y + source.Size.Height / 2);
+            }
+            else
+            {
+                target.AddLink(link);
             }
 
             LinkAdded?.Invoke(link);
@@ -95,6 +102,9 @@ namespace Blazor.Diagrams.Core
         {
             if (link.IsAttached)
                 throw new Exception("Link already attached.");
+
+            if (!link.SourcePort.CanAttachTo(targetPort))
+                return;
 
             link.SetTargetPort(targetPort);
             targetPort.AddLink(link);
@@ -196,5 +206,7 @@ namespace Blazor.Diagrams.Core
         internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
 
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
+
+        internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
     }
 }

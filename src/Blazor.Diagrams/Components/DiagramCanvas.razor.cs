@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components
@@ -19,6 +20,10 @@ namespace Blazor.Diagrams.Components
 
         protected ElementReference elementReference;
         private bool _shouldReRender;
+
+        public string PanX => DiagramManager.Pan.X.ToString(CultureInfo.InvariantCulture);
+        public string PanY => DiagramManager.Pan.Y.ToString(CultureInfo.InvariantCulture);
+        public string Zoom => DiagramManager.Zoom.ToString(CultureInfo.InvariantCulture);
 
         protected override void OnInitialized()
         {
@@ -55,6 +60,8 @@ namespace Blazor.Diagrams.Components
         protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(null, e);
 
         protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
+
+        protected void OnWheel(WheelEventArgs e) => DiagramManager.OnWheel(e);
 
         private void DiagramManager_Changed()
         {

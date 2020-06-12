@@ -15,6 +15,10 @@
     pointer-events: none;
 }
 
+.diagram-links {
+    overflow: visible !important;
+}
+
 .node {
     position: absolute;
     user-select: none;

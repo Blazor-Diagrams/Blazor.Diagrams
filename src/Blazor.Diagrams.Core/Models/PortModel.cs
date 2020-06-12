@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -38,6 +37,8 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
             _links.ForEach(l => l.Refresh());
         }
+
+        public virtual bool CanAttachTo(PortModel port) => port != this && Parent != port.Parent;
 
         internal void AddLink(LinkModel link) => _links.Add(link);
 

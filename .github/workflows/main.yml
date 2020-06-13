@@ -15,12 +15,6 @@ jobs:
     - name: Publish app
       run: cd samples/Wasm && dotnet publish -c Release
 
-    - name: Rewrite base href
-      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
-      with:
-        html_path: ${{ env.PUBLISH_DIR }}/index.html
-        base_href: /Blazor.Diagrams/
-
     - name: GitHub Pages
       if: success()
       uses: crazy-max/ghaction-github-pages@v1.5.1

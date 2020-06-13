@@ -82,11 +82,12 @@ namespace Blazor.Diagrams.Core
         }
 
         public LinkModel AddLink(PortModel source, PortModel? target = null)
+            => AddLink<LinkModel>(source, target);
+
+        public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
         {
-            var link = new LinkModel(source, target)
-            {
-                Type = Options.DefaultLinkType
-            };
+            var link = (T)Activator.CreateInstance(typeof(T), source, target);
+            link.Type = Options.DefaultLinkType;
             source.AddLink(link);
 
             if (target == null)

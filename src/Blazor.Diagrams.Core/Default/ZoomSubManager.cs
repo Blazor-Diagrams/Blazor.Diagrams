@@ -21,11 +21,19 @@ namespace Blazor.Diagrams.Core.Default
             if (newZoom < 0)
                 return;
 
-            var cuX = e.ClientX - DiagramManager.Container.Left;
-            var cuY = e.ClientY - DiagramManager.Container.Top;
-            var cX = DiagramManager.Pan.X + cuX / oldZoom;
-            var cY = DiagramManager.Pan.Y + cuY / oldZoom;
-            DiagramManager.Pan = new Point(cX - cuX / newZoom, cY - cuY / newZoom);
+            // Other algorithms (based only on the changes in the zoom) don't work for our case
+            // This solution is taken as is from react-diagrams (ZoomCanvasAction)
+            var clientWidth = DiagramManager.Container.Width;
+            var clientHeight = DiagramManager.Container.Height;
+            var widthDiff = clientWidth * newZoom - clientWidth * oldZoom;
+            var heightDiff = clientHeight * newZoom - clientHeight * oldZoom;
+            var clientX = e.ClientX - DiagramManager.Container.Left;
+            var clientY = e.ClientY - DiagramManager.Container.Top;
+            var xFactor = (clientX - DiagramManager.Pan.X) / oldZoom / clientWidth;
+            var yFactor = (clientY - DiagramManager.Pan.Y) / oldZoom / clientHeight;
+            var newPanX = DiagramManager.Pan.X - widthDiff * xFactor;
+            var newPanY = DiagramManager.Pan.Y - heightDiff * yFactor;
+            DiagramManager.Pan = new Point(newPanX, newPanY);
 
             DiagramManager.Zoom = newZoom;
             DiagramManager.Refresh();

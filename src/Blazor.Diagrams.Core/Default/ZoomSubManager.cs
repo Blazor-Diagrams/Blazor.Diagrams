@@ -15,7 +15,8 @@ namespace Blazor.Diagrams.Core.Default
         private void DiagramManager_Wheel(WheelEventArgs e)
         {
             var oldZoom = DiagramManager.Zoom;
-            var newZoom = e.DeltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
+            var deltaY = DiagramManager.Options.InverseZoom ? e.DeltaY * -1 : e.DeltaY;
+            var newZoom = deltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
 
             if (newZoom < 0)
                 return;

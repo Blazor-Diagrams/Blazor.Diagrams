@@ -32,12 +32,14 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel> LinkAttached;
         public event Action<LinkModel> LinkRemoved;
 
-        public DiagramManager()
+        public DiagramManager(DiagramOptions? options = null)
         {
             _nodes = new List<NodeModel>();
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
+
+            Options = options ?? new DiagramOptions();
 
             RegisterSubManager<SelectionSubManager>();
             RegisterSubManager<DragNodeSubManager>();
@@ -53,6 +55,7 @@ namespace Blazor.Diagrams.Core
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public float Zoom { get; internal set; } = 1;
+        public DiagramOptions Options { get; }
 
         public void AddNode(NodeModel node)
         {
@@ -80,7 +83,10 @@ namespace Blazor.Diagrams.Core
 
         public LinkModel AddLink(PortModel source, PortModel? target = null)
         {
-            var link = new LinkModel(source, target);
+            var link = new LinkModel(source, target)
+            {
+                Type = Options.DefaultLinkType
+            };
             source.AddLink(link);
 
             if (target == null)

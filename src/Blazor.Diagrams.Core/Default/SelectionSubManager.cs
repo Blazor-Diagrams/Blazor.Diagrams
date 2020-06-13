@@ -24,7 +24,7 @@ namespace Blazor.Diagrams.Core.Default
                 }
                 else
                 {
-                    DiagramManager.SelectModel(sm, e.CtrlKey == false);
+                    DiagramManager.SelectModel(sm, !e.CtrlKey);
                 }
             }
         }

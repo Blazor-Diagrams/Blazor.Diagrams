@@ -35,11 +35,6 @@ namespace Blazor.Diagrams.Core.Default
             var deltaX = e.ClientX - _lastClientX - (DiagramManager.Pan.X - _initialPan.X);
             var deltaY = e.ClientY - _lastClientY - (DiagramManager.Pan.Y - _initialPan.Y);
             DiagramManager.Pan = DiagramManager.Pan.Add(deltaX, deltaY);
-
-            // Update this while we're at it
-            //DiagramManager.Container.Left += deltaX;
-            //DiagramManager.Container.Top += deltaY;
-
             DiagramManager.Refresh();
         }
 

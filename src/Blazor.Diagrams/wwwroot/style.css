@@ -4,6 +4,7 @@
     position: relative;
     outline: none;
     overflow: hidden;
+    cursor: grab;
 }
 
 .diagram-links, .diagram-nodes {

@@ -1,0 +1,25 @@
+﻿@page "/demos/dynamic-insertions"
+@layout DemoLayout
+@inherits DynamicInsertionsComponent
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Dynamic insertions";
+        LayoutData.Info = "You can dynamically insert anything and anytime!";
+        LayoutData.DataChanged();
+    }
+}
+
+<button class="btn btn-primary m-2" @onclick="AddNode">Add a node</button><br />
+<button class="btn btn-primary m-2" @onclick="RemoveNode">Remove a node</button><br />
+<button class="btn btn-primary m-2" @onclick="AddPort">Add a port to the selected node</button><br />
+<button class="btn btn-primary m-2" @onclick="RemovePort">Delete a port from the selected node</button><br />
+<button class="btn btn-primary m-2" @onclick="AddLink">Add a link between two selected nodes</button>
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

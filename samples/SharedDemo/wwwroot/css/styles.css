@@ -1537,3 +1537,15 @@ body {
         margin-left: -15rem;
     }
 }
+
+.diagram-container {
+    width: 100%;
+    height: calc(100% - 52px);
+}
+
+.floating.alert {
+    position: absolute;
+    top: 62px;
+    right: 8px;
+    max-width: 400px;
+}

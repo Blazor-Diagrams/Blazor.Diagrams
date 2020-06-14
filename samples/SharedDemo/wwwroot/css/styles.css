@@ -1549,3 +1549,38 @@ body {
     right: 8px;
     max-width: 400px;
 }
+
+.node.custom.selected, .node.custom.selected .port {
+    border: 1px solid #6e9fd4;
+}
+
+.node.custom:hover .port {
+    visibility: visible;
+}
+
+.node.custom .port {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    border: 1px solid #d4d4d4;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+    .node.custom .port:hover, .node.custom .port.has-links {
+        visibility: visible;
+        background-color: black;
+    }
+
+    .node.custom .port.bottom {
+        position: absolute;
+        bottom: -10px;
+        left: 115px;
+    }
+
+    .node.custom .port.top {
+        position: absolute;
+        top: -10px;
+        left: 115px;
+    }

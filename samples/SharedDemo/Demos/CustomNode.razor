@@ -1,0 +1,19 @@
+﻿@page "/demos/custom-node"
+@layout DemoLayout
+@inherits CustomNodeComponent
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Custom node";
+        LayoutData.Info = "Creating your own custom design is very easy!";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

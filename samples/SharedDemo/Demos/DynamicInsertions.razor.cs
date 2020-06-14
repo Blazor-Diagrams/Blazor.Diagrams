@@ -15,7 +15,7 @@ namespace SharedDemo.Demos
         {
             base.OnInitialized();
 
-            var node1 = new NodeModel(new Point(50, 50));
+            var node1 = new NodeModel(new Point(300, 50));
             var node2 = new NodeModel(new Point(300, 400));
             diagramManager.AddNodes(node1, node2);
         }

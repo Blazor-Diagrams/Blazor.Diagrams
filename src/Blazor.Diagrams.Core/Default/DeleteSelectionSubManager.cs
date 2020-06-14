@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components.Web;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Default
 {
@@ -17,7 +18,7 @@ namespace Blazor.Diagrams.Core.Default
 
             var somethingWasRemoved = false;
 
-            foreach (var sm in DiagramManager.SelectedModels)
+            foreach (var sm in DiagramManager.SelectedModels.ToList())
             {
                 if (sm.Locked)
                     continue;

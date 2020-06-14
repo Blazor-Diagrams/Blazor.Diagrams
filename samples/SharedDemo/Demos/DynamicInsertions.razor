@@ -14,11 +14,13 @@
     }
 }
 
-<button class="btn btn-primary m-2" @onclick="AddNode">Add a node</button><br />
-<button class="btn btn-primary m-2" @onclick="RemoveNode">Remove a node</button><br />
-<button class="btn btn-primary m-2" @onclick="AddPort">Add a port to the selected node</button><br />
-<button class="btn btn-primary m-2" @onclick="RemovePort">Delete a port from the selected node</button><br />
-<button class="btn btn-primary m-2" @onclick="AddLink">Add a link between two selected nodes</button>
+<div style="position: absolute; z-index: 10;">
+    <button class="btn btn-primary m-2" @onclick="AddNode">Add a node</button><br />
+    <button class="btn btn-primary m-2" @onclick="RemoveNode">Remove a node</button><br />
+    <button class="btn btn-primary m-2" @onclick="AddPort">Add a port to the selected node</button><br />
+    <button class="btn btn-primary m-2" @onclick="RemovePort">Delete a port from the selected node</button><br />
+    <button class="btn btn-primary m-2" @onclick="AddLink">Add a link between two selected nodes</button>
+</div>
 
 <CascadingValue Name="DiagramManager" Value="diagramManager">
     <DiagramCanvas></DiagramCanvas>

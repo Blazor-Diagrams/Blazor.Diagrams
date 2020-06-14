@@ -39,19 +39,20 @@ namespace Blazor.Diagrams.Core.Default
             if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
                 return;
 
-            double deltaX = (e.ClientX - _lastClientX.Value) / DiagramManager.Zoom;
-            double deltaY = (e.ClientY - _lastClientY.Value) / DiagramManager.Zoom;
+            var deltaX = (e.ClientX - _lastClientX.Value) / DiagramManager.Zoom;
+            var deltaY = (e.ClientY - _lastClientY.Value) / DiagramManager.Zoom;
+            var i = 0;
 
-            foreach ((var i, var sm) in DiagramManager.SelectedModels.LoopWithIndex())
+            foreach (var sm in DiagramManager.SelectedModels)
             {
                 if (!(sm is NodeModel node) || node.Locked)
                     continue;
 
-                // The order shouldn't change between MouseDown & MouseMove
                 var initialPosition = _initialPositions[i];
                 node.UpdatePosition(deltaX - (node.Position.X - initialPosition.X),
                     deltaY - (node.Position.Y - initialPosition.Y));
                 node.RefreshAll();
+                i++;
             }
         }
 

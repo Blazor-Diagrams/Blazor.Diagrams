@@ -64,29 +64,44 @@ namespace Blazor.Diagrams.Core
             Changed?.Invoke();
         }
 
+        public void AddNodes(params NodeModel[] nodes)
+        {
+            _nodes.AddRange(nodes);
+
+            // Is this okay?
+            foreach (var node in nodes)
+                NodeAdded?.Invoke(node);
+
+            Changed?.Invoke();
+        }
+
         public void RemoveNode(NodeModel node, bool triggerEvent = true)
         {
             if (_nodes.Remove(node))
             {
+                // In case its selected
+                _selectedModels.Remove(node);
+
                 foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
                 {
                     RemoveLink(link, false);
                 }
 
+                NodeRemoved?.Invoke(node);
                 if (triggerEvent)
                 {
-                    NodeRemoved?.Invoke(node);
                     Changed?.Invoke();
                 }
             }
         }
 
         public LinkModel AddLink(PortModel source, PortModel? target = null)
+            => AddLink<LinkModel>(source, target);
+
+        public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
         {
-            var link = new LinkModel(source, target)
-            {
-                Type = Options.DefaultLinkType
-            };
+            var link = (T)Activator.CreateInstance(typeof(T), source, target);
+            link.Type = Options.DefaultLinkType;
             source.AddLink(link);
 
             if (target == null)
@@ -123,9 +138,9 @@ namespace Blazor.Diagrams.Core
             link.SourcePort.RemoveLink(link);
             link.TargetPort?.RemoveLink(link);
 
+            LinkRemoved?.Invoke(link);
             if (triggerEvent)
             {
-                LinkRemoved?.Invoke(link);
                 Changed?.Invoke();
             }
         }

@@ -15,8 +15,4 @@
     <ProjectReference Include="..\..\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Layouts\" />
-  </ItemGroup>
-
 </Project>

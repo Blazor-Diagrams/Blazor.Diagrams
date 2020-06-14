@@ -1,0 +1,50 @@
+﻿@inherits LayoutComponentBase
+@inject LayoutData LayoutData
+
+@code {
+    private bool collapseNavMenu = false;
+
+    private string NavMenuCssClass => collapseNavMenu ? "toggled" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.OnDataChanged = () => StateHasChanged();
+    }
+}
+
+@if (LayoutData.Info != null)
+{
+    <div class="floating alert alert-primary" role="alert">
+        <h4 class="alert-heading">@LayoutData.Title</h4>
+        <p>@((MarkupString)LayoutData.Info)</p>
+    </div>
+}
+
+<div class="d-flex @NavMenuCssClass" id="wrapper">
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">Demos</div>
+        <div class="list-group list-group-flush">
+            <a href="demos/simple" class="list-group-item list-group-item-action bg-light">Simple</a>
+            <a href="demos/locked" class="list-group-item list-group-item-action bg-light">Locked models</a>
+            <a href="demos/events" class="list-group-item list-group-item-action bg-light">Events</a>
+            <a href="demos/dynamic-insertions" class="list-group-item list-group-item-action bg-light">Dynamic insertions</a>
+            <a href="demos/custom-node" class="list-group-item list-group-item-action bg-light">Custom node</a>
+            <a href="demos/performance" class="list-group-item list-group-item-action bg-light">Performance</a>
+        </div>
+    </div>
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-primary" id="menu-toggle" @onclick="ToggleNavMenu">Toggle Menu</button>
+        </nav>
+        <div class="diagram-container">
+            @Body
+        </div>
+    </div>
+</div>

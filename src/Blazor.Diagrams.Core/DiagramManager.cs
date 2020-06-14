@@ -79,14 +79,17 @@ namespace Blazor.Diagrams.Core
         {
             if (_nodes.Remove(node))
             {
+                // In case its selected
+                _selectedModels.Remove(node);
+
                 foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
                 {
                     RemoveLink(link, false);
                 }
 
+                NodeRemoved?.Invoke(node);
                 if (triggerEvent)
                 {
-                    NodeRemoved?.Invoke(node);
                     Changed?.Invoke();
                 }
             }
@@ -135,9 +138,9 @@ namespace Blazor.Diagrams.Core
             link.SourcePort.RemoveLink(link);
             link.TargetPort?.RemoveLink(link);
 
+            LinkRemoved?.Invoke(link);
             if (triggerEvent)
             {
-                LinkRemoved?.Invoke(link);
                 Changed?.Invoke();
             }
         }

@@ -64,6 +64,17 @@ namespace Blazor.Diagrams.Core
             Changed?.Invoke();
         }
 
+        public void AddNodes(params NodeModel[] nodes)
+        {
+            _nodes.AddRange(nodes);
+
+            // Is this okay?
+            foreach (var node in nodes)
+                NodeAdded?.Invoke(node);
+
+            Changed?.Invoke();
+        }
+
         public void RemoveNode(NodeModel node, bool triggerEvent = true)
         {
             if (_nodes.Remove(node))

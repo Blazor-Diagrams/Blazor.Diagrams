@@ -1,6 +1,6 @@
 # Blazor.Diagrams
 
-Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor. It was inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams).  
+Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams).  
 
 Blazor.Diagrams can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. The purpose of this library is to give as much functionality as possible with as little JavaScript Interop as possible.  
 

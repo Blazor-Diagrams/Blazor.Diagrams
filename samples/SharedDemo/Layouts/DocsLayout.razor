@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.OnDataChanged = () => StateHasChanged();
+    }
+}
+
+<div class="page-wrapper">
+    <header id="header" class="header">
+        <div class="container">
+            <div class="branding">
+                <h1 class="logo">
+                    <a href="/">
+                        <span aria-hidden="true" class="icon_documents_alt icon"></span>
+                        <span class="text-highlight">Blazor.</span><span class="text-bold">Diagrams</span>
+                    </a>
+                </h1>
+            </div>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">@LayoutData.Title</li>
+            </ol>
+        </div>
+    </header>
+    <div class="doc-wrapper">
+        <div class="container">
+            <div id="doc-header" class="doc-header text-center">
+                <h1 class="doc-title"><i class="icon fa @LayoutData.Icon"></i> @LayoutData.Title</h1>
+                <div class="meta"><i class="far fa-clock"></i> Last updated: @LayoutData.Date</div>
+            </div>
+            <div class="doc-body row">
+                @Body
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer id="footer" class="footer text-center">
+    <div class="container">
+        <small class="copyright">Designed with <i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com/" target="_blank">Xiaoying Riley</a> for developers</small>
+    </div>
+</footer>

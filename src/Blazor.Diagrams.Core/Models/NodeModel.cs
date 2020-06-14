@@ -30,6 +30,8 @@ namespace Blazor.Diagrams.Core.Models
             return port;
         }
 
+        public bool RemovePort(PortModel port) => _ports.Remove(port);
+
         public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
         public void UpdatePosition(double deltaX, double deltaY)

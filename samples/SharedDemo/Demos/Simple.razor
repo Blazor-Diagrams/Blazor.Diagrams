@@ -1,0 +1,19 @@
+﻿@page "/demos/simple"
+@inherits SimpleComponent
+@layout DemoLayout
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Simple";
+        LayoutData.Info = "A simple example of Blazor.Diagrams";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

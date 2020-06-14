@@ -1,0 +1,21 @@
+﻿@page "/demos/locked"
+@inherits LockedComponent
+@layout DemoLayout
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Locked models";
+        LayoutData.Info = "All the nodes and links in this example are locked, they cannot be moved nor deleted.<br />" +
+                "All the TOP ports are locked as well, so you can't create links from/to them, but you can from/to the others.<br />" +
+                "Newly created links aren't locked, so they can be deleted.";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

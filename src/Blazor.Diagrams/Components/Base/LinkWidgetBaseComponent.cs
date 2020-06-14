@@ -21,7 +21,7 @@ namespace Blazor.Diagrams.Components.Base
             Link.Changed += OnLinkChanged;
         }
 
-        protected void OnMouseDown(MouseEventArgs e)
+        protected virtual void OnMouseDown(MouseEventArgs e)
         {
             DiagramManager.OnMouseDown(Link, e);
         }

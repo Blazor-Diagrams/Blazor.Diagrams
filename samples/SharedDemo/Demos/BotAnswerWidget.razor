@@ -1,0 +1,26 @@
+﻿@inherits NodeWidgetBaseComponent
+
+@code {
+    // This will change in the future, maybe NodeWidgetBaseComponent should be generic?
+    private BotAnswerNode CastedNode => Node as BotAnswerNode;
+}
+
+<div class="node custom @(Node.Selected ? "selected" : "")"
+     @onmousedown="OnMouseDown"
+     @onmousedown:stopPropagation
+     @ref="element"
+     style="top: @(Node.Position.Y.ToInvariantString())px;
+            left: @(Node.Position.X.ToInvariantString())px">
+    <div class="card" style="width: 250px;">
+        <div class="card-body">
+            <h5 class="card-title">Bot Answer</h5>
+            <div class="form-group">
+                <input type="text" class="form-control" @bind-value="CastedNode.Answer" placeholder="Answer" />
+            </div>
+        </div>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <PortWidget Port="port" />
+    }
+</div>

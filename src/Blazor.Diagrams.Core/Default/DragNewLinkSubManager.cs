@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is PortModel port))
+            if (!(model is PortModel port) || port.Locked)
                 return;
 
             _initialX = e.ClientX;
@@ -47,7 +47,7 @@ namespace Blazor.Diagrams.Core.Default
 
             if (!(model is PortModel port) || !_ongoingLink.SourcePort.CanAttachTo(port))
             {
-                //DiagramManager.RemoveLink(_ongoingLink);
+                DiagramManager.RemoveLink(_ongoingLink);
                 _ongoingLink = null;
                 return;
             }

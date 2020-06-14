@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wasm", "samples\Wasm\Wasm.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams", "src\Blazor.Diagrams\Blazor.Diagrams.csproj", "{A1A4F8A5-7C97-41A8-9ADD-54E9D1725B56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestComponents", "samples\TestComponents\TestComponents.csproj", "{1CBCC8E6-111C-4364-9882-50881E4CC8B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedDemo", "samples\SharedDemo\SharedDemo.csproj", "{1CBCC8E6-111C-4364-9882-50881E4CC8B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerSide", "samples\ServerSide\ServerSide.csproj", "{B9EE910B-8FE7-490C-B20C-CEC27A2890D6}"
 EndProject

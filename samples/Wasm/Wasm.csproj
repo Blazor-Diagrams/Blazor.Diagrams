@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
-    <ProjectReference Include="..\TestComponents\TestComponents.csproj" />
+    <ProjectReference Include="..\SharedDemo\SharedDemo.csproj" />
   </ItemGroup>
 
 </Project>

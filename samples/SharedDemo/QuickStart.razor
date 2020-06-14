@@ -1,0 +1,209 @@
+﻿@page "/quickstart"
+@inherits DocPage
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Quick Start";
+        LayoutData.Icon = "fa-paper-plane";
+        LayoutData.Date = "June 14th, 2020";
+        LayoutData.DataChanged();
+    }
+}
+
+<div class="doc-content col-md-9 col-12 order-1">
+    <div class="content-inner">
+        <section id="installation-section" class="doc-section">
+            <h2 class="section-title">Installation</h2>
+            <div id="package-installation" class="section-block">
+                <h3 class="block-title">Package installation</h3>
+                <p>
+                    First, you'll need to install the NuGet package, using Visual Studio's Package Manager or the following commands:
+                </p>
+                <div class="code-block">
+                    <h4 class="block-title">Package Manager Console</h4>
+                    <p><code>Install-Package Z.Blazor.Diagrams</code></p>
+                </div>
+                <div class="code-block">
+                    <h4 class="block-title">CLI</h4>
+                    <p><code>dotnet add package Z.Blazor.Diagrams</code></p>
+                </div>
+            </div>
+            <div id="project-setup" class="section-block">
+                <h3 class="block-title">Project setup</h3>
+                <p>
+                    Blazor.Diagrams needs some JavaScript and CSS to work properly, let's add them:
+                </p>
+                <pre><code class="language-markup line-numbers">&lt;!-- in the head element --&gt;
+&lt;link href="_content/Z.Blazor.Diagrams/style.css" rel="stylesheet" /&gt;
+&lt;!-- if you want the default styling --&gt;
+&lt;link href="_content/Z.Blazor.Diagrams/default.styles.css" rel="stylesheet" /&gt;
+&lt;!-- in the body element --&gt;
+&lt;script src="_content/Z.Blazor.Diagrams/script.js"&gt;&lt;/script&gt;</code></pre>
+                <div class="callout-block callout-info">
+                    <div class="icon-holder">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="content">
+                        <h4 class="callout-title">Location</h4>
+                        <p>
+                            If you are using Server Side Rendering, you will need to add the above code in
+                            <code>Pages/_Host.cshtml</code>, otherwise (Blazor WASM) it's
+                            <code>wwwroot/index.html</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="diagram-creation" class="doc-section">
+            <h2 class="section-title">Diagram creation</h2>
+            <div id="diagram" class="section-block">
+                <h3 class="block-title">Diagram</h3>
+                <p>
+                    Blazor.Diagrams is very code/oop oriented at the moment, which means all the diagram information
+                    needs to be given to it using code. This has some benefits, such as easy (de)serialization.
+                </p>
+                <div class="code-block">
+                    <h3 class="block-title">Creating a diagram manager</h3>
+                    <p>
+                        Every diagram has a <code>DiagramManager</code>, go ahead and create one in the component
+                        where you want to show it:
+                    </p>
+                    <pre><code class="language-csharp line-numbers">private DiagramManager DiagramManager { get; private set; }
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    DiagramManager = new DiagramManager();
+}</code></pre>
+                </div>
+                <div class="code-block">
+                    <h3 class="block-title">Changing options</h3>
+                    <p>
+                        Every <code>DiagramManager</code> has a list of options that you can change:
+                    </p>
+                    <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    var options = new DiagramOptions
+    {
+        DeleteKey = "Delete", // What key deletes the selected nodes/links
+        InverseZoom = false, // Whether to inverse the direction of the zoom when using the wheel
+        DefaultLinkType = LinkType.Curved, // Default link type (Curved, Line or LineWithArrowToTarget for now)
+        DefaultLinkComponent = null, // Default component for links
+        DefaultNodeComponent = null // Default component for nodes
+    };
+    DiagramManager = new DiagramManager(options);
+}</code></pre>
+                </div>
+            </div>
+            <div id="nodes" class="section-block">
+                <h3 class="block-title">Nodes</h3>
+                <p>
+                    For the sake of this tutorial, we'll add some nodes manually. Usually, these would be created
+                    from data received from the backend for example.<br />
+                    Notice that the created nodes have 4 ports, the alignment only matters if you're using the
+                    default styling, otherwise it's up to you to decide what to do with it.
+                </p>
+                <pre><code class="language-csharp line-numbers">private void Setup()
+{
+    var node1 = NewNode(50, 50);
+    var node2 = NewNode(300, 300);
+    var node3 = NewNode(300, 50);
+    DiagramManager.AddNodes(node1, node2, node3);
+}
+
+private NodeModel NewNode(double x, double y)
+{
+    var node = new NodeModel(new Point(x, y));
+    node.AddPort(PortAlignment.BOTTOM);
+    node.AddPort(PortAlignment.TOP);
+    node.AddPort(PortAlignment.LEFT);
+    node.AddPort(PortAlignment.RIGHT);
+    return node;
+}</code></pre>
+                Go ahead and add <code>Setup();</code> in the <code>OnInitialized</code> method.
+            </div>
+            <div id="links" class="section-block">
+                <h3 class="block-title">Links</h3>
+                <p>
+                    In Blazor.Diagrams, links can be added from a source port to a target port.<br />
+                    Let's add one:
+                </p>
+                <pre><code class="language-csharp line-numbers">private void Setup()
+{
+    var node1 = NewNode(50, 50);
+    var node2 = NewNode(300, 300);
+    var node3 = NewNode(300, 50);
+    DiagramManager.AddNodes(node1, node2, node3);
+    DiagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
+}</code></pre>
+                <p>
+                    The <code>AddLink</code> method adds a link of type <code>LinkModel</code>, which is the default
+                    link type. It also returns the created link, so you could get that and change for example its type
+                    to a line.
+                </p>
+            </div>
+        </section>
+        <section id="display" class="doc-section">
+            <h2 class="block-title">Display</h2>
+            <p>
+                Finally, let's show the diagram!
+            </p>
+            <div class="code-block">
+                <h4 class="block-title">_Imports.razor</h4>
+                <pre><code class="line-numbers">@@using Blazor.Diagrams.Core;
+@@using Blazor.Diagrams.Core.Models;
+@@using Blazor.Diagrams.Components;</code></pre>
+            </div>
+            <div class="code-block">
+                <h4 class="block-title">Adding the canvas</h4>
+                <pre><code class="language-markup line-numbers">&lt;!-- Add this where you want to show the diagram --&gt;
+&lt;CascadingValue Name=&quot;DiagramManager&quot; Value=&quot;DiagramManager&quot;&gt;
+    &lt;DiagramCanvas&gt;&lt;/DiagramCanvas&gt;
+&lt;/CascadingValue&gt;</code></pre>
+            </div>
+            <div class="callout-block callout-warning">
+                <div class="icon-holder">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="content">
+                    <h4 class="callout-title">Pay attention</h4>
+                    <p>
+                        When adding a <code>DiagramCanvas</code>, its parent needs to have an actual width/height,
+                        since all the layers in Blazor.Diagrams use <code>width: 100%; height: 100%</code> for them
+                        to be able to work properly.
+                    </p>
+                </div>
+            </div>
+            <p>
+                If you did everything correctly and used the default styles, you should see this:
+            </p>
+            <img src="_content/SharedDemo/img/QuickStartDiagramDisplay.png" alt="Diagram Display" />
+        </section>
+    </div>
+</div>
+
+<div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+    <div id="doc-nav" class="doc-nav">
+        <nav id="doc-menu" class="nav doc-menu flex-column sticky">
+            <a class="nav-link scrollto" href="#installation-section">Installation</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#package-installation">Package installation</a>
+                <a class="nav-link scrollto" href="#project-setup">Project setup</a>
+            </nav>
+            <a class="nav-link scrollto" href="#diagram-creation">Diagram creation</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#diagram">Diagram</a>
+                <a class="nav-link scrollto" href="#nodes">Nodes</a>
+                <a class="nav-link scrollto" href="#links">Links</a>
+            </nav>
+            <a class="nav-link scrollto" href="#display">Display</a>
+        </nav>
+    </div>
+</div>

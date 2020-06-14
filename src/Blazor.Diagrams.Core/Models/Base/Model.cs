@@ -14,6 +14,7 @@ namespace Blazor.Diagrams.Core.Models.Base
         public event Action Changed;
 
         public string Id { get; }
+        public bool Locked { get; set; }
 
         public virtual void Refresh() => Changed?.Invoke();
     }

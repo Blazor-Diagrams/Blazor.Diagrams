@@ -33,6 +33,7 @@ There are a lot of things missing in the documentation, such as customization. T
 
 - Panning/Zooming
 - Ports & Links (no free links for now)
+- Multi selection
 - Locking mechanism
 - Custom nodes/links
 - SVG layer for links and DIV layer for nodes for maximum customizability

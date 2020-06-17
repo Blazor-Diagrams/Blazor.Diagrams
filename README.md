@@ -16,6 +16,8 @@ This project is currently in Alpha, all issues/MRs are welcome!
 
 | Badges   |                                                                                                                                    |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.js)|
+| CSS | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/style.css)|
 | Activity | [![GitHub](https://img.shields.io/github/last-commit/zHaytam/Blazor.Diagrams/develop)](https://github.com/zHaytam/Blazor.Diagrams) |
 | License  | [![GitHub](https://img.shields.io/github/license/zHaytam/Blazor.Diagrams.svg)](https://github.com/zHaytam/Blazor.Diagrams)         |
 

@@ -7,7 +7,7 @@
     cursor: grab;
 }
 
-.diagram-links, .diagram-nodes {
+.diagram-svg-layer, .diagram-html-layer {
     top: 0px;
     left: 0px;
     right: 0px;

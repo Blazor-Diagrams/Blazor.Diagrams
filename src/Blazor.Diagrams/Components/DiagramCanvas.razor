@@ -12,7 +12,7 @@
      @onwheel:stopPropagation>
 
     @* Links *@
-    <svg class="diagram-links"
+    <svg class="diagram-svg-layer"
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var link in DiagramManager.AllLinks)
         {
@@ -26,7 +26,7 @@
     </svg>
 
     @* Nodes *@
-    <div class="diagram-nodes"
+    <div class="diagram-html-layer"
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML))
         {

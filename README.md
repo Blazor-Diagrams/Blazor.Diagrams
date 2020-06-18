@@ -16,6 +16,8 @@ This project is currently in Alpha, all issues/MRs are welcome!
 
 | Badges   |                                                                                                                                    |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.js)|
+| CSS | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/style.css)|
 | Activity | [![GitHub](https://img.shields.io/github/last-commit/zHaytam/Blazor.Diagrams/develop)](https://github.com/zHaytam/Blazor.Diagrams) |
 | License  | [![GitHub](https://img.shields.io/github/license/zHaytam/Blazor.Diagrams.svg)](https://github.com/zHaytam/Blazor.Diagrams)         |
 
@@ -33,6 +35,7 @@ There are a lot of things missing in the documentation, such as customization. T
 
 - Panning/Zooming
 - Ports & Links (no free links for now)
+- Multi selection / deletion
 - Locking mechanism
 - Custom nodes/links
 - SVG layer for links and DIV layer for nodes for maximum customizability

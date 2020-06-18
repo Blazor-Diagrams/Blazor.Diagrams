@@ -18,6 +18,11 @@
         {
             <LinkRenderer @key="link.Id" Link="link" />
         }
+
+        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.SVG))
+        {
+            <NodeRenderer @key="node.Id" Node="node" />
+        }
     </svg>
 
     @* Nodes *@

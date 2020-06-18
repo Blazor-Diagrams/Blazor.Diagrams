@@ -22,7 +22,7 @@ namespace SharedDemo
 
         private NodeModel NewNode(double x, double y)
         {
-            var node = new NodeModel(new Point(x, y));
+            var node = new NodeModel(new Point(x, y), RenderLayer.SVG);
             node.AddPort(PortAlignment.BOTTOM);
             node.AddPort(PortAlignment.TOP);
             node.AddPort(PortAlignment.LEFT);

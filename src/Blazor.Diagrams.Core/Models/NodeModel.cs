@@ -9,17 +9,20 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
 
-        public NodeModel(Point? position = null)
+        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML)
         {
             Position = position ?? Point.Zero;
+            Layer = layer;
         }
 
-        public NodeModel(string id, Point? position = null) : base(id)
+        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id)
         {
             Position = position ?? Point.Zero;
+            Layer = layer;
         }
 
         public Point Position { get; set; }
+        public RenderLayer Layer { get; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
@@ -48,5 +51,11 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
             _ports.ForEach(p => p.RefreshAll());
         }
+    }
+
+    public enum RenderLayer
+    {
+        HTML,
+        SVG
     }
 }

@@ -23,7 +23,7 @@
     @* Nodes *@
     <div class="diagram-nodes"
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-        @foreach (var node in DiagramManager.Nodes)
+        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML))
         {
             <NodeRenderer @key="node.Id" Node="node" />
         }

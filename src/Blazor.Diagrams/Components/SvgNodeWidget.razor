@@ -1,0 +1,9 @@
+﻿@inherits NodeWidgetBaseComponent
+
+<g class="node default @(Node.Selected ? "selected" : "")"
+   @onmousedown="OnMouseDown"
+   @onmousedown:stopPropagation
+   @ref="element"
+   transform="translate(@Node.Position.X.ToInvariantString() @Node.Position.Y.ToInvariantString())">
+    <rect width="50" height="50" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+</g>

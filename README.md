@@ -38,7 +38,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - Multi selection / deletion
 - Locking mechanism
 - Custom nodes/links
-- SVG layer for links and DIV layer for nodes for maximum customizability
+- SVG layer for links/nodes and HTML layer for nodes for maximum customizability
 - Replaceable behaviors (e.g. link dragging, model deletion, ...)
 
 ## Preview
@@ -56,7 +56,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - [ ] Avoid rendering models outside of screen view (might add a lot of js interop)
 - [ ] Send to front/back (limited since there are 2 layers)
 - [ ] Free links, no need for ports (useful in simple diagram scenarios, like a flowchart)
-- [ ] Ability to add nodes in the SVG layer (useful in simple diagram scenarios, like a flowchart)
+- [x] Ability to add nodes in the SVG layer (useful in simple diagram scenarios, like a flowchart)
 - [ ] A set of common shapes (depends on the above feature)
 
 ## Feedback

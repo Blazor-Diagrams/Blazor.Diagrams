@@ -15,9 +15,9 @@ namespace Blazor.Diagrams.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = DiagramManager.GetComponentForModel(Node) ?? 
+            var componentType = DiagramManager.GetComponentForModel(Node) ??
                 DiagramManager.Options.DefaultNodeComponent ??
-                typeof(NodeWidget);
+                (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
             builder.OpenComponent(0, componentType);
             builder.AddAttribute(1, "Node", Node);

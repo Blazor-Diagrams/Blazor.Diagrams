@@ -1,0 +1,24 @@
+﻿@page "/demos/zoomtofit"
+@inherits ZoomToFitComponent
+@layout DemoLayout
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Zoom to fit";
+        LayoutData.Info = "Click the button to zoom to fit all the nodes with a margin of 50px.<br>" +
+                "You can also select some nodes and zoom to fit them only.";
+        LayoutData.DataChanged();
+    }
+}
+
+<button class="btn btn-primary position-absolute m-2"
+        style="z-index: 999;"
+        @onclick="() => diagramManager.ZoomToFit(50)">Zoom to fit</button>
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

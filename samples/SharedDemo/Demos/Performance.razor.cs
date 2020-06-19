@@ -12,9 +12,9 @@ namespace SharedDemo.Demos
         {
             base.OnInitialized();
 
-            for (int r = 0; r < 8; r++)
+            for (int r = 0; r < 10; r++)
             {
-                for (int c = 0; c < 8; c += 2)
+                for (int c = 0; c < 10; c += 2)
                 {
                     var node1 = new NodeModel(new Point(10 + c * 10 + c * 120, 10 + r * 100));
                     var node2 = new NodeModel(new Point(10 + (c + 1) * 130, 10 + r * 100));

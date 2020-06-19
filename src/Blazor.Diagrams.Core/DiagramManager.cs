@@ -54,7 +54,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
-        public float Zoom { get; internal set; } = 1;
+        public double Zoom { get; internal set; } = 1;
         public DiagramOptions Options { get; }
 
         public void AddNode(NodeModel node)
@@ -219,6 +219,59 @@ namespace Blazor.Diagrams.Core
         }
 
         public void Refresh() => Changed?.Invoke();
+
+        public void ZoomToFit(double margin = 10)
+        {
+            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s).ToList();
+            var nodes = selectedNodes.Count > 0 ? selectedNodes : _nodes;
+
+            if (nodes.Count == 0)
+                return;
+
+            double minX = nodes[0].Position.X;
+            double maxX = nodes[0].Position.X + nodes[0].Size!.Width;
+            double minY = nodes[0].Position.Y;
+            double maxY = nodes[0].Position.Y + nodes[0].Size!.Height;
+
+            for (var i = 1; i < nodes.Count; i++)
+            {
+                var node = nodes[i];
+                var trX = node.Position.X + node.Size!.Width;
+                var bY = node.Position.Y + node.Size.Height;
+
+                if (node.Position.X < minX)
+                {
+                    minX = node.Position.X;
+                }
+                if (trX > maxX)
+                {
+                    maxX = trX;
+                }
+                if (node.Position.Y < minY)
+                {
+                    minY = node.Position.Y;
+                }
+                if (bY > maxY)
+                {
+                    maxY = bY;
+                }
+            }
+
+            var width = maxX - minX + 2 * margin;
+            var height = maxY - minY + 2 * margin;
+            minX -= margin;
+            minY -= margin;
+
+            var xf = Container.Width / width;
+            var yf = Container.Height / height;
+            Zoom = Math.Min(xf, yf);
+
+            var nx = Container.Left + Pan.X + minX * Zoom;
+            var ny = Container.Top + Pan.Y + minY * Zoom;
+            Pan = Pan.Add(Container.Left - nx, Container.Top - ny);
+
+            Refresh();
+        }
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 

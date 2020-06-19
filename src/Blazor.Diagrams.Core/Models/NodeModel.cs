@@ -22,6 +22,7 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public Point Position { get; private set; }
+        public Size? Size { get; internal set; }
         public RenderLayer Layer { get; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);

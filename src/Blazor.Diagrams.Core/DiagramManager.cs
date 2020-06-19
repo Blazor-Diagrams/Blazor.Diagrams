@@ -54,7 +54,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
-        public float Zoom { get; internal set; } = 1;
+        public float Zoom { get; set; } = 1;
         public DiagramOptions Options { get; }
 
         public void AddNode(NodeModel node)

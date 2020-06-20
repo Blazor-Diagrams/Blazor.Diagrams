@@ -40,10 +40,10 @@ namespace Blazor.Diagrams.Components
                 tY = Link.OnGoingPosition.Y;
             }
 
-            var dist = Math.Abs(sX - tX);
             return $"M {sX.ToInvariantString()} {sY.ToInvariantString()} " +
-                $"C {(sX + (dist / 2)).ToInvariantString()} {sY.ToInvariantString()}, " +
-                $"{(tX - (dist / 2)).ToInvariantString()} {tY.ToInvariantString()}, {tX.ToInvariantString()} {tY.ToInvariantString()}";
+                $"C {((sX + tX) / 2).ToInvariantString()} {sY.ToInvariantString()}," +
+                $" {((sX + tX) / 2).ToInvariantString()} {tY.ToInvariantString()}," +
+                $" {tX.ToInvariantString()} {tY.ToInvariantString()}";
         }
 
         protected string CalculateAngleForTargetArrow()

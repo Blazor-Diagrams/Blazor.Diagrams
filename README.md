@@ -40,6 +40,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - Custom nodes/links
 - SVG layer for links/nodes and HTML layer for nodes for maximum customizability
 - Replaceable behaviors (e.g. link dragging, model deletion, ...)
+- Zoom to fit (all nodes or selected ones only)
 
 ## Preview
 
@@ -50,7 +51,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - [ ] Groups
 - [ ] Razor-oriented diagram creation
 - [ ] Auto layout (might add a lot of js interop)
-- [ ] Zoom to fit (might add a lot of js interop too)
+- [x] Zoom to fit
 - [ ] History (undo/redo)
 - [ ] Preview/Navigator on the bottom-right 
 - [ ] Avoid rendering models outside of screen view (might add a lot of js interop)

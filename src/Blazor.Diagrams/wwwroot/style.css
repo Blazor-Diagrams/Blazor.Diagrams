@@ -31,3 +31,7 @@
     pointer-events: all;
     cursor: pointer;
 }
+
+.diagram-navigator {
+    z-index: 10;
+}

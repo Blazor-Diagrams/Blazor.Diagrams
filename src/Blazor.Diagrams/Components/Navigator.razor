@@ -1,0 +1,23 @@
+﻿@inherits NavigatorComponent
+
+<div class="diagram-navigator@(DefaultStyle ? " default" : "")"
+     style="width: @(Width.ToInvariantString())px; height: @(Height.ToInvariantString())px">
+    <svg width="100%" height="100%">
+        @if (AllNodesContainer != null)
+        {
+            @foreach (var node in DiagramManager.Nodes.Where(n => n.Size != null))
+            {
+                var left = (node.Position.X - AllNodesContainer.Left) * XFactor;
+                var top = (node.Position.Y - AllNodesContainer.Top) * YFactor;
+                var width = node.Size.Width * XFactor;
+                var height = node.Size.Height * YFactor;
+
+                <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
+                    <rect fill="#31d0c6"
+                          width="@width.ToInvariantString()"
+                          height="@height.ToInvariantString()"></rect>
+                </g>
+            }
+        }
+    </svg>
+</div>

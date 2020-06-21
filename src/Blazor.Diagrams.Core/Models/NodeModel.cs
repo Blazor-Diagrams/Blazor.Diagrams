@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,15 +22,13 @@ namespace Blazor.Diagrams.Core.Models
             Layer = layer;
         }
 
-        public event Action SizeChanged;
-
         public Size? Size
         {
             get => _size;
             set
             {
                 _size = value;
-                SizeChanged?.Invoke();
+                Refresh();
             }
         }
 

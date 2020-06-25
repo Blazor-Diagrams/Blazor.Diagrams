@@ -68,8 +68,9 @@
     border: 3px solid #9BA8B0;
     border-radius: 15px;
     padding: 20px;
+    background-color: white;
 }
 
-    .diagram-navigator.default .current-view {
-        border: 2px solid #40babd;
-    }
+.diagram-navigator.default .current-view {
+    border: 2px solid #40babd;
+}

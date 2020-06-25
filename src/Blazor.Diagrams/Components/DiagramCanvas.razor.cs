@@ -15,6 +15,9 @@ namespace Blazor.Diagrams.Components
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
+        [Parameter]
+        public RenderFragment Widgets { get; set; }
+
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 

@@ -41,10 +41,21 @@ There are a lot of things missing in the documentation, such as customization. T
 - SVG layer for links/nodes and HTML layer for nodes for maximum customizability
 - Replaceable behaviors (e.g. link dragging, model deletion, ...)
 - Zoom to fit (all nodes or selected ones only)
+- Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
 
 ## Preview
 
-![](https://i.imgur.com/YhcjaTn.png)
+```html
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas>
+        <Widgets>
+            <Navigator Width="300" Height="200" DefaultStyle="true"></Navigator>
+        </Widgets>
+    </DiagramCanvas>
+</CascadingValue>
+```
+
+![](https://i.imgur.com/k4UThmh.png)
 
 ## Roadmap
 
@@ -53,7 +64,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - [ ] Auto layout (might add a lot of js interop)
 - [x] Zoom to fit
 - [ ] History (undo/redo)
-- [ ] Preview/Navigator on the bottom-right 
+- [x] Preview/Navigator on the bottom-right 
 - [ ] Avoid rendering models outside of screen view (might add a lot of js interop)
 - [ ] Send to front/back (limited since there are 2 layers)
 - [ ] Free links, no need for ports (useful in simple diagram scenarios, like a flowchart)

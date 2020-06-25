@@ -20,8 +20,8 @@
         <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
             @foreach (var node in DiagramManager.Nodes.Where(n => n.Size != null))
             {
-                var left = (node.Position.X + addedNodeX) * XFactor;
-                var top = (node.Position.Y + addedNodeY) * YFactor;
+                var left = (Math.Max(0, node.Position.X + addedNodeX)) * XFactor;
+                var top = (Math.Max(0, node.Position.Y + addedNodeY)) * YFactor;
                 var width = node.Size.Width * XFactor;
                 var height = node.Size.Height * YFactor;
 

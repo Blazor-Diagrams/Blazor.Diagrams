@@ -245,8 +245,10 @@ namespace Blazor.Diagrams.Core
 
         public (double minX, double maxX, double minY, double maxY) GetNodesRect(List<NodeModel>? nodes = null)
         {
-            nodes ??= _nodes;
-            if (nodes.Count == 0)
+            if (nodes == null || nodes?.Count == 0)
+                nodes = _nodes;
+
+            if (nodes!.Count == 0)
                 return (0, 0, 0, 0);
 
             double minX = nodes[0].Position.X;

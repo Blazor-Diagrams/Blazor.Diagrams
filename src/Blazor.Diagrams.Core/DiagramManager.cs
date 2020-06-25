@@ -223,10 +223,31 @@ namespace Blazor.Diagrams.Core
         public void ZoomToFit(double margin = 10)
         {
             var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s).ToList();
-            var nodes = selectedNodes.Count > 0 ? selectedNodes : _nodes;
-
-            if (nodes.Count == 0)
+            if (selectedNodes.Count == 0 && _nodes.Count == 0)
                 return;
+
+            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes);
+            var width = maxX - minX + 2 * margin;
+            var height = maxY - minY + 2 * margin;
+            minX -= margin;
+            minY -= margin;
+
+            var xf = Container.Width / width;
+            var yf = Container.Height / height;
+            Zoom = Math.Min(xf, yf);
+
+            var nx = Container.Left + Pan.X + minX * Zoom;
+            var ny = Container.Top + Pan.Y + minY * Zoom;
+            Pan = Pan.Add(Container.Left - nx, Container.Top - ny);
+
+            Refresh();
+        }
+
+        public (double minX, double maxX, double minY, double maxY) GetNodesRect(List<NodeModel>? nodes = null)
+        {
+            nodes ??= _nodes;
+            if (nodes.Count == 0)
+                return (0, 0, 0, 0);
 
             double minX = nodes[0].Position.X;
             double maxX = nodes[0].Position.X + nodes[0].Size!.Width;
@@ -257,20 +278,7 @@ namespace Blazor.Diagrams.Core
                 }
             }
 
-            var width = maxX - minX + 2 * margin;
-            var height = maxY - minY + 2 * margin;
-            minX -= margin;
-            minY -= margin;
-
-            var xf = Container.Width / width;
-            var yf = Container.Height / height;
-            Zoom = Math.Min(xf, yf);
-
-            var nx = Container.Left + Pan.X + minX * Zoom;
-            var ny = Container.Top + Pan.Y + minY * Zoom;
-            Pan = Pan.Add(Container.Left - nx, Container.Top - ny);
-
-            Refresh();
+            return (minX, maxX, minY, maxY);
         }
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);

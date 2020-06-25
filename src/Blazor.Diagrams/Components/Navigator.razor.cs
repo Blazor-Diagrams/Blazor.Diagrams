@@ -1,9 +1,13 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Default;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 
 namespace Blazor.Diagrams.Components
 {
@@ -22,11 +26,8 @@ namespace Blazor.Diagrams.Components
         [Parameter]
         public bool DefaultStyle { get; set; }
 
-        protected Rectangle AllNodesContainer { get; private set; }
-
-        protected double XFactor { get; private set; }
-
-        protected double YFactor { get; private set; }
+        protected double XFactor { get; set; }
+        protected double YFactor { get; set; }
 
         protected override void OnParametersSet()
         {
@@ -56,57 +57,128 @@ namespace Blazor.Diagrams.Components
 
         private void Refresh()
         {
-            AllNodesContainer = GetAllNodesContainer();
-            if (AllNodesContainer == null)
+            var nodes = DiagramManager.Nodes.Where(n => n.Size != null).ToList();
+            if (nodes.Count == 0)
                 return;
 
-            XFactor = Width / AllNodesContainer.Width;
-            YFactor = Height / AllNodesContainer.Height;
+            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = DiagramManager.GetNodesRect(nodes);
+            nodesMinX *= DiagramManager.Zoom;
+            nodesMaxX *= DiagramManager.Zoom;
+            nodesMinY *= DiagramManager.Zoom;
+            nodesMaxY *= DiagramManager.Zoom;
+
+            (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
+            AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
+
+            XFactor = Width / fullSizeWidth;
+            YFactor = Height / fullSizeHeight;
             StateHasChanged();
         }
 
-        private Rectangle GetAllNodesContainer()
+        private void AdjustFullSizeWithNodesRect(double nodesMinX, double nodesMinY, ref double fullSizeWidth, 
+            ref double fullSizeHeight)
         {
-            var nodes = DiagramManager.Nodes.Where(n => n.Size != null).ToArray();
-            if (nodes.Length == 0)
-                return null;
-
-            var minX = nodes[0].Position.X;
-            var maxX = nodes[0].Position.X + nodes[0].Size!.Width;
-            var minY = nodes[0].Position.Y;
-            var maxY = nodes[0].Position.Y + nodes[0].Size!.Height;
-
-            for (var i = 1; i < nodes.Length; i++)
+            // Width
+            if (nodesMinX < 0)
             {
-                var node = nodes[i];
-                var trX = node.Position.X + node.Size!.Width;
-                var bY = node.Position.Y + node.Size.Height;
-
-                if (node.Position.X < minX)
+                var temp = nodesMinX + DiagramManager.Pan.X;
+                if (DiagramManager.Pan.X > 0 && temp < 0)
                 {
-                    minX = node.Position.X;
+                    fullSizeWidth += Math.Abs(temp);
                 }
-                if (trX > maxX)
+                else if (DiagramManager.Pan.X <= 0)
                 {
-                    maxX = trX;
-                }
-                if (node.Position.Y < minY)
-                {
-                    minY = node.Position.Y;
-                }
-                if (bY > maxY)
-                {
-                    maxY = bY;
+                    fullSizeWidth += Math.Abs(nodesMinX);
                 }
             }
 
-            return new Rectangle
+            // Height
+            if (nodesMinY < 0)
             {
-                Left = minX - 50 - DiagramManager.Pan.X,
-                Top = minY - 50 - DiagramManager.Pan.Y,
-                Width = DiagramManager.Pan.X + maxX - minX + 2 * 50,
-                Height = DiagramManager.Pan.Y + maxY - minY + 2 * 50
-            };
+                var temp = nodesMinY + DiagramManager.Pan.Y;
+                if (DiagramManager.Pan.Y > 0 && temp < 0)
+                {
+                    fullSizeHeight += Math.Abs(temp);
+                }
+                else if (DiagramManager.Pan.Y <= 0)
+                {
+                    fullSizeHeight += Math.Abs(nodesMinY);
+                }
+            }
+        }
+
+        private (double width, double height) GetFullSize(double nodesMaxX, double nodesMaxY)
+        {
+            var nodesLayerWidth = Math.Max(DiagramManager.Container.Width * DiagramManager.Zoom, nodesMaxX);
+            var nodesLayerHeight = Math.Max(DiagramManager.Container.Height * DiagramManager.Zoom, nodesMaxY);
+            double fullWidth;
+            double fullHeight;
+
+            if (DiagramManager.Zoom == 1)
+            {
+                fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
+                fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+            }
+            else if (DiagramManager.Zoom > 1)
+            {
+                // Width
+                if (DiagramManager.Pan.X < 0)
+                {
+                    if (nodesLayerWidth + DiagramManager.Pan.X < DiagramManager.Container.Width)
+                    {
+                        fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
+                    }
+                    else
+                    {
+                        fullWidth = nodesLayerWidth;
+                    }
+                }
+                else
+                {
+                    fullWidth = nodesLayerWidth + DiagramManager.Pan.X;
+                }
+
+                // Height
+                if (DiagramManager.Pan.Y < 0)
+                {
+                    if (nodesLayerHeight + DiagramManager.Pan.Y < DiagramManager.Container.Height)
+                    {
+                        fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+                    }
+                    else
+                    {
+                        fullHeight = nodesLayerHeight;
+                    }
+                }
+                else
+                {
+                    fullHeight = nodesLayerHeight + DiagramManager.Pan.Y;
+                }
+            }
+            else
+            {
+                // Width
+                if (DiagramManager.Pan.X > 0)
+                {
+                    fullWidth = Math.Max(nodesLayerWidth + DiagramManager.Pan.X, DiagramManager.Container.Width);
+                }
+                else
+                {
+                    fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
+                }
+
+                // Height
+                if (DiagramManager.Pan.Y > 0)
+                {
+                    fullHeight = Math.Max(nodesLayerHeight + DiagramManager.Pan.Y, DiagramManager.Container.Height);
+                }
+                else
+                {
+                    fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+                }
+            }
+
+            return (fullWidth, fullHeight);
         }
 
         public void Dispose()

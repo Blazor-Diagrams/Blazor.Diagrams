@@ -7,6 +7,7 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class NodeModel : SelectableModel
     {
+        private Size? _size;
         private readonly List<PortModel> _ports = new List<PortModel>();
 
         public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML)
@@ -21,8 +22,17 @@ namespace Blazor.Diagrams.Core.Models
             Layer = layer;
         }
 
+        public Size? Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                Refresh();
+            }
+        }
+
         public Point Position { get; private set; }
-        public Size? Size { get; internal set; }
         public RenderLayer Layer { get; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);

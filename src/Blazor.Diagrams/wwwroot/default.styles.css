@@ -69,3 +69,7 @@
     border-radius: 15px;
     padding: 20px;
 }
+
+    .diagram-navigator.default .current-view {
+        border: 2px solid #40babd;
+    }

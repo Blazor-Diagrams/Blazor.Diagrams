@@ -1,24 +1,36 @@
 ﻿@inherits NavigatorComponent
 
-<div class="diagram-navigator@(DefaultStyle ? " default" : "")">
-    <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
-        @{
-            var addedPosX = Math.Max(0, DiagramManager.Pan.X);
-            var addedPosY = Math.Max(0, DiagramManager.Pan.Y);
-        }
+@if (DiagramManager.Container != null)
+{
+    var addedNodeX = Math.Max(0, DiagramManager.Pan.X);
+    var addedNodeY = Math.Max(0, DiagramManager.Pan.Y);
+    var addedCurrentViewX = Math.Abs(Math.Min(0, DiagramManager.Pan.X)) * XFactor;
+    var addedCurrentViewY = Math.Abs(Math.Min(0, DiagramManager.Pan.Y)) * YFactor;
+    var currentViewWidth = DiagramManager.Container.Width * XFactor;
+    var currentViewHeight = DiagramManager.Container.Height * YFactor;
 
-        @foreach (var node in DiagramManager.Nodes.Where(n => n.Size != null))
-        {
-            var left = (node.Position.X + addedPosX) * XFactor;
-            var top = (node.Position.Y + addedPosY) * YFactor;
-            var width = node.Size.Width * XFactor;
-            var height = node.Size.Height * YFactor;
+    <div class="diagram-navigator@(DefaultStyle ? " default" : "")">
+        <div style="position: relative;">
+            <div class="current-view"
+                 style="top: @(addedCurrentViewY.ToInvariantString())px;
+                        left: @(addedCurrentViewX.ToInvariantString())px;
+                        width: @(currentViewWidth.ToInvariantString())px;
+                        height: @(currentViewHeight.ToInvariantString())px;"></div>
+        </div>
+        <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
+            @foreach (var node in DiagramManager.Nodes.Where(n => n.Size != null))
+            {
+                var left = (node.Position.X + addedNodeX) * XFactor;
+                var top = (node.Position.Y + addedNodeY) * YFactor;
+                var width = node.Size.Width * XFactor;
+                var height = node.Size.Height * YFactor;
 
-            <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
-                <rect fill="#31d0c6"
-                      width="@width.ToInvariantString()"
-                      height="@height.ToInvariantString()"></rect>
-            </g>
-        }
-    </svg>
-</div>
+                <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
+                    <rect fill="#40babd"
+                          width="@width.ToInvariantString()"
+                          height="@height.ToInvariantString()"></rect>
+                </g>
+            }
+        </svg>
+    </div>
+}

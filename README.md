@@ -6,8 +6,6 @@ Blazor.Diagrams can be used to make advanced diagrams with a custom design. Even
 
 Blazor.Diagrams is very code/OOP oriented for now, this has a lot of benefits, for example if you want to (de)serialize models or even make an engine that runs at runtime (visual programming).
 
-This project is currently in Alpha, all issues/MRs are welcome!
-
 | NuGet Package          | Version                                                                                                                      | Download                                                                                                                      |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Z.Blazor.Diagrams.Core | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) |

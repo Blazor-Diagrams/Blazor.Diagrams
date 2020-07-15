@@ -1,4 +1,4 @@
-name: DeployToGitHubPages
+name: DeployDemoToGitHubPages
 env:
   PUBLISH_DIR: samples/Wasm/bin/Release/netstandard2.1/publish/wwwroot
 

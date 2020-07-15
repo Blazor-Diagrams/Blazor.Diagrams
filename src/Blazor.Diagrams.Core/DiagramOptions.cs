@@ -10,5 +10,6 @@ namespace Blazor.Diagrams.Core
         public LinkType DefaultLinkType { get; set; }
         public Type? DefaultLinkComponent { get; set; }
         public Type? DefaultNodeComponent { get; set; }
+        public int? GridSize { get; set; }
     }
 }

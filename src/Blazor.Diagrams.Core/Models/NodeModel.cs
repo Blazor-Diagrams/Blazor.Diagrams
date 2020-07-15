@@ -48,9 +48,9 @@ namespace Blazor.Diagrams.Core.Models
 
         public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
-        public void UpdatePosition(double deltaX, double deltaY)
+        public void SetPosition(double x, double y)
         {
-            Position = new Point(Position.X + deltaX, Position.Y + deltaY);
+            Position = new Point(x, y);
             foreach (var port in _ports)
             {
                 port.Position = new Point(Position.X + port.Offset.X, Position.Y + port.Offset.Y);

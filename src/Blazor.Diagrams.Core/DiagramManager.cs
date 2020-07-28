@@ -17,6 +17,7 @@ namespace Blazor.Diagrams.Core
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly HashSet<SelectableModel> _selectedModels;
+        private readonly List<Group> _groups;
 
         public event Action<Model, MouseEventArgs> MouseDown;
         public event Action<Model, MouseEventArgs> MouseMove;
@@ -31,6 +32,8 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel> LinkAdded;
         public event Action<LinkModel> LinkAttached;
         public event Action<LinkModel> LinkRemoved;
+        public event Action<Group> GroupAdded;
+        public event Action<Group> GroupRemoved;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -38,6 +41,7 @@ namespace Blazor.Diagrams.Core
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
+            _groups = new List<Group>();
 
             Options = options ?? new DiagramOptions();
 
@@ -52,6 +56,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
+        public IReadOnlyCollection<Group> Groups => _groups;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; internal set; } = 1;
@@ -143,6 +148,42 @@ namespace Blazor.Diagrams.Core
             {
                 Changed?.Invoke();
             }
+        }
+
+        public Group Group(params NodeModel[] nodes)
+        {
+            if (nodes == null || nodes.Length == 0)
+                throw new ArgumentException($"Null or empty nodes array");
+
+            if (nodes.Select(n => n.Layer).Distinct().Count() > 1)
+                throw new InvalidOperationException("Cannot group nodes with different layers");
+
+            if (nodes.Any(n => n.Group != null))
+                throw new InvalidOperationException("Cannot group nodes that already belong to another group");
+
+            var group = new Group();
+
+            foreach (var node in nodes)
+            {
+                node.Group = group;
+                group.AddNode(node);
+            }
+
+            _groups.Add(group);
+            GroupAdded?.Invoke(group);
+            return group;
+        }
+
+        public void Ungroup(Group group)
+        {
+            if (!_groups.Remove(group))
+                return;
+
+            foreach (var node in group.Nodes)
+                node.Group = null;
+
+            group.Clear();
+            GroupRemoved?.Invoke(group);
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)

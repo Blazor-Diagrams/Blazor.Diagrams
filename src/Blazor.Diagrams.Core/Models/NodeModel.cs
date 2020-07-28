@@ -36,6 +36,7 @@ namespace Blazor.Diagrams.Core.Models
         public RenderLayer Layer { get; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
+        public Group? Group { get; internal set; }
 
         public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {

@@ -162,7 +162,7 @@ namespace Blazor.Diagrams.Core
             if (nodes.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new Group();
+            var group = new Group(nodes[0].Layer);
 
             foreach (var node in nodes)
             {
@@ -172,6 +172,7 @@ namespace Blazor.Diagrams.Core
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
+            Refresh();
             return group;
         }
 
@@ -185,6 +186,7 @@ namespace Blazor.Diagrams.Core
 
             group.Clear();
             GroupRemoved?.Invoke(group);
+            Refresh();
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)
@@ -214,8 +216,11 @@ namespace Blazor.Diagrams.Core
 
         public void UnselectAll()
         {
-            foreach (var model in _selectedModels)
+            foreach (var model in _selectedModels.ToList())
             {
+                if (!model.Selected) // In case it got unselected by something else, like grouping
+                    continue;
+
                 model.Selected = false;
                 model.Refresh();
                 // Todo: will result in many events, maybe one event for all of them?

@@ -64,10 +64,4 @@ namespace Blazor.Diagrams.Core.Models
             _ports.ForEach(p => p.RefreshAll());
         }
     }
-
-    public enum RenderLayer
-    {
-        HTML,
-        SVG
-    }
 }

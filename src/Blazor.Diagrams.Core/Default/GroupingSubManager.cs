@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Linq;
@@ -10,6 +11,31 @@ namespace Blazor.Diagrams.Core.Default
         public GroupingSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.KeyDown += DiagramManager_KeyDown;
+            DiagramManager.SelectionChanged += DiagramManager_SelectionChanged;
+        }
+
+        private void DiagramManager_SelectionChanged(SelectableModel model, bool selected)
+        {
+            if (!(model is NodeModel node))
+                return;
+
+            if (node.Group == null)
+                return;
+
+            foreach (var n in node.Group.Nodes)
+            {
+                if (n == node || n.Selected == selected)
+                    continue;
+
+                if (selected)
+                {
+                    DiagramManager.SelectModel(n, false);
+                }
+                else
+                {
+                    DiagramManager.UnselectModel(n);
+                }
+            }
         }
 
         private void DiagramManager_KeyDown(KeyboardEventArgs e)

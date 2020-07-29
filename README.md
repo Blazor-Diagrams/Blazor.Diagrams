@@ -40,6 +40,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - Zoom to fit (all nodes or selected ones only)
 - Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
 - Snap to Grid
+- Grouping: [CTRL + G] to group and [CTRL + SHIFT + G] to ungroup
 
 ## Preview
 
@@ -57,10 +58,10 @@ There are a lot of things missing in the documentation, such as customization. T
 
 ## Roadmap
 
-- [ ] Groups
-- [ ] Auto layout (might add a lot of js interop)
+- [x] Groups
 - [ ] History (undo/redo)
 - [ ] Avoid rendering models outside of screen view (might add a lot of js interop)
+- [ ] Auto layout (might add a lot of js interop)
 
 ### Thinking about
 

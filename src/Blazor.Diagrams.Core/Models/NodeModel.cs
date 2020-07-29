@@ -36,6 +36,7 @@ namespace Blazor.Diagrams.Core.Models
         public RenderLayer Layer { get; }
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
+        public Group? Group { get; internal set; }
 
         public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
         {
@@ -62,11 +63,5 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
             _ports.ForEach(p => p.RefreshAll());
         }
-    }
-
-    public enum RenderLayer
-    {
-        HTML,
-        SVG
     }
 }

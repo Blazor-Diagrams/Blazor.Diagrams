@@ -1,6 +1,6 @@
 ﻿@inherits NodeWidgetBaseComponent
 
-<div class="node default @(Node.Selected ? "selected" : "")"
+<div class="node default @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")"
      @onmousedown="OnMouseDown"
      @onmousedown:stopPropagation
      @ref="element"

@@ -168,11 +168,11 @@ namespace Blazor.Diagrams.Core
             {
                 node.Group = group;
                 group.AddNode(node);
+                node.Refresh();
             }
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
-            Refresh();
             return group;
         }
 
@@ -182,11 +182,13 @@ namespace Blazor.Diagrams.Core
                 return;
 
             foreach (var node in group.Nodes)
+            {
                 node.Group = null;
+                node.Refresh();
+            }
 
             group.Clear();
             GroupRemoved?.Invoke(group);
-            Refresh();
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)

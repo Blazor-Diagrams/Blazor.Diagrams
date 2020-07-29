@@ -45,18 +45,23 @@ namespace Blazor.Diagrams.Core.Default
 
             if (e.CtrlKey && e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
             {
+                var selectedNodes = DiagramManager.SelectedModels
+                    .Where(m => m is NodeModel)
+                    .Select(m => (NodeModel)m)
+                    .ToArray();
+
                 if (e.ShiftKey)
                 {
-                    // Ungroup, todo
+                    // Ungroup
+                    var nodesWithGroup = selectedNodes.Where(n => n.Group != null);
+                    foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
+                    {
+                        DiagramManager.Ungroup(group);
+                    }
                 }
                 else
                 {
                     // Group
-                    var selectedNodes = DiagramManager.SelectedModels
-                        .Where(m => m is NodeModel)
-                        .Select(m => (NodeModel)m)
-                        .ToArray();
-
                     if (selectedNodes.Length < 2)
                         return;
 

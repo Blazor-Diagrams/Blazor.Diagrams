@@ -51,6 +51,7 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<DeleteSelectionSubManager>();
             RegisterSubManager<PanSubManager>();
             RegisterSubManager<ZoomSubManager>();
+            RegisterSubManager<GroupingSubManager>();
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;

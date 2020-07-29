@@ -16,6 +16,9 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_SelectionChanged(SelectableModel model, bool selected)
         {
+            if (!DiagramManager.Options.GroupingEnabled)
+                return;
+
             if (!(model is NodeModel node))
                 return;
 
@@ -40,6 +43,9 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_KeyDown(KeyboardEventArgs e)
         {
+            if (!DiagramManager.Options.GroupingEnabled)
+                return;
+
             if (DiagramManager.SelectedModels.Count == 0)
                 return;
 

@@ -11,5 +11,6 @@ namespace Blazor.Diagrams.Core
         public Type? DefaultLinkComponent { get; set; }
         public Type? DefaultNodeComponent { get; set; }
         public int? GridSize { get; set; }
+        public bool GroupingEnabled { get; set; }
     }
 }

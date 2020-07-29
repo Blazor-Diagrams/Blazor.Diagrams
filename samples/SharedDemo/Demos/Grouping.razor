@@ -1,0 +1,24 @@
+﻿@page "/demos/grouping"
+@inherits GroupingComponent
+@layout DemoLayout
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Grouping";
+        LayoutData.Info = "You can group nodes using CTRL+G and ungroup using CTRL+SHIFT+G.<br>" +
+                "Whenever you select a node that belongs to a group, every other node in the group is also selected.";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Name="DiagramManager" Value="diagramManager">
+    <DiagramCanvas>
+        <Widgets>
+            <Navigator Width="300" Height="200" DefaultStyle="true"></Navigator>
+        </Widgets>
+    </DiagramCanvas>
+</CascadingValue>

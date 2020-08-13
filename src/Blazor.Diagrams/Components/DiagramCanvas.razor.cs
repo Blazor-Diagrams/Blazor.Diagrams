@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -22,6 +23,7 @@ namespace Blazor.Diagrams.Components
         public IJSRuntime JSRuntime { get; set; }
 
         protected ElementReference elementReference;
+        private DotNetObjectReference<DiagramCanvasComponent> _reference;
         private bool _shouldReRender;
 
         public string PanX => DiagramManager.Pan.X.ToString(CultureInfo.InvariantCulture);
@@ -32,6 +34,7 @@ namespace Blazor.Diagrams.Components
         {
             base.OnInitialized();
 
+            _reference = DotNetObjectReference.Create(this);
             DiagramManager.Changed += DiagramManager_Changed;
         }
 
@@ -42,7 +45,16 @@ namespace Blazor.Diagrams.Components
             if (firstRender)
             {
                 DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
+                await JSRuntime.ObserveResizes(elementReference, _reference);
             }
+        }
+
+        [JSInvokable]
+        public void OnResize(Size size)
+        {
+            DiagramManager.Container.Width = size.Width;
+            DiagramManager.Container.Height = size.Height;
+            DiagramManager.Refresh();
         }
 
         protected override bool ShouldRender()
@@ -75,6 +87,14 @@ namespace Blazor.Diagrams.Components
         public void Dispose()
         {
             DiagramManager.Changed -= DiagramManager_Changed;
+
+            if (_reference == null)
+                return;
+
+            if (elementReference.Id != null)
+                _ = JSRuntime.UnobserveResizes(elementReference);
+
+            _reference.Dispose();
         }
     }
 }

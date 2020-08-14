@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components.Base
 {
-    public class NodeWidgetBaseComponent : ComponentBase, IDisposable
+    public class NodeWidgetBaseComponent<T> : ComponentBase, IDisposable where T : NodeModel
     {
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]
-        public NodeModel Node { get; set; }
+        public T Node { get; set; }
 
         [Inject]
         private IJSRuntime jsRuntime { get; set; }

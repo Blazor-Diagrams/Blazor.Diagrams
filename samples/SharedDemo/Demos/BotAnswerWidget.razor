@@ -1,9 +1,4 @@
-﻿@inherits NodeWidgetBaseComponent
-
-@code {
-    // This will change in the future, maybe NodeWidgetBaseComponent should be generic?
-    private BotAnswerNode CastedNode => Node as BotAnswerNode;
-}
+﻿@inherits NodeWidgetBaseComponent<BotAnswerNode>
 
 <div class="node custom @(Node.Selected ? "selected" : "")"
      @onmousedown="OnMouseDown"
@@ -15,7 +10,7 @@
         <div class="card-body">
             <h5 class="card-title">Bot Answer</h5>
             <div class="form-group">
-                <input type="text" class="form-control" @bind-value="CastedNode.Answer" placeholder="Answer" />
+                <input type="text" class="form-control" @bind-value="Node.Answer" placeholder="Answer" />
             </div>
         </div>
     </div>

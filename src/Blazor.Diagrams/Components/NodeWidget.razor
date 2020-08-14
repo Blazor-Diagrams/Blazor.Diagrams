@@ -1,4 +1,4 @@
-﻿@inherits NodeWidgetBaseComponent
+﻿@inherits NodeWidgetBaseComponent<NodeModel>
 
 <div class="node default @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")"
      @onmousedown="OnMouseDown"

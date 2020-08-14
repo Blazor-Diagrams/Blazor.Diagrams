@@ -49,17 +49,17 @@ namespace Blazor.Diagrams.Core.Default
             if (DiagramManager.SelectedModels.Count == 0)
                 return;
 
-            if (e.CtrlKey && e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
+            if (e.CtrlKey && e.AltKey && e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
             {
                 var selectedNodes = DiagramManager.SelectedModels
                     .Where(m => m is NodeModel)
                     .Select(m => (NodeModel)m)
                     .ToArray();
 
-                if (e.ShiftKey)
+                var nodesWithGroup = selectedNodes.Where(n => n.Group != null).ToArray();
+                if (nodesWithGroup.Length > 0)
                 {
                     // Ungroup
-                    var nodesWithGroup = selectedNodes.Where(n => n.Group != null);
                     foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
                     {
                         DiagramManager.Ungroup(group);

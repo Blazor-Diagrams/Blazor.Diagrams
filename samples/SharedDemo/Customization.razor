@@ -1,0 +1,110 @@
+﻿@page "/customization"
+@inherits DocPage
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Customization";
+        LayoutData.Icon = "fa-sliders-h";
+        LayoutData.Date = "August 14th, 2020";
+        LayoutData.DataChanged();
+    }
+}
+
+<div class="doc-content col-md-9 col-12 order-1">
+    <div class="content-inner">
+        <section id="custom-nodes" class="doc-section">
+            <h2 class="section-title">Custom nodes</h2>
+            <p>
+                In Z.Blazor.Diagrams, everything is a <code>Model</code>, this makes it easier to handle (de)serialization and customization by inheritance.<br />
+                In order to customize nodes, you'll have to create a new Model, as well as the Blazor component for it.
+            </p>
+            <div id="create-node-model" class="section-block">
+                <h3 class="block-title">Creating a model</h3>
+                <p>
+                    First, we'll create a new model for our node, which will contain all the data needed.<br />
+                    Our custom node will be used to add two numbers together.
+                </p>
+                <pre><code class="language-csharp line-numbers">public class AddTwoNumbersNode : NodeModel
+{
+    public AddTwoNumbersNode(Point position = null) : base(position) { }
+
+    public double FirstNumber { get; set; }
+    public double SecondNumber { get; set; }
+
+    // Here, you can put whatever you want, such as a method that does the addition
+}</code></pre>
+            </div>
+            <div id="create-node-component" class="section-block">
+                <h3 class="block-title">Creating a component</h3>
+                <p>
+                    Second, we'll create a component <code>AddTwoNumbersComponent</code> that handles our new type of nodes.
+                </p>
+                <pre><code class="language-markup line-numbers">@@inherits NodeWidgetBaseComponent&#x3C;AddTwoNumbersNode&#x3E;
+
+&#x3C;div class=&#x22;node custom @@(Node.Selected ? &#x22;selected&#x22; : &#x22;&#x22;)&#x22;
+     @@onmousedown=&#x22;OnMouseDown&#x22;
+     @@onmousedown:stopPropagation
+     @@ref=&#x22;element&#x22;
+     style=&#x22;top: @@(Node.Position.Y.ToInvariantString())px;
+            left: @@(Node.Position.X.ToInvariantString())px&#x22;&#x3E;
+    &#x3C;div class=&#x22;card&#x22; style=&#x22;width: 250px;&#x22;&#x3E;
+        &#x3C;div class=&#x22;card-body&#x22;&#x3E;
+            &#x3C;h5 class=&#x22;card-title&#x22;&#x3E;Add&#x3C;/h5&#x3E;
+            &#x3C;div class=&#x22;form-group&#x22;&#x3E;
+                &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.FirstNumber&#x22; placeholder=&#x22;Number 1&#x22; /&#x3E;
+            &#x3C;/div&#x3E;
+            &#x3C;div class=&#x22;form-group&#x22;&#x3E;
+                &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.SecondNumber&#x22; placeholder=&#x22;Number 2&#x22; /&#x3E;
+            &#x3C;/div&#x3E;
+        &#x3C;/div&#x3E;
+    &#x3C;/div&#x3E;
+    @@foreach (var port in Node.Ports)
+    {
+        &#x3C;PortWidget Port=&#x22;port&#x22; /&#x3E;
+    }
+&#x3C;/div&#x3E;</code></pre>
+                <p>Things you need to ensure:</p>
+                <ol class="list">
+                    <li>Your component must inherit <code>NodeWidgetBaseComponent&lt;T&gt;</code>.</li>
+                    <li>Your parent div must have a <code>node</code> class.</li>
+                    <li>You must setup <code>@@onmousedown</code>, <code> @@onmousedown:stopPropagation</code> and <code>@@ref</code>.</li>
+                    <li>You must specify <code>top</code> and <code>left</code> in the style.</li>
+                    <li>You are in charge of the node's ports, you can do whatever you want, including using the default <code>PortWidget</code>.</li>
+                </ol>
+            </div>
+            <div id="register-custom-node" class="section-block">
+                <h3 class="block-title">Registering the custom node</h3>
+                <p>
+                    Lastly, we'll register the custom node and its component in the <code>DiagramManager</code>:
+                </p>
+                <pre><code class="language-csharp line-numbers">private DiagramManager DiagramManager { get; private set; }
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    DiagramManager = new DiagramManager();
+    DiagramManager.RegisterModelComponent&lt;AddTwoNumbersNode, AddTwoNumbersComponent&gt;();
+}</code></pre>
+                <p>This tells the Diagram manager to render a <code>AddTwoNumbersComponent</code> for every node of type <code>AddTwoNumbersNode</code>.</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+    <div id="doc-nav" class="doc-nav">
+        <nav id="doc-menu" class="nav doc-menu flex-column sticky">
+            <a class="nav-link scrollto" href="#custom-nodes">Custom nodes</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#create-node-model">Creating a model</a>
+                <a class="nav-link scrollto" href="#create-node-component">Creating a component</a>
+                <a class="nav-link scrollto" href="#register-custom-node">Registering the custom node</a>
+            </nav>
+        </nav>
+    </div>
+</div>

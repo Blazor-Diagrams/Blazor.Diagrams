@@ -26,7 +26,8 @@ You can get started very easily & quickly using:
 - [Quick Start](https://blazor-diagrams.zhaytam.com/quickstart)
 - [Demos](https://blazor-diagrams.zhaytam.com/demos/simple)
 
-There are a lot of things missing in the documentation, such as customization. They will be added as things progress. In the meantime, the demos should show you how to do most things.
+There are a some things missing in the documentation, especially in the customization part. They will be added as things progress.  
+In the meantime, the demos should show you how to do most things.
 
 ## Functionalities
 
@@ -40,7 +41,7 @@ There are a lot of things missing in the documentation, such as customization. T
 - Zoom to fit (all nodes or selected ones only)
 - Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
 - Snap to Grid
-- Grouping: [CTRL + G] to group and [CTRL + SHIFT + G] to ungroup
+- Grouping: [CTRL + ALT + G] to (un)group
 
 ## Preview
 

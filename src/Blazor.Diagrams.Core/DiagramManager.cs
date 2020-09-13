@@ -34,6 +34,7 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel> LinkRemoved;
         public event Action<Group> GroupAdded;
         public event Action<Group> GroupRemoved;
+        public event Action PanChanged;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -330,6 +331,13 @@ namespace Blazor.Diagrams.Core
             }
 
             return (minX, maxX, minY, maxY);
+        }
+
+        public void ChangePan(double deltaX, double deltaY)
+        {
+            Pan = Pan.Add(deltaX, deltaY);
+            PanChanged?.Invoke();
+            Refresh();
         }
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);

@@ -42,6 +42,7 @@ In the meantime, the demos should show you how to do most things.
 - Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
 - Snap to Grid
 - Grouping: [CTRL + ALT + G] to (un)group
+- Clipping: only draw nodes that are visible to the users
 
 ## Preview
 
@@ -61,7 +62,7 @@ In the meantime, the demos should show you how to do most things.
 
 - [x] Groups
 - [ ] History (undo/redo)
-- [ ] Avoid rendering models outside of screen view (might add a lot of js interop)
+- [x] Avoid rendering models outside of screen view
 - [ ] Auto layout (might add a lot of js interop)
 
 ### Thinking about

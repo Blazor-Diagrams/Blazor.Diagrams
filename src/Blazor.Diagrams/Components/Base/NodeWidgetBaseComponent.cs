@@ -33,7 +33,8 @@ namespace Blazor.Diagrams.Components.Base
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            if (firstRender)
+            // In case the node becomes visible again, no need to get the size
+            if (firstRender && Node.Size == null)
             {
                 var rect = await jsRuntime.GetBoundingClientRect(element);
                 Node.Size = new Size(rect.Width, rect.Height);
@@ -45,10 +46,7 @@ namespace Blazor.Diagrams.Components.Base
             DiagramManager.OnMouseDown(Node, e);
         }
 
-        private void OnNodeChanged()
-        {
-            StateHasChanged();
-        }
+        private void OnNodeChanged() => StateHasChanged();
 
         public void Dispose()
         {

@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Components.Base
                 var offsetAndSize = await JSRuntime.GetOffsetWithSize(element);
                 Port.Offset = new Point(offsetAndSize[0], offsetAndSize[1]);
                 Port.Size = new Size(offsetAndSize[2], offsetAndSize[3]);
-                Port.Position = new Point(Port.Position.X + Port.Offset.X, Port.Position.Y + Port.Offset.Y);
+                Port.Position = new Point(Port.Parent.Position.X + Port.Offset.X, Port.Parent.Position.Y + Port.Offset.Y);
                 Port.RefreshAll();
             }
         }

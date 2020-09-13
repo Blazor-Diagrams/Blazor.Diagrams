@@ -34,8 +34,7 @@ namespace Blazor.Diagrams.Core.Default
 
             var deltaX = e.ClientX - _lastClientX - (DiagramManager.Pan.X - _initialPan.X);
             var deltaY = e.ClientY - _lastClientY - (DiagramManager.Pan.Y - _initialPan.Y);
-            DiagramManager.Pan = DiagramManager.Pan.Add(deltaX, deltaY);
-            DiagramManager.Refresh();
+            DiagramManager.ChangePan(deltaX, deltaY);
         }
 
         private void DiagramManager_MouseUp(Model model, MouseEventArgs e)

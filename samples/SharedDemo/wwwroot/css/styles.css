@@ -1550,15 +1550,15 @@ body {
     max-width: 400px;
 }
 
-.node.custom.selected, .node.custom.selected .port {
+.custom-node.selected, .custom-node.selected .port {
     border: 1px solid #6e9fd4;
 }
 
-.node.custom:hover .port {
+.custom-node:hover .port {
     visibility: visible;
 }
 
-.node.custom .port {
+.custom-node .port {
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -1568,18 +1568,18 @@ body {
     visibility: hidden;
 }
 
-    .node.custom .port:hover, .node.custom .port.has-links {
+    .custom-node .port:hover, .node > .card .port.has-links {
         visibility: visible;
         background-color: black;
     }
 
-    .node.custom .port.bottom {
+    .custom-node .port.bottom {
         position: absolute;
         bottom: -10px;
         left: 115px;
     }
 
-    .node.custom .port.top {
+    .custom-node .port.top {
         position: absolute;
         top: -10px;
         left: 115px;

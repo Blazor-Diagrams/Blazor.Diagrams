@@ -1,12 +1,16 @@
-﻿using Blazor.Diagrams.Components.Base;
-using Blazor.Diagrams.Core.Extensions;
+﻿using Blazor.Diagrams.Core.Extensions;
+using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Globalization;
 
 namespace Blazor.Diagrams.Components
 {
-    public class LinkWidgetComponent : LinkWidgetBaseComponent
+    public partial class LinkWidget
     {
+        [Parameter]
+        public LinkModel Link { get; set; }
+
         protected string GetTargetX()
         {
             if (!Link.IsAttached)

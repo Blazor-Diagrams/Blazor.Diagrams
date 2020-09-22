@@ -41,9 +41,18 @@ namespace Blazor.Diagrams.Components
                 DiagramManager.Options.DefaultNodeComponent ??
                 (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
-            builder.OpenElement(0, "div");
+            builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
             builder.AddAttribute(1, "class", "node");
-            builder.AddAttribute(2, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+
+            if (Node.Layer == RenderLayer.HTML)
+            {
+                builder.AddAttribute(2, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+            }
+            else
+            {
+                builder.AddAttribute(2, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+            }
+
             builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
             builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
             builder.AddElementReferenceCapture(5, value => _element = value);

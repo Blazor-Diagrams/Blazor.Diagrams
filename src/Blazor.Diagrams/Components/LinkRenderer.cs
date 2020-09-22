@@ -9,6 +9,8 @@ namespace Blazor.Diagrams.Components
 {
     public class LinkRenderer : ComponentBase, IDisposable
     {
+        private bool _shouldRender = true;
+
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
@@ -27,6 +29,8 @@ namespace Blazor.Diagrams.Components
             Link.Changed += Link_Changed;
         }
 
+        protected override bool ShouldRender() => _shouldRender;
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var componentType = DiagramManager.GetComponentForModel(Link) ?? 
@@ -43,7 +47,13 @@ namespace Blazor.Diagrams.Components
             builder.CloseElement();
         }
 
-        private void Link_Changed() => StateHasChanged();
+        protected override void OnAfterRender(bool firstRender) => _shouldRender = false;
+
+        private void Link_Changed()
+        {
+            _shouldRender = true;
+            StateHasChanged();
+        }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Link, e);
     }

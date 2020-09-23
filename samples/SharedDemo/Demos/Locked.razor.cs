@@ -18,17 +18,17 @@ namespace SharedDemo
             diagramManager.AddNode(node2);
             diagramManager.AddNode(NewNode(300, 50));
 
-            var link = diagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
+            var link = diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
             link.Locked = true;
         }
 
         private NodeModel NewNode(double x, double y)
         {
             var node = new NodeModel(new Point(x, y));
-            node.AddPort(PortAlignment.BOTTOM);
-            node.AddPort(PortAlignment.TOP).Locked = true;
-            node.AddPort(PortAlignment.LEFT);
-            node.AddPort(PortAlignment.RIGHT);
+            node.AddPort(PortAlignment.Bottom);
+            node.AddPort(PortAlignment.Top).Locked = true;
+            node.AddPort(PortAlignment.Left);
+            node.AddPort(PortAlignment.Right);
             node.Locked = true;
             return node;
         }

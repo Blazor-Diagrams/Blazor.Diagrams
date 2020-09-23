@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Core.Models
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
         public Group? Group { get; internal set; }
 
-        public PortModel AddPort(PortAlignment alignment = PortAlignment.BOTTOM)
+        public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
         {
             var port = new PortModel(this, alignment, Position);
             _ports.Add(port);

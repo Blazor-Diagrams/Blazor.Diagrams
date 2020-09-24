@@ -43,37 +43,31 @@
                 <p>
                     Second, we'll create a component <code>AddTwoNumbersComponent</code> that handles our new type of nodes.
                 </p>
-                <pre><code class="language-markup line-numbers">@@inherits NodeWidgetBaseComponent&#x3C;AddTwoNumbersNode&#x3E;
-
-&#x3C;div class=&#x22;node custom @@(Node.Selected ? &#x22;selected&#x22; : &#x22;&#x22;)&#x22;
-     @@onmousedown=&#x22;OnMouseDown&#x22;
-     @@onmousedown:stopPropagation
-     @@ref=&#x22;element&#x22;
-     style=&#x22;top: @@(Node.Position.Y.ToInvariantString())px;
-            left: @@(Node.Position.X.ToInvariantString())px&#x22;&#x3E;
-    &#x3C;div class=&#x22;card&#x22; style=&#x22;width: 250px;&#x22;&#x3E;
-        &#x3C;div class=&#x22;card-body&#x22;&#x3E;
-            &#x3C;h5 class=&#x22;card-title&#x22;&#x3E;Add&#x3C;/h5&#x3E;
-            &#x3C;div class=&#x22;form-group&#x22;&#x3E;
-                &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.FirstNumber&#x22; placeholder=&#x22;Number 1&#x22; /&#x3E;
-            &#x3C;/div&#x3E;
-            &#x3C;div class=&#x22;form-group&#x22;&#x3E;
-                &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.SecondNumber&#x22; placeholder=&#x22;Number 2&#x22; /&#x3E;
-            &#x3C;/div&#x3E;
+                <pre><code class="language-markup line-numbers">&#x3C;div class=&#x22;card&#x22; style=&#x22;width: 250px;&#x22;&#x3E;
+    &#x3C;div class=&#x22;card-body&#x22;&#x3E;
+        &#x3C;h5 class=&#x22;card-title&#x22;&#x3E;Add&#x3C;/h5&#x3E;
+        &#x3C;div class=&#x22;form-group&#x22;&#x3E;
+            &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.FirstNumber&#x22; placeholder=&#x22;Number 1&#x22; /&#x3E;
+        &#x3C;/div&#x3E;
+        &#x3C;div class=&#x22;form-group&#x22;&#x3E;
+            &#x3C;input type=&#x22;number&#x22; class=&#x22;form-control&#x22; @@bind-value=&#x22;Node.SecondNumber&#x22; placeholder=&#x22;Number 2&#x22; /&#x3E;
         &#x3C;/div&#x3E;
     &#x3C;/div&#x3E;
     @@foreach (var port in Node.Ports)
     {
-        &#x3C;PortWidget Port=&#x22;port&#x22; /&#x3E;
+        &#x3C;!-- Default ports --&#x3E;
+        &#x3C;PortRenderer Port=&#x22;port&#x22; /&#x3E;
     }
-&#x3C;/div&#x3E;</code></pre>
-                <p>Things you need to ensure:</p>
+&#x3C;/div&#x3E;
+
+@@code {
+    [Parameter]
+    public BotAnswerNode Node { get; set; }
+}</code></pre>
                 <ol class="list">
-                    <li>Your component must inherit <code>NodeWidgetBaseComponent&lt;T&gt;</code>.</li>
-                    <li>Your parent div must have a <code>node</code> class.</li>
-                    <li>You must setup <code>@@onmousedown</code>, <code> @@onmousedown:stopPropagation</code> and <code>@@ref</code>.</li>
-                    <li>You must specify <code>top</code> and <code>left</code> in the style.</li>
-                    <li>You are in charge of the node's ports, you can do whatever you want, including using the default <code>PortWidget</code>.</li>
+                    <li>Your component will be wrapped in a <code>div.node</code> element in order to position it.</li>
+                    <li>You are always in charge of rendering the ports, and you must use <code>PortRenderer</code>.</li>
+                    <li>The <code>BotAnswerNode Node</code> will come from the parent.</li>
                 </ol>
             </div>
             <div id="register-custom-node" class="section-block">

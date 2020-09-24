@@ -121,6 +121,8 @@ namespace Blazor.Diagrams.Core
                 target.AddLink(link);
             }
 
+            source.Refresh();
+            target?.Refresh();
             LinkAdded?.Invoke(link);
             Changed?.Invoke();
             return link;
@@ -137,6 +139,7 @@ namespace Blazor.Diagrams.Core
             link.SetTargetPort(targetPort);
             targetPort.AddLink(link);
             link.Refresh();
+            targetPort.Refresh();
             LinkAttached?.Invoke(link);
         }
 
@@ -146,6 +149,9 @@ namespace Blazor.Diagrams.Core
             link.TargetPort?.RemoveLink(link);
 
             LinkRemoved?.Invoke(link);
+            link.SourcePort.Refresh();
+            link.TargetPort?.Refresh();
+
             if (triggerEvent)
             {
                 Changed?.Invoke();

@@ -40,24 +40,24 @@ namespace SharedDemo.Demos
                 return;
 
             var node = model as NodeModel;
-            if (node.GetPort(PortAlignment.TOP) == null)
+            if (node.GetPort(PortAlignment.Top) == null)
             {
-                node.AddPort(PortAlignment.TOP);
+                node.AddPort(PortAlignment.Top);
                 node.Refresh();
             }
-            else if (node.GetPort(PortAlignment.RIGHT) == null)
+            else if (node.GetPort(PortAlignment.Right) == null)
             {
-                node.AddPort(PortAlignment.RIGHT);
+                node.AddPort(PortAlignment.Right);
                 node.Refresh();
             }
-            else if (node.GetPort(PortAlignment.BOTTOM) == null)
+            else if (node.GetPort(PortAlignment.Bottom) == null)
             {
-                node.AddPort(PortAlignment.BOTTOM);
+                node.AddPort(PortAlignment.Bottom);
                 node.Refresh();
             }
-            else if (node.GetPort(PortAlignment.LEFT) == null)
+            else if (node.GetPort(PortAlignment.Left) == null)
             {
-                node.AddPort(PortAlignment.LEFT);
+                node.AddPort(PortAlignment.Left);
                 node.Refresh();
             }
         }

@@ -96,7 +96,8 @@ protected override void OnInitialized()
         InverseZoom = false, // Whether to inverse the direction of the zoom when using the wheel
         DefaultLinkType = LinkType.Curved, // Default link type (Curved, Line or LineWithArrowToTarget for now)
         DefaultLinkComponent = null, // Default component for links
-        DefaultNodeComponent = null // Default component for nodes
+        DefaultNodeComponent = null, // Default component for nodes,
+        AllowMultiSelection = true // Whether to allow multi selection using CTRL
     };
     DiagramManager = new DiagramManager(options);
 }</code></pre>

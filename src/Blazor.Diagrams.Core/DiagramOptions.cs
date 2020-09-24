@@ -12,5 +12,6 @@ namespace Blazor.Diagrams.Core
         public Type? DefaultNodeComponent { get; set; }
         public int? GridSize { get; set; }
         public bool GroupingEnabled { get; set; }
+        public bool AllowMultiSelection { get; set; } = true;
     }
 }

@@ -1,11 +1,4 @@
-﻿@inherits NodeWidgetBaseComponent<BotAnswerNode>
-
-<div class="node custom @(Node.Selected ? "selected" : "")"
-     @onmousedown="OnMouseDown"
-     @onmousedown:stopPropagation
-     @ref="element"
-     style="top: @(Node.Position.Y.ToInvariantString())px;
-            left: @(Node.Position.X.ToInvariantString())px">
+﻿<div class="custom-node @(Node.Selected ? " selected" : "")">
     <div class="card" style="width: 250px;">
         <div class="card-body">
             <h5 class="card-title">Bot Answer</h5>
@@ -14,8 +7,14 @@
             </div>
         </div>
     </div>
+
     @foreach (var port in Node.Ports)
     {
-        <PortWidget Port="port" />
+        <PortRenderer Port="port"></PortRenderer>
     }
 </div>
+
+@code {
+    [Parameter]
+    public BotAnswerNode Node { get; set; }
+}

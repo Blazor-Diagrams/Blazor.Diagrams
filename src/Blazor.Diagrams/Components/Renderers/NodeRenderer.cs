@@ -1,21 +1,30 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using System;
+using System.Threading.Tasks;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components.Renderers
 {
     public class NodeRenderer : ComponentBase, IDisposable
     {
         private bool _reRender;
         private bool _isVisible = true;
+        private ElementReference _element;
 
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]
         public NodeModel Node { get; set; }
+
+        [Inject]
+        private IJSRuntime jsRuntime { get; set; }
 
         public void Dispose()
         {
@@ -32,9 +41,25 @@ namespace Blazor.Diagrams.Components
                 DiagramManager.Options.DefaultNodeComponent ??
                 (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
-            builder.OpenComponent(0, componentType);
-            builder.AddAttribute(1, "Node", Node);
+            builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
+            builder.AddAttribute(1, "class", "node");
+
+            if (Node.Layer == RenderLayer.HTML)
+            {
+                builder.AddAttribute(2, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+            }
+            else
+            {
+                builder.AddAttribute(2, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+            }
+
+            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
+            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
+            builder.AddElementReferenceCapture(5, value => _element = value);
+            builder.OpenComponent(6, componentType);
+            builder.AddAttribute(7, "Node", Node);
             builder.CloseComponent();
+            builder.CloseElement();
         }
 
         protected override void OnInitialized()
@@ -54,6 +79,18 @@ namespace Blazor.Diagrams.Components
             }
 
             return false;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            // In case the node becomes visible again, no need to get the size
+            if (firstRender && Node.Size == null)
+            {
+                var rect = await jsRuntime.GetBoundingClientRect(_element);
+                Node.Size = new Size(rect.Width, rect.Height);
+            }
         }
 
         private void DiagramManager_PanChanged()
@@ -80,6 +117,9 @@ namespace Blazor.Diagrams.Components
         private void Node_Changed()
         {
             _reRender = true;
+            StateHasChanged();
         }
+
+        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Node, e);
     }
 }

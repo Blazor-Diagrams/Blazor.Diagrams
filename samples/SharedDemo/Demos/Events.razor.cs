@@ -22,7 +22,7 @@ namespace SharedDemo.Demos
             diagramManager.AddNode(node2);
             diagramManager.AddNode(NewNode(300, 50));
 
-            diagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
+            diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
         }
 
         private void RegisterEvents()
@@ -56,10 +56,10 @@ namespace SharedDemo.Demos
         private NodeModel NewNode(double x, double y)
         {
             var node = new NodeModel(new Point(x, y));
-            node.AddPort(PortAlignment.BOTTOM);
-            node.AddPort(PortAlignment.TOP);
-            node.AddPort(PortAlignment.LEFT);
-            node.AddPort(PortAlignment.RIGHT);
+            node.AddPort(PortAlignment.Bottom);
+            node.AddPort(PortAlignment.Top);
+            node.AddPort(PortAlignment.Left);
+            node.AddPort(PortAlignment.Right);
             return node;
         }
     }

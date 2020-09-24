@@ -19,8 +19,8 @@ namespace SharedDemo.Demos
                     var node1 = new NodeModel(new Point(10 + c * 10 + c * 120, 10 + r * 100));
                     var node2 = new NodeModel(new Point(10 + (c + 1) * 130, 10 + r * 100));
 
-                    var sourcePort = node1.AddPort(PortAlignment.RIGHT);
-                    var targetPort = node2.AddPort(PortAlignment.LEFT);
+                    var sourcePort = node1.AddPort(PortAlignment.Right);
+                    var targetPort = node2.AddPort(PortAlignment.Left);
 
                     diagramManager.AddNodes(node1, node2);
                     diagramManager.AddLink(sourcePort, targetPort);
@@ -31,10 +31,10 @@ namespace SharedDemo.Demos
         private NodeModel NewNode(double x, double y)
         {
             var node = new NodeModel(new Point(x, y));
-            node.AddPort(PortAlignment.BOTTOM);
-            node.AddPort(PortAlignment.TOP);
-            node.AddPort(PortAlignment.LEFT);
-            node.AddPort(PortAlignment.RIGHT);
+            node.AddPort(PortAlignment.Bottom);
+            node.AddPort(PortAlignment.Top);
+            node.AddPort(PortAlignment.Left);
+            node.AddPort(PortAlignment.Right);
             return node;
         }
     }

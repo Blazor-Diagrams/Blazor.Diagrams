@@ -1,16 +1,19 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Extensions;
-using Microsoft.AspNetCore.Components;
+﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Extensions;
 
-namespace Blazor.Diagrams.Components.Base
+namespace Blazor.Diagrams.Components.Renderers
 {
-    public class PortWidgetBaseComponent : ComponentBase, IDisposable
+    public partial class PortRenderer : IDisposable
     {
+        private bool _shouldRender = true;
+        private ElementReference _element;
+
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
@@ -20,7 +23,16 @@ namespace Blazor.Diagrams.Components.Base
         [Parameter]
         public PortModel Port { get; set; }
 
-        protected ElementReference element;
+        [Parameter]
+        public string Class { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        public void Dispose()
+        {
+            Port.Changed -= OnPortChanged;
+        }
 
         protected override void OnInitialized()
         {
@@ -29,13 +41,16 @@ namespace Blazor.Diagrams.Components.Base
             Port.Changed += OnPortChanged;
         }
 
+        protected override bool ShouldRender() => _shouldRender;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+            _shouldRender = false;
 
             if (firstRender)
             {
-                var offsetAndSize = await JSRuntime.GetOffsetWithSize(element);
+                var offsetAndSize = await JSRuntime.GetOffsetWithSize(_element);
                 Port.Offset = new Point(offsetAndSize[0], offsetAndSize[1]);
                 Port.Size = new Size(offsetAndSize[2], offsetAndSize[3]);
                 Port.Position = new Point(Port.Parent.Position.X + Port.Offset.X, Port.Parent.Position.Y + Port.Offset.Y);
@@ -49,12 +64,8 @@ namespace Blazor.Diagrams.Components.Base
 
         private void OnPortChanged()
         {
+            _shouldRender = true;
             StateHasChanged();
-        }
-
-        public void Dispose()
-        {
-            Port.Changed -= OnPortChanged;
         }
     }
 }

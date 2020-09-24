@@ -2,9 +2,13 @@
 {
     public enum PortAlignment
     {
-        TOP,
-        RIGHT,
-        BOTTOM,
-        LEFT
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
+        TopLeft
     }
 }

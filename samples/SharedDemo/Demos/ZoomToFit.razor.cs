@@ -19,8 +19,8 @@ namespace SharedDemo.Demos
                     var node1 = new NodeModel(new Point(350 + c * 80 + c * 120, 150 + r * 120));
                     var node2 = new NodeModel(new Point(350 + (c + 1) * 200, 150 + r * 120));
 
-                    var sourcePort = node1.AddPort(PortAlignment.RIGHT);
-                    var targetPort = node2.AddPort(PortAlignment.LEFT);
+                    var sourcePort = node1.AddPort(PortAlignment.Right);
+                    var targetPort = node2.AddPort(PortAlignment.Left);
 
                     diagramManager.AddNodes(node1, node2);
                     diagramManager.AddLink(sourcePort, targetPort);

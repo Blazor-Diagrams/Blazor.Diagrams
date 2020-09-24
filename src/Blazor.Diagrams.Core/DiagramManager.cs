@@ -149,6 +149,9 @@ namespace Blazor.Diagrams.Core
             link.TargetPort?.RemoveLink(link);
 
             LinkRemoved?.Invoke(link);
+            link.SourcePort.Refresh();
+            link.TargetPort?.Refresh();
+
             if (triggerEvent)
             {
                 Changed?.Invoke();

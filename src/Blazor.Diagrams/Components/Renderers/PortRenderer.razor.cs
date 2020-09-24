@@ -11,6 +11,9 @@ namespace Blazor.Diagrams.Components.Renderers
 {
     public partial class PortRenderer : IDisposable
     {
+        private bool _shouldRender = true;
+        private ElementReference _element;
+
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
@@ -26,7 +29,10 @@ namespace Blazor.Diagrams.Components.Renderers
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        protected ElementReference element;
+        public void Dispose()
+        {
+            Port.Changed -= OnPortChanged;
+        }
 
         protected override void OnInitialized()
         {
@@ -35,13 +41,16 @@ namespace Blazor.Diagrams.Components.Renderers
             Port.Changed += OnPortChanged;
         }
 
+        protected override bool ShouldRender() => _shouldRender;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+            _shouldRender = false;
 
             if (firstRender)
             {
-                var offsetAndSize = await JSRuntime.GetOffsetWithSize(element);
+                var offsetAndSize = await JSRuntime.GetOffsetWithSize(_element);
                 Port.Offset = new Point(offsetAndSize[0], offsetAndSize[1]);
                 Port.Size = new Size(offsetAndSize[2], offsetAndSize[3]);
                 Port.Position = new Point(Port.Parent.Position.X + Port.Offset.X, Port.Parent.Position.Y + Port.Offset.Y);
@@ -55,12 +64,8 @@ namespace Blazor.Diagrams.Components.Renderers
 
         private void OnPortChanged()
         {
+            _shouldRender = true;
             StateHasChanged();
-        }
-
-        public void Dispose()
-        {
-            Port.Changed -= OnPortChanged;
         }
     }
 }

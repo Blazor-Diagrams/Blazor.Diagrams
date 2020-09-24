@@ -1585,7 +1585,7 @@ body {
         left: 115px;
     }
 
-.diagram-canvas {
+.diagram-canvas.grid {
     background-size: 50px 50px;
     background-image: linear-gradient(to right, rgb(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(0, 0, 0, 0.05) 1px, transparent 1px);
 }

@@ -19,6 +19,9 @@ namespace Blazor.Diagrams.Components
         [Parameter]
         public RenderFragment Widgets { get; set; }
 
+        [Parameter]
+        public string Class { get; set; }
+
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 

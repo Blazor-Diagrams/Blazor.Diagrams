@@ -26,9 +26,6 @@ You can get started very easily & quickly using:
 - [Quick Start](https://blazor-diagrams.zhaytam.com/quickstart)
 - [Demos](https://blazor-diagrams.zhaytam.com/demos/simple)
 
-There are a some things missing in the documentation, especially in the customization part. They will be added as things progress.  
-In the meantime, the demos should show you how to do most things.
-
 ## Functionalities
 
 - Panning/Zooming
@@ -60,9 +57,7 @@ In the meantime, the demos should show you how to do most things.
 
 ## Roadmap
 
-- [x] Groups
 - [ ] History (undo/redo)
-- [x] Avoid rendering models outside of screen view
 - [ ] Auto layout (might add a lot of js interop)
 
 ### Thinking about

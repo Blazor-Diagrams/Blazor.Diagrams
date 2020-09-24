@@ -1,15 +1,15 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Extensions;
-using Microsoft.AspNetCore.Components;
+﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Extensions;
 
-namespace Blazor.Diagrams.Components.Base
+namespace Blazor.Diagrams.Components.Renderers
 {
-    public class PortWidgetBaseComponent : ComponentBase, IDisposable
+    public partial class PortRenderer : IDisposable
     {
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
@@ -19,6 +19,12 @@ namespace Blazor.Diagrams.Components.Base
 
         [Parameter]
         public PortModel Port { get; set; }
+
+        [Parameter]
+        public string Class { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         protected ElementReference element;
 

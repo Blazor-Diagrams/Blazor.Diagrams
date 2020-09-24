@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components.Renderers
 {
     public class LinkRenderer : ComponentBase, IDisposable
     {
@@ -33,7 +33,7 @@ namespace Blazor.Diagrams.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = DiagramManager.GetComponentForModel(Link) ?? 
+            var componentType = DiagramManager.GetComponentForModel(Link) ??
                 DiagramManager.Options.DefaultLinkComponent ??
                 typeof(LinkWidget);
 

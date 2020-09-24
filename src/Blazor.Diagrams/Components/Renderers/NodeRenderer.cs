@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components.Renderers
 {
     public class NodeRenderer : ComponentBase, IDisposable
     {

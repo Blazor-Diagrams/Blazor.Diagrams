@@ -38,12 +38,14 @@ namespace Blazor.Diagrams.Core.Models
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
         public Group? Group { get; internal set; }
 
-        public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
+        public PortModel AddPort(PortModel port)
         {
-            var port = new PortModel(this, alignment, Position);
             _ports.Add(port);
             return port;
         }
+
+        public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
+            => AddPort(new PortModel(this, alignment, Position));
 
         public bool RemovePort(PortModel port) => _ports.Remove(port);
 

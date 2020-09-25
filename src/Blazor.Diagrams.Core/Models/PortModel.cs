@@ -6,7 +6,7 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class PortModel : Model
     {
-        private readonly List<LinkModel> _links = new List<LinkModel>();
+        private readonly List<LinkModel> _links = new List<LinkModel>(4);
 
         public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, 
             Size? size = null)

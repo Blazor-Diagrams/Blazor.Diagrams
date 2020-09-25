@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : SelectableModel
+    public class NodeModel<PortType> : SelectableModel where PortType : PortModel
     {
         private Size? _size;
-        private readonly List<PortModel> _ports = new List<PortModel>();
+        private readonly List<PortType> _ports = new List<PortType>();
 
         public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML)
         {
@@ -34,20 +34,19 @@ namespace Blazor.Diagrams.Core.Models
 
         public Point Position { get; private set; }
         public RenderLayer Layer { get; }
-        public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
+        public ReadOnlyCollection<PortType> Ports => _ports.AsReadOnly();
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
         public Group? Group { get; internal set; }
 
-        public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
+        public PortType AddPort(PortType port)
         {
-            var port = new PortModel(this, alignment, Position);
             _ports.Add(port);
             return port;
         }
 
-        public bool RemovePort(PortModel port) => _ports.Remove(port);
+        public PortType GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
-        public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
+        public bool RemovePort(PortType port) => _ports.Remove(port);
 
         public void SetPosition(double x, double y)
         {
@@ -62,6 +61,19 @@ namespace Blazor.Diagrams.Core.Models
         {
             Refresh();
             _ports.ForEach(p => p.RefreshAll());
+        }
+    }
+
+    public class NodeModel : NodeModel<PortModel>
+    {
+        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(position, layer) { }
+
+        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id, position, layer) { }
+
+        public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
+        {
+            var port = new PortModel(this, alignment, Position);
+            return AddPort(port);
         }
     }
 }

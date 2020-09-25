@@ -49,6 +49,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
+        public T GetPort<T>(PortAlignment alignment) where T : PortModel => (T)GetPort(alignment);
+
         public void SetPosition(double x, double y)
         {
             Position = new Point(x, y);

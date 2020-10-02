@@ -28,7 +28,6 @@ namespace Blazor.Diagrams.Core.Models
 
         public NodeModel Parent { get; }
         public PortAlignment Alignment { get; }
-        public Point Offset { get; set; } = Point.Zero;
         public Point Position { get; set; }
         public Size Size { get; set; }
         public ReadOnlyCollection<LinkModel> Links => _links.AsReadOnly();

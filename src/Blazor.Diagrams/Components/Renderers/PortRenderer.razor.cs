@@ -50,10 +50,10 @@ namespace Blazor.Diagrams.Components.Renderers
 
             if (firstRender)
             {
-                var offsetAndSize = await JSRuntime.GetOffsetWithSize(_element);
-                Port.Offset = new Point(offsetAndSize[0], offsetAndSize[1]);
-                Port.Size = new Size(offsetAndSize[2], offsetAndSize[3]);
-                Port.Position = new Point(Port.Parent.Position.X + Port.Offset.X, Port.Parent.Position.Y + Port.Offset.Y);
+                var rect = await JSRuntime.GetBoundingClientRect(_element);
+                Port.Size = new Size(rect.Width, rect.Height);
+                Port.Position = new Point(rect.Left - DiagramManager.Container.Left - DiagramManager.Pan.X,
+                    rect.Top - DiagramManager.Container.Top - DiagramManager.Pan.Y);
                 Port.RefreshAll();
             }
         }

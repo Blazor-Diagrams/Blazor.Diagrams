@@ -1,7 +1,4 @@
 var s = {
-    getOffsetWithSize: el => {
-        return [el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight];
-    },
     getBoundingClientRect: el => {
         return el.getBoundingClientRect();
     },

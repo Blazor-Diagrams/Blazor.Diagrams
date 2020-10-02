@@ -55,10 +55,14 @@ namespace Blazor.Diagrams.Core.Models
 
         public void SetPosition(double x, double y)
         {
+            var deltaX = x - Position.X;
+            var deltaY = y - Position.Y;
             Position = new Point(x, y);
+
+            // Save some JS calls and update ports directly here
             foreach (var port in _ports)
             {
-                port.Position = new Point(Position.X + port.Offset.X, Position.Y + port.Offset.Y);
+                port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
             }
         }
 

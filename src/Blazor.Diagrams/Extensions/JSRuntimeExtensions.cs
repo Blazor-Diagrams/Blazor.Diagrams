@@ -7,11 +7,6 @@ namespace Blazor.Diagrams.Extensions
 {
     public static class JSRuntimeExtensions
     {
-        public static async Task<double[]> GetOffsetWithSize(this IJSRuntime jsRuntime, ElementReference element)
-        {
-            return await jsRuntime.InvokeAsync<double[]>("ZBlazorDiagrams.getOffsetWithSize", element);
-        }
-
         public static async Task<Rectangle> GetBoundingClientRect(this IJSRuntime jsRuntime, ElementReference element)
         {
             return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);

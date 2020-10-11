@@ -48,12 +48,16 @@ namespace Blazor.Diagrams.Components.Renderers
             await base.OnAfterRenderAsync(firstRender);
             _shouldRender = false;
 
-            if (firstRender)
+            if (firstRender && !Port.Initialized)
             {
+                var zoom = DiagramManager.Zoom;
+                var pan = DiagramManager.Pan;
                 var rect = await JSRuntime.GetBoundingClientRect(_element);
-                Port.Size = new Size(rect.Width, rect.Height);
-                Port.Position = new Point(rect.Left - DiagramManager.Container.Left - DiagramManager.Pan.X,
-                    rect.Top - DiagramManager.Container.Top - DiagramManager.Pan.Y);
+
+                Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
+                Port.Position = new Point((rect.Left - DiagramManager.Container.Left - pan.X) / zoom,
+                    (rect.Top - DiagramManager.Container.Top - pan.Y) / zoom);
+                Port.Initialized = true;
                 Port.RefreshAll();
             }
         }

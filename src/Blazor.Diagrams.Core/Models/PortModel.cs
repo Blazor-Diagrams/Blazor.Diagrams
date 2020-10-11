@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<LinkModel> _links = new List<LinkModel>(4);
 
-        public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, 
+        public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null,
             Size? size = null)
         {
             Parent = parent;
@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Core.Models
             Size = size ?? Size.Zero;
         }
 
-        public PortModel(string id, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, 
+        public PortModel(string id, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom,
             Point? position = null, Size? size = null) : base(id)
         {
             Parent = parent;
@@ -31,6 +31,7 @@ namespace Blazor.Diagrams.Core.Models
         public Point Position { get; set; }
         public Size Size { get; set; }
         public ReadOnlyCollection<LinkModel> Links => _links.AsReadOnly();
+        public bool Initialized { get; internal set; }
 
         public void RefreshAll()
         {

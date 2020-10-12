@@ -55,9 +55,11 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
             builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddElementReferenceCapture(5, value => _element = value);
-            builder.OpenComponent(6, componentType);
-            builder.AddAttribute(7, "Node", Node);
+            builder.AddAttribute(4, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
+            builder.AddEventStopPropagationAttribute(5, "onmouseup", true);
+            builder.AddElementReferenceCapture(6, value => _element = value);
+            builder.OpenComponent(7, componentType);
+            builder.AddAttribute(8, "Node", Node);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -121,5 +123,7 @@ namespace Blazor.Diagrams.Components.Renderers
         }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Node, e);
+        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Node, e);
+
     }
 }

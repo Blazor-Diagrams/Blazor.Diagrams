@@ -55,11 +55,11 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
             builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddAttribute(4, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(5, "onmouseup", true);
-            builder.AddElementReferenceCapture(6, value => _element = value);
-            builder.OpenComponent(7, componentType);
-            builder.AddAttribute(8, "Node", Node);
+            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
+            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
+            builder.AddElementReferenceCapture(7, value => _element = value);
+            builder.OpenComponent(8, componentType);
+            builder.AddAttribute(9, "Node", Node);
             builder.CloseComponent();
             builder.CloseElement();
         }

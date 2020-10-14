@@ -1,4 +1,4 @@
-﻿namespace Blazor.Diagrams.Core.Models
+﻿namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Point
     {

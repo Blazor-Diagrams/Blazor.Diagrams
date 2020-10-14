@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Core;
 
 namespace SharedDemo.Demos
 {

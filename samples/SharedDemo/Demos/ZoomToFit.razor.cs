@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core;
 using Microsoft.AspNetCore.Components;
+using Blazor.Diagrams.Core.Models.Core;
 
 namespace SharedDemo.Demos
 {

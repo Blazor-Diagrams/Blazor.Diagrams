@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Core;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;

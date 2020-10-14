@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
 using Blazor.Diagrams.Extensions;
+using Blazor.Diagrams.Core.Models.Core;
 
 namespace Blazor.Diagrams.Components.Renderers
 {

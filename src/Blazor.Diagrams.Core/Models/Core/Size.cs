@@ -1,10 +1,8 @@
-﻿namespace Blazor.Diagrams.Core.Models
+﻿namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Size
     {
         public static Size Zero { get; } = new Size(0, 0);
-
-        public Size() { }
 
         public Size(double width, double height)
         {
@@ -12,8 +10,8 @@
             Height = height;
         }
 
-        public double Width { get; set; }
-        public double Height { get; set; }
+        public double Width { get; }
+        public double Height { get; }
 
         public override string ToString() => $"Size(width={Width}, height={Height})";
     }

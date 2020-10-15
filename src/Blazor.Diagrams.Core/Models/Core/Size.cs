@@ -4,6 +4,8 @@
     {
         public static Size Zero { get; } = new Size(0, 0);
 
+        public Size() { }
+
         public Size(double width, double height)
         {
             Width = width;

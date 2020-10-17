@@ -1,0 +1,97 @@
+﻿@page "/options"
+@inherits DocPage
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Options";
+        LayoutData.Icon = "fa-cogs";
+        LayoutData.Date = "October 17th, 2020";
+        LayoutData.DataChanged();
+    }
+}
+
+<div class="doc-content col-md-9 col-12 order-1">
+    <div class="content-inner">
+        <section id="diagram-options" class="doc-section">
+            <h2 class="section-title">Diagram options</h2>
+            <p>
+                In Z.Blazor.Diagrams, you can customize a lot of things using the available diagram options.
+            </p>
+            <div id="diagram-options-table" class="section-block">
+                <h3 class="block-title">Table</h3>
+                <p>
+                    Here are all the available options, as well as their default values:
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var possibleOption in ReflectionUtils.ExtractPossibleOptions<DiagramOptions>())
+                            {
+                                <tr>
+                                    <th>@possibleOption.Name</th>
+                                    <td>@possibleOption.Type</td>
+                                    <td>@possibleOption.Default</td>
+                                    <td>@possibleOption.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="diagram-options-example" class="section-block">
+                <h3 class="block-title">Example</h3>
+                <p>
+                    Here's an example usage:
+                </p>
+                <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    var options = new DiagramOptions
+    {
+        DeleteKey = "Delete",
+        InverseZoom = false,
+        DefaultNodeComponent = null,
+        GridSize = 40,
+        GroupingEnabled = true,
+        AllowMultiSelection = true,
+        AllowPanning = true,
+        AllowZooming = true,
+        Links = new DiagramLinkOptions
+        {
+            DefaultLinkType = LinkType.LineWithArrowToTarget,
+            DefaultLinkComponent = null,
+            DefaultColor = "blue",
+            DefaultSelectedColor = "red"
+        }
+    };
+    DiagramManager = new DiagramManager(options);
+}</code></pre>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+    <div id="doc-nav" class="doc-nav">
+        <nav id="doc-menu" class="nav doc-menu flex-column sticky">
+            <a class="nav-link scrollto" href="#diagram-options">Diagram Options</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#diagram-options-table">Table</a>
+                <a class="nav-link scrollto" href="#diagram-options-example">Example</a>
+            </nav>
+        </nav>
+    </div>
+</div>

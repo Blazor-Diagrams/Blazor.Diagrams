@@ -36,6 +36,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Group> GroupAdded;
         public event Action<Group> GroupRemoved;
         public event Action PanChanged;
+        public event Action ZoomChanged;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -62,7 +63,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<Group> Groups => _groups;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
-        public double Zoom { get; internal set; } = 1;
+        public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
 
         public void AddNode(NodeModel node)
@@ -344,6 +345,13 @@ namespace Blazor.Diagrams.Core
         {
             Pan = Pan.Add(deltaX, deltaY);
             PanChanged?.Invoke();
+            Refresh();
+        }
+
+        public void ChangeZoom(double newZoom)
+        {
+            Zoom = newZoom;
+            ZoomChanged?.Invoke();
             Refresh();
         }
 

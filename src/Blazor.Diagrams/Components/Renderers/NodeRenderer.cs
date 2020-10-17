@@ -31,7 +31,8 @@ namespace Blazor.Diagrams.Components.Renderers
 
         public void Dispose()
         {
-            DiagramManager.PanChanged -= DiagramManager_PanChanged;
+            DiagramManager.PanChanged -= CheckVisibility;
+            DiagramManager.ZoomChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
             if (_reference == null)
@@ -51,6 +52,27 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             Node.Size = size;
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            _reference = DotNetObjectReference.Create(this);
+            DiagramManager.PanChanged += CheckVisibility;
+            DiagramManager.ZoomChanged += CheckVisibility;
+            Node.Changed += ReRender;
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (_shouldRender)
+            {
+                _shouldRender = false;
+                return true;
+            }
+
+            return false;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -85,26 +107,6 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.CloseElement();
         }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            _reference = DotNetObjectReference.Create(this);
-            DiagramManager.PanChanged += DiagramManager_PanChanged;
-            Node.Changed += ReRender;
-        }
-
-        protected override bool ShouldRender()
-        {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
-
-            return false;
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -116,7 +118,7 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private async void DiagramManager_PanChanged()
+        private async void CheckVisibility()
         {
             if (Node.Size == null)
                 return;

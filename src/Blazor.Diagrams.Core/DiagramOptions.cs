@@ -14,5 +14,6 @@ namespace Blazor.Diagrams.Core
         public bool GroupingEnabled { get; set; }
         public bool AllowMultiSelection { get; set; } = true;
         public bool AllowPanning { get; set; } = true;
+        public bool AllowZooming { get; set; } = true;
     }
 }

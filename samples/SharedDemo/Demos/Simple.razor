@@ -14,6 +14,17 @@
     }
 }
 
+<div style="position: absolute; z-index: 9999;">
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="zoomCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleZoom" checked />
+        <label class="custom-control-label" for="zoomCheckbox">Toggle Zoom</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="panningCheckbox" type="checkbox" class="custom-control-input" @onchange="TogglePanning" checked />
+        <label class="custom-control-label" for="panningCheckbox">Toggle Panning</label>
+    </div>
+</div>
+
 <CascadingValue Name="DiagramManager" Value="diagramManager">
     <DiagramCanvas>
         <Widgets>

@@ -14,9 +14,11 @@ namespace Blazor.Diagrams.Components.Renderers
 {
     public class NodeRenderer : ComponentBase, IDisposable
     {
-        private bool _reRender;
+        private bool _shouldRender;
         private bool _isVisible = true;
+        private bool _becameVisible;
         private ElementReference _element;
+        private DotNetObjectReference<NodeRenderer> _reference;
 
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
@@ -25,12 +27,30 @@ namespace Blazor.Diagrams.Components.Renderers
         public NodeModel Node { get; set; }
 
         [Inject]
-        private IJSRuntime jsRuntime { get; set; }
+        private IJSRuntime JsRuntime { get; set; }
 
         public void Dispose()
         {
             DiagramManager.PanChanged -= DiagramManager_PanChanged;
-            Node.Changed -= Node_Changed;
+            Node.Changed -= ReRender;
+
+            if (_reference == null)
+                return;
+
+            if (_element.Id != null)
+                _ = JsRuntime.UnobserveResizes(_element);
+
+            _reference.Dispose();
+        }
+
+        [JSInvokable]
+        public void OnResize(Size size)
+        {
+            // When the node becomes invisible (a.k.a unrendered), the size is zero
+            if (Size.Zero.Equals(size))
+                return;
+
+            Node.Size = size;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -69,15 +89,16 @@ namespace Blazor.Diagrams.Components.Renderers
         {
             base.OnInitialized();
 
+            _reference = DotNetObjectReference.Create(this);
             DiagramManager.PanChanged += DiagramManager_PanChanged;
-            Node.Changed += Node_Changed;
+            Node.Changed += ReRender;
         }
 
         protected override bool ShouldRender()
         {
-            if (_reRender)
+            if (_shouldRender)
             {
-                _reRender = false;
+                _shouldRender = false;
                 return true;
             }
 
@@ -88,15 +109,14 @@ namespace Blazor.Diagrams.Components.Renderers
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            // In case the node becomes visible again, no need to get the size
-            if (firstRender && Node.Size == null)
+            if (firstRender || _becameVisible)
             {
-                var rect = await jsRuntime.GetBoundingClientRect(_element);
-                Node.Size = new Size(rect.Width, rect.Height);
+                _becameVisible = false;
+                await JsRuntime.ObserveResizes(_element, _reference);
             }
         }
 
-        private void DiagramManager_PanChanged()
+        private async void DiagramManager_PanChanged()
         {
             if (Node.Size == null)
                 return;
@@ -112,19 +132,25 @@ namespace Blazor.Diagrams.Components.Renderers
             if (_isVisible != isVisible)
             {
                 _isVisible = isVisible;
-                _reRender = true;
-                StateHasChanged();
+                _becameVisible = isVisible;
+
+                if (!_isVisible)
+                {
+                    await JsRuntime.UnobserveResizes(_element);
+                }
+
+                ReRender();
             }
         }
 
-        private void Node_Changed()
+        private void ReRender()
         {
-            _reRender = true;
+            _shouldRender = true;
             StateHasChanged();
         }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Node, e);
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Node, e);
 
+        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Node, e);
     }
 }

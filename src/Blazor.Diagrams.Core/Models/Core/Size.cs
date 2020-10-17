@@ -12,8 +12,10 @@
             Height = height;
         }
 
-        public double Width { get; }
-        public double Height { get; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        public bool Equals(Size size) => size != null && Width == size.Width && Height == size.Height;
 
         public override string ToString() => $"Size(width={Width}, height={Height})";
     }

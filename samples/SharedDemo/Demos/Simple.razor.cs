@@ -7,7 +7,10 @@ namespace SharedDemo
 {
     public class SimpleComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly DiagramManager diagramManager = new DiagramManager(new DiagramOptions
+        {
+            AllowPanning = false
+        });
 
         protected override void OnInitialized()
         {

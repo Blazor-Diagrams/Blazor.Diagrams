@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Extensions;
+﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -8,6 +9,10 @@ namespace Blazor.Diagrams.Components
 {
     public partial class LinkWidget
     {
+
+        [CascadingParameter(Name = "DiagramManager")]
+        public DiagramManager DiagramManager { get; set; }
+
         [Parameter]
         public LinkModel Link { get; set; }
 

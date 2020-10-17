@@ -7,14 +7,14 @@
               y1="@MiddleSourceY.ToInvariantString()"
               x2="@GetTargetX()"
               y2="@GetTargetY()"
-              stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
+              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
               stroke-width="4" />
         break;
     case Core.Models.LinkType.Curved:
         <path d="@GenerateCurvedPath()"
               stroke-width="3"
               fill="none"
-              stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
+              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />
         break;
     case Core.Models.LinkType.LineWithArrowToTarget:
         <g>
@@ -22,14 +22,15 @@
                   y1="@MiddleSourceY.ToInvariantString()"
                   x2="@GetTargetX()"
                   y2="@GetTargetY()"
-                  stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
+                  stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
                   stroke-width="4" />
         </g>
         <g transform="translate(@GetTargetX(), @GetTargetY())">
             <g style="transform: rotate(@(CalculateAngleForTargetArrow())deg);">
                 <g transform="translate(0, -4)">
                     <polygon points="0,10 8,30 -8,30"
-                             fill="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"></polygon>
+                             fill="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)">
+                    </polygon>
                 </g>
             </g>
         </g>

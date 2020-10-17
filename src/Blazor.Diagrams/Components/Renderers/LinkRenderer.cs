@@ -34,7 +34,7 @@ namespace Blazor.Diagrams.Components.Renderers
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var componentType = DiagramManager.GetComponentForModel(Link) ??
-                DiagramManager.Options.DefaultLinkComponent ??
+                DiagramManager.Options.Links.DefaultLinkComponent ??
                 typeof(LinkWidget);
 
             builder.OpenElement(0, "g");

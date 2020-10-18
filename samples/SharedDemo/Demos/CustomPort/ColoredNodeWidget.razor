@@ -1,0 +1,14 @@
+﻿<div class="colored-node @(Node.Selected ? " selected" : "")">
+    <div>N</div>
+    @foreach (var port in Node.Ports.Cast<ColoredPort>())
+    {
+        <PortRenderer Port="port" Class="@(port.IsRed ? "red" : "blue")">
+            @* You can put custom content here*@
+        </PortRenderer>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public NodeModel Node { get; set; }
+}

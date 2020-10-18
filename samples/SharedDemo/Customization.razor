@@ -87,6 +87,196 @@ protected override void OnInitialized()
                 <p>This tells the Diagram manager to render a <code>AddTwoNumbersComponent</code> for every node of type <code>AddTwoNumbersNode</code>.</p>
             </div>
         </section>
+        <section id="custom-ports" class="doc-section">
+            <h2 class="section-title">Custom ports</h2>
+            <p>
+                In order to customize ports, you'll only need to create a new Model.<br />
+                Since nodes control their ports, it's up to them to style the ports.
+            </p>
+            <div id="create-port-model" class="section-block">
+                <h3 class="block-title">Creating a model</h3>
+                <p>
+                    First, we'll create a new model for our port, which will contain all the data needed.
+                </p>
+                <pre><code class="language-csharp line-numbers">public class ColoredPort : PortModel
+{
+    public ColoredPort(NodeModel parent, PortAlignment alignment, bool isRed) : base(parent, alignment, null, null)
+    {
+        IsRed = isRed;
+    }
+
+    public bool IsRed { get; set; }
+
+    public override bool CanAttachTo(PortModel port)
+    {
+        // Checks for same-node/port attachements
+        if (!base.CanAttachTo(port))
+            return false;
+
+        // Only able to attach to the same port type
+        if (!(port is ColoredPort cp))
+            return false;
+
+        return IsRed == cp.IsRed;
+    }
+}</code></pre>
+                <p>As you can see in the example, we can override the method <code>CanAttachTo</code> in order to add extra checks.</p>
+            </div>
+            <div id="style-custom-port" class="section-block">
+                <h3 class="block-title">Styling the custom ports</h3>
+                <p>
+                    Second, we'll create a custom node component <code>ColoredNodeWidget</code> that will help us style our custom ports.
+                </p>
+                <pre><code class="language-markup line-numbers">&#x3C;div class=&#x22;colored-node @@(Node.Selected ? &#x22; selected&#x22; : &#x22;&#x22;)&#x22;&#x3E;
+    &#x3C;div&#x3E;N&#x3C;/div&#x3E;
+    @@foreach (var port in Node.Ports.Cast&#x3C;ColoredPort&#x3E;()) // Notice the cast
+    {
+        &#x3C;PortRenderer Port=&#x22;port&#x22; Class=&#x22;@@(port.IsRed ? &#x22;red&#x22; : &#x22;blue&#x22;)&#x22;&#x3E;
+            @@* You can put custom content here (e.g. custom components) *@@
+        &#x3C;/PortRenderer&#x3E;
+    }
+&#x3C;/div&#x3E;
+
+@@code {
+    [Parameter]
+    public NodeModel Node { get; set; }
+}</code></pre>
+                <p>And for the CSS:</p>
+                <pre><code class="language-css line-numbers">.colored-node {
+    border: 2px solid black;
+    text-align: center;
+}
+
+    .colored-node.selected {
+        border-color: blue;
+    }
+
+    .colored-node .port {
+        width: 30px;
+        height: 30px;
+    }
+
+        .colored-node .port.blue {
+            background-color: blue;
+        }
+
+        .colored-node .port.red {
+            background-color: red;
+        }</code></pre>
+            </div>
+            <div id="using-custom-port" class="section-block">
+                <h3 class="block-title">Using the custom ports</h3>
+                <p>
+                    Lastly, we'll put everything together:
+                </p>
+                <pre><code class="language-csharp line-numbers">private readonly DiagramManager _diagramManager = new DiagramManager();
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    _diagramManager.Options.DefaultNodeComponent = typeof(ColoredNodeWidget);
+
+    var node1 = NewNode(50, 50);
+    var node2 = NewNode(300, 300);
+    _diagramManager.AddNode(node1);
+    _diagramManager.AddNode(node2);
+    _diagramManager.AddNode(NewNode(500, 50));
+
+    _diagramManager.AddLink(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top));
+}
+
+private NodeModel NewNode(double x, double y)
+{
+    var node = new NodeModel(new Point(x, y));
+    node.AddPort(new ColoredPort(node, PortAlignment.Top, true));
+    node.AddPort(new ColoredPort(node, PortAlignment.Left, false));
+    return node;
+}</code></pre>
+                <p>As you you can see, you can instanciate your custom ports however you want and just pass them to <code>AddPort</code>.</p>
+            </div>
+        </section>
+        <section id="custom-links" class="doc-section">
+            <h2 class="section-title">Custom links</h2>
+            <p>
+                Creating custom links is pretty much the same as custom nodes.
+            </p>
+            <div id="create-link-model" class="section-block">
+                <h3 class="block-title">Creating a model</h3>
+                <p>
+                    First, we'll create a new model for our link.
+                </p>
+                <pre><code class="language-csharp line-numbers">public class ThickLink : LinkModel
+{
+    public ThickLink(PortModel sourcePort, PortModel targetPort = null) : base(sourcePort, targetPort) { }
+
+    // Add relevant data here if you need to
+}</code></pre>
+                <p>
+                    In Z.Blazor.Diagrams, links only hold information such as the source and target ports for now.
+                </p>
+            </div>
+            <div id="create-link-component" class="section-block">
+                <h3 class="block-title">Creating a component</h3>
+                <p>
+                    Second, we'll create a component <code>ThickLinkWidget</code> that handles our new type of links.
+                </p>
+                <pre><code class="language-markup line-numbers">@@code {
+    [Parameter]
+    public LinkModel Link { get; set; }
+}
+
+&#x3C;line x1=&#x22;@@Link.GetMiddleSourceX().ToInvariantString()&#x22;
+      y1=&#x22;@@Link.GetMiddleSourceY().ToInvariantString()&#x22;
+      x2=&#x22;@@Link.GetTargetX().ToInvariantString()&#x22;
+      y2=&#x22;@@Link.GetTargetY().ToInvariantString()&#x22;
+      stroke=&#x22;@@(Link.Selected ? &#x22;red&#x22; : &#x22;blue&#x22;)&#x22;
+      stroke-width=&#x22;6&#x22; /&#x3E;</code></pre>
+                <ul>
+                    <li>All the <code>GetX</code> methods are extension methods available in <code>Blazor.Diagrams.Core.Extensions.LinkModelExtensions</code>.</li>
+                    <li>The <code>ToInvariantString</code> method is used to make sure numbers are formatted using a dot.</li>
+                </ul>
+            </div>
+            <div id="register-custom-link" class="section-block">
+                <h3 class="block-title">Registering the custom link</h3>
+                <p>
+                    Lastly, we'll register the custom link and its component in the <code>DiagramManager</code>:
+                </p>
+                <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    _diagramManager.RegisterModelComponent&#x3C;ThickLink, ThickLinkWidget&#x3E;();
+    // Also usable: _diagramManager.Options.Links.DefaultLinkComponent = typeof(ThickLink);
+
+    var node1 = NewNode(50, 50);
+    var node2 = NewNode(300, 300);
+    var node3 = NewNode(500, 50);
+
+    _diagramManager.AddNode(node1);
+    _diagramManager.AddNode(node2);
+    _diagramManager.AddNode(node3);
+
+    _diagramManager.AddLink&#x3C;ThickLink&#x3E;(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+    _diagramManager.AddLink&#x3C;ThickLink&#x3E;(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));
+}
+
+private NodeModel NewNode(double x, double y)
+{
+    var node = new NodeModel(new Point(x, y));
+    node.AddPort(PortAlignment.Bottom);
+    node.AddPort(PortAlignment.Top);
+    node.AddPort(PortAlignment.Left);
+    node.AddPort(PortAlignment.Right);
+    return node;
+}</code></pre>
+                <p>
+                    As you can see, you can either set the <code>DefaultLinkComponent</code> option so that every new
+                    link is rendered as a <code>ThickLinkWidget</code>, or specify the type of the link everytime you call
+                    <code>DiagramManager.AddLink</code>.
+                </p>
+            </div>
+        </section>
     </div>
 </div>
 
@@ -98,6 +288,18 @@ protected override void OnInitialized()
                 <a class="nav-link scrollto" href="#create-node-model">Creating a model</a>
                 <a class="nav-link scrollto" href="#create-node-component">Creating a component</a>
                 <a class="nav-link scrollto" href="#register-custom-node">Registering the custom node</a>
+            </nav>
+            <a class="nav-link scrollto" href="#custom-ports">Custom ports</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#create-port-model">Creating a model</a>
+                <a class="nav-link scrollto" href="#style-custom-port">Styling the custom ports</a>
+                <a class="nav-link scrollto" href="#using-custom-port">Using the custom ports</a>
+            </nav>
+            <a class="nav-link scrollto" href="#custom-links">Custom links</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#create-link-model">Creating a model</a>
+                <a class="nav-link scrollto" href="#create-link-component">Creating a component</a>
+                <a class="nav-link scrollto" href="#register-custom-link">Registering the custom link</a>
             </nav>
         </nav>
     </div>

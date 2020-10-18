@@ -1611,3 +1611,7 @@ body {
         .colored-node .port.red {
             background-color: red;
         }
+
+.bg-primary {
+    background: #40babd !important;
+}

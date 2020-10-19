@@ -6,11 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2020-10-19
 ### Added
-- New visual identity by [@joriskalz](https://github.com/joriskalz).
+- Track mouseup events on nodes [@joriskalz](https://github.com/joriskalz).
 - Zooming in/out will now trigger the nodes visibility check.
 - `AllowZooming` and `AllowPanning` options.
 - `DefaultColor` and `DefaultSelectedColor` link options.
 - Custom ports/links demos/documentation.
+- Options documentation.
 
 ### Changed
 - Group link related options into `DiagramLinkOptions`, available in `DiagramOptions.Links`.

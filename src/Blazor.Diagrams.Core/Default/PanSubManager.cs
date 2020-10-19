@@ -1,5 +1,5 @@
-﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Base;
+﻿using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.Diagrams.Core.Default
@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (model != null)
+            if (!DiagramManager.Options.AllowPanning || model != null)
                 return;
 
             _initialPan = DiagramManager.Pan;
@@ -29,7 +29,7 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
         {
-            if (_initialPan == null)
+            if (!DiagramManager.Options.AllowPanning || _initialPan == null)
                 return;
 
             var deltaX = e.ClientX - _lastClientX - (DiagramManager.Pan.X - _initialPan.X);
@@ -39,6 +39,9 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
         {
+            if (!DiagramManager.Options.AllowPanning)
+                return;
+
             _initialPan = null;
         }
 

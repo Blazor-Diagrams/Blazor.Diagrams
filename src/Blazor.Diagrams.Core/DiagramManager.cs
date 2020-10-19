@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Default;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -35,6 +36,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Group> GroupAdded;
         public event Action<Group> GroupRemoved;
         public event Action PanChanged;
+        public event Action ZoomChanged;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -61,7 +63,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<Group> Groups => _groups;
         public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
-        public double Zoom { get; internal set; } = 1;
+        public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
 
         public void AddNode(NodeModel node)
@@ -108,7 +110,7 @@ namespace Blazor.Diagrams.Core
         public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
         {
             var link = (T)Activator.CreateInstance(typeof(T), source, target);
-            link.Type = Options.DefaultLinkType;
+            link.Type = Options.Links.DefaultLinkType;
             source.AddLink(link);
 
             if (target == null)
@@ -343,6 +345,13 @@ namespace Blazor.Diagrams.Core
         {
             Pan = Pan.Add(deltaX, deltaY);
             PanChanged?.Invoke();
+            Refresh();
+        }
+
+        public void ChangeZoom(double newZoom)
+        {
+            Zoom = newZoom;
+            ZoomChanged?.Invoke();
             Refresh();
         }
 

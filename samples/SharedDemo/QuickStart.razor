@@ -9,7 +9,7 @@
 
         LayoutData.Title = "Quick Start";
         LayoutData.Icon = "fa-paper-plane";
-        LayoutData.Date = "June 14th, 2020";
+        LayoutData.Date = "October 17th, 2020";
         LayoutData.DataChanged();
     }
 }
@@ -94,10 +94,12 @@ protected override void OnInitialized()
     {
         DeleteKey = "Delete", // What key deletes the selected nodes/links
         InverseZoom = false, // Whether to inverse the direction of the zoom when using the wheel
-        DefaultLinkType = LinkType.Curved, // Default link type (Curved, Line or LineWithArrowToTarget for now)
-        DefaultLinkComponent = null, // Default component for links
-        DefaultNodeComponent = null, // Default component for nodes,
-        AllowMultiSelection = true // Whether to allow multi selection using CTRL
+        DefaultNodeComponent = null, // Default component for nodes
+        AllowMultiSelection = true, // Whether to allow multi selection using CTRL
+        Links = new DiagramLinkOptions
+        {
+            // Options related to links
+        }
     };
     DiagramManager = new DiagramManager(options);
 }</code></pre>

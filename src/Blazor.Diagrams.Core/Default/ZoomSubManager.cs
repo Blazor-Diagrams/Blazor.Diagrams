@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.Diagrams.Core.Default
@@ -14,6 +14,9 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_Wheel(WheelEventArgs e)
         {
+            if (!DiagramManager.Options.AllowZooming)
+                return;
+
             var oldZoom = DiagramManager.Zoom;
             var deltaY = DiagramManager.Options.InverseZoom ? e.DeltaY * -1 : e.DeltaY;
             var newZoom = deltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
@@ -33,10 +36,9 @@ namespace Blazor.Diagrams.Core.Default
             var yFactor = (clientY - DiagramManager.Pan.Y) / oldZoom / clientHeight;
             var newPanX = DiagramManager.Pan.X - widthDiff * xFactor;
             var newPanY = DiagramManager.Pan.Y - heightDiff * yFactor;
-            DiagramManager.Pan = new Point(newPanX, newPanY);
 
-            DiagramManager.Zoom = newZoom;
-            DiagramManager.Refresh();
+            DiagramManager.Pan = new Point(newPanX, newPanY);
+            DiagramManager.ChangeZoom(newZoom);
         }
 
         public override void Dispose()

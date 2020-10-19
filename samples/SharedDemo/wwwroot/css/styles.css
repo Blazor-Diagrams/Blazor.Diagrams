@@ -1589,3 +1589,29 @@ body {
     background-size: 50px 50px;
     background-image: linear-gradient(to right, rgb(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(0, 0, 0, 0.05) 1px, transparent 1px);
 }
+
+.colored-node {
+    border: 2px solid black;
+    text-align: center;
+}
+
+    .colored-node.selected {
+        border-color: blue;
+    }
+
+    .colored-node .port {
+        width: 30px;
+        height: 30px;
+    }
+
+        .colored-node .port.blue {
+            background-color: blue;
+        }
+
+        .colored-node .port.red {
+            background-color: red;
+        }
+
+.bg-primary {
+    background: #40babd !important;
+}

@@ -1,35 +1,44 @@
-﻿@* Maybe we can use markers? *@
+﻿@code {
+    [CascadingParameter(Name = "DiagramManager")]
+    public DiagramManager DiagramManager { get; set; }
+
+    [Parameter]
+    public LinkModel Link { get; set; }
+}
+
+@* Maybe we can use markers? *@
 
 @switch (Link.Type)
 {
     case Core.Models.LinkType.Line:
-        <line x1="@MiddleSourceX.ToInvariantString()"
-              y1="@MiddleSourceY.ToInvariantString()"
-              x2="@GetTargetX()"
-              y2="@GetTargetY()"
-              stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
+        <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
+              y1="@Link.GetMiddleSourceY().ToInvariantString()"
+              x2="@Link.GetTargetX().ToInvariantString()"
+              y2="@Link.GetTargetY().ToInvariantString()"
+              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
               stroke-width="4" />
         break;
     case Core.Models.LinkType.Curved:
-        <path d="@GenerateCurvedPath()"
+        <path d="@Link.GenerateCurvedPath()"
               stroke-width="3"
               fill="none"
-              stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")" />
+              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />
         break;
     case Core.Models.LinkType.LineWithArrowToTarget:
         <g>
-            <line x1="@MiddleSourceX.ToInvariantString()"
-                  y1="@MiddleSourceY.ToInvariantString()"
-                  x2="@GetTargetX()"
-                  y2="@GetTargetY()"
-                  stroke="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"
+            <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
+                  y1="@Link.GetMiddleSourceY().ToInvariantString()"
+                  x2="@Link.GetTargetX().ToInvariantString()"
+                  y2="@Link.GetTargetY().ToInvariantString()"
+                  stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
                   stroke-width="4" />
         </g>
-        <g transform="translate(@GetTargetX(), @GetTargetY())">
-            <g style="transform: rotate(@(CalculateAngleForTargetArrow())deg);">
+        <g transform="translate(@Link.GetTargetX().ToInvariantString(), @Link.GetTargetY().ToInvariantString())">
+            <g style="transform: rotate(@(Link.CalculateAngleForTargetArrow())deg);">
                 <g transform="translate(0, -4)">
                     <polygon points="0,10 8,30 -8,30"
-                             fill="@(Link.Selected ? "rgb(110, 159, 212)" : "black")"></polygon>
+                             fill="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)">
+                    </polygon>
                 </g>
             </g>
         </g>

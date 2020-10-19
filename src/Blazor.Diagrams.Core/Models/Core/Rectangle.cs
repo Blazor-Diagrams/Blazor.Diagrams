@@ -1,4 +1,4 @@
-﻿namespace Blazor.Diagrams.Core.Models
+﻿namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Rectangle
     {
@@ -11,7 +11,7 @@
         public double Bottom { get; set; }
         public double Left { get; set; }
 
-        public override string ToString() 
+        public override string ToString()
             => $"Rectangle(x={X}, y={Y}, width={Width}, height={Height}, top={Top}, right={Right}, bottom={Bottom}, left={Left})";
     }
 }

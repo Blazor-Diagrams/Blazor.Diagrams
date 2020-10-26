@@ -55,6 +55,10 @@ You can get started very easily & quickly using:
 
 ![](https://i.imgur.com/k4UThmh.png)
 
+### Sample project
+
+![](https://i.imgur.com/yFXZ0JN.png)
+
 ## Roadmap
 
 - [ ] History (undo/redo)

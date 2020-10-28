@@ -57,6 +57,8 @@ You can get started very easily & quickly using:
 
 ### Sample project
 
+Repository: https://github.com/zHaytam/Blazor.DatabaseDesigner
+
 ![](https://i.imgur.com/yFXZ0JN.png)
 
 ## Roadmap

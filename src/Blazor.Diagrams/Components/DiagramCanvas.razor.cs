@@ -53,10 +53,9 @@ namespace Blazor.Diagrams.Components
         }
 
         [JSInvokable]
-        public void OnResize(Size size)
+        public void OnResize(Rectangle rect)
         {
-            DiagramManager.Container.Width = size.Width;
-            DiagramManager.Container.Height = size.Height;
+            DiagramManager.Container = rect;
             DiagramManager.Refresh();
         }
 

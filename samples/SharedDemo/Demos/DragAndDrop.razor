@@ -1,0 +1,28 @@
+﻿@page "/demos/drag-and-drop"
+@layout DemoLayout
+@inject LayoutData LayoutData
+
+<div class="row h-100">
+    <div class="col-4">
+        @* Toolbox *@
+        <div class="row h-100 p-4 no-gutters" style="background: #eee;">
+            <div class="col-6">
+                <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(0)">
+                    <img class="d-block m-auto" src="_content/SharedDemo/img/DefaultNodeWidget.png" />
+                    <span>Default Node</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(1)">
+                    <img class="d-block m-auto" src="_content/SharedDemo/img/BotAnswerNodeWidget.png" />
+                    <span>Bot Answer Node</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="OnDrop">
+        <CascadingValue Name="DiagramManager" Value="_diagramManager">
+            <DiagramCanvas></DiagramCanvas>
+        </CascadingValue>
+    </div>
+</div>

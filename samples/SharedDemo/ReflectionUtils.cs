@@ -10,27 +10,26 @@ namespace SharedDemo
         public static IEnumerable<PossibleOption> ExtractPossibleOptions<T>()
         {
             var type = typeof(T);
-            return ExtractPossibleOptions(type, "");
+            return ExtractPossibleOptions(type, string.Empty, Activator.CreateInstance(type));
         }
 
-        private static IEnumerable<PossibleOption> ExtractPossibleOptions(Type type, string prefix)
+        private static IEnumerable<PossibleOption> ExtractPossibleOptions(Type type, string prefix, object instance)
         {
-            var instance = Activator.CreateInstance(type); // Assuming parameterless ctor
-
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var name = $"{prefix}{property.Name}";
+                var propertyValue = instance == null ? null : property.GetValue(instance);
 
                 if (!IsPrimitiveOrNullable(property.PropertyType))
                 {
-                    foreach (var entry in ExtractPossibleOptions(property.PropertyType, name + "."))
+                    foreach (var entry in ExtractPossibleOptions(property.PropertyType, name + ".", propertyValue))
                         yield return entry;
 
                     continue;
                 }
 
                 var typeName = FormatPropertyType(property.PropertyType);
-                var @default = property.GetValue(instance)?.ToString();
+                var @default = propertyValue?.ToString();
                 var description = property.GetCustomAttribute<DescriptionAttribute>().Description;
                 yield return new PossibleOption(name, typeName, @default, description);
             }
@@ -48,7 +47,7 @@ namespace SharedDemo
         {
             return type == typeof(object) ||
                 type == typeof(Type) ||
-                Type.GetTypeCode(type) != TypeCode.Object || 
+                Type.GetTypeCode(type) != TypeCode.Object ||
                 Nullable.GetUnderlyingType(type) != null;
         }
     }

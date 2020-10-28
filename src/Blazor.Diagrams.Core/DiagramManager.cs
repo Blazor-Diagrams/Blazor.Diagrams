@@ -355,6 +355,9 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
+        public Point GetRelativePoint(double clientX, double clientY)
+            => new Point((clientX - Container.Left - Pan.X) / Zoom, (clientY - Container.Top - Pan.Y) / Zoom);
+
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 
         internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);

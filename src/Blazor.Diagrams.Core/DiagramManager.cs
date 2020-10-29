@@ -35,8 +35,10 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel> LinkRemoved;
         public event Action<Group> GroupAdded;
         public event Action<Group> GroupRemoved;
+
         public event Action PanChanged;
         public event Action ZoomChanged;
+        public event Action ContainerChanged;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -61,7 +63,7 @@ namespace Blazor.Diagrams.Core
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public IReadOnlyCollection<Group> Groups => _groups;
-        public Rectangle Container { get; internal set; }
+        public Rectangle Container { get; private set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
@@ -352,6 +354,13 @@ namespace Blazor.Diagrams.Core
         {
             Zoom = newZoom;
             ZoomChanged?.Invoke();
+            Refresh();
+        }
+
+        internal void ChangeContainer(Rectangle newRect)
+        {
+            Container = newRect;
+            ContainerChanged?.Invoke();
             Refresh();
         }
 

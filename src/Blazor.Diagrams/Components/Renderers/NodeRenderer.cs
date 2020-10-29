@@ -33,6 +33,7 @@ namespace Blazor.Diagrams.Components.Renderers
         {
             DiagramManager.PanChanged -= CheckVisibility;
             DiagramManager.ZoomChanged -= CheckVisibility;
+            DiagramManager.ContainerChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
             if (_reference == null)
@@ -61,6 +62,7 @@ namespace Blazor.Diagrams.Components.Renderers
             _reference = DotNetObjectReference.Create(this);
             DiagramManager.PanChanged += CheckVisibility;
             DiagramManager.ZoomChanged += CheckVisibility;
+            DiagramManager.ContainerChanged += CheckVisibility;
             Node.Changed += ReRender;
         }
 

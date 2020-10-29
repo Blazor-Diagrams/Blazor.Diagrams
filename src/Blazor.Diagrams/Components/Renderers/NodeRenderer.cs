@@ -53,6 +53,12 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             Node.Size = size;
+
+            foreach (var port in Node.Ports)
+            {
+                port.Initialized = false;
+                port.RefreshAll();
+            }
         }
 
         protected override void OnInitialized()

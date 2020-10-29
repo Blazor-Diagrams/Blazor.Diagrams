@@ -44,8 +44,16 @@ namespace Blazor.Diagrams.Core.Models
 
         public virtual bool CanAttachTo(PortModel port) => port != this && !port.Locked && Parent != port.Parent;
 
-        internal void AddLink(LinkModel link) => _links.Add(link);
+        internal void AddLink(LinkModel link)
+        {
+            _links.Add(link);
+            Refresh();
+        }
 
-        internal void RemoveLink(LinkModel link) => _links.Remove(link);
+        internal void RemoveLink(LinkModel link)
+        {
+            _links.Remove(link);
+            Refresh();
+        }
     }
 }

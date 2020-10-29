@@ -87,5 +87,47 @@ namespace Blazor.Diagrams.Core.Extensions
 
         public static double GetMiddleTargetY(this LinkModel link)
             => link.TargetPort!.Position.Y + (link.SourcePort.Size.Height / 2);
+
+
+
+        /// <summary>
+        /// Reconnects the link to the ports that are closest in distance for the link's nodes.
+        /// </summary>
+        /// <param name="link"></param>
+        /// <returns>The reconnected LinkModel entitiy</returns>
+        public static T Reconnect<T>(this T link) where T:LinkModel
+        {
+            if (link.TargetPort == null)
+            {
+                return link;
+            }
+
+            var sourcePorts = link.SourcePort.Parent.Ports;
+            var targetPorts = link.TargetPort.Parent.Ports;
+
+            //Find the ports with minimal distance
+            var minDistance = double.MaxValue;
+            var minSourcePort = link.SourcePort;
+            var minTargetPort = link.TargetPort;
+            foreach (var sourcePort in sourcePorts)
+            {
+                foreach (var targetPort in targetPorts)
+                {
+                    var distance = sourcePort.GetDistance(targetPort);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        minSourcePort = sourcePort;
+                        minTargetPort = targetPort;
+                    }
+                }
+            }
+
+            //Reconnect
+            link.SetSourcePort(minSourcePort);
+            link.SetTargetPort(minTargetPort);
+
+            return link;
+        }
     }
 }

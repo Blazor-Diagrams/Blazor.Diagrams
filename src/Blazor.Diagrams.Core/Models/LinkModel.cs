@@ -18,24 +18,29 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public LinkType Type { get; set; }
-        public PortModel SourcePort { get; }
+        public PortModel SourcePort { get; private set; }
         public PortModel? TargetPort { get; private set; }
         public bool IsAttached => TargetPort != null;
         public Point? OnGoingPosition { get; set; }
 
+        public void SetSourcePort(PortModel port)
+        {
+            if (port != SourcePort)
+            {
+                SourcePort.RemoveLink(this);
+                port.AddLink(this);
+                SourcePort = port;
+            }
+        }
+        
         public void SetTargetPort(PortModel port)
         {
-            if (IsAttached)
-                return;
-
-            TargetPort = port;
+            if (port != TargetPort)
+            {
+                TargetPort?.RemoveLink(this);
+                port.AddLink(this);
+                TargetPort = port;
+            }
         }
-    }
-
-    public enum LinkType
-    {
-        Curved,
-        Line,
-        LineWithArrowToTarget
     }
 }

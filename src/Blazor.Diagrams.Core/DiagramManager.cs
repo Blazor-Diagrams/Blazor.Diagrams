@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Blazor.Diagrams.Core.Extensions;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 namespace Blazor.Diagrams.Core
@@ -107,10 +108,23 @@ namespace Blazor.Diagrams.Core
         public LinkModel AddLink(PortModel source, PortModel? target = null)
             => AddLink<LinkModel>(source, target);
 
+
         public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
         {
             var link = (T)Activator.CreateInstance(typeof(T), source, target);
             link.Type = Options.Links.DefaultLinkType;
+            return ConnectLinktoPorts(link, source, target);
+        }
+
+        public T AddLink<T>(T link) where T :LinkModel
+        {
+            var source = link.SourcePort;
+            var target = link.TargetPort;
+            return ConnectLinktoPorts(link, source, target);
+        }
+
+        private T ConnectLinktoPorts<T>(T link, PortModel source, PortModel? target) where T : LinkModel
+        {
             source.AddLink(link);
 
             if (target == null)
@@ -130,6 +144,7 @@ namespace Blazor.Diagrams.Core
             return link;
         }
 
+
         public void AttachLink(LinkModel link, PortModel targetPort)
         {
             if (link.IsAttached)
@@ -139,7 +154,6 @@ namespace Blazor.Diagrams.Core
                 return;
 
             link.SetTargetPort(targetPort);
-            targetPort.AddLink(link);
             link.Refresh();
             targetPort.Refresh();
             LinkAttached?.Invoke(link);
@@ -364,5 +378,14 @@ namespace Blazor.Diagrams.Core
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
         internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+
+        public void ReconnectAllLinks()
+        {
+            var linkModels = AllLinks.ToList();
+            foreach (var link in linkModels)
+            {
+                link.Reconnect();
+            }
+        }
     }
 }

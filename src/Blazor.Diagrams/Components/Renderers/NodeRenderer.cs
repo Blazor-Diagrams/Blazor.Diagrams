@@ -33,6 +33,7 @@ namespace Blazor.Diagrams.Components.Renderers
         {
             DiagramManager.PanChanged -= CheckVisibility;
             DiagramManager.ZoomChanged -= CheckVisibility;
+            DiagramManager.ContainerChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
             if (_reference == null)
@@ -52,6 +53,12 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             Node.Size = size;
+
+            foreach (var port in Node.Ports)
+            {
+                port.Initialized = false;
+                port.RefreshAll();
+            }
         }
 
         protected override void OnInitialized()
@@ -61,6 +68,7 @@ namespace Blazor.Diagrams.Components.Renderers
             _reference = DotNetObjectReference.Create(this);
             DiagramManager.PanChanged += CheckVisibility;
             DiagramManager.ZoomChanged += CheckVisibility;
+            DiagramManager.ContainerChanged += CheckVisibility;
             Node.Changed += ReRender;
         }
 

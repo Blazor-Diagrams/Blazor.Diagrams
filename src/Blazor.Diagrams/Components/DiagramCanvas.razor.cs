@@ -47,18 +47,12 @@ namespace Blazor.Diagrams.Components
 
             if (firstRender)
             {
-                DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
                 await JSRuntime.ObserveResizes(elementReference, _reference);
             }
         }
 
         [JSInvokable]
-        public void OnResize(Size size)
-        {
-            DiagramManager.Container.Width = size.Width;
-            DiagramManager.Container.Height = size.Height;
-            DiagramManager.Refresh();
-        }
+        public void OnResize(Rectangle rect) => DiagramManager.ChangeContainer(rect);
 
         protected override bool ShouldRender()
         {

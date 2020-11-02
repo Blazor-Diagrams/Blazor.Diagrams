@@ -8,10 +8,7 @@ var s = {
             let id = Array.from(entry.target.attributes).find(e => e.name.startsWith('_bl')).name.substring(4);
             let element = window.ZBlazorDiagrams.tracked[id];
             if (element) {
-                element.ref.invokeMethodAsync('OnResize', {
-                    'Width': entry.contentRect.width,
-                    'Height': entry.contentRect.height
-                });
+                element.ref.invokeMethodAsync('OnResize', entry.target.getBoundingClientRect());
             }
         }
     }),

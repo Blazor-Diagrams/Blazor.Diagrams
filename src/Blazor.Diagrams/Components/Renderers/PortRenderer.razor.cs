@@ -49,7 +49,7 @@ namespace Blazor.Diagrams.Components.Renderers
             await base.OnAfterRenderAsync(firstRender);
             _shouldRender = false;
 
-            if (firstRender && !Port.Initialized)
+            if (!Port.Initialized || firstRender)
             {
                 var zoom = DiagramManager.Zoom;
                 var pan = DiagramManager.Pan;

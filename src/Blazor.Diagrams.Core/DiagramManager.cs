@@ -63,7 +63,7 @@ namespace Blazor.Diagrams.Core
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public IReadOnlyCollection<Group> Groups => _groups;
-        public Rectangle Container { get; private set; }
+        public Rectangle Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }

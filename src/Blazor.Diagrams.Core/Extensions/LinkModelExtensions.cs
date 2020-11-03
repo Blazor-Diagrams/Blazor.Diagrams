@@ -30,7 +30,7 @@ namespace Blazor.Diagrams.Core.Extensions
                 return link.OnGoingPosition!.Y;
 
             return link.GetMiddleTargetY();
-        }
+        }       
 
         public static string GenerateCurvedPath(this LinkModel link)
         {
@@ -49,9 +49,20 @@ namespace Blazor.Diagrams.Core.Extensions
                 tY = link.OnGoingPosition.Y;
             }
 
+            var cX = (sX + tX) / 2;
+            var cY = (sY + tY) / 2;
+
+            var curvePoint1 = (link.SourcePort.Alignment == PortAlignment.Left || link.SourcePort.Alignment == PortAlignment.Right) ?
+                $"{cX.ToInvariantString()} {sY.ToInvariantString()}" :
+                $"{sX.ToInvariantString()} {cY.ToInvariantString()}";
+            
+            var cuvePoint2 = (!link.IsAttached || link.TargetPort!.Alignment == PortAlignment.Left || link.TargetPort.Alignment == PortAlignment.Right) ?
+                $"{cX.ToInvariantString()} {tY.ToInvariantString()}" :
+                $"{tX.ToInvariantString()} {cY.ToInvariantString()}";
+
             return $"M {sX.ToInvariantString()} {sY.ToInvariantString()} " +
-                $"C {((sX + tX) / 2).ToInvariantString()} {sY.ToInvariantString()}," +
-                $" {((sX + tX) / 2).ToInvariantString()} {tY.ToInvariantString()}," +
+                $"C {curvePoint1}," +
+                $" {cuvePoint2}," +
                 $" {tX.ToInvariantString()} {tY.ToInvariantString()}";
         }
 

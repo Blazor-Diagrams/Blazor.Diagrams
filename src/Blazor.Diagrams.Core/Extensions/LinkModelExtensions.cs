@@ -83,9 +83,9 @@ namespace Blazor.Diagrams.Core.Extensions
             => link.SourcePort.Position.Y + (link.SourcePort.Size.Height / 2);
 
         public static double GetMiddleTargetX(this LinkModel link)
-            => link.TargetPort!.Position.X + (link.SourcePort.Size.Width / 2);
+            => link.TargetPort!.Position.X + (link.TargetPort.Size.Width / 2);
 
         public static double GetMiddleTargetY(this LinkModel link)
-            => link.TargetPort!.Position.Y + (link.SourcePort.Size.Height / 2);
+            => link.TargetPort!.Position.Y + (link.TargetPort.Size.Height / 2);
     }
 }

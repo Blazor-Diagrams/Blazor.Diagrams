@@ -32,6 +32,8 @@ namespace Blazor.Diagrams.Core
         public LinkType DefaultLinkType { get; set; }
         [Description("The default component for links")]
         public Type? DefaultLinkComponent { get; set; }
+        [Description("The default link model")]
+        public Type? DefaultLinkModel { get; set; }
         [Description("The default color for links")]
         public string DefaultColor { get; set; } = "black";
         [Description("The default color for selected links")]

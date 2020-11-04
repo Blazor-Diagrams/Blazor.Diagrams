@@ -63,24 +63,25 @@ namespace Blazor.Diagrams.Core.Extensions
         private const double Margin = 125;
         private static string GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
         {
+            var margin = Math.Min(Margin, Math.Pow(Math.Pow(pX - cX, 2) + Math.Pow(pY - cY, 2), .5));
             switch (alignment)
             {
                 case PortAlignment.Top:
-                    return FormattableString.Invariant($"{pX} {Math.Min(pY - Margin, cY)}");
+                    return FormattableString.Invariant($"{pX} {Math.Min(pY - margin, cY)}");
                 case PortAlignment.Bottom:
-                    return FormattableString.Invariant($"{pX} {Math.Max(pY + Margin, cY)}");
+                    return FormattableString.Invariant($"{pX} {Math.Max(pY + margin, cY)}");
                 case PortAlignment.TopRight:
-                    return FormattableString.Invariant($"{Math.Max(pX + Margin, cX)} {Math.Min(pY - Margin, cY)}");
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Min(pY - margin, cY)}");
                 case PortAlignment.BottomRight:
-                    return FormattableString.Invariant($"{Math.Max(pX + Margin, cX)} {Math.Max(pY + Margin, cY)}");                    
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Max(pY + margin, cY)}");                    
                 case PortAlignment.Right:
-                    return FormattableString.Invariant($"{Math.Max(pX + Margin, cX)} {pY}");
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {pY}");
                 case PortAlignment.Left:
-                    return FormattableString.Invariant($"{Math.Min(pX - Margin, cX)} {pY}");
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {pY}");
                 case PortAlignment.BottomLeft:
-                    return FormattableString.Invariant($"{Math.Min(pX - Margin, cX)} {Math.Max(pY + Margin, cY)}");
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Max(pY + margin, cY)}");
                 case PortAlignment.TopLeft:
-                    return FormattableString.Invariant($"{Math.Min(pX - Margin, cX)} {Math.Min(pY - Margin, cY)}");
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Min(pY - margin, cY)}");
             }
             return FormattableString.Invariant($"{cX} {cY}");
         }

@@ -1,6 +1,8 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using System;
+using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Blazor.Diagrams.Core.Extensions
 {
@@ -30,7 +32,7 @@ namespace Blazor.Diagrams.Core.Extensions
                 return link.OnGoingPosition!.Y;
 
             return link.GetMiddleTargetY();
-        }
+        }       
 
         public static string GenerateCurvedPath(this LinkModel link)
         {
@@ -49,10 +51,39 @@ namespace Blazor.Diagrams.Core.Extensions
                 tY = link.OnGoingPosition.Y;
             }
 
-            return $"M {sX.ToInvariantString()} {sY.ToInvariantString()} " +
-                $"C {((sX + tX) / 2).ToInvariantString()} {sY.ToInvariantString()}," +
-                $" {((sX + tX) / 2).ToInvariantString()} {tY.ToInvariantString()}," +
-                $" {tX.ToInvariantString()} {tY.ToInvariantString()}";
+            var cX = (sX + tX) / 2;
+            var cY = (sY + tY) / 2;
+
+            var curvePointA = GetCurvePoint(sX, sY, cX, cY, link.SourcePort.Alignment);
+            var curvePointB = GetCurvePoint(tX, tY, cX, cY, link.TargetPort?.Alignment);
+
+            return FormattableString.Invariant($"M {sX} {sY} C {curvePointA}, {curvePointB}, {tX} {tY}");
+        }
+
+        private const double Margin = 125;
+        private static string GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
+        {
+            var margin = Math.Min(Margin, Math.Pow(Math.Pow(pX - cX, 2) + Math.Pow(pY - cY, 2), .5));
+            switch (alignment)
+            {
+                case PortAlignment.Top:
+                    return FormattableString.Invariant($"{pX} {Math.Min(pY - margin, cY)}");
+                case PortAlignment.Bottom:
+                    return FormattableString.Invariant($"{pX} {Math.Max(pY + margin, cY)}");
+                case PortAlignment.TopRight:
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Min(pY - margin, cY)}");
+                case PortAlignment.BottomRight:
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Max(pY + margin, cY)}");                    
+                case PortAlignment.Right:
+                    return FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {pY}");
+                case PortAlignment.Left:
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {pY}");
+                case PortAlignment.BottomLeft:
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Max(pY + margin, cY)}");
+                case PortAlignment.TopLeft:
+                    return FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Min(pY - margin, cY)}");
+            }
+            return FormattableString.Invariant($"{cX} {cY}");
         }
 
         public static string CalculateAngleForTargetArrow(this LinkModel link)

@@ -41,26 +41,15 @@ namespace SharedDemo.Demos
                 return;
 
             var node = model as NodeModel;
-            if (node.GetPort(PortAlignment.Top) == null)
+            foreach(PortAlignment portAlignment in Enum.GetValues(typeof(PortAlignment)))
             {
-                node.AddPort(PortAlignment.Top);
-                node.Refresh();
-            }
-            else if (node.GetPort(PortAlignment.Right) == null)
-            {
-                node.AddPort(PortAlignment.Right);
-                node.Refresh();
-            }
-            else if (node.GetPort(PortAlignment.Bottom) == null)
-            {
-                node.AddPort(PortAlignment.Bottom);
-                node.Refresh();
-            }
-            else if (node.GetPort(PortAlignment.Left) == null)
-            {
-                node.AddPort(PortAlignment.Left);
-                node.Refresh();
-            }
+                if(node.GetPort(portAlignment) == null)
+                {
+                    node.AddPort(portAlignment);
+                    node.Refresh();
+                    break;
+                }
+            }            
         }
 
         protected void RemovePort()

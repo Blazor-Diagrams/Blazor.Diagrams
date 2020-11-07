@@ -123,7 +123,7 @@ namespace Blazor.Diagrams.Core
             return AddLink(link, source, target);
         }
 
-        private T AddLink<T>(T link, PortModel source, PortModel? target = null) where T : LinkModel
+        public T AddLink<T>(T link, PortModel source, PortModel? target = null) where T : LinkModel
         {
             link.Type = Options.Links.DefaultLinkType;
             source.AddLink(link);

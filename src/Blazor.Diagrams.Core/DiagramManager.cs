@@ -20,25 +20,25 @@ namespace Blazor.Diagrams.Core
         private readonly HashSet<SelectableModel> _selectedModels;
         private readonly List<Group> _groups;
 
-        public event Action<Model, MouseEventArgs> MouseDown;
-        public event Action<Model, MouseEventArgs> MouseMove;
-        public event Action<Model, MouseEventArgs> MouseUp;
-        public event Action<KeyboardEventArgs> KeyDown;
-        public event Action<WheelEventArgs> Wheel;
+        public event Action<Model, MouseEventArgs>? MouseDown;
+        public event Action<Model, MouseEventArgs>? MouseMove;
+        public event Action<Model, MouseEventArgs>? MouseUp;
+        public event Action<KeyboardEventArgs>? KeyDown;
+        public event Action<WheelEventArgs>? Wheel;
 
-        public event Action Changed;
-        public event Action<NodeModel> NodeAdded;
-        public event Action<NodeModel> NodeRemoved;
-        public event Action<SelectableModel, bool> SelectionChanged;
-        public event Action<LinkModel> LinkAdded;
-        public event Action<LinkModel> LinkAttached;
-        public event Action<LinkModel> LinkRemoved;
-        public event Action<Group> GroupAdded;
-        public event Action<Group> GroupRemoved;
+        public event Action? Changed;
+        public event Action<NodeModel>? NodeAdded;
+        public event Action<NodeModel>? NodeRemoved;
+        public event Action<SelectableModel, bool>? SelectionChanged;
+        public event Action<LinkModel>? LinkAdded;
+        public event Action<LinkModel>? LinkAttached;
+        public event Action<LinkModel>? LinkRemoved;
+        public event Action<Group>? GroupAdded;
+        public event Action<Group>? GroupRemoved;
 
-        public event Action PanChanged;
-        public event Action ZoomChanged;
-        public event Action ContainerChanged;
+        public event Action? PanChanged;
+        public event Action? ZoomChanged;
+        public event Action? ContainerChanged;
 
         public DiagramManager(DiagramOptions? options = null)
         {
@@ -63,7 +63,7 @@ namespace Blazor.Diagrams.Core
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public IReadOnlyCollection<Group> Groups => _groups;
-        public Rectangle Container { get; internal set; }
+        public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
@@ -108,11 +108,12 @@ namespace Blazor.Diagrams.Core
 
         public LinkModel AddLink(PortModel source, PortModel? target = null)
         {
-            if(Options?.Links?.DefaultLinkModel != null)
+            if (Options?.Links?.DefaultLinkModel != null)
             {
                 var link = (LinkModel)Activator.CreateInstance(Options?.Links?.DefaultLinkModel, source, target);
                 return AddLink(link, source, target);
             }
+
             return AddLink<LinkModel>(source, target);
         }
 
@@ -123,7 +124,7 @@ namespace Blazor.Diagrams.Core
         }
 
         private T AddLink<T>(T link, PortModel source, PortModel? target = null) where T : LinkModel
-        {            
+        {
             link.Type = Options.Links.DefaultLinkType;
             source.AddLink(link);
 

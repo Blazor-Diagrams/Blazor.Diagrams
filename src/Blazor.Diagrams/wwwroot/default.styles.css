@@ -22,10 +22,12 @@
     .default-node .port {
         width: 20px;
         height: 20px;
+        margin: -10px;
         border-radius: 50%;
         background-color: #f5f5f5;
         border: 1px solid #d4d4d4;
         cursor: pointer;
+        position: absolute;
     }
 
         .default-node .port:hover, .default-node .port.has-links {
@@ -33,27 +35,43 @@
         }
 
         .default-node .port.bottom {
-            position: absolute;
-            bottom: -10px;
-            left: 40px;
+            bottom: 0px;
+            left: 50%;
+        }
+
+        .default-node .port.bottomleft {            
+            bottom: 0px;
+            left: 0px;
+        }
+
+        .default-node .port.bottomright {
+            bottom: 0px;
+            right: 0px;
         }
 
         .default-node .port.top {
-            position: absolute;
-            top: -10px;
-            left: 40px;
+            top: 0px;
+            left: 50%;
+        }
+
+        .default-node .port.topleft {
+            top: 0px;
+            left: 0px;
+        }
+
+        .default-node .port.topright {
+            top: 0px;
+            right: 0px;
         }
 
         .default-node .port.left {
-            position: absolute;
-            left: -10px;
-            top: 30px;
+            left: 0px;
+            top: 50%;
         }
 
         .default-node .port.right {
-            position: absolute;
-            right: -10px;
-            top: 30px;
+            right: 0px;
+            top: 50%;
         }
 
 .diagram-navigator.default {

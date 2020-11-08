@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Blazor.Diagrams.Algorithms\Blazor.Diagrams.Algorithms.csproj" />
     <ProjectReference Include="..\..\src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
     <ProjectReference Include="..\..\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
   </ItemGroup>

@@ -5,15 +5,16 @@
     <RazorLangVersion>3.0</RazorLangVersion>
     <Authors>zHaytam</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>1.1.3</AssemblyVersion>
-    <FileVersion>1.1.3</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <FileVersion>1.2.0</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
     <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <Version>1.1.3</Version>
+    <Version>1.2.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
     <PackageId>Z.Blazor.Diagrams</PackageId>
     <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+    <Product>Z.Blazor.Diagrams</Product>
   </PropertyGroup>
 
 

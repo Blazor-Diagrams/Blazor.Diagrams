@@ -154,7 +154,6 @@ namespace Blazor.Diagrams.Core
                 return;
 
             link.SetTargetPort(targetPort);
-            targetPort.AddLink(link);
             link.Refresh();
             targetPort.Refresh();
             LinkAttached?.Invoke(link);

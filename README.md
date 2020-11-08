@@ -2,14 +2,15 @@
 
 Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams).
 
-Blazor.Diagrams can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. The purpose of this library is to give as much functionality as possible with as little JavaScript Interop as possible.
+Blazor.Diagrams can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. It is very code/OOP oriented, representing a diagram (using models) is seperate from rendering. This has a lot of benefits, for example if you want to (de)serialize diagrams or make an engine that runs at runtime (visual programming).
 
-Blazor.Diagrams is very code/OOP oriented for now, this has a lot of benefits, for example if you want to (de)serialize models or even make an engine that runs at runtime (visual programming).
+This library aims to provide most of its features using C#/Blazor while minimizing Javascript.
 
 | NuGet Package          | Version                                                                                                                      | Download                                                                                                                      |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Z.Blazor.Diagrams.Core | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) |
 | Z.Blazor.Diagrams      | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)           | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)           |
+| Z.Blazor.Diagrams.Algorithms      | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms)           | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms)           |
 
 | Badges     |                                                                                                                                    |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -40,6 +41,7 @@ You can get started very easily & quickly using:
 - Snap to Grid
 - Grouping: [CTRL + ALT + G] to (un)group
 - Clipping: only draw nodes that are visible to the users
+- Algorithms
 
 ## Preview
 
@@ -63,8 +65,9 @@ Repository: https://github.com/zHaytam/Blazor.DatabaseDesigner
 
 ## Roadmap
 
-- [ ] History (undo/redo)
-- [ ] Auto layout (might add a lot of js interop)
+- [ ] Better way to handle/render groups
+- [ ] Pluggable history (undo/redo)
+- [ ] Auto layout
 
 ### Thinking about
 

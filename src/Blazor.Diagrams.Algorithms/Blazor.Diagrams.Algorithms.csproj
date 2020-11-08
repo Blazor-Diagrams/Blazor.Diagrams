@@ -6,11 +6,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>zHaytam</Authors>
-    <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <AssemblyVersion>0.1</AssemblyVersion>
-    <FileVersion>0.1</FileVersion>
+    <Description>Algorithms for Z.Blazor.Diagrams</Description>
+    <AssemblyVersion>0.1.0</AssemblyVersion>
+    <FileVersion>0.1.0</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>0.10</Version>
+    <Version>0.1.0</Version>
     <PackageId>Z.Blazor.Diagrams.Algorithms</PackageId>
     <PackageTags>blazor diagrams diagramming svg drag algorithms layouts</PackageTags>
     <Product>Z.Blazor.Diagrams.Algorithms</Product>

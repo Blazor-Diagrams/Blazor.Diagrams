@@ -28,9 +28,14 @@
     @* Nodes *@
     <div class="diagram-html-layer"
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML))
+        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
         {
             <NodeRenderer @key="node.Id" Node="node" />
+        }
+
+        @foreach (var group in DiagramManager.Groups)
+        {
+            <GroupRenderer Group="group" />
         }
     </div>
 </div>

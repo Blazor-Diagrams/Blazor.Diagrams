@@ -25,7 +25,7 @@ namespace Blazor.Diagrams.Core.Models
 
         public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
-        public Group? Group { get; internal set; }
+        public GroupModel? Group { get; internal set; }
 
         public RenderLayer Layer { get; }
 

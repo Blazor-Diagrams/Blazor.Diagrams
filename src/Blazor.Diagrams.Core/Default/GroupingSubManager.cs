@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Core.Default
         public GroupingSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.KeyDown += DiagramManager_KeyDown;
-            DiagramManager.SelectionChanged += DiagramManager_SelectionChanged;
+            // DiagramManager.SelectionChanged += DiagramManager_SelectionChanged;
         }
 
         private void DiagramManager_SelectionChanged(SelectableModel model, bool selected)
@@ -84,7 +84,7 @@ namespace Blazor.Diagrams.Core.Default
 
         public override void Dispose()
         {
-            DiagramManager.KeyDown -= DiagramManager_KeyDown;
+            // DiagramManager.KeyDown -= DiagramManager_KeyDown;
         }
     }
 }

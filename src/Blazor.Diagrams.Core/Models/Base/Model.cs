@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             Id = id;
         }
 
-        public event Action Changed;
+        public event Action? Changed;
 
         public string Id { get; }
         public bool Locked { get; set; }

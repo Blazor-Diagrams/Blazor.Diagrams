@@ -18,7 +18,7 @@ namespace Blazor.Diagrams.Core
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly HashSet<SelectableModel> _selectedModels;
-        private readonly List<Group> _groups;
+        private readonly List<GroupModel> _groups;
 
         public event Action<Model, MouseEventArgs>? MouseDown;
         public event Action<Model, MouseEventArgs>? MouseMove;
@@ -33,8 +33,8 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel>? LinkAdded;
         public event Action<LinkModel>? LinkAttached;
         public event Action<LinkModel>? LinkRemoved;
-        public event Action<Group>? GroupAdded;
-        public event Action<Group>? GroupRemoved;
+        public event Action<GroupModel>? GroupAdded;
+        public event Action<GroupModel>? GroupRemoved;
 
         public event Action? PanChanged;
         public event Action? ZoomChanged;
@@ -46,7 +46,7 @@ namespace Blazor.Diagrams.Core
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
-            _groups = new List<Group>();
+            _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
 
@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
-        public IReadOnlyCollection<Group> Groups => _groups;
+        public IReadOnlyCollection<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
@@ -174,7 +174,7 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public Group Group(params NodeModel[] nodes)
+        public GroupModel Group(params NodeModel[] nodes)
         {
             if (nodes == null || nodes.Length == 0)
                 throw new ArgumentException($"Null or empty nodes array");
@@ -185,7 +185,7 @@ namespace Blazor.Diagrams.Core
             if (nodes.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new Group(nodes[0].Layer);
+            var group = new GroupModel(this, nodes[0].Layer);
 
             foreach (var node in nodes)
             {
@@ -196,10 +196,11 @@ namespace Blazor.Diagrams.Core
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
+            Refresh();
             return group;
         }
 
-        public void Ungroup(Group group)
+        public void Ungroup(GroupModel group)
         {
             if (!_groups.Remove(group))
                 return;

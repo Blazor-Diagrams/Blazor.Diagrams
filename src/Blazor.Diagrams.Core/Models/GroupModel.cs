@@ -33,14 +33,14 @@ namespace Blazor.Diagrams.Core.Models
             Update();
         }
 
+        internal void Clear() => _nodes.Clear();
+
         private void Node_Changed()
         {
             // Todo: optimize
             Update();
             Refresh();
         }
-
-        internal void Clear() => _nodes.Clear();
 
         private void Update()
         {

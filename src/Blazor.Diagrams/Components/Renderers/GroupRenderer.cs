@@ -4,6 +4,7 @@ using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
+using System.Linq;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
@@ -36,10 +37,23 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddAttribute(2, "style", $"position: absolute; top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px; " +
                 $"width: {width.ToInvariantString()}px; height: {height.ToInvariantString()}px; border: 1px solid black;");
 
+            builder.OpenElement(3, "svg");
+            builder.AddAttribute(4, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; " +
+                $"top: {(-position.X).ToInvariantString()}px; left: {(-position.Y).ToInvariantString()}px");
+            
+            foreach (var link in Group.Nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct())
+            {
+                builder.OpenComponent<LinkRenderer>(5);
+                builder.AddAttribute(6, "Link", link);
+                builder.CloseComponent();
+            }
+
+            builder.CloseElement();
+
             foreach (var node in Group.Nodes)
             {
-                builder.OpenComponent<NodeRenderer>(2);
-                builder.AddAttribute(3, "Node", node);
+                builder.OpenComponent<NodeRenderer>(7);
+                builder.AddAttribute(8, "Node", node);
                 builder.CloseComponent();
             }
 

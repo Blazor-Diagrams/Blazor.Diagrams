@@ -29,7 +29,7 @@ namespace Blazor.Diagrams.Core.Default
             // Don't link this linq
             _initialPositions = DiagramManager.SelectedModels
                 .Where(m => m is NodeModel)
-                .Select(m => (m as NodeModel).Position)
+                .Select(m => (m as NodeModel)!.Position)
                 .ToArray();
 
             _lastClientX = e.ClientX;
@@ -55,6 +55,19 @@ namespace Blazor.Diagrams.Core.Default
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
                 node.SetPosition(ndx, ndy);
                 node.RefreshAll();
+
+                // Refresh the position of the other nodes
+                if (node.Group != null)
+                {
+                    foreach (var gnode in node.Group.Nodes)
+                    {
+                        if (gnode == node)
+                            continue;
+
+                        gnode.Refresh();
+                    }
+                }
+
                 i++;
             }
         }

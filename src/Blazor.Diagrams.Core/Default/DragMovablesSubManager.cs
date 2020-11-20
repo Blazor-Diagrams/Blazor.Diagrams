@@ -1,6 +1,4 @@
-﻿using Blazor.Diagrams.Core.Extensions;
-using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Base;
+﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -8,13 +6,13 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Default
 {
-    public class DragNodeSubManager : DiagramSubManager
+    public class DragMovablesSubManager : DiagramSubManager
     {
         private Point[]? _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
 
-        public DragNodeSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public DragMovablesSubManager(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
             DiagramManager.MouseMove += DiagramManager_MouseMove;
@@ -23,13 +21,13 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is NodeModel))
+            if (!(model is MovableModel))
                 return;
 
             // Don't link this linq
             _initialPositions = DiagramManager.SelectedModels
-                .Where(m => m is NodeModel)
-                .Select(m => (m as NodeModel)!.Position)
+                .Where(m => m is MovableModel)
+                .Select(m => (m as MovableModel)!.Position)
                 .ToArray();
 
             _lastClientX = e.ClientX;
@@ -47,27 +45,13 @@ namespace Blazor.Diagrams.Core.Default
 
             foreach (var sm in DiagramManager.SelectedModels)
             {
-                if (!(sm is NodeModel node) || node.Locked)
+                if (!(sm is MovableModel node) || node.Locked)
                     continue;
 
                 var initialPosition = _initialPositions[i];
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
                 node.SetPosition(ndx, ndy);
-                node.RefreshAll();
-
-                // Refresh the position of the other nodes
-                if (node.Group != null)
-                {
-                    foreach (var gnode in node.Group.Nodes)
-                    {
-                        if (gnode == node)
-                            continue;
-
-                        gnode.Refresh();
-                    }
-                }
-
                 i++;
             }
         }

@@ -1,25 +1,26 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : SelectableModel
+    public class NodeModel : MovableModel
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
         private Size? _size;
 
-        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML)
+        public event Action<NodeModel>? Moving;
+
+        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(position)
         {
-            Position = position ?? Point.Zero;
             Layer = layer;
         }
 
-        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id)
+        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id, position)
         {
-            Position = position ?? Point.Zero;
             Layer = layer;
         }
 
@@ -30,8 +31,6 @@ namespace Blazor.Diagrams.Core.Models
         public RenderLayer Layer { get; }
 
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
-
-        public Point Position { get; private set; }
 
         public Size? Size
         {
@@ -64,17 +63,20 @@ namespace Blazor.Diagrams.Core.Models
 
         public bool RemovePort(PortModel port) => _ports.Remove(port);
 
-        public void SetPosition(double x, double y)
+        public override void SetPosition(double x, double y)
         {
             var deltaX = x - Position.X;
             var deltaY = y - Position.Y;
-            Position = new Point(x, y);
+            base.SetPosition(x, y);
+            RefreshAll();
 
             // Save some JS calls and update ports directly here
             foreach (var port in _ports)
             {
                 port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
             }
+
+            Moving?.Invoke(this);
         }
     }
 }

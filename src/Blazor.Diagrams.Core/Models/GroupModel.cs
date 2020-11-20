@@ -1,61 +1,74 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class GroupModel : Model
+    public class GroupModel : MovableModel, IDisposable
     {
-        private readonly HashSet<NodeModel> _nodes = new HashSet<NodeModel>();
         private readonly DiagramManager _diagramManager;
 
-        public GroupModel(DiagramManager diagramManager, RenderLayer layer)
+        public GroupModel(DiagramManager diagramManager, NodeModel[] nodes)
         {
             _diagramManager = diagramManager;
-            Layer = layer;
+            Nodes = nodes;
+            Initialize();
         }
 
-        public RenderLayer Layer { get; }
-        public IReadOnlyCollection<NodeModel> Nodes => _nodes;
+        public NodeModel[] Nodes { get; private set; }
         public Size Size { get; private set; } = Size.Zero;
-        public Point Position { get; private set; } = Point.Zero;
+        public Point? InitialPosition { get; private set; }
 
-
-        internal void AddNode(NodeModel node)
+        public void Dispose()
         {
-            if (node.Layer != Layer)
-                throw new ArgumentException($"The node must have be in the layer {Layer}");
-
-            _nodes.Add(node);
-            node.Changed += Node_Changed; // Todo: unsubscribe later
-            Update();
+            foreach (var node in Nodes)
+                node.Moving -= Node_Moving;
         }
 
-        internal void Clear() => _nodes.Clear();
-
-        private void Node_Changed()
+        private void Initialize()
         {
-            // Todo: optimize
-            Update();
-            Refresh();
-        }
-
-        private void Update()
-        {
-            if (_nodes.Count == 0)
-                return;
-
-            if (_nodes.Count == 1)
+            foreach (var node in Nodes)
             {
-                Size = _nodes.First().Size!;
-                return;
+                node.Group = this;
+                node.Moving += Node_Moving;
             }
 
-            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(_nodes.ToList());
+            UpdateDimensions();
+        }
+
+        private void Node_Moving(NodeModel node)
+        {
+            // Todo: optimize
+            UpdateDimensions();
+
+            // Refresh the position of the other nodes in the group
+            foreach (var gnode in Nodes)
+            {
+                if (gnode == node)
+                    continue;
+
+                gnode.Refresh();
+            }
+        }
+
+        private void UpdateDimensions()
+        {
+            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Nodes.ToList());
             Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
-            Position = new Point(nodesMinX, nodesMinY);
+
+            var diff = InitialPosition == null ? Point.Zero : (Position - InitialPosition);
+            InitialPosition = new Point(nodesMinX, nodesMinY);
+            SetPosition(nodesMinX + diff.X, nodesMinY + diff.Y);
+        }
+
+        public override void SetPosition(double x, double y)
+        {
+            base.SetPosition(x, y);
+            Refresh();
+
+            foreach (var link in Nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct())
+                link.Refresh();
         }
     }
 }

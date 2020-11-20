@@ -97,7 +97,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             var position = Node.Position;
             if (Node.Group != null)
-                position = (position - Node.Group.Position).Add(20);
+                position = (position - Node.Group.InitialPosition).Add(20);
 
             if (Node.Layer == RenderLayer.HTML)
             {

@@ -51,7 +51,7 @@ namespace Blazor.Diagrams.Core
             Options = options ?? new DiagramOptions();
 
             RegisterSubManager<SelectionSubManager>();
-            RegisterSubManager<DragNodeSubManager>();
+            RegisterSubManager<DragMovablesSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
             RegisterSubManager<PanSubManager>();
@@ -176,23 +176,23 @@ namespace Blazor.Diagrams.Core
 
         public GroupModel Group(params NodeModel[] nodes)
         {
-            if (nodes == null || nodes.Length == 0)
-                throw new ArgumentException($"Null or empty nodes array");
+            if (nodes.Length < 2)
+                throw new ArgumentException("Number of nodes must be >= 2");
 
-            if (nodes.Select(n => n.Layer).Distinct().Count() > 1)
+            var layers = nodes.Select(n => n.Layer).Distinct();
+            if (layers.Count() > 1)
                 throw new InvalidOperationException("Cannot group nodes with different layers");
+
+            if (layers.First() == RenderLayer.SVG)
+                throw new InvalidOperationException("SVG groups aren't imeplemtend yet");
 
             if (nodes.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(this, nodes[0].Layer);
+            var group = new GroupModel(this, nodes);
 
             foreach (var node in nodes)
-            {
-                node.Group = group;
-                group.AddNode(node);
                 node.Refresh();
-            }
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
@@ -211,7 +211,7 @@ namespace Blazor.Diagrams.Core
                 node.Refresh();
             }
 
-            group.Clear();
+            group.Dispose();
             GroupRemoved?.Invoke(group);
         }
 

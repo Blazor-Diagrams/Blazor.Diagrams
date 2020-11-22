@@ -96,8 +96,8 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddAttribute(1, "class", "node");
 
             var position = Node.Position;
-            if (Node.Group != null)
-                position = (position - Node.Group.InitialPosition).Add(20);
+            //if (Node.Group != null)
+            //    position -= Node.Group.TopLeftBoundary;
 
             if (Node.Layer == RenderLayer.HTML)
             {

@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             Position = position ?? Point.Zero;
         }
 
-        public Point Position { get; private set; }
+        public Point Position { get; set; }
 
         public virtual void SetPosition(double x, double y) => Position = new Point(x, y);
     }

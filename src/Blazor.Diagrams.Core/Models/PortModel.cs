@@ -44,6 +44,18 @@ namespace Blazor.Diagrams.Core.Models
 
         public virtual bool CanAttachTo(PortModel port) => port != this && !port.Locked && Parent != port.Parent;
 
+        /// <summary>
+        /// Takes into account whether the parent is inside a group that moved
+        /// </summary>
+        /// <returns></returns>
+        public Point GetFinalPosition()
+        {
+            if (Parent.Group == null || Parent.Group.TopLeftBoundary == null)
+                return Position;
+
+            return Position; // + Parent.Group.MovedBy;
+        }
+
         internal void AddLink(LinkModel link) => _links.Add(link);
 
         internal void RemoveLink(LinkModel link) => _links.Remove(link);

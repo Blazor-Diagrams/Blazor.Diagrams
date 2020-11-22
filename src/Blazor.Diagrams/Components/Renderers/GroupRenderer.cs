@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override void OnParametersSet()
@@ -30,7 +30,6 @@ namespace Blazor.Diagrams.Components.Renderers
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var position = Group.Position.Add(-20);
-            var initialPosition = Group.InitialPosition.Add(-20);
             var width = Group.Size.Width + 20 * 2;
             var height = Group.Size.Height + 20 * 2;
 
@@ -45,7 +44,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.OpenElement(7, "svg");
             builder.AddAttribute(8, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; " +
-                $"top: {(-initialPosition.Y).ToInvariantString()}px; left: {(-initialPosition.X).ToInvariantString()}px");
+                $"top: {(-position.Y).ToInvariantString()}px; left: {(-position.X).ToInvariantString()}px");
             
             foreach (var link in Group.Nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct())
             {
@@ -57,13 +56,18 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.CloseElement();
 
+            builder.OpenElement(11, "div");
+            builder.AddAttribute(12, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; top: 20px; left: 20px;");
+
             foreach (var node in Group.Nodes)
             {
-                builder.OpenComponent<NodeRenderer>(11);
+                builder.OpenComponent<NodeRenderer>(12);
                 builder.SetKey(node.Id);
-                builder.AddAttribute(12, "Node", node);
+                builder.AddAttribute(13, "Node", node);
                 builder.CloseComponent();
             }
+
+            builder.CloseElement();
 
             builder.CloseElement();
         }

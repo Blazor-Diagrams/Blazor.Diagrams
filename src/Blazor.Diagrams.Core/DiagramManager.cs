@@ -192,7 +192,9 @@ namespace Blazor.Diagrams.Core
             var group = new GroupModel(this, nodes);
 
             foreach (var node in nodes)
-                node.Refresh();
+            {
+                _nodes.Remove(node);
+            }
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
@@ -205,8 +207,13 @@ namespace Blazor.Diagrams.Core
             if (!_groups.Remove(group))
                 return;
 
-            group.Clear();
+            group.Ungroup();
+
+            foreach (var node in group.Children)
+                _nodes.Add(node);
+
             GroupRemoved?.Invoke(group);
+            Refresh();
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)
@@ -286,14 +293,14 @@ namespace Blazor.Diagrams.Core
         }
 
         public void Refresh() => Changed?.Invoke();
-
+         
         public void ZoomToFit(double margin = 10)
         {
-            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s).ToList();
-            if (selectedNodes.Count == 0 && _nodes.Count == 0)
+            if (_nodes.Count == 0)
                 return;
 
-            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes);
+            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s);
+            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : _nodes);
             var width = maxX - minX + 2 * margin;
             var height = maxY - minY + 2 * margin;
             minX -= margin;
@@ -310,22 +317,15 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        public (double minX, double maxX, double minY, double maxY) GetNodesRect(List<NodeModel>? nodes = null)
+        public (double minX, double maxX, double minY, double maxY) GetNodesRect(IEnumerable<NodeModel> nodes)
         {
-            if (nodes == null || nodes.Count == 0)
-                nodes = _nodes;
+            double minX = double.MaxValue;
+            double maxX = double.MinValue;
+            double minY = double.MaxValue;
+            double maxY = double.MinValue;
 
-            if (nodes.Count == 0)
-                return (0, 0, 0, 0);
-
-            double minX = nodes[0].Position.X;
-            double maxX = nodes[0].Position.X + nodes[0].Size!.Width;
-            double minY = nodes[0].Position.Y;
-            double maxY = nodes[0].Position.Y + nodes[0].Size!.Height;
-
-            for (var i = 1; i < nodes.Count; i++)
+            foreach (var node in nodes)
             {
-                var node = nodes[i];
                 var trX = node.Position.X + node.Size!.Width;
                 var bY = node.Position.Y + node.Size.Height;
 

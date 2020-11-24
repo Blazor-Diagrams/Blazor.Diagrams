@@ -25,7 +25,7 @@ namespace Blazor.Diagrams.Core.Default
             if (node.Group == null)
                 return;
 
-            foreach (var n in node.Group.Nodes)
+            foreach (var n in node.Group.Children)
             {
                 if (n == node || n.Selected == selected)
                     continue;

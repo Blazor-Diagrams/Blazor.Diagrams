@@ -1,26 +1,36 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Models.Core;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class GroupModel : MovableModel
+    public class GroupModel : NodeModel
     {
         private readonly DiagramManager _diagramManager;
 
-        public GroupModel(DiagramManager diagramManager, NodeModel[] nodes)
+        public GroupModel(DiagramManager diagramManager, NodeModel[] children)
         {
             _diagramManager = diagramManager;
-            Nodes = nodes;
+            Children = children;
             Initialize();
         }
 
-        public NodeModel[] Nodes { get; private set; }
-        public Size Size { get; private set; } = Size.Zero;
+        public NodeModel[] Children { get; private set; }
 
-        public void Clear()
+        public override void SetPosition(double x, double y)
         {
-            foreach (var node in Nodes)
+            var deltaX = x - Position.X;
+            var deltaY = y - Position.Y;
+            base.SetPosition(x, y);
+
+            foreach (var node in Children)
+                node.UpdatePositionSilently(deltaX, deltaY);
+
+            Refresh();
+        }
+
+        public void Ungroup()
+        {
+            foreach (var node in Children)
             {
                 node.Group = null;
                 node.Moving -= Node_Moving;
@@ -29,7 +39,7 @@ namespace Blazor.Diagrams.Core.Models
 
         private void Initialize()
         {
-            foreach (var node in Nodes)
+            foreach (var node in Children)
             {
                 node.Group = this;
                 node.Moving += Node_Moving;
@@ -38,26 +48,17 @@ namespace Blazor.Diagrams.Core.Models
             UpdateDimensions();
         }
 
-        private void Node_Moving(NodeModel node) => UpdateDimensions();
-
-        private void UpdateDimensions()
+        private void Node_Moving(NodeModel node)
         {
-            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Nodes.ToList());
-            Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
-            Position = new Point(nodesMinX, nodesMinY);
+            UpdateDimensions();
             Refresh();
         }
 
-        public override void SetPosition(double x, double y)
+        private void UpdateDimensions()
         {
-            var deltaX = x - Position.X;
-            var deltaY = y - Position.Y;
-            base.SetPosition(x, y);
-
-            foreach (var node in Nodes)
-                node.UpdatePositionSilently(deltaX, deltaY);
-
-            Refresh();
+            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children.ToList());
+            Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
+            Position = new Point(nodesMinX, nodesMinY);
         }
     }
 }

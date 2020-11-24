@@ -46,7 +46,7 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddAttribute(8, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; " +
                 $"top: {(-position.Y).ToInvariantString()}px; left: {(-position.X).ToInvariantString()}px");
             
-            foreach (var link in Group.Nodes.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct())
+            foreach (var link in Group.Children.SelectMany(n => n.Ports.SelectMany(p => p.Links)).Distinct())
             {
                 builder.OpenComponent<LinkRenderer>(9);
                 builder.SetKey(link.Id);
@@ -60,7 +60,7 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddAttribute(12, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; " +
                 $"top: {(-position.Y).ToInvariantString()}px; left: {(-position.X).ToInvariantString()}px");
 
-            foreach (var node in Group.Nodes)
+            foreach (var node in Group.Children)
             {
                 builder.OpenComponent<NodeRenderer>(12);
                 builder.SetKey(node.Id);

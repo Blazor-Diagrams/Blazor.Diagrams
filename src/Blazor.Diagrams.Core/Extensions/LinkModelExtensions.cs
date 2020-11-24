@@ -98,15 +98,15 @@ namespace Blazor.Diagrams.Core.Extensions
         }
 
         public static double GetMiddleSourceX(this LinkModel link)
-            => link.SourcePort.GetFinalPosition().X + (link.SourcePort.Size.Width / 2);
+            => link.SourcePort.Position.X + (link.SourcePort.Size.Width / 2);
 
         public static double GetMiddleSourceY(this LinkModel link)
-            => link.SourcePort.GetFinalPosition().Y + (link.SourcePort.Size.Height / 2);
+            => link.SourcePort.Position.Y + (link.SourcePort.Size.Height / 2);
 
         public static double GetMiddleTargetX(this LinkModel link)
-            => link.TargetPort!.GetFinalPosition().X + (link.TargetPort.Size.Width / 2);
+            => link.TargetPort!.Position.X + (link.TargetPort.Size.Width / 2);
 
         public static double GetMiddleTargetY(this LinkModel link)
-            => link.TargetPort!.GetFinalPosition().Y + (link.TargetPort.Size.Height / 2);
+            => link.TargetPort!.Position.Y + (link.TargetPort.Size.Height / 2);
     }
 }

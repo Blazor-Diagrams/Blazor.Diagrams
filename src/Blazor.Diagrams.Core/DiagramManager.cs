@@ -205,13 +205,7 @@ namespace Blazor.Diagrams.Core
             if (!_groups.Remove(group))
                 return;
 
-            foreach (var node in group.Nodes)
-            {
-                node.Group = null;
-                node.Refresh();
-            }
-
-            group.Dispose();
+            group.Clear();
             GroupRemoved?.Invoke(group);
         }
 

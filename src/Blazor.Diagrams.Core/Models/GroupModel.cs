@@ -1,11 +1,10 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
-using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class GroupModel : MovableModel, IDisposable
+    public class GroupModel : MovableModel
     {
         private readonly DiagramManager _diagramManager;
 
@@ -19,10 +18,13 @@ namespace Blazor.Diagrams.Core.Models
         public NodeModel[] Nodes { get; private set; }
         public Size Size { get; private set; } = Size.Zero;
 
-        public void Dispose()
+        public void Clear()
         {
             foreach (var node in Nodes)
+            {
+                node.Group = null;
                 node.Moving -= Node_Moving;
+            }
         }
 
         private void Initialize()

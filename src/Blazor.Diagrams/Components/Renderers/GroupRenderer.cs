@@ -57,7 +57,8 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.CloseElement();
 
             builder.OpenElement(11, "div");
-            builder.AddAttribute(12, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; top: 20px; left: 20px;");
+            builder.AddAttribute(12, "style", "position: absolute; width: 100%; height: 100%; overflow: visible; " +
+                $"top: {(-position.Y).ToInvariantString()}px; left: {(-position.X).ToInvariantString()}px");
 
             foreach (var node in Group.Nodes)
             {

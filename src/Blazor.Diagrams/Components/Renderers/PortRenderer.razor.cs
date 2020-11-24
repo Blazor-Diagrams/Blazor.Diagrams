@@ -58,12 +58,6 @@ namespace Blazor.Diagrams.Components.Renderers
                 Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
                 Port.Position = new Point((rect.Left - DiagramManager.Container.Left - pan.X) / zoom,
                     (rect.Top - DiagramManager.Container.Top - pan.Y) / zoom);
-
-                //if (Port.Parent.Group != null)
-                //{
-                //    Port.Position -= Port.Parent.Group.MovedBy;
-                //}
-
                 Port.Initialized = true;
                 Port.RefreshAll();
             }

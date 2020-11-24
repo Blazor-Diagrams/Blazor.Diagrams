@@ -78,5 +78,18 @@ namespace Blazor.Diagrams.Core.Models
             RefreshAll();
             Moving?.Invoke(this);
         }
+
+        public void UpdatePositionSilently(double deltaX, double deltaY)
+        {
+            base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
+
+            // Save some JS calls and update ports directly here
+            foreach (var port in _ports)
+            {
+                port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
+            }
+
+            RefreshAll();
+        }
     }
 }

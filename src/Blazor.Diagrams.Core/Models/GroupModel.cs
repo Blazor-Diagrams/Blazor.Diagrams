@@ -1,9 +1,9 @@
-﻿using Blazor.Diagrams.Core.Models.Core;
-using System.Linq;
+﻿using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Models.Core;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class GroupModel : NodeModel
+    public class GroupModel : MovableModel
     {
         private readonly DiagramManager _diagramManager;
 
@@ -15,6 +15,7 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public NodeModel[] Children { get; private set; }
+        public Size Size { get; private set; } = Size.Zero;
 
         public override void SetPosition(double x, double y)
         {
@@ -56,7 +57,7 @@ namespace Blazor.Diagrams.Core.Models
 
         private void UpdateDimensions()
         {
-            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children.ToList());
+            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children);
             Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
             Position = new Point(nodesMinX, nodesMinY);
         }

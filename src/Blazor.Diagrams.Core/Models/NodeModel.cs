@@ -67,7 +67,7 @@ namespace Blazor.Diagrams.Core.Models
             Moving?.Invoke(this);
         }
 
-        public void UpdatePositionSilently(double deltaX, double deltaY)
+        public virtual void UpdatePositionSilently(double deltaX, double deltaY)
         {
             base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
 

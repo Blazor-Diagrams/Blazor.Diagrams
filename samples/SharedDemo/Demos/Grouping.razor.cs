@@ -17,11 +17,13 @@ namespace SharedDemo.Demos
             base.OnInitialized();
 
             var node1 = NewNode(50, 50);
-            var node2 = NewNode(300, 300);
+            var node2 = NewNode(200, 250);
+            var node3 = NewNode(400, 100);
+
             diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(300, 50));
+            diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));
+            diagramManager.Group(node1, node2);
+            diagramManager.AddNode(node3);
         }
 
         private NodeModel NewNode(double x, double y)

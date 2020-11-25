@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
@@ -34,7 +35,8 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var node in Children)
             {
                 node.Group = null;
-                node.Moving -= Node_Moving;
+                node.SizeChanged -= OnNodeChanged;
+                node.Moving -= OnNodeChanged;
             }
         }
 
@@ -43,13 +45,14 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var node in Children)
             {
                 node.Group = this;
-                node.Moving += Node_Moving;
+                node.SizeChanged += OnNodeChanged;
+                node.Moving += OnNodeChanged;
             }
 
             UpdateDimensions();
         }
 
-        private void Node_Moving(NodeModel node)
+        private void OnNodeChanged(NodeModel node)
         {
             UpdateDimensions();
             Refresh();
@@ -57,6 +60,9 @@ namespace Blazor.Diagrams.Core.Models
 
         private void UpdateDimensions()
         {
+            if (Children.Any(n => n.Size == null))
+                return;
+
             (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children);
             Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
             Position = new Point(nodesMinX, nodesMinY);

@@ -10,7 +10,9 @@ namespace Blazor.Diagrams.Core.Models
     public class NodeModel : MovableModel
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
+        private Size? _size;
 
+        public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
         public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(position)
@@ -24,7 +26,15 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public RenderLayer Layer { get; }
-        public Size? Size { get; set; }
+        public Size? Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                SizeChanged?.Invoke(this);
+            }
+        }
         public GroupModel? Group { get; internal set; }
 
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();

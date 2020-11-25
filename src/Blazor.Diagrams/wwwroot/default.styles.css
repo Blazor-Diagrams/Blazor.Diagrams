@@ -89,10 +89,10 @@
 }
 
 .group {
-    border: 1px solid black;
+    border: 2px solid black;
     background: rgb(198, 198, 198);
 }
 
     .group.selected {
-        border: 1px solid #6e9fd4;
+        border: 2px solid #6e9fd4;
     }

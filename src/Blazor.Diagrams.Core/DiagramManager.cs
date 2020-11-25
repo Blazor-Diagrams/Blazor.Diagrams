@@ -319,10 +319,10 @@ namespace Blazor.Diagrams.Core
 
         public (double minX, double maxX, double minY, double maxY) GetNodesRect(IEnumerable<NodeModel> nodes)
         {
-            double minX = double.MaxValue;
-            double maxX = double.MinValue;
-            double minY = double.MaxValue;
-            double maxY = double.MinValue;
+            var minX = double.MaxValue;
+            var maxX = double.MinValue;
+            var minY = double.MaxValue;
+            var maxY = double.MinValue;
 
             foreach (var node in nodes)
             {

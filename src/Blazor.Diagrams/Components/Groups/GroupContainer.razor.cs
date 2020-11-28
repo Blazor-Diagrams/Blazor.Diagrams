@@ -22,8 +22,8 @@ namespace Blazor.Diagrams.Components.Groups
 
         public double X => Group.Position.X - Padding;
         public double Y => Group.Position.Y - Padding;
-        public double Width => Group.Size.Width + Padding;
-        public double Height => Group.Size.Height + Padding;
+        public double Width => Group.Size.Width + Padding * 2;
+        public double Height => Group.Size.Height + Padding * 2;
 
         public void Dispose()
         {

@@ -17,8 +17,8 @@ namespace SharedDemo.Demos
             base.OnInitialized();
 
             var node1 = NewNode(50, 50);
-            var node2 = NewNode(200, 250);
-            var node3 = NewNode(400, 100);
+            var node2 = NewNode(250, 250);
+            var node3 = NewNode(450, 100);
 
             diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
             diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));

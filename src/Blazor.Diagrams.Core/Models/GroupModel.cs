@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
@@ -17,6 +18,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public NodeModel[] Children { get; private set; }
         public Size Size { get; private set; } = Size.Zero;
+
+        public IEnumerable<LinkModel> AllLinks => Children.SelectMany(n => n.AllLinks).Distinct();
 
         public override void SetPosition(double x, double y)
         {

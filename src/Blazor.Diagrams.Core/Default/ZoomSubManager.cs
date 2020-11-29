@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Core.Default
             var newPanY = DiagramManager.Pan.Y - heightDiff * yFactor;
 
             DiagramManager.Pan = new Point(newPanX, newPanY);
-            DiagramManager.ChangeZoom(newZoom);
+            DiagramManager.SetZoom(newZoom);
         }
 
         public override void Dispose()

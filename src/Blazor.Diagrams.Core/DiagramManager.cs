@@ -312,7 +312,7 @@ namespace Blazor.Diagrams.Core
 
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
-            Pan = Pan.Add(Container.Left - nx, Container.Top - ny);
+            UpdatePan(Container.Left - nx, Container.Top - ny);
 
             Refresh();
         }
@@ -350,21 +350,21 @@ namespace Blazor.Diagrams.Core
             return (minX, maxX, minY, maxY);
         }
 
-        public void ChangePan(double deltaX, double deltaY)
+        public void UpdatePan(double deltaX, double deltaY)
         {
             Pan = Pan.Add(deltaX, deltaY);
             PanChanged?.Invoke();
             Refresh();
         }
 
-        public void ChangeZoom(double newZoom)
+        public void SetZoom(double newZoom)
         {
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();
         }
 
-        internal void ChangeContainer(Rectangle newRect)
+        internal void SetContainer(Rectangle newRect)
         {
             Container = newRect;
             ContainerChanged?.Invoke();

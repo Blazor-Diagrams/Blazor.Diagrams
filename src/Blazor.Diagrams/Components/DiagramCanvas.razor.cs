@@ -53,7 +53,7 @@ namespace Blazor.Diagrams.Components
         }
 
         [JSInvokable]
-        public void OnResize(Rectangle rect) => DiagramManager.ChangeContainer(rect);
+        public void OnResize(Rectangle rect) => DiagramManager.SetContainer(rect);
 
         protected override bool ShouldRender()
         {

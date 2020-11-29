@@ -1,13 +1,8 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Default;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 
 namespace Blazor.Diagrams.Components
 {
@@ -75,7 +70,7 @@ namespace Blazor.Diagrams.Components
             StateHasChanged();
         }
 
-        private void AdjustFullSizeWithNodesRect(double nodesMinX, double nodesMinY, ref double fullSizeWidth, 
+        private void AdjustFullSizeWithNodesRect(double nodesMinX, double nodesMinY, ref double fullSizeWidth,
             ref double fullSizeHeight)
         {
             // Width

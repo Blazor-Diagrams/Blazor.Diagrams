@@ -10,7 +10,10 @@ namespace SharedDemo.Demos
     public class DynamicInsertionsComponent : ComponentBase
     {
         private static readonly Random _random = new Random();
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly DiagramManager diagramManager = new DiagramManager(new DiagramOptions
+        {
+            GroupingEnabled = true
+        });
 
         protected override void OnInitialized()
         {

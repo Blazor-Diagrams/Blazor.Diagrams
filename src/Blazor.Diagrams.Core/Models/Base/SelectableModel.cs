@@ -1,6 +1,6 @@
 ﻿namespace Blazor.Diagrams.Core.Models.Base
 {
-    public class SelectableModel : Model
+    public abstract class SelectableModel : Model
     {
         public SelectableModel() { }
 

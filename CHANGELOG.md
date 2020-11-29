@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams [1.3.0] - 2020-11-29
+
+### Added
+- Abstract `MovableModel`, which inherits from `SelectableModel` and represents models that can be move with the mouse (e.g. nodes and groups).
+- Groups widget customization using `RegisterModelComponent`.
+- `SizeChanged` event on `NodeModel`.
+
+### Changed
+- `SelectableModel` is now abstract.
+- Groups:
+  - Renamed model `Group` to `GroupModel`.
+  - Rendered as a single entity (HTML div) with padding.
+  - Movable and Selectable.
+  - Selecting a node inside a group doesn't select the others anymore.
+- **[BREAKING]** Renamed `DiagramManager.ChangePan` to `UpdatePan`.
+- **[BREAKING]** Renamed `DiagramManager.ChangeZoom` to `SetZoom`.
+
+### Fixed
+- `ZoomToFit` wasn't unhiding hidden nodes.
+
 ## Diagrams [1.2.0] - 2020-11-08
 ### Added
 - `DefaultLinkModel` in `DiagramLinkOptions` ([@joezearing](https://github.com/joezearing)).

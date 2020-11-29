@@ -53,6 +53,7 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             Node.Size = size;
+            Node.Refresh();
 
             foreach (var port in Node.Ports)
             {

@@ -14,8 +14,15 @@
         public double Y { get; }
 
         // Maybe just make Points mutable?
+        public Point Add(double value) => new Point(X + value, Y + value);
         public Point Add(double x, double y) => new Point(X + x, Y + y);
 
+        public Point Substract(double value) => new Point(X - value, Y - value);
+        public Point Substract(double x, double y) => new Point(X - x, Y - y);
+
         public override string ToString() => $"Point(x={X}, y={Y})";
+
+        public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y);
+        public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y);
     }
 }

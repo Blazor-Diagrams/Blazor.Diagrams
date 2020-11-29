@@ -20,6 +20,15 @@
     overflow: visible;
 }
 
+.html-layer, .svg-layer {
+    position: absolute;
+    pointer-events: none;
+    transform-origin: 0px 0px;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
 .node {
     position: absolute;
     user-select: none;
@@ -39,4 +48,17 @@
     .diagram-navigator .current-view {
         position: absolute;
         border: 2px solid black;
+    }
+
+.group {
+    position: absolute;
+    user-select: none;
+    cursor: move;
+    pointer-events: all;
+}
+
+    .group .layer {
+        position: absolute;
+        overflow: visible;
+        pointer-events: none;
     }

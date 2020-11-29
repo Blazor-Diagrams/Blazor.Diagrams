@@ -1,0 +1,12 @@
+﻿@code {
+    [CascadingParameter]
+    public GroupContainer GroupContainer { get; set; }
+}
+
+<div class="layer"
+     style="top: @((-GroupContainer.Y).ToInvariantString())px; left: @((-GroupContainer.X).ToInvariantString())px">
+    @foreach (var node in GroupContainer.Group.Children)
+    {
+        <NodeRenderer @key="node.Id" Node="node"></NodeRenderer>
+    }
+</div>

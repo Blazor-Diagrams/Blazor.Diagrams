@@ -57,6 +57,7 @@ You can get started very easily & quickly using:
 
 ![](https://i.imgur.com/k4UThmh.png)
 
+
 ### Sample project
 
 Repository: https://github.com/zHaytam/Blazor.DatabaseDesigner
@@ -65,7 +66,7 @@ Repository: https://github.com/zHaytam/Blazor.DatabaseDesigner
 
 ## Roadmap
 
-- [ ] Better way to handle/render groups
+- [x] Better way to handle/render groups
 - [ ] Pluggable history (undo/redo)
 - [ ] Auto layout
 

@@ -18,7 +18,7 @@ namespace Blazor.Diagrams.Core
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly HashSet<SelectableModel> _selectedModels;
-        private readonly List<Group> _groups;
+        private readonly List<GroupModel> _groups;
 
         public event Action<Model, MouseEventArgs>? MouseDown;
         public event Action<Model, MouseEventArgs>? MouseMove;
@@ -33,8 +33,8 @@ namespace Blazor.Diagrams.Core
         public event Action<LinkModel>? LinkAdded;
         public event Action<LinkModel>? LinkAttached;
         public event Action<LinkModel>? LinkRemoved;
-        public event Action<Group>? GroupAdded;
-        public event Action<Group>? GroupRemoved;
+        public event Action<GroupModel>? GroupAdded;
+        public event Action<GroupModel>? GroupRemoved;
 
         public event Action? PanChanged;
         public event Action? ZoomChanged;
@@ -46,12 +46,12 @@ namespace Blazor.Diagrams.Core
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
-            _groups = new List<Group>();
+            _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
 
             RegisterSubManager<SelectionSubManager>();
-            RegisterSubManager<DragNodeSubManager>();
+            RegisterSubManager<DragMovablesSubManager>();
             RegisterSubManager<DragNewLinkSubManager>();
             RegisterSubManager<DeleteSelectionSubManager>();
             RegisterSubManager<PanSubManager>();
@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
         public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
-        public IReadOnlyCollection<Group> Groups => _groups;
+        public IReadOnlyCollection<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
@@ -174,44 +174,46 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public Group Group(params NodeModel[] nodes)
+        public GroupModel Group(params NodeModel[] nodes)
         {
-            if (nodes == null || nodes.Length == 0)
-                throw new ArgumentException($"Null or empty nodes array");
+            if (nodes.Length < 2)
+                throw new ArgumentException("Number of nodes must be >= 2");
 
-            if (nodes.Select(n => n.Layer).Distinct().Count() > 1)
+            var layers = nodes.Select(n => n.Layer).Distinct();
+            if (layers.Count() > 1)
                 throw new InvalidOperationException("Cannot group nodes with different layers");
+
+            if (layers.First() == RenderLayer.SVG)
+                throw new InvalidOperationException("SVG groups aren't imeplemtend yet");
 
             if (nodes.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new Group(nodes[0].Layer);
+            var group = new GroupModel(this, nodes);
 
             foreach (var node in nodes)
             {
-                node.Group = group;
-                group.AddNode(node);
-                node.Refresh();
+                _nodes.Remove(node);
             }
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);
+            Refresh();
             return group;
         }
 
-        public void Ungroup(Group group)
+        public void Ungroup(GroupModel group)
         {
             if (!_groups.Remove(group))
                 return;
 
-            foreach (var node in group.Nodes)
-            {
-                node.Group = null;
-                node.Refresh();
-            }
+            group.Ungroup();
 
-            group.Clear();
+            foreach (var node in group.Children)
+                _nodes.Add(node);
+
             GroupRemoved?.Invoke(group);
+            Refresh();
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)
@@ -291,14 +293,14 @@ namespace Blazor.Diagrams.Core
         }
 
         public void Refresh() => Changed?.Invoke();
-
+         
         public void ZoomToFit(double margin = 10)
         {
-            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s).ToList();
-            if (selectedNodes.Count == 0 && _nodes.Count == 0)
+            if (_nodes.Count == 0)
                 return;
 
-            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes);
+            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s);
+            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : _nodes);
             var width = maxX - minX + 2 * margin;
             var height = maxY - minY + 2 * margin;
             minX -= margin;
@@ -315,22 +317,15 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        public (double minX, double maxX, double minY, double maxY) GetNodesRect(List<NodeModel>? nodes = null)
+        public (double minX, double maxX, double minY, double maxY) GetNodesRect(IEnumerable<NodeModel> nodes)
         {
-            if (nodes == null || nodes.Count == 0)
-                nodes = _nodes;
+            var minX = double.MaxValue;
+            var maxX = double.MinValue;
+            var minY = double.MaxValue;
+            var maxY = double.MinValue;
 
-            if (nodes.Count == 0)
-                return (0, 0, 0, 0);
-
-            double minX = nodes[0].Position.X;
-            double maxX = nodes[0].Position.X + nodes[0].Size!.Width;
-            double minY = nodes[0].Position.Y;
-            double maxY = nodes[0].Position.Y + nodes[0].Size!.Height;
-
-            for (var i = 1; i < nodes.Count; i++)
+            foreach (var node in nodes)
             {
-                var node = nodes[i];
                 var trX = node.Position.X + node.Size!.Width;
                 var bY = node.Position.Y + node.Size.Height;
 

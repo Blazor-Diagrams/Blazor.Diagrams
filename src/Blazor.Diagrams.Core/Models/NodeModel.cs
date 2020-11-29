@@ -1,47 +1,44 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : SelectableModel
+    public class NodeModel : MovableModel
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
         private Size? _size;
 
-        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML)
+        public event Action<NodeModel>? SizeChanged;
+        public event Action<NodeModel>? Moving;
+
+        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(position)
         {
-            Position = position ?? Point.Zero;
             Layer = layer;
         }
 
-        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id)
+        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id, position)
         {
-            Position = position ?? Point.Zero;
             Layer = layer;
         }
-
-        public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
-
-        public Group? Group { get; internal set; }
 
         public RenderLayer Layer { get; }
-
-        public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
-
-        public Point Position { get; private set; }
-
         public Size? Size
         {
             get => _size;
             set
             {
                 _size = value;
-                Refresh();
+                SizeChanged?.Invoke(this);
             }
         }
+        public GroupModel? Group { get; internal set; }
+
+        public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
+        public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
         public PortModel AddPort(PortModel port)
         {
@@ -64,17 +61,33 @@ namespace Blazor.Diagrams.Core.Models
 
         public bool RemovePort(PortModel port) => _ports.Remove(port);
 
-        public void SetPosition(double x, double y)
+        public override void SetPosition(double x, double y)
         {
             var deltaX = x - Position.X;
             var deltaY = y - Position.Y;
-            Position = new Point(x, y);
+            base.SetPosition(x, y);
 
             // Save some JS calls and update ports directly here
             foreach (var port in _ports)
             {
                 port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
             }
+
+            RefreshAll();
+            Moving?.Invoke(this);
+        }
+
+        public virtual void UpdatePositionSilently(double deltaX, double deltaY)
+        {
+            base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
+
+            // Save some JS calls and update ports directly here
+            foreach (var port in _ports)
+            {
+                port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
+            }
+
+            RefreshAll();
         }
     }
 }

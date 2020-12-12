@@ -1,4 +1,5 @@
 var s = {
+    canvas: null,
     getBoundingClientRect: el => {
         return el.getBoundingClientRect();
     },
@@ -12,15 +13,25 @@ var s = {
             }
         }
     }),
-    observe: (element, ref, id) => {
+    observe: (element, ref, id, isCanvas) => {
         s.ro.observe(element);
         s.tracked[id] = {
             ref: ref
         };
+        if (isCanvas) {
+            s.canvas = {
+                elem: element,
+                ref: ref
+            }
+        }
     },
     unobserve: (element, id) => {
         s.ro.unobserve(element);
         delete s.tracked[id];
-    }
+    },
+    
 };
 window.ZBlazorDiagrams = s;
+window.addEventListener('scroll', () => {
+    s.canvas.ref.invokeMethodAsync('OnResize', s.canvas.elem.getBoundingClientRect());
+});

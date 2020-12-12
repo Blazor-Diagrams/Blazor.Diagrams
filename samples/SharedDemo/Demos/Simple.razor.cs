@@ -21,7 +21,7 @@ namespace SharedDemo
             diagramManager.AddNode(NewNode(300, 50));
         }
 
-        protected void ToggleZoom() => diagramManager.Options.AllowZooming = !diagramManager.Options.AllowZooming;
+        protected void ToggleZoom() => diagramManager.Options.Zoom.Enabled = !diagramManager.Options.Zoom.Enabled;
 
         protected void TogglePanning() => diagramManager.Options.AllowPanning = !diagramManager.Options.AllowPanning;
 

@@ -8,8 +8,6 @@ namespace Blazor.Diagrams.Core
     {
         [Description("Key code for deleting entities")]
         public string DeleteKey { get; set; } = "Delete";
-        [Description("Whether to inverse the zoom direction or not")]
-        public bool InverseZoom { get; set; }
         [Description("The default component for nodes")]
         public Type? DefaultNodeComponent { get; set; }
         [Description("The grid size (grid-based snaping")]
@@ -20,9 +18,8 @@ namespace Blazor.Diagrams.Core
         public bool AllowMultiSelection { get; set; } = true;
         [Description("Whether to allow panning or not")]
         public bool AllowPanning { get; set; } = true;
-        [Description("Whether to allow zooming or not")]
-        public bool AllowZooming { get; set; } = true;
 
+        public DiagramZoomOptions Zoom { get; set; } = new DiagramZoomOptions();
         public DiagramLinkOptions Links { get; set; } = new DiagramLinkOptions();
     }
 
@@ -38,5 +35,17 @@ namespace Blazor.Diagrams.Core
         public string DefaultColor { get; set; } = "black";
         [Description("The default color for selected links")]
         public string DefaultSelectedColor { get; set; } = "rgb(110, 159, 212)";
+    }
+
+    public class DiagramZoomOptions
+    {
+        [Description("Whether to allow zooming or not")]
+        public bool Enabled { get; set; } = true;
+        [Description("Whether to inverse the zoom direction or not")]
+        public bool Inverse { get; set; }
+        [Description("Minimum value allowed")]
+        public double Minimum { get; set; } = 0.1;
+        [Description("Maximum value allowed")]
+        public double Maximum { get; set; } = 2;
     }
 }

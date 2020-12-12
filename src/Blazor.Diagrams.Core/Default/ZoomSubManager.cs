@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 
 namespace Blazor.Diagrams.Core.Default
 {
@@ -14,11 +15,11 @@ namespace Blazor.Diagrams.Core.Default
 
         private void DiagramManager_Wheel(WheelEventArgs e)
         {
-            if (!DiagramManager.Options.AllowZooming)
+            if (!DiagramManager.Options.Zoom.Enabled)
                 return;
 
             var oldZoom = DiagramManager.Zoom;
-            var deltaY = DiagramManager.Options.InverseZoom ? e.DeltaY * -1 : e.DeltaY;
+            var deltaY = DiagramManager.Options.Zoom.Inverse ? e.DeltaY * -1 : e.DeltaY;
             var newZoom = deltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
 
             if (newZoom < 0)
@@ -36,6 +37,10 @@ namespace Blazor.Diagrams.Core.Default
             var yFactor = (clientY - DiagramManager.Pan.Y) / oldZoom / clientHeight;
             var newPanX = DiagramManager.Pan.X - widthDiff * xFactor;
             var newPanY = DiagramManager.Pan.Y - heightDiff * yFactor;
+
+            newZoom = Math.Clamp(newZoom, DiagramManager.Options.Zoom.Minimum, DiagramManager.Options.Zoom.Maximum);
+            if (newZoom == DiagramManager.Zoom)
+                return;
 
             DiagramManager.Pan = new Point(newPanX, newPanY);
             DiagramManager.SetZoom(newZoom);

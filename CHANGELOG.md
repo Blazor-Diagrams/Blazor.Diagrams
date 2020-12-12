@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams [1.4.0] - 2020-12-12
+
+### Added
+
+- Two zoom related options, `Minimum` and `Maximum`, to clamp the zoom value.
+
+### Changed
+
+- **[BREAKING]** Grouped zoom related options into `DiagramZoomOptions`, available unnder `Options.Zoom`.
+	- The option `AllowZooming` was renamed to `Enabled`.
+	- The option `InverseZoom` was renamed to `Inverse`.
+
+### Fixed
+
+- The diagram canvas' container wasn't updated when the user scrolls ([#51](https://github.com/zHaytam/Blazor.Diagrams/issues/51)).
+
 ## Diagrams [1.3.0] - 2020-11-29
 
 ### Added

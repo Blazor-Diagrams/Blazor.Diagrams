@@ -12,7 +12,6 @@ namespace Blazor.Diagrams.Components
 {
     public class DiagramCanvasComponent : ComponentBase, IDisposable
     {
-
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
@@ -48,7 +47,7 @@ namespace Blazor.Diagrams.Components
             if (firstRender)
             {
                 DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
-                await JSRuntime.ObserveResizes(elementReference, _reference);
+                await JSRuntime.ObserveResizes(elementReference, _reference, isCanvas: true);
             }
         }
 

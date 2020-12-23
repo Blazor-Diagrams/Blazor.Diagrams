@@ -129,6 +129,10 @@ namespace Blazor.Diagrams.Components.Renderers
 
         private async void CheckVisibility()
         {
+            // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
+            if (!DiagramManager.Options.EnableVirtualization && _isVisible)
+                return;
+
             if (Node.Size == null)
                 return;
 

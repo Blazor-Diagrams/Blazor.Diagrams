@@ -278,12 +278,14 @@ namespace Blazor.Diagrams.Core
         }
 
         public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
+            => RegisterModelComponent(typeof(M), typeof(C));
+
+        public void RegisterModelComponent(Type modelType, Type componentType)
         {
-            var modelType = typeof(M);
             if (_componentByModelMapping.ContainsKey(modelType))
                 throw new Exception($"Component already registered for model '{modelType.Name}'.");
 
-            _componentByModelMapping.Add(modelType, typeof(C));
+            _componentByModelMapping.Add(modelType, componentType);
         }
 
         public Type? GetComponentForModel<M>(M model) where M : Model

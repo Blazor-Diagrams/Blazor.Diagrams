@@ -18,6 +18,8 @@ namespace Blazor.Diagrams.Core
         public bool AllowMultiSelection { get; set; } = true;
         [Description("Whether to allow panning or not")]
         public bool AllowPanning { get; set; } = true;
+        [Description("Only render visible nodes")]
+        public bool EnableVirtualization { get; set; } = true;
 
         public DiagramZoomOptions Zoom { get; set; } = new DiagramZoomOptions();
         public DiagramLinkOptions Links { get; set; } = new DiagramLinkOptions();

@@ -25,6 +25,9 @@ namespace SharedDemo
 
         protected void TogglePanning() => diagramManager.Options.AllowPanning = !diagramManager.Options.AllowPanning;
 
+        protected void ToggleVirtualization()
+            => diagramManager.Options.EnableVirtualization = !diagramManager.Options.EnableVirtualization;
+
         private NodeModel NewNode(double x, double y)
         {
             var node = new NodeModel(new Point(x, y));

@@ -36,6 +36,10 @@
     pointer-events: all;
 }
 
+.node.locked {
+    cursor: pointer;
+}
+
 .link {
     pointer-events: all;
     cursor: pointer;

@@ -94,7 +94,7 @@ namespace Blazor.Diagrams.Components.Renderers
                 (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
             builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
-            builder.AddAttribute(1, "class", "node");
+            builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
 
             if (Node.Layer == RenderLayer.HTML)
             {

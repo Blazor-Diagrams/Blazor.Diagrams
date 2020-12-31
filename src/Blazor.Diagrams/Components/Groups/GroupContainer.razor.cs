@@ -1,13 +1,18 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
+using System.Diagnostics;
 
 namespace Blazor.Diagrams.Components.Groups
 {
     public partial class GroupContainer : IDisposable
     {
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private int _totalRenders = 0;
+
         [Parameter]
         public GroupModel Group { get; set; }
 
@@ -20,10 +25,10 @@ namespace Blazor.Diagrams.Components.Groups
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
-        public double X => Group.Position.X - Padding;
-        public double Y => Group.Position.Y - Padding;
-        public double Width => Group.Size.Width + Padding * 2;
-        public double Height => Group.Size.Height + Padding * 2;
+        public double X => Group.Position.X;
+        public double Y => Group.Position.Y;
+        public double Width => Group.Size.Width;
+        public double Height => Group.Size.Height;
 
         public void Dispose()
         {
@@ -35,7 +40,24 @@ namespace Blazor.Diagrams.Components.Groups
             Group.Changed += OnGroupChanged;
         }
 
-        private void OnGroupChanged() => StateHasChanged(); // Todo: Use _shouldRender pattern
+        protected override bool ShouldRender()
+        {
+            _stopwatch.Start();
+            return true;
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            _totalRenders++;
+            Console.WriteLine($"Group: {Group.Id}, Render: #{_totalRenders}, Time: {_stopwatch.Elapsed.TotalMilliseconds}ms");
+            _stopwatch.Reset();
+        }
+
+        private void OnGroupChanged()
+        {
+            StateHasChanged(); // Todo: Use _shouldRender pattern
+        }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Group, e);
 

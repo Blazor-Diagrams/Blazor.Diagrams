@@ -7,6 +7,13 @@
      style="top: @((-GroupContainer.Y).ToInvariantString())px; left: @((-GroupContainer.X).ToInvariantString())px">
     @foreach (var node in GroupContainer.Group.Children)
     {
-        <NodeRenderer @key="node.Id" Node="node"></NodeRenderer>
+        if (node is GroupModel g)
+        {
+            <GroupRenderer @key="g.Id" Group="g"></GroupRenderer>
+        }
+        else
+        {
+            <NodeRenderer @key="node.Id" Node="node"></NodeRenderer>
+        }
     }
 </div>

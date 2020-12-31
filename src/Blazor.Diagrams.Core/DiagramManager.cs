@@ -174,26 +174,33 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        public GroupModel Group(params NodeModel[] nodes)
+        public GroupModel Group(params NodeModel[] children)
         {
-            if (nodes.Length < 2)
+            if (children.Length < 2)
                 throw new ArgumentException("Number of nodes must be >= 2");
 
-            var layers = nodes.Select(n => n.Layer).Distinct();
+            var layers = children.Select(n => n.Layer).Distinct();
             if (layers.Count() > 1)
                 throw new InvalidOperationException("Cannot group nodes with different layers");
 
             if (layers.First() == RenderLayer.SVG)
                 throw new InvalidOperationException("SVG groups aren't imeplemtend yet");
 
-            if (nodes.Any(n => n.Group != null))
+            if (children.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(this, nodes);
+            var group = new GroupModel(this, children);
 
-            foreach (var node in nodes)
+            foreach (var child in children)
             {
-                _nodes.Remove(node);
+                if (child is GroupModel g)
+                {
+                    _groups.Remove(g);
+                }
+                else
+                {
+                    _nodes.Remove(child);
+                }
             }
 
             _groups.Add(group);
@@ -209,8 +216,17 @@ namespace Blazor.Diagrams.Core
 
             group.Ungroup();
 
-            foreach (var node in group.Children)
-                _nodes.Add(node);
+            foreach (var child in group.Children)
+            {
+                if (child is GroupModel g)
+                {
+                    _groups.Add(g);
+                }
+                else
+                {
+                    _nodes.Add(child);
+                }
+            }
 
             GroupRemoved?.Invoke(group);
             Refresh();

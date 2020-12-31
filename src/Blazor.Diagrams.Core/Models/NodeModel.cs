@@ -31,6 +31,9 @@ namespace Blazor.Diagrams.Core.Models
             get => _size;
             set
             {
+                if (value?.Equals(_size) == true)
+                    return;
+
                 _size = value;
                 SizeChanged?.Invoke(this);
             }

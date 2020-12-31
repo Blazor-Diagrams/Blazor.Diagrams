@@ -1,17 +1,14 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
-using System.Diagnostics;
 
 namespace Blazor.Diagrams.Components.Groups
 {
     public partial class GroupContainer : IDisposable
     {
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        private int _totalRenders = 0;
+        private bool _shouldRender = true;
 
         [Parameter]
         public GroupModel Group { get; set; }
@@ -42,21 +39,19 @@ namespace Blazor.Diagrams.Components.Groups
 
         protected override bool ShouldRender()
         {
-            _stopwatch.Start();
-            return true;
-        }
+            if (_shouldRender)
+            {
+                _shouldRender = false;
+                return true;
+            }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-            _totalRenders++;
-            Console.WriteLine($"Group: {Group.Id}, Render: #{_totalRenders}, Time: {_stopwatch.Elapsed.TotalMilliseconds}ms");
-            _stopwatch.Reset();
+            return false;
         }
 
         private void OnGroupChanged()
         {
-            StateHasChanged(); // Todo: Use _shouldRender pattern
+            _shouldRender = true;
+            StateHasChanged();
         }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Group, e);

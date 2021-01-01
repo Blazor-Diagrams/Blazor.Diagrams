@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,12 +9,10 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly DiagramManager _diagramManager;
         private readonly byte _padding;
-        private readonly HashSet<LinkModel> _allLinks;
 
         public GroupModel(DiagramManager diagramManager, NodeModel[] children, byte padding = 30)
         {
             _diagramManager = diagramManager;
-            _allLinks = new HashSet<LinkModel>();
             _padding = padding;
 
             Size = Size.Zero;
@@ -22,7 +21,7 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public NodeModel[] Children { get; private set; }
-        public new IReadOnlyCollection<LinkModel> AllLinks => _allLinks;
+        public IEnumerable<LinkModel> HandledLinks => Group != null ? Array.Empty<LinkModel>() : Children.SelectMany(c => c.AllLinks).Distinct();
 
         public override void SetPosition(double x, double y)
         {
@@ -46,29 +45,21 @@ namespace Blazor.Diagrams.Core.Models
 
         public void Ungroup()
         {
-            foreach (var node in Children)
+            foreach (var child in Children)
             {
-                node.Group = null;
-                node.SizeChanged -= OnNodeChanged;
-                node.Moving -= OnNodeChanged;
+                child.Group = null;
+                child.SizeChanged -= OnNodeChanged;
+                child.Moving -= OnNodeChanged;
             }
         }
 
         private void Initialize()
         {
-            foreach (var node in Children)
+            foreach (var child in Children)
             {
-                node.Group = this;
-                node.SizeChanged += OnNodeChanged;
-                node.Moving += OnNodeChanged;
-
-                foreach (var link in node.AllLinks)
-                {
-                    if (link.SourcePort.Parent != node)
-                        continue;
-
-                    _allLinks.Add(link);
-                }
+                child.Group = this;
+                child.SizeChanged += OnNodeChanged;
+                child.Moving += OnNodeChanged;
             }
 
             UpdateDimensions();

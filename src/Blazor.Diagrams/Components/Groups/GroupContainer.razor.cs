@@ -14,9 +14,6 @@ namespace Blazor.Diagrams.Components.Groups
         public GroupModel Group { get; set; }
 
         [Parameter]
-        public ushort Padding { get; set; }
-
-        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [CascadingParameter(Name = "DiagramManager")]

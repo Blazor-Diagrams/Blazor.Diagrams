@@ -19,11 +19,6 @@ namespace Blazor.Diagrams.Components.Groups
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
-        public double X => Group.Position.X;
-        public double Y => Group.Position.Y;
-        public double Width => Group.Size.Width;
-        public double Height => Group.Size.Height;
-
         public void Dispose()
         {
             Group.Changed -= OnGroupChanged;

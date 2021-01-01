@@ -1,11 +1,11 @@
 ﻿@code {
     [CascadingParameter]
-    public GroupContainer GroupContainer { get; set; }
+    public GroupModel Group { get; set; }
 }
 
 <div class="layer"
-     style="top: @((-GroupContainer.Y).ToInvariantString())px; left: @((-GroupContainer.X).ToInvariantString())px">
-    @foreach (var node in GroupContainer.Group.Children)
+     style="top: @((-Group.Position.Y).ToInvariantString())px; left: @((-Group.Position.X).ToInvariantString())px">
+    @foreach (var node in Group.Group.Children)
     {
         if (node is GroupModel g)
         {

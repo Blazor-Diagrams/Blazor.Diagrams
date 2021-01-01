@@ -5,7 +5,7 @@
 
 <svg class="layer"
      style="top: @((-Group.Position.Y).ToInvariantString())px; left: @((-Group.Position.X).ToInvariantString())px">
-    @foreach (var link in Group.Group.HandledLinks)
+    @foreach (var link in Group.HandledLinks)
     {
         <LinkRenderer @key="link.Id" Link="link"></LinkRenderer>
     }

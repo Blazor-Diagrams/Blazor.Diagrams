@@ -140,6 +140,10 @@ namespace Blazor.Diagrams.Core
 
             source.Refresh();
             target?.Refresh();
+
+            source.Parent.Group?.Refresh();
+            target?.Parent.Group?.Refresh();
+
             LinkAdded?.Invoke(link);
             Changed?.Invoke();
             return link;
@@ -156,6 +160,10 @@ namespace Blazor.Diagrams.Core
             link.SetTargetPort(targetPort);
             link.Refresh();
             targetPort.Refresh();
+
+            link.SourcePort.Parent.Group?.Refresh();
+            targetPort?.Parent.Group?.Refresh();
+
             LinkAttached?.Invoke(link);
         }
 
@@ -167,6 +175,9 @@ namespace Blazor.Diagrams.Core
             LinkRemoved?.Invoke(link);
             link.SourcePort.Refresh();
             link.TargetPort?.Refresh();
+
+            link.SourcePort.Parent.Group?.Refresh();
+            link.TargetPort?.Parent.Group?.Refresh();
 
             if (triggerEvent)
             {
@@ -311,7 +322,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public void Refresh() => Changed?.Invoke();
-         
+
         public void ZoomToFit(double margin = 10)
         {
             if (_nodes.Count == 0)

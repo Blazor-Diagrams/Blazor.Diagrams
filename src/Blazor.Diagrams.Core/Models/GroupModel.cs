@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Models.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +20,7 @@ namespace Blazor.Diagrams.Core.Models
         }
 
         public NodeModel[] Children { get; private set; }
-        public IEnumerable<LinkModel> HandledLinks => Group != null ? Array.Empty<LinkModel>() : Children.SelectMany(c => c.AllLinks).Distinct();
+        public IEnumerable<LinkModel> HandledLinks => Children.SelectMany(c => c.AllLinks).Distinct();
 
         public override void SetPosition(double x, double y)
         {

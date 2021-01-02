@@ -1,4 +1,4 @@
-﻿<div class="group @(Group.Selected ? " selected" : "")"
+﻿<div class="group@(Group.Selected ? " selected" : "") @(string.IsNullOrEmpty(Class) ? "" : $" {Class}")"
      style="top: @(Group.Position.Y.ToInvariantString())px; left: @(Group.Position.X.ToInvariantString())px;
             width: @(Group.Size.Width.ToInvariantString())px; height: @(Group.Size.Height.ToInvariantString())px;"
      @onmousedown="OnMouseDown"

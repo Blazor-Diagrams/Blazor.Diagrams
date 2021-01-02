@@ -14,6 +14,9 @@ namespace Blazor.Diagrams.Components.Groups
         public GroupModel Group { get; set; }
 
         [Parameter]
+        public string Class { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [CascadingParameter(Name = "DiagramManager")]

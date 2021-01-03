@@ -51,15 +51,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             if (!Port.Initialized || firstRender)
             {
-                var zoom = DiagramManager.Zoom;
-                var pan = DiagramManager.Pan;
-                var rect = await JSRuntime.GetBoundingClientRect(_element);
-
-                Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
-                Port.Position = new Point((rect.Left - DiagramManager.Container.Left - pan.X) / zoom,
-                    (rect.Top - DiagramManager.Container.Top - pan.Y) / zoom);
-                Port.Initialized = true;
-                Port.RefreshAll();
+                await UpdateDimensions();
             }
         }
 
@@ -67,10 +59,34 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected virtual void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Port, e);
 
-        private void OnPortChanged()
+        private async Task UpdateDimensions()
         {
-            _shouldRender = true;
-            StateHasChanged();
+            var zoom = DiagramManager.Zoom;
+            var pan = DiagramManager.Pan;
+            var rect = await JSRuntime.GetBoundingClientRect(_element);
+
+            Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
+            Port.Position = new Point((rect.Left - DiagramManager.Container.Left - pan.X) / zoom,
+                (rect.Top - DiagramManager.Container.Top - pan.Y) / zoom);
+
+            Port.Initialized = true;
+
+            // We don't really need to refresh the port again,
+            // let's just refresh the links so that they use the new port's position
+            Port.RefreshLinks();
+        }
+
+        private async void OnPortChanged()
+        {
+            if (Port.Initialized)
+            {
+                _shouldRender = true;
+                StateHasChanged();
+            }
+            else
+            {
+                await UpdateDimensions();
+            }
         }
     }
 }

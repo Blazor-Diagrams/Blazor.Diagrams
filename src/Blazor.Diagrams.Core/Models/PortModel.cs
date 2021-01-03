@@ -37,8 +37,10 @@ namespace Blazor.Diagrams.Core.Models
         public void RefreshAll()
         {
             Refresh();
-            _links.ForEach(l => l.Refresh());
+            RefreshLinks();
         }
+
+        public void RefreshLinks() => _links.ForEach(l => l.Refresh());
 
         public T GetParent<T>() where T : NodeModel => (T)Parent;
 

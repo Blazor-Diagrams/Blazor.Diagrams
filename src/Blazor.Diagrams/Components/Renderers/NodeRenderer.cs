@@ -61,7 +61,7 @@ namespace Blazor.Diagrams.Components.Renderers
             foreach (var port in Node.Ports)
             {
                 port.Initialized = false;
-                port.RefreshAll();
+                port.Refresh();
             }
         }
 

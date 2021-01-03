@@ -70,13 +70,8 @@ namespace Blazor.Diagrams.Core.Models
             var deltaY = y - Position.Y;
             base.SetPosition(x, y);
 
-            // Save some JS calls and update ports directly here
-            foreach (var port in _ports)
-            {
-                port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
-            }
-
-            RefreshAll();
+            UpdatePortPositions(deltaX, deltaY);
+            Refresh();
             Moving?.Invoke(this);
         }
 
@@ -84,13 +79,18 @@ namespace Blazor.Diagrams.Core.Models
         {
             base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
 
+            UpdatePortPositions(deltaX, deltaY);
+            Refresh();
+        }
+
+        private void UpdatePortPositions(double deltaX, double deltaY)
+        {
             // Save some JS calls and update ports directly here
             foreach (var port in _ports)
             {
                 port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
+                port.RefreshLinks();
             }
-
-            RefreshAll();
         }
     }
 }

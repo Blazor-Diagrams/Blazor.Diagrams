@@ -60,7 +60,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
-        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
+        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Union(_groups.SelectMany(g => g.AllLinks)).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public IReadOnlyCollection<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }

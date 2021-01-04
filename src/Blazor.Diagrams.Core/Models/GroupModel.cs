@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,18 +67,21 @@ namespace Blazor.Diagrams.Core.Models
 
         private void OnNodeChanged(NodeModel node)
         {
-            UpdateDimensions();
-            Refresh();
+            if (UpdateDimensions())
+            {
+                Refresh();
+            }
         }
 
-        private void UpdateDimensions()
+        private bool UpdateDimensions()
         {
             if (Children.Any(n => n.Size == null))
-                return;
+                return false;
 
             (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children);
             Size = new Size(nodesMaxX - nodesMinX + _padding * 2, nodesMaxY - nodesMinY + _padding * 2);
             Position = new Point(nodesMinX - _padding, nodesMinY - _padding);
+            return true;
         }
     }
 }

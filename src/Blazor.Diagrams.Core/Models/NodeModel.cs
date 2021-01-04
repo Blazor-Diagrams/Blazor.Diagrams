@@ -62,6 +62,15 @@ namespace Blazor.Diagrams.Core.Models
             _ports.ForEach(p => p.RefreshAll());
         }
 
+        public void ReinitializePorts()
+        {
+            foreach (var port in Ports)
+            {
+                port.Initialized = false;
+                port.Refresh();
+            }
+        }
+
         public bool RemovePort(PortModel port) => _ports.Remove(port);
 
         public override void SetPosition(double x, double y)

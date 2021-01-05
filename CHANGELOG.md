@@ -25,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use `@key` when rendering the list of groups. Not using it caused big/weird render times.
 - Groups not showing in Navigator/Overview.
 
-
 ## Diagrams [1.4.2] - 2020-12-30
 
 ## Added

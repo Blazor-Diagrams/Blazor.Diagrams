@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams [1.5.0] - 2021-01-05
+
+## Added
+
+- The ability to have ports on groups.
+- **EXPERIMENTAL/INCOMPLETE** Nested groups. Since `GroupModel` now inherits `NodeMode`, it became possible to have nested groups, but there are still problems with the order of links between groups.
+- A `Class` parameter to `GroupContainer`.
+
+## Changed
+
+- Only rerender groups when necessary.
+- Receiving the same size from `ResizeObserver` doesn't trigger a rerender anymore.
+- Avoid rerendering ports twice to update positions.
+- Avoid rerendering ports when their parent node is moving.
+- Padding is now handled in `GroupModel` instead of `GroupContainer` (UI). This is because the padding is necessary to have accurate size/position in the group model directly.
+
+## Fixed
+
+- Use `@key` when rendering the list of groups. Not using it caused big/weird render times.
+- Groups not showing in Navigator/Overview.
+
+
 ## Diagrams [1.4.2] - 2020-12-30
 
 ## Added

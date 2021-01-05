@@ -53,11 +53,11 @@ namespace SharedDemo.Demos
 
             diagramManager.LinkRemoved += (l) => events.Add($"LinkRemoved, LinkId={l.Id}");
 
-            diagramManager.MouseUp += (m, e) => {
-                events.Add($"NodeMoved, NodeId={m.Id}");
+            diagramManager.MouseUp += (m, e) =>
+            {
+                events.Add($"MouseUp, ModelId={m?.Id}");
                 StateHasChanged();
             };
-
         }
 
         private NodeModel NewNode(double x, double y)

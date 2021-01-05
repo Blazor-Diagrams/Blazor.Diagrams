@@ -18,11 +18,16 @@ namespace SharedDemo.Demos
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);
-            var node3 = NewNode(450, 100);
+            var node3 = NewNode(500, 100);
+
+            var group = diagramManager.Group(node1, node2);
+            group.AddPort(PortAlignment.Bottom);
+            group.AddPort(PortAlignment.Top);
+            group.AddPort(PortAlignment.Left);
+            group.AddPort(PortAlignment.Right);
 
             diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-            diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));
-            diagramManager.Group(node1, node2);
+            diagramManager.AddLink(group.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));
             diagramManager.AddNode(node3);
         }
 

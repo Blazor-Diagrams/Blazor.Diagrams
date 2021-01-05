@@ -19,7 +19,7 @@
             border: 1px solid #6e9fd4;
         }
 
-    .default-node .port {
+    .default-node .port, .default.group .port {
         width: 20px;
         height: 20px;
         margin: -10px;
@@ -30,46 +30,46 @@
         position: absolute;
     }
 
-        .default-node .port:hover, .default-node .port.has-links {
+        .default-node .port:hover, .default-node .port.has-links, .default.group .port.has-links {
             background-color: black;
         }
 
-        .default-node .port.bottom {
+        .default-node .port.bottom, .default.group .port.bottom {
             bottom: 0px;
             left: 50%;
         }
 
-        .default-node .port.bottomleft {            
+        .default-node .port.bottomleft, .default.group .port.bottomleft {
             bottom: 0px;
             left: 0px;
         }
 
-        .default-node .port.bottomright {
+        .default-node .port.bottomright, .default.group .port.bottomright {
             bottom: 0px;
             right: 0px;
         }
 
-        .default-node .port.top {
+        .default-node .port.top, .default.group .port.top {
             top: 0px;
             left: 50%;
         }
 
-        .default-node .port.topleft {
+        .default-node .port.topleft, .default.group .port.topleft {
             top: 0px;
             left: 0px;
         }
 
-        .default-node .port.topright {
+        .default-node .port.topright, .default.group .port.topright {
             top: 0px;
             right: 0px;
         }
 
-        .default-node .port.left {
+        .default-node .port.left, .default.group .port.left {
             left: 0px;
             top: 50%;
         }
 
-        .default-node .port.right {
+        .default-node .port.right, .default.group .port.right {
             right: 0px;
             top: 50%;
         }
@@ -88,11 +88,11 @@
     border: 2px solid #40babd;
 }
 
-.group {
+.group.default {
     outline: 2px solid black;
     background: rgb(198, 198, 198);
 }
 
-    .group.selected {
+    .group.default.selected {
         outline: 2px solid #6e9fd4;
     }

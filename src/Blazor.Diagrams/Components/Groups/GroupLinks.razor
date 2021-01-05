@@ -1,11 +1,11 @@
 ﻿@code {
     [CascadingParameter]
-    public GroupContainer GroupContainer { get; set; }
+    public GroupModel Group { get; set; }
 } 
 
 <svg class="layer"
-     style="top: @((-GroupContainer.Y).ToInvariantString())px; left: @((-GroupContainer.X).ToInvariantString())px">
-    @foreach (var link in GroupContainer.Group.AllLinks)
+     style="top: @((-Group.Position.Y).ToInvariantString())px; left: @((-Group.Position.X).ToInvariantString())px">
+    @foreach (var link in Group.HandledLinks)
     {
         <LinkRenderer @key="link.Id" Link="link"></LinkRenderer>
     }

@@ -60,7 +60,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public IReadOnlyCollection<NodeModel> Nodes => _nodes;
-        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Distinct();
+        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Union(_groups.SelectMany(g => g.AllLinks)).Distinct();
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
         public IReadOnlyCollection<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
@@ -140,6 +140,10 @@ namespace Blazor.Diagrams.Core
 
             source.Refresh();
             target?.Refresh();
+
+            source.Parent.Group?.Refresh();
+            target?.Parent.Group?.Refresh();
+
             LinkAdded?.Invoke(link);
             Changed?.Invoke();
             return link;
@@ -156,6 +160,10 @@ namespace Blazor.Diagrams.Core
             link.SetTargetPort(targetPort);
             link.Refresh();
             targetPort.Refresh();
+
+            link.SourcePort.Parent.Group?.Refresh();
+            targetPort?.Parent.Group?.Refresh();
+
             LinkAttached?.Invoke(link);
         }
 
@@ -168,32 +176,42 @@ namespace Blazor.Diagrams.Core
             link.SourcePort.Refresh();
             link.TargetPort?.Refresh();
 
+            link.SourcePort.Parent.Group?.Refresh();
+            link.TargetPort?.Parent.Group?.Refresh();
+
             if (triggerEvent)
             {
                 Changed?.Invoke();
             }
         }
 
-        public GroupModel Group(params NodeModel[] nodes)
+        public GroupModel Group(params NodeModel[] children)
         {
-            if (nodes.Length < 2)
+            if (children.Length < 2)
                 throw new ArgumentException("Number of nodes must be >= 2");
 
-            var layers = nodes.Select(n => n.Layer).Distinct();
+            var layers = children.Select(n => n.Layer).Distinct();
             if (layers.Count() > 1)
                 throw new InvalidOperationException("Cannot group nodes with different layers");
 
             if (layers.First() == RenderLayer.SVG)
                 throw new InvalidOperationException("SVG groups aren't imeplemtend yet");
 
-            if (nodes.Any(n => n.Group != null))
+            if (children.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(this, nodes);
+            var group = new GroupModel(this, children);
 
-            foreach (var node in nodes)
+            foreach (var child in children)
             {
-                _nodes.Remove(node);
+                if (child is GroupModel g)
+                {
+                    _groups.Remove(g);
+                }
+                else
+                {
+                    _nodes.Remove(child);
+                }
             }
 
             _groups.Add(group);
@@ -209,8 +227,17 @@ namespace Blazor.Diagrams.Core
 
             group.Ungroup();
 
-            foreach (var node in group.Children)
-                _nodes.Add(node);
+            foreach (var child in group.Children)
+            {
+                if (child is GroupModel g)
+                {
+                    _groups.Add(g);
+                }
+                else
+                {
+                    _nodes.Add(child);
+                }
+            }
 
             GroupRemoved?.Invoke(group);
             Refresh();
@@ -295,7 +322,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public void Refresh() => Changed?.Invoke();
-         
+
         public void ZoomToFit(double margin = 10)
         {
             if (_nodes.Count == 0)

@@ -52,14 +52,12 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Size.Zero.Equals(size))
                 return;
 
+            if (size.Equals(Node.Size))
+                return;
+
             Node.Size = size;
             Node.Refresh();
-
-            foreach (var port in Node.Ports)
-            {
-                port.Initialized = false;
-                port.RefreshAll();
-            }
+            Node.ReinitializePorts();
         }
 
         protected override void OnInitialized()

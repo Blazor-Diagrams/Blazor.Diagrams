@@ -1,25 +1,27 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class GroupModel : MovableModel
+    public class GroupModel : NodeModel
     {
         private readonly DiagramManager _diagramManager;
+        private readonly byte _padding;
 
-        public GroupModel(DiagramManager diagramManager, NodeModel[] children)
+        public GroupModel(DiagramManager diagramManager, NodeModel[] children, byte padding = 30)
         {
             _diagramManager = diagramManager;
+            _padding = padding;
+
+            Size = Size.Zero;
             Children = children;
             Initialize();
         }
 
         public NodeModel[] Children { get; private set; }
-        public Size Size { get; private set; } = Size.Zero;
-
-        public IEnumerable<LinkModel> AllLinks => Children.SelectMany(n => n.AllLinks).Distinct();
+        public IEnumerable<LinkModel> HandledLinks => Children.SelectMany(c => c.AllLinks).Distinct();
 
         public override void SetPosition(double x, double y)
         {
@@ -33,23 +35,31 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
         }
 
+        public override void UpdatePositionSilently(double deltaX, double deltaY)
+        {
+            base.UpdatePositionSilently(deltaX, deltaY);
+
+            foreach (var child in Children)
+                child.UpdatePositionSilently(deltaX, deltaY);
+        }
+
         public void Ungroup()
         {
-            foreach (var node in Children)
+            foreach (var child in Children)
             {
-                node.Group = null;
-                node.SizeChanged -= OnNodeChanged;
-                node.Moving -= OnNodeChanged;
+                child.Group = null;
+                child.SizeChanged -= OnNodeChanged;
+                child.Moving -= OnNodeChanged;
             }
         }
 
         private void Initialize()
         {
-            foreach (var node in Children)
+            foreach (var child in Children)
             {
-                node.Group = this;
-                node.SizeChanged += OnNodeChanged;
-                node.Moving += OnNodeChanged;
+                child.Group = this;
+                child.SizeChanged += OnNodeChanged;
+                child.Moving += OnNodeChanged;
             }
 
             UpdateDimensions();
@@ -57,18 +67,21 @@ namespace Blazor.Diagrams.Core.Models
 
         private void OnNodeChanged(NodeModel node)
         {
-            UpdateDimensions();
-            Refresh();
+            if (UpdateDimensions())
+            {
+                Refresh();
+            }
         }
 
-        private void UpdateDimensions()
+        private bool UpdateDimensions()
         {
             if (Children.Any(n => n.Size == null))
-                return;
+                return false;
 
             (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = _diagramManager.GetNodesRect(Children);
-            Size = new Size(nodesMaxX - nodesMinX, nodesMaxY - nodesMinY);
-            Position = new Point(nodesMinX, nodesMinY);
+            Size = new Size(nodesMaxX - nodesMinX + _padding * 2, nodesMaxY - nodesMinY + _padding * 2);
+            Position = new Point(nodesMinX - _padding, nodesMinY - _padding);
+            return true;
         }
     }
 }

@@ -40,7 +40,8 @@ You can get started very easily & quickly using:
 - Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
 - Snap to Grid
 - Grouping: [CTRL + ALT + G] to (un)group
-- Clipping: only draw nodes that are visible to the users
+- Groups with ports/links and nested groups (**experimental**)
+- Virtualization: only draw nodes that are visible to the users
 - Algorithms
 
 ## Preview

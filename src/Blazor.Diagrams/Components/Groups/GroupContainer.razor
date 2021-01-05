@@ -1,10 +1,11 @@
-﻿<div class="group @(Group.Selected ? " selected" : "")"
-     style="top: @(Y.ToInvariantString())px; left: @(X.ToInvariantString())px;width: @(Width.ToInvariantString())px; height: @(Height.ToInvariantString())px;"
+﻿<div class="group@(Group.Selected ? " selected" : "") @(string.IsNullOrEmpty(Class) ? "" : $" {Class}")"
+     style="top: @(Group.Position.Y.ToInvariantString())px; left: @(Group.Position.X.ToInvariantString())px;
+            width: @(Group.Size.Width.ToInvariantString())px; height: @(Group.Size.Height.ToInvariantString())px;"
      @onmousedown="OnMouseDown"
      @onmousedown:stopPropagation
      @onmouseup="OnMouseUp"
      @onmouseup:stopPropagation>
-    <CascadingValue Value="this">
+    <CascadingValue Value="Group">
         @ChildContent
     </CascadingValue>
 </div>

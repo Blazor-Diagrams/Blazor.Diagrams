@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq;
@@ -29,30 +30,34 @@ namespace Blazor.Diagrams.Components
             base.OnParametersSet();
 
             foreach (var node in DiagramManager.Nodes)
-                node.Changed += Node_Changed;
+                node.Changed += Refresh;
+
+            foreach (var group in DiagramManager.Groups)
+                group.Changed += Refresh;
 
             DiagramManager.Changed += DiagramManager_Changed;
             DiagramManager.NodeAdded += DiagramManager_NodeAdded;
             DiagramManager.NodeRemoved += DiagramManager_NodeRemoved;
+            DiagramManager.GroupAdded += DiagramManager_GroupAdded;
+            DiagramManager.GroupRemoved += DiagramManager_GroupRemoved;
         }
 
         private void DiagramManager_Changed() => Refresh();
 
-        private void DiagramManager_NodeAdded(NodeModel node)
-        {
-            node.Changed += Node_Changed;
-        }
+        private void DiagramManager_NodeAdded(NodeModel node) => node.Changed += Refresh;
 
-        private void Node_Changed() => Refresh();
+        private void DiagramManager_NodeRemoved(NodeModel node) => node.Changed -= Refresh;
 
-        private void DiagramManager_NodeRemoved(NodeModel node)
-        {
-            node.Changed -= Node_Changed;
-        }
+        private void DiagramManager_GroupAdded(GroupModel group) => group.Changed += Refresh;
+
+        private void DiagramManager_GroupRemoved(GroupModel group) => group.Changed -= Refresh;
 
         private void Refresh()
         {
-            var nodes = DiagramManager.Nodes.Where(n => n.Size != null).ToList();
+            var nodes = DiagramManager.Nodes
+                .Union(DiagramManager.Groups)
+                .Where(n => n.Size?.Equals(Size.Zero) == false).ToList();
+
             if (nodes.Count == 0)
                 return;
 
@@ -181,6 +186,8 @@ namespace Blazor.Diagrams.Components
             DiagramManager.Changed -= DiagramManager_Changed;
             DiagramManager.NodeAdded -= DiagramManager_NodeAdded;
             DiagramManager.NodeRemoved -= DiagramManager_NodeRemoved;
+
+            // Todo: unregister node/group changed events
         }
     }
 }

@@ -31,6 +31,9 @@ namespace Blazor.Diagrams.Core.Models
             get => _size;
             set
             {
+                if (value?.Equals(_size) == true)
+                    return;
+
                 _size = value;
                 SizeChanged?.Invoke(this);
             }
@@ -59,6 +62,15 @@ namespace Blazor.Diagrams.Core.Models
             _ports.ForEach(p => p.RefreshAll());
         }
 
+        public void ReinitializePorts()
+        {
+            foreach (var port in Ports)
+            {
+                port.Initialized = false;
+                port.Refresh();
+            }
+        }
+
         public bool RemovePort(PortModel port) => _ports.Remove(port);
 
         public override void SetPosition(double x, double y)
@@ -67,13 +79,8 @@ namespace Blazor.Diagrams.Core.Models
             var deltaY = y - Position.Y;
             base.SetPosition(x, y);
 
-            // Save some JS calls and update ports directly here
-            foreach (var port in _ports)
-            {
-                port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
-            }
-
-            RefreshAll();
+            UpdatePortPositions(deltaX, deltaY);
+            Refresh();
             Moving?.Invoke(this);
         }
 
@@ -81,13 +88,18 @@ namespace Blazor.Diagrams.Core.Models
         {
             base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
 
+            UpdatePortPositions(deltaX, deltaY);
+            Refresh();
+        }
+
+        private void UpdatePortPositions(double deltaX, double deltaY)
+        {
             // Save some JS calls and update ports directly here
             foreach (var port in _ports)
             {
                 port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
+                port.RefreshLinks();
             }
-
-            RefreshAll();
         }
     }
 }

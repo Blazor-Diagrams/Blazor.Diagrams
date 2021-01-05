@@ -20,36 +20,36 @@ namespace Blazor.Diagrams.Core.Default
             if (DiagramManager.SelectedModels.Count == 0)
                 return;
 
-            if (e.CtrlKey && e.AltKey && e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
+            if (!e.CtrlKey || !e.AltKey || !e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            var selectedNodes = DiagramManager.SelectedModels
+                .Where(m => m is NodeModel)
+                .Select(m => (NodeModel)m)
+                .ToArray();
+
+            var nodesWithGroup = selectedNodes.Where(n => n.Group != null).ToArray();
+            if (nodesWithGroup.Length > 0)
             {
-                var selectedNodes = DiagramManager.SelectedModels
-                    .Where(m => m is NodeModel)
-                    .Select(m => (NodeModel)m)
-                    .ToArray();
-
-                var nodesWithGroup = selectedNodes.Where(n => n.Group != null).ToArray();
-                if (nodesWithGroup.Length > 0)
+                // Ungroup
+                foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
                 {
-                    // Ungroup
-                    foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
-                    {
-                        DiagramManager.Ungroup(group);
-                    }
+                    DiagramManager.Ungroup(group);
                 }
-                else
-                {
-                    // Group
-                    if (selectedNodes.Length < 2)
-                        return;
+            }
+            else
+            {
+                // Group
+                if (selectedNodes.Length < 2)
+                    return;
 
-                    if (selectedNodes.Any(n => n.Group != null))
-                        return;
+                if (selectedNodes.Any(n => n.Group != null))
+                    return;
 
-                    if (selectedNodes.Select(n => n.Layer).Distinct().Count() > 1)
-                        return;
+                if (selectedNodes.Select(n => n.Layer).Distinct().Count() > 1)
+                    return;
 
-                    DiagramManager.Group(selectedNodes);
-                }
+                DiagramManager.Group(selectedNodes);
             }
         }
 

@@ -117,6 +117,11 @@ namespace Blazor.Diagrams.Core
             return AddLink<LinkModel>(source, target);
         }
 
+        /// <summary>
+        /// Creates and configures an instance of a link model that expects a constructor with two parameters:
+        /// the source port and the target port.
+        /// </summary>
+        /// <returns>The created link instance.</returns>
         public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
         {
             var link = (T)Activator.CreateInstance(typeof(T), source, target);
@@ -185,24 +190,38 @@ namespace Blazor.Diagrams.Core
             }
         }
 
+        /// <summary>
+        /// Groups 2 or more children.
+        /// </summary>
+        /// <param name="children">An array of child nodes.</param>
+        /// <returns>The created group instance.</returns>
         public GroupModel Group(params NodeModel[] children)
         {
-            if (children.Length < 2)
+            var group = new GroupModel(this, children);
+            AddGroup(group);
+            return group;
+        }
+
+        /// <summary>
+        /// Adds the group to the diagram after validating it.
+        /// </summary>
+        /// <param name="group">A group instance.</param>
+        public void AddGroup(GroupModel group)
+        {
+            if (group.Children.Length < 2)
                 throw new ArgumentException("Number of nodes must be >= 2");
 
-            var layers = children.Select(n => n.Layer).Distinct();
+            var layers = group.Children.Select(n => n.Layer).Distinct();
             if (layers.Count() > 1)
                 throw new InvalidOperationException("Cannot group nodes with different layers");
 
             if (layers.First() == RenderLayer.SVG)
-                throw new InvalidOperationException("SVG groups aren't imeplemtend yet");
+                throw new InvalidOperationException("SVG groups aren't implemented yet");
 
-            if (children.Any(n => n.Group != null))
+            if (group.Children.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(this, children);
-
-            foreach (var child in children)
+            foreach (var child in group.Children)
             {
                 if (child is GroupModel g)
                 {
@@ -217,7 +236,6 @@ namespace Blazor.Diagrams.Core
             _groups.Add(group);
             GroupAdded?.Invoke(group);
             Refresh();
-            return group;
         }
 
         public void Ungroup(GroupModel group)

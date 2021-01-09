@@ -1,0 +1,9 @@
+﻿<GroupContainer Group="Group" Class="custom">
+    <span class="title">@Group.Title</span>
+    <GroupLinks></GroupLinks>
+    <GroupNodes></GroupNodes>
+</GroupContainer>
+
+@code {
+    [Parameter] public CustomGroupModel Group { get; set; }
+}

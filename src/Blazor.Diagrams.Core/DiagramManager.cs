@@ -197,6 +197,9 @@ namespace Blazor.Diagrams.Core
         /// <returns>The created group instance.</returns>
         public GroupModel Group(params NodeModel[] children)
         {
+            if (children.Any(n => n.Group != null))
+                throw new InvalidOperationException("Cannot group nodes that already belong to another group");
+
             var group = new GroupModel(this, children);
             AddGroup(group);
             return group;
@@ -217,9 +220,6 @@ namespace Blazor.Diagrams.Core
 
             if (layers.First() == RenderLayer.SVG)
                 throw new InvalidOperationException("SVG groups aren't implemented yet");
-
-            if (group.Children.Any(n => n.Group != null))
-                throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
             foreach (var child in group.Children)
             {

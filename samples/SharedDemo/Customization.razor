@@ -277,6 +277,117 @@ private NodeModel NewNode(double x, double y)
                 </p>
             </div>
         </section>
+        <section id="custom-groups" class="doc-section">
+            <h2 class="section-title">Custom groups</h2>
+            <p>
+                Creating custom groups is almost the same as creating custom nodes, except for some specifics.
+            </p>
+            <div id="create-group-model" class="section-block">
+                <h3 class="block-title">Creating a model</h3>
+                <p>
+                    First, we'll create a new model for our group.
+                </p>
+                <pre><code class="language-csharp line-numbers">public class CustomGroupModel : GroupModel
+{
+    public CustomGroupModel(DiagramManager diagramManager, NodeModel[] children, string title, byte padding = 30)
+        : base(diagramManager, children, padding)
+    {
+        Title = title;
+    }
+
+    public string Title { get; }
+}</code></pre>
+                <p>
+                    You can add whatever properties you might need. You can also change the value of the padding, which is used when calculating the position/size of the group.
+                </p>
+            </div>
+            <div id="create-group-component" class="section-block">
+                <h3 class="block-title">Creating a component</h3>
+                <p>
+                    Second, we'll create a component <code>CustomGroupWidget</code> that handles our new type of links.
+                </p>
+                <pre><code class="language-markup line-numbers">&lt;GroupContainer Group=&quot;Group&quot; Class=&quot;custom&quot;&gt;
+    &lt;span class=&quot;title&quot;&gt;@@Group.Title&lt;/span&gt;
+    &lt;GroupLinks&gt;&lt;/GroupLinks&gt;
+    &lt;GroupNodes&gt;&lt;/GroupNodes&gt;
+
+    @@foreach (var port in Group.Ports)
+    {
+        &lt;PortRenderer Port=&quot;port&quot; Class=&quot;group-port&quot;&gt;&lt;/PortRenderer&gt;
+    }
+&lt;/GroupContainer&gt;
+
+@@code {
+    [Parameter] public CustomGroupModel Group { get; set; }
+}</code></pre>
+                <ul>
+                    <li>It is mandatory to wrap everything in a <code>GroupContainer</code> component so that everything works properly, such as the group's position, moving it, etc..</li>
+                    <li>
+                        It is mandatory to add both <code>GroupLinks</code> and <code>GroupNodes</code> as direct children of the container.
+                        This will render the appropriate layers and populate/configure them properly.
+                    </li>
+                    <li>As with custom nodes, you are in charge of rendering the ports.</li>
+                </ul>
+
+                For any custom content, you can add it wherever you want, as long as it's inside the container like our title <code>span</code>.<br />
+                As with everything else, the component can be styled using CSS. Here is the styling of the custom group in the demos:
+                <pre><code class="language-css line-numbers">.group.custom {
+    outline: 2px solid black;
+    background-color: #6fbb6e;
+}
+
+    .group.custom > span.title {
+        padding: 20px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #eee;
+        border: 2px solid black;
+        border-radius: 50%;
+        background-color: #6fbb6e;
+        font-weight: bold;
+        text-transform: uppercase;
+    }</code></pre>
+            </div>
+            <div id="register-custom-group" class="section-block">
+                <h3 class="block-title">Registering the custom group</h3>
+                <p>
+                    Lastly, we'll register the custom link and its component in the <code>DiagramManager</code>:
+                </p>
+                <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
+{
+    base.OnInitialized();
+                    
+    _diagramManager.RegisterModelComponent&lt;CustomGroupModel, CustomGroupWidget&gt;();
+
+    var node1 = NewNode(50, 50);
+    var node2 = NewNode(300, 300);
+    var node3 = NewNode(500, 100);
+
+    _diagramManager.AddNode(node1);
+    // You can create your own group directly and add it
+    // You don't have to add its children to the diagram
+    _diagramManager.AddGroup(new CustomGroupModel(_diagramManager, new[] { node2, node3 }, &quot;Group 1&quot;));
+
+    _diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+    _diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Bottom));
+}
+
+private NodeModel NewNode(double x, double y)
+{
+    var node = new NodeModel(new Point(x, y));
+    node.AddPort(PortAlignment.Bottom);
+    node.AddPort(PortAlignment.Top);
+    node.AddPort(PortAlignment.Left);
+    node.AddPort(PortAlignment.Right);
+    return node;
+}</code></pre>
+            </div>
+            <p>
+                Here's how it would look like:
+            </p>
+            <img src="_content/SharedDemo/img/CustomGroupDisplay.png" alt="Custom Group Display" />
+        </section>
     </div>
 </div>
 
@@ -300,6 +411,12 @@ private NodeModel NewNode(double x, double y)
                 <a class="nav-link scrollto" href="#create-link-model">Creating a model</a>
                 <a class="nav-link scrollto" href="#create-link-component">Creating a component</a>
                 <a class="nav-link scrollto" href="#register-custom-link">Registering the custom link</a>
+            </nav>
+            <a class="nav-link scrollto" href="#custom-groups">Custom groups</a>
+            <nav class="doc-sub-menu nav flex-column">
+                <a class="nav-link scrollto" href="#create-group-model">Creating a model</a>
+                <a class="nav-link scrollto" href="#create-group-component">Creating a component</a>
+                <a class="nav-link scrollto" href="#register-custom-group">Registering the custom group</a>
             </nav>
         </nav>
     </div>

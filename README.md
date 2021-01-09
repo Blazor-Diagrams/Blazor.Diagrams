@@ -56,7 +56,7 @@ You can get started very easily & quickly using:
 </CascadingValue>
 ```
 
-![](https://i.imgur.com/k4UThmh.png)
+![](https://i.imgur.com/WZYL2PW.png)
 
 
 ### Sample project

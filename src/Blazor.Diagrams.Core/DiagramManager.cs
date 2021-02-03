@@ -166,6 +166,7 @@ namespace Blazor.Diagrams.Core
                 return;
 
             group.Ungroup();
+            Links.Remove(group.AllLinks.ToArray());
             GroupRemoved?.Invoke(group);
             Refresh();
         }

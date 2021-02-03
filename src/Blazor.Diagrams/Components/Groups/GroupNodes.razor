@@ -9,12 +9,10 @@
     {
         if (node is GroupModel g)
         {
-            Console.WriteLine("deep");
             <GroupRenderer @key="g.Id" Group="g"></GroupRenderer>
         }
         else
         {
-            Console.WriteLine(node.Id);
             <NodeRenderer @key="node.Id" Node="node"></NodeRenderer>
         }
     }

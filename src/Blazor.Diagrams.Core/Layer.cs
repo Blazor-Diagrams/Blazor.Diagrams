@@ -14,12 +14,18 @@ namespace Blazor.Diagrams.Core
 
         public void Add(params T[] items)
         {
+            if (items.Length == 0)
+                return;
+
             _items.AddRange(items);
             Added?.Invoke(items);
         }
 
         public void Remove(params T[] items)
         {
+            if (items.Length == 0)
+                return;
+
             foreach (var item in items)
             {
                 _items.Remove(item);
@@ -34,6 +40,9 @@ namespace Blazor.Diagrams.Core
 
         public void Clear()
         {
+            if (Count == 0)
+                return;
+
             var items = _items.ToArray();
             _items.Clear();
             Removed?.Invoke(items);

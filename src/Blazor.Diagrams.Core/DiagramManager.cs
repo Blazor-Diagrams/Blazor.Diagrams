@@ -28,6 +28,7 @@ namespace Blazor.Diagrams.Core
         public event Action? Changed;
         public event Action<SelectableModel, bool>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
+        public event Action<GroupModel>? GroupUngrouped;
         public event Action<GroupModel>? GroupRemoved;
 
         public event Action? PanChanged;
@@ -165,7 +166,21 @@ namespace Blazor.Diagrams.Core
             if (!_groups.Remove(group))
                 return;
 
+            // Todo: batch Refresh()
             group.Ungroup();
+            Links.Remove(group.AllLinks.ToArray());
+            GroupUngrouped?.Invoke(group);
+            Refresh();
+        }
+
+        public void RemoveGroup(GroupModel group)
+        {
+            if (!_groups.Remove(group))
+                return;
+
+            // Todo: batch Refresh()
+            group.Ungroup();
+            Nodes.Remove(group.Children);
             Links.Remove(group.AllLinks.ToArray());
             GroupRemoved?.Invoke(group);
             Refresh();

@@ -22,7 +22,11 @@ namespace Blazor.Diagrams.Core.Default
                 if (sm.Locked)
                     continue;
 
-                if (sm is NodeModel node)
+                if (sm is GroupModel group)
+                {
+                    DiagramManager.RemoveGroup(group);
+                }
+                else if (sm is NodeModel node)
                 {
                     DiagramManager.Nodes.Remove(node);
                 }

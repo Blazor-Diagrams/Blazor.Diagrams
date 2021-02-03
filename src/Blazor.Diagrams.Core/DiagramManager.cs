@@ -14,7 +14,6 @@ namespace Blazor.Diagrams.Core
 {
     public class DiagramManager
     {
-        private readonly List<NodeModel> _nodes;
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly HashSet<SelectableModel> _selectedModels;
@@ -27,12 +26,7 @@ namespace Blazor.Diagrams.Core
         public event Action<WheelEventArgs>? Wheel;
 
         public event Action? Changed;
-        public event Action<NodeModel>? NodeAdded;
-        public event Action<NodeModel>? NodeRemoved;
         public event Action<SelectableModel, bool>? SelectionChanged;
-        public event Action<LinkModel>? LinkAdded;
-        public event Action<LinkModel>? LinkAttached;
-        public event Action<LinkModel>? LinkRemoved;
         public event Action<GroupModel>? GroupAdded;
         public event Action<GroupModel>? GroupRemoved;
 
@@ -42,13 +36,19 @@ namespace Blazor.Diagrams.Core
 
         public DiagramManager(DiagramOptions? options = null)
         {
-            _nodes = new List<NodeModel>();
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _selectedModels = new HashSet<SelectableModel>();
             _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
+            Nodes = new Layer<NodeModel>();
+            Links = new Layer<LinkModel>();
+
+            Nodes.Added += OnNodesAdded;
+            Nodes.Removed += OnNodesRemoved;
+            Links.Added += OnLinksAdded;
+            Links.Removed += OnLinksRemoved;
 
             RegisterSubManager<SelectionSubManager>();
             RegisterSubManager<DragMovablesSubManager>();
@@ -59,136 +59,64 @@ namespace Blazor.Diagrams.Core
             RegisterSubManager<GroupingSubManager>();
         }
 
-        public IReadOnlyCollection<NodeModel> Nodes => _nodes;
-        public IEnumerable<LinkModel> AllLinks => _nodes.SelectMany(n => n.AllLinks).Union(_groups.SelectMany(g => g.AllLinks)).Distinct();
+        public Layer<NodeModel> Nodes { get; }
+        public Layer<LinkModel> Links { get; }
         public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
-        public IReadOnlyCollection<GroupModel> Groups => _groups;
+        //public IReadOnlyList<NodeModel> Nodes => _nodes;
+        //public IEnumerable<LinkModel> Links => _nodes.SelectMany(n => n.AllLinks).Union(_groups.SelectMany(g => g.AllLinks)).Distinct();
+        public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
 
-        public void AddNode(NodeModel node)
-        {
-            _nodes.Add(node);
-            NodeAdded?.Invoke(node);
-            Changed?.Invoke();
-        }
+        private void OnNodesAdded(NodeModel[] _) => Refresh();
 
-        public void AddNodes(params NodeModel[] nodes)
+        private void OnNodesRemoved(NodeModel[] nodes)
         {
-            _nodes.AddRange(nodes);
-
-            // Is this okay?
             foreach (var node in nodes)
-                NodeAdded?.Invoke(node);
-
-            Changed?.Invoke();
-        }
-
-        public void RemoveNode(NodeModel node, bool triggerEvent = true)
-        {
-            if (_nodes.Remove(node))
             {
-                // In case its selected
-                _selectedModels.Remove(node);
-
-                foreach (var link in node.AllLinks.ToList()) // Since we're removing from the list
-                {
-                    RemoveLink(link, false);
-                }
-
-                NodeRemoved?.Invoke(node);
-                if (triggerEvent)
-                {
-                    Changed?.Invoke();
-                }
-            }
-        }
-
-        public LinkModel AddLink(PortModel source, PortModel? target = null)
-        {
-            if (Options?.Links?.DefaultLinkModel != null)
-            {
-                var link = (LinkModel)Activator.CreateInstance(Options?.Links?.DefaultLinkModel, source, target);
-                return AddLink(link, source, target);
+                Links.Remove(node.AllLinks.ToArray());
             }
 
-            return AddLink<LinkModel>(source, target);
+            Refresh();
         }
 
-        /// <summary>
-        /// Creates and configures an instance of a link model that expects a constructor with two parameters:
-        /// the source port and the target port.
-        /// </summary>
-        /// <returns>The created link instance.</returns>
-        public T AddLink<T>(PortModel source, PortModel? target = null) where T : LinkModel
+        private void OnLinksAdded(LinkModel[] links)
         {
-            var link = (T)Activator.CreateInstance(typeof(T), source, target);
-            return AddLink(link, source, target);
-        }
-
-        public T AddLink<T>(T link, PortModel source, PortModel? target = null) where T : LinkModel
-        {
-            link.Type = Options.Links.DefaultLinkType;
-            source.AddLink(link);
-
-            if (target == null)
+            foreach (var link in links)
             {
-                link.OnGoingPosition = new Point(source.Position.X + source.Size.Width / 2,
-                    source.Position.Y + source.Size.Height / 2);
-            }
-            else
-            {
-                target.AddLink(link);
+                link.SourcePort.AddLink(link);
+                link.TargetPort?.AddLink(link);
+
+                link.SourcePort.Refresh();
+                link.TargetPort?.Refresh();
+
+                link.SourcePort.Parent.Group?.Refresh();
+                link.TargetPort?.Parent.Group?.Refresh();
             }
 
-            source.Refresh();
-            target?.Refresh();
-
-            source.Parent.Group?.Refresh();
-            target?.Parent.Group?.Refresh();
-
-            LinkAdded?.Invoke(link);
-            Changed?.Invoke();
-            return link;
+            Refresh();
         }
 
-        public void AttachLink(LinkModel link, PortModel targetPort)
+        private void OnLinksRemoved(LinkModel[] links)
         {
-            if (link.IsAttached)
-                throw new Exception("Link already attached.");
-
-            if (!link.SourcePort.CanAttachTo(targetPort))
-                return;
-
-            link.SetTargetPort(targetPort);
-            link.Refresh();
-            targetPort.Refresh();
-
-            link.SourcePort.Parent.Group?.Refresh();
-            targetPort?.Parent.Group?.Refresh();
-
-            LinkAttached?.Invoke(link);
-        }
-
-        public void RemoveLink(LinkModel link, bool triggerEvent = true)
-        {
-            link.SourcePort.RemoveLink(link);
-            link.TargetPort?.RemoveLink(link);
-
-            LinkRemoved?.Invoke(link);
-            link.SourcePort.Refresh();
-            link.TargetPort?.Refresh();
-
-            link.SourcePort.Parent.Group?.Refresh();
-            link.TargetPort?.Parent.Group?.Refresh();
-
-            if (triggerEvent)
+            foreach (var link in links)
             {
-                Changed?.Invoke();
+                link.SourcePort.RemoveLink(link);
+                link.TargetPort?.RemoveLink(link);
+
+                link.SourcePort.Refresh();
+                link.TargetPort?.Refresh();
+
+                link.SourcePort.Parent.Group?.Refresh();
+                link.TargetPort?.Parent.Group?.Refresh();
             }
+
+            Refresh();
         }
+
+        #region Groups
 
         /// <summary>
         /// Groups 2 or more children.
@@ -223,14 +151,8 @@ namespace Blazor.Diagrams.Core
 
             foreach (var child in group.Children)
             {
-                if (child is GroupModel g)
-                {
-                    _groups.Remove(g);
-                }
-                else
-                {
-                    _nodes.Remove(child);
-                }
+                if (child is NodeModel node && !Nodes.Contains(node))
+                    throw new Exception("One of the nodes isn't in the diagram. Make sure to add all the nodes before creating the group.");
             }
 
             _groups.Add(group);
@@ -244,22 +166,13 @@ namespace Blazor.Diagrams.Core
                 return;
 
             group.Ungroup();
-
-            foreach (var child in group.Children)
-            {
-                if (child is GroupModel g)
-                {
-                    _groups.Add(g);
-                }
-                else
-                {
-                    _nodes.Add(child);
-                }
-            }
-
             GroupRemoved?.Invoke(group);
             Refresh();
         }
+
+        #endregion
+
+        #region Selection
 
         public void SelectModel(SelectableModel model, bool unselectOthers)
         {
@@ -302,6 +215,8 @@ namespace Blazor.Diagrams.Core
             _selectedModels.Clear();
         }
 
+        #endregion
+
         public void RegisterSubManager<T>() where T : DiagramSubManager
         {
             var type = typeof(T);
@@ -343,11 +258,11 @@ namespace Blazor.Diagrams.Core
 
         public void ZoomToFit(double margin = 10)
         {
-            if (_nodes.Count == 0)
+            if (Nodes.Count == 0)
                 return;
 
             var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s);
-            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : _nodes);
+            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : Nodes);
             var width = maxX - minX + 2 * margin;
             var height = maxY - minY + 2 * margin;
             minX -= margin;

@@ -118,7 +118,7 @@ protected override void OnInitialized()
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(300, 50);
-    DiagramManager.AddNodes(node1, node2, node3);
+    DiagramManager.Nodes.Add(node1, node2, node3);
 }
 
 private NodeModel NewNode(double x, double y)
@@ -143,7 +143,7 @@ private NodeModel NewNode(double x, double y)
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(300, 50);
-    DiagramManager.AddNodes(node1, node2, node3);
+    DiagramManager.Nodes.Add(node1, node2, node3);
     DiagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
 }</code></pre>
                 <p>

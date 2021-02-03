@@ -22,11 +22,11 @@ namespace SharedDemo.Demos.CustomGroup
             var node2 = NewNode(300, 300);
             var node3 = NewNode(500, 100);
 
-            _diagramManager.AddNode(node1);
+            _diagramManager.Nodes.Add(node1, node2, node3);
             _diagramManager.AddGroup(new CustomGroupModel(_diagramManager, new[] { node2, node3 }, "Group 1"));
 
-            _diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-            _diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Bottom));
+            _diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            _diagramManager.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
         }
 
         private NodeModel NewNode(double x, double y)

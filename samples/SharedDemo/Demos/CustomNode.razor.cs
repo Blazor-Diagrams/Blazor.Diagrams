@@ -14,15 +14,14 @@ namespace SharedDemo.Demos
             base.OnInitialized();
 
             diagramManager.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
-            diagramManager.AddNode(NewNode(100, 100));
-            diagramManager.AddNode(NewNode(300, 300));
 
             var node = new NodeModel(new Point(20, 20));
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Right);
             node.AddPort(PortAlignment.Bottom);
             node.AddPort(PortAlignment.Left);
-            diagramManager.AddNode(node);
+
+            diagramManager.Nodes.Add(node, NewNode(100, 100), NewNode(300, 300));
         }
 
         private BotAnswerNode NewNode(double x, double y)

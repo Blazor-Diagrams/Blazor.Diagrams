@@ -23,20 +23,10 @@ namespace SharedDemo.Demos
                     var sourcePort = node1.AddPort(PortAlignment.Right);
                     var targetPort = node2.AddPort(PortAlignment.Left);
 
-                    diagramManager.AddNodes(node1, node2);
-                    diagramManager.AddLink(sourcePort, targetPort);
+                    diagramManager.Nodes.Add(node1, node2);
+                    diagramManager.Links.Add(new LinkModel(sourcePort, targetPort));
                 }
             }
-        }
-
-        private NodeModel NewNode(double x, double y)
-        {
-            var node = new NodeModel(new Point(x, y));
-            node.AddPort(PortAlignment.Bottom);
-            node.AddPort(PortAlignment.Top);
-            node.AddPort(PortAlignment.Left);
-            node.AddPort(PortAlignment.Right);
-            return node;
         }
     }
 }

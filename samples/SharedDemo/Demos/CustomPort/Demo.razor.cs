@@ -21,11 +21,8 @@ namespace SharedDemo.Demos.CustomPort
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            _diagramManager.AddNode(node1);
-            _diagramManager.AddNode(node2);
-            _diagramManager.AddNode(NewNode(500, 50));
-
-            _diagramManager.AddLink(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top));
+            _diagramManager.Nodes.Add(node1, node2, NewNode(500, 50));
+            _diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top)));
         }
 
         private NodeModel NewNode(double x, double y)

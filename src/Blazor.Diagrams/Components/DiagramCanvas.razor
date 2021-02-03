@@ -14,8 +14,9 @@
     @* Links *@
     <svg class="diagram-svg-layer"
          style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-        @foreach (var link in DiagramManager.AllLinks.Where(l => l.SourcePort.Parent.Group == null && l.TargetPort?.Parent.Group == null))
+        @foreach (var link in DiagramManager.Links)
         {
+            @link.Id
             <LinkRenderer @key="link.Id" Link="link" />
         }
 
@@ -34,7 +35,7 @@
             <GroupRenderer @key="group.Id" Group="group" />
         }
 
-        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML))
+        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
         {
             <NodeRenderer @key="node.Id" Node="node" />
         }

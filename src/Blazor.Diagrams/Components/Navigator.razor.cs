@@ -36,17 +36,29 @@ namespace Blazor.Diagrams.Components
                 group.Changed += Refresh;
 
             DiagramManager.Changed += DiagramManager_Changed;
-            DiagramManager.NodeAdded += DiagramManager_NodeAdded;
-            DiagramManager.NodeRemoved += DiagramManager_NodeRemoved;
+            DiagramManager.Nodes.Added += DiagramManager_NodesAdded;
+            DiagramManager.Nodes.Removed += DiagramManager_NodesRemoved;
             DiagramManager.GroupAdded += DiagramManager_GroupAdded;
             DiagramManager.GroupRemoved += DiagramManager_GroupRemoved;
         }
 
         private void DiagramManager_Changed() => Refresh();
 
-        private void DiagramManager_NodeAdded(NodeModel node) => node.Changed += Refresh;
+        private void DiagramManager_NodesAdded(NodeModel[] nodes)
+        {
+            foreach (var node in nodes)
+            {
+                node.Changed += Refresh;
+            }
+        }
 
-        private void DiagramManager_NodeRemoved(NodeModel node) => node.Changed -= Refresh;
+        private void DiagramManager_NodesRemoved(NodeModel[] nodes)
+        {
+            foreach (var node in nodes)
+            {
+                node.Changed -= Refresh;
+            }
+        }
 
         private void DiagramManager_GroupAdded(GroupModel group) => group.Changed += Refresh;
 
@@ -184,8 +196,8 @@ namespace Blazor.Diagrams.Components
         public void Dispose()
         {
             DiagramManager.Changed -= DiagramManager_Changed;
-            DiagramManager.NodeAdded -= DiagramManager_NodeAdded;
-            DiagramManager.NodeRemoved -= DiagramManager_NodeRemoved;
+            DiagramManager.Nodes.Added -= DiagramManager_NodesAdded;
+            DiagramManager.Nodes.Removed -= DiagramManager_NodesRemoved;
 
             // Todo: unregister node/group changed events
         }

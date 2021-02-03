@@ -15,10 +15,8 @@ namespace SharedDemo
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(300, 50));
+            diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            diagramManager.Nodes.Add(node1, node2, NewNode(300, 50));
         }
 
         protected void ToggleZoom() => diagramManager.Options.Zoom.Enabled = !diagramManager.Options.Zoom.Enabled;

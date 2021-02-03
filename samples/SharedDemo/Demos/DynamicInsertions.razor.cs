@@ -21,20 +21,20 @@ namespace SharedDemo.Demos
 
             var node1 = new NodeModel(new Point(300, 50));
             var node2 = new NodeModel(new Point(300, 400));
-            diagramManager.AddNodes(node1, node2);
+            diagramManager.Nodes.Add(node1, node2);
         }
 
         protected void AddNode()
         {
             var x = _random.Next(0, (int)diagramManager.Container.Width - 120);
             var y = _random.Next(0, (int)diagramManager.Container.Height - 100);
-            diagramManager.AddNode(new NodeModel(new Point(x, y)));
+            diagramManager.Nodes.Add(new NodeModel(new Point(x, y)));
         }
 
         protected void RemoveNode()
         {
             var i = _random.Next(0, diagramManager.Nodes.Count);
-            diagramManager.RemoveNode(diagramManager.Nodes.ElementAt(i));
+            diagramManager.Nodes.Remove(diagramManager.Nodes[i]);
         }
 
         protected void AddPort()
@@ -68,9 +68,7 @@ namespace SharedDemo.Demos
             var i = _random.Next(0, node.Ports.Count);
             var port = node.Ports[i];
 
-            foreach (var link in port.Links)
-                diagramManager.RemoveLink(link);
-
+            diagramManager.Links.Remove(port.Links.ToArray());
             node.RemovePort(port);
             node.Refresh();
         }
@@ -88,7 +86,7 @@ namespace SharedDemo.Demos
 
             var sourcePort = node1.Ports[_random.Next(0, node1.Ports.Count)];
             var targetPort = node2.Ports[_random.Next(0, node2.Ports.Count)];
-            diagramManager.AddLink(sourcePort, targetPort);
+            diagramManager.Links.Add(new LinkModel(sourcePort, targetPort));
         }
     }
 }

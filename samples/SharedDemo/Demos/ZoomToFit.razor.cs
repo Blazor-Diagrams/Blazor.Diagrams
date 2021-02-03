@@ -23,8 +23,8 @@ namespace SharedDemo.Demos
                     var sourcePort = node1.AddPort(PortAlignment.Right);
                     var targetPort = node2.AddPort(PortAlignment.Left);
 
-                    diagramManager.AddNodes(node1, node2);
-                    diagramManager.AddLink(sourcePort, targetPort);
+                    diagramManager.Nodes.Add(node1, node2);
+                    diagramManager.Links.Add(new LinkModel(sourcePort, targetPort));
                 }
             }
         }

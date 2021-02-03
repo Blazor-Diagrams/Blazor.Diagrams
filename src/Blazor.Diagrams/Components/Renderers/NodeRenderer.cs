@@ -93,6 +93,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
             builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
+            builder.AddAttribute(55, "data-id", Node.Id);
 
             if (Node.Layer == RenderLayer.HTML)
             {

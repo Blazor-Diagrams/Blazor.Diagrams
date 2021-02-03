@@ -16,8 +16,7 @@ namespace Blazor.Diagrams.Core.Default
             if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != DiagramManager.Options.DeleteKey)
                 return;
 
-            var somethingWasRemoved = false;
-
+            // TODO: BATCH
             foreach (var sm in DiagramManager.SelectedModels.ToList())
             {
                 if (sm.Locked)
@@ -25,19 +24,12 @@ namespace Blazor.Diagrams.Core.Default
 
                 if (sm is NodeModel node)
                 {
-                    DiagramManager.RemoveNode(node, false);
-                    somethingWasRemoved = true;
+                    DiagramManager.Nodes.Remove(node);
                 }
                 else if (sm is LinkModel link)
                 {
-                    DiagramManager.RemoveLink(link, false);
-                    somethingWasRemoved = true;
+                    DiagramManager.Links.Remove(link);
                 }
-            }
-
-            if (somethingWasRemoved)
-            {
-                DiagramManager.Refresh();
             }
         }
 

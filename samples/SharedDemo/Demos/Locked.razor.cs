@@ -15,12 +15,13 @@ namespace SharedDemo
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(300, 50));
+            diagramManager.Nodes.Add(node1, node2, NewNode(300, 50));
 
-            var link = diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-            link.Locked = true;
+            var link = new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
+            {
+                Locked = true
+            };
+            diagramManager.Links.Add(link);
         }
 
         private NodeModel NewNode(double x, double y)

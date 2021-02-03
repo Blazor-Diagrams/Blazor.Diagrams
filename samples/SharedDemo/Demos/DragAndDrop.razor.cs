@@ -35,7 +35,7 @@ namespace SharedDemo.Demos
             var node = _draggedType == 0 ? new NodeModel(position) : new BotAnswerNode(position);
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Bottom);
-            _diagramManager.AddNode(node);
+            _diagramManager.Nodes.Add(node);
             _draggedType = null;
         }
     }

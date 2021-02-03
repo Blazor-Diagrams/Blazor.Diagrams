@@ -42,24 +42,10 @@
                 <g @key="group.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
                     <rect stroke="#40babd"
                           stroke-width="2"
-                          fill="#ffffff"
+                          fill="none"
                           width="@width.ToInvariantString()"
                           height="@height.ToInvariantString()"></rect>
                 </g>
-
-                @foreach (var child in group.Children)
-                {
-                    var childLeft = (Math.Max(0, child.Position.X * DiagramManager.Zoom) + addedNodeX) * XFactor;
-                    var childTop = (Math.Max(0, child.Position.Y * DiagramManager.Zoom) + addedNodeY) * YFactor;
-                    var childWidth = child.Size.Width * DiagramManager.Zoom * XFactor;
-                    var childHeight = child.Size.Height * DiagramManager.Zoom * YFactor;
-
-                    <g @key="child.Id" transform="translate(@childLeft.ToInvariantString(), @childTop.ToInvariantString())">
-                        <rect fill="#40babd"
-                              width="@childWidth.ToInvariantString()"
-                              height="@childHeight.ToInvariantString()"></rect>
-                    </g>
-                }
             }
         </svg>
     </div>

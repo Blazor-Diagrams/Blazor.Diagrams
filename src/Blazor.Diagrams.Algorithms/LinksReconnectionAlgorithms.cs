@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Algorithms
             // Only refresh ports once
             var portsToRefresh = new HashSet<PortModel>();
 
-            foreach (var link in diagramManager.AllLinks.ToArray())
+            foreach (var link in diagramManager.Links.ToArray())
             {
                 if (link.TargetPort == null)
                     continue;

@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharedDemo.Demos
 {
@@ -19,11 +20,8 @@ namespace SharedDemo.Demos
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(300, 50));
-
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+            diagramManager.Nodes.Add(node1, node2, NewNode(300, 50));
+            diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
         }
 
         private void RegisterEvents()
@@ -34,8 +32,8 @@ namespace SharedDemo.Demos
                 StateHasChanged();
             };
 
-            diagramManager.NodeAdded += (n) => events.Add($"NodeAdded, NodeId={n.Id}");
-            diagramManager.NodeRemoved += (n) => events.Add($"NodeRemoved, NodeId={n.Id}");
+            diagramManager.Nodes.Added += (nodes) => events.AddRange(nodes.Select(n => $"NodesAdded, NodeId={n.Id}"));
+            diagramManager.Nodes.Removed += (nodes) => events.AddRange(nodes.Select(n => $"NodesRemoved, NodeId={n.Id}"));
 
             diagramManager.SelectionChanged += (m, s) =>
             {
@@ -43,19 +41,20 @@ namespace SharedDemo.Demos
                 StateHasChanged();
             };
 
-            diagramManager.LinkAdded += (l) => events.Add($"LinkAdded, LinkId={l.Id}");
+            diagramManager.Links.Added += (links) => events.AddRange(links.Select(l => $"Links.Added, LinkId={l.Id}"));
 
-            diagramManager.LinkAttached += (l) =>
-            {
-                events.Add($"LinkAttached, LinkId={l.Id}");
-                StateHasChanged();
-            };
+            // Todo: replace with TargetPortChanged
+            //diagramManager.LinkAttached += (l) =>
+            //{
+            //    events.Add($"LinkAttached, LinkId={l.Id}");
+            //    StateHasChanged();
+            //};
 
-            diagramManager.LinkRemoved += (l) => events.Add($"LinkRemoved, LinkId={l.Id}");
+            diagramManager.Links.Removed += (links) => events.AddRange(links.Select(l => $"Links.Removed, LinkId={l.Id}"));
 
             diagramManager.MouseUp += (m, e) =>
             {
-                events.Add($"MouseUp, ModelId={m?.Id}");
+                events.Add($"MouseUp, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
         }

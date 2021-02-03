@@ -17,11 +17,9 @@ namespace SharedDemo.Demos.Algorithms
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
             var node3 = NewNode(300, 50);
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Right));
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Bottom), node3.GetPort(PortAlignment.Top));
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(node3);
+            diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Right)));
+            diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Bottom), node3.GetPort(PortAlignment.Top)));
+            diagramManager.Nodes.Add(node1, node2, node3);
         }
 
 

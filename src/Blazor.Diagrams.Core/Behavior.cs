@@ -2,9 +2,9 @@
 
 namespace Blazor.Diagrams.Core
 {
-    public abstract class DiagramSubManager : IDisposable
+    public abstract class Behavior : IDisposable
     {
-        public DiagramSubManager(DiagramManager diagramManager)
+        public Behavior(DiagramManager diagramManager)
         {
             DiagramManager = diagramManager;
         }

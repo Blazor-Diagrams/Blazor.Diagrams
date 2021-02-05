@@ -1,11 +1,11 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class SelectionSubManager : DiagramSubManager
+    public class SelectionBehavior : Behavior
     {
-        public SelectionSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public SelectionBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
         }

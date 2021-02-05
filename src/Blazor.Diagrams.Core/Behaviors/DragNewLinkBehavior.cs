@@ -3,15 +3,15 @@ using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class DragNewLinkSubManager : DiagramSubManager
+    public class DragNewLinkBehavior : Behavior
     {
         private double _initialX;
         private double _initialY;
         private LinkModel? _ongoingLink;
 
-        public DragNewLinkSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public DragNewLinkBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
             DiagramManager.MouseMove += DiagramManager_MouseMove;

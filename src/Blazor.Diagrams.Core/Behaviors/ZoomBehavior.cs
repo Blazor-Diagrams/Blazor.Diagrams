@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Components.Web;
 using System;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class ZoomSubManager : DiagramSubManager
+    public class ZoomBehavior : Behavior
     {
         private const float _scaleBy = 1.05f;
 
-        public ZoomSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public ZoomBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.Wheel += DiagramManager_Wheel;
         }

@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Linq;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class DragMovablesSubManager : DiagramSubManager
+    public class DragMovablesBehavior : Behavior
     {
         private Point[]? _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
 
-        public DragMovablesSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public DragMovablesBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
             DiagramManager.MouseMove += DiagramManager_MouseMove;

@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Components.Web;
 using System.Linq;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class DeleteSelectionSubManager : DiagramSubManager
+    public class DeleteSelectionBehavior : Behavior
     {
-        public DeleteSelectionSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public DeleteSelectionBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.KeyDown += DiagramManager_KeyDown;
         }

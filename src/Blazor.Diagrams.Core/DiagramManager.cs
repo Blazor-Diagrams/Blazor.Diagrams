@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Default;
+﻿using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
@@ -14,7 +14,7 @@ namespace Blazor.Diagrams.Core
 {
     public class DiagramManager
     {
-        private readonly List<DiagramSubManager> _subManagers;
+        private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly List<GroupModel> _groups;
 
@@ -36,7 +36,7 @@ namespace Blazor.Diagrams.Core
 
         public DiagramManager(DiagramOptions? options = null)
         {
-            _subManagers = new List<DiagramSubManager>();
+            _behaviors = new Dictionary<Type, Behavior>();
             _componentByModelMapping = new Dictionary<Type, Type>();
             _groups = new List<GroupModel>();
 
@@ -49,13 +49,13 @@ namespace Blazor.Diagrams.Core
             Links.Added += OnLinksAdded;
             Links.Removed += OnLinksRemoved;
 
-            RegisterSubManager<SelectionSubManager>();
-            RegisterSubManager<DragMovablesSubManager>();
-            RegisterSubManager<DragNewLinkSubManager>();
-            RegisterSubManager<DeleteSelectionSubManager>();
-            RegisterSubManager<PanSubManager>();
-            RegisterSubManager<ZoomSubManager>();
-            RegisterSubManager<GroupingSubManager>();
+            RegisterBehavior(new SelectionBehavior(this));
+            RegisterBehavior(new DragMovablesBehavior(this));
+            RegisterBehavior(new DragNewLinkBehavior(this));
+            RegisterBehavior(new DeleteSelectionBehavior(this));
+            RegisterBehavior(new PanBehavior(this));
+            RegisterBehavior(new ZoomBehavior(this));
+            RegisterBehavior(new GroupingBehavior(this));
         }
 
         public Layer<NodeModel> Nodes { get; }
@@ -229,25 +229,28 @@ namespace Blazor.Diagrams.Core
 
         #endregion
 
-        public void RegisterSubManager<T>() where T : DiagramSubManager
+        #region Behaviors
+
+        public void RegisterBehavior(Behavior behavior)
+        {
+            var type = behavior.GetType();
+            if (_behaviors.ContainsKey(type))
+                throw new Exception($"Behavior '{type.Name}' already registered");
+
+            _behaviors.Add(type, behavior);
+        }
+
+        public void UnregisterBehavior<T>() where T : Behavior
         {
             var type = typeof(T);
-            if (_subManagers.Any(sm => sm.GetType() == type))
-                throw new Exception($"SubManager '{type.Name}' already registered.");
-
-            var instance = (DiagramSubManager)Activator.CreateInstance(type, this);
-            _subManagers.Add(instance);
-        }
-
-        public void UnregisterSubManager<T>() where T : DiagramSubManager
-        {
-            var subManager = _subManagers.FirstOrDefault(sm => sm.GetType() == typeof(T));
-            if (subManager == null)
+            if (!_behaviors.ContainsKey(type))
                 return;
 
-            subManager.Dispose();
-            _subManagers.Remove(subManager);
+            _behaviors[type].Dispose();
+            _behaviors.Remove(type);
         }
+
+        #endregion
 
         public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
             => RegisterModelComponent(typeof(M), typeof(C));

@@ -2,15 +2,15 @@
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class PanSubManager : DiagramSubManager
+    public class PanBehavior : Behavior
     {
         private Point? _initialPan;
         private double _lastClientX;
         private double _lastClientY;
 
-        public PanSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public PanBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.MouseDown += DiagramManager_MouseDown;
             DiagramManager.MouseMove += DiagramManager_MouseMove;

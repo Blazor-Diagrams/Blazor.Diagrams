@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Linq;
 
-namespace Blazor.Diagrams.Core.Default
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class GroupingSubManager : DiagramSubManager
+    public class GroupingBehavior : Behavior
     {
-        public GroupingSubManager(DiagramManager diagramManager) : base(diagramManager)
+        public GroupingBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
             DiagramManager.KeyDown += DiagramManager_KeyDown;
         }

@@ -17,17 +17,13 @@ namespace Blazor.Diagrams.Core.Default
             if (!DiagramManager.Options.GroupingEnabled)
                 return;
 
-            if (DiagramManager.SelectedModels.Count == 0)
+            if (!DiagramManager.GetSelectedModels().Any())
                 return;
 
             if (!e.CtrlKey || !e.AltKey || !e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            var selectedNodes = DiagramManager.SelectedModels
-                .Where(m => m is NodeModel)
-                .Select(m => (NodeModel)m)
-                .ToArray();
-
+            var selectedNodes = DiagramManager.Nodes.Where(n => n.Selected).ToArray();
             var nodesWithGroup = selectedNodes.Where(n => n.Group != null).ToArray();
             if (nodesWithGroup.Length > 0)
             {

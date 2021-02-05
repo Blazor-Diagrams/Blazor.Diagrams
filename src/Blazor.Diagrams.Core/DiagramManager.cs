@@ -16,7 +16,6 @@ namespace Blazor.Diagrams.Core
     {
         private readonly List<DiagramSubManager> _subManagers;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
-        private readonly HashSet<SelectableModel> _selectedModels;
         private readonly List<GroupModel> _groups;
 
         public event Action<Model, MouseEventArgs>? MouseDown;
@@ -26,7 +25,7 @@ namespace Blazor.Diagrams.Core
         public event Action<WheelEventArgs>? Wheel;
 
         public event Action? Changed;
-        public event Action<SelectableModel, bool>? SelectionChanged;
+        public event Action<SelectableModel>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
         public event Action<GroupModel>? GroupUngrouped;
         public event Action<GroupModel>? GroupRemoved;
@@ -39,7 +38,6 @@ namespace Blazor.Diagrams.Core
         {
             _subManagers = new List<DiagramSubManager>();
             _componentByModelMapping = new Dictionary<Type, Type>();
-            _selectedModels = new HashSet<SelectableModel>();
             _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
@@ -62,9 +60,6 @@ namespace Blazor.Diagrams.Core
 
         public Layer<NodeModel> Nodes { get; }
         public Layer<LinkModel> Links { get; }
-        public IReadOnlyCollection<SelectableModel> SelectedModels => _selectedModels;
-        //public IReadOnlyList<NodeModel> Nodes => _nodes;
-        //public IEnumerable<LinkModel> Links => _nodes.SelectMany(n => n.AllLinks).Union(_groups.SelectMany(g => g.AllLinks)).Distinct();
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
@@ -190,45 +185,46 @@ namespace Blazor.Diagrams.Core
 
         #region Selection
 
+        public IEnumerable<SelectableModel> GetSelectedModels()
+        {
+            var selectedNodes = Nodes.Where(n => n.Selected);
+            var selectedLinks = Links.Where(n => n.Selected).Cast<SelectableModel>();
+            var selectedGroups = Groups.Where(n => n.Selected);
+            return selectedNodes.Union(selectedLinks.Union(selectedGroups));
+        }
+
         public void SelectModel(SelectableModel model, bool unselectOthers)
         {
-            if (_selectedModels.Contains(model))
+            if (model.Selected)
                 return;
 
             if (unselectOthers)
                 UnselectAll();
 
             model.Selected = true;
-            _selectedModels.Add(model);
             model.Refresh();
-            SelectionChanged?.Invoke(model, true);
+            SelectionChanged?.Invoke(model);
         }
 
         public void UnselectModel(SelectableModel model)
         {
-            if (!_selectedModels.Contains(model))
+            if (!model.Selected)
                 return;
 
             model.Selected = false;
-            _selectedModels.Remove(model);
             model.Refresh();
-            SelectionChanged?.Invoke(model, false);
+            SelectionChanged?.Invoke(model);
         }
 
         public void UnselectAll()
         {
-            foreach (var model in _selectedModels.ToList())
+            foreach (var model in GetSelectedModels())
             {
-                if (!model.Selected) // In case it got unselected by something else, like grouping
-                    continue;
-
                 model.Selected = false;
                 model.Refresh();
                 // Todo: will result in many events, maybe one event for all of them?
-                SelectionChanged?.Invoke(model, false);
+                SelectionChanged?.Invoke(model);
             }
-
-            _selectedModels.Clear();
         }
 
         #endregion
@@ -274,10 +270,10 @@ namespace Blazor.Diagrams.Core
 
         public void ZoomToFit(double margin = 10)
         {
-            if (Nodes.Count == 0)
+            if (Container == null || Nodes.Count == 0)
                 return;
 
-            var selectedNodes = SelectedModels.Where(s => s is NodeModel).Select(s => (NodeModel)s);
+            var selectedNodes = Nodes.Where(s => s.Selected);
             (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : Nodes);
             var width = maxX - minX + 2 * margin;
             var height = maxY - minY + 2 * margin;
@@ -291,8 +287,6 @@ namespace Blazor.Diagrams.Core
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
             UpdatePan(Container.Left - nx, Container.Top - ny);
-
-            Refresh();
         }
 
         public (double minX, double maxX, double minY, double maxY) GetNodesRect(IEnumerable<NodeModel> nodes)

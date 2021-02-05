@@ -39,11 +39,10 @@ namespace SharedDemo.Demos
 
         protected void AddPort()
         {
-            var model = diagramManager.SelectedModels.FirstOrDefault(sm => sm is NodeModel);
-            if (model == null)
+            var node = diagramManager.Nodes.FirstOrDefault(n => n.Selected);
+            if (node == null)
                 return;
 
-            var node = model as NodeModel;
             foreach(PortAlignment portAlignment in Enum.GetValues(typeof(PortAlignment)))
             {
                 if(node.GetPort(portAlignment) == null)
@@ -57,11 +56,10 @@ namespace SharedDemo.Demos
 
         protected void RemovePort()
         {
-            var model = diagramManager.SelectedModels.FirstOrDefault(sm => sm is NodeModel);
-            if (model == null)
+            var node = diagramManager.Nodes.FirstOrDefault(n => n.Selected);
+            if (node == null)
                 return;
 
-            var node = model as NodeModel;
             if (node.Ports.Count == 0)
                 return;
 
@@ -75,11 +73,12 @@ namespace SharedDemo.Demos
 
         protected void AddLink()
         {
-            if (diagramManager.SelectedModels.Count != 2)
+            var selectedNodes = diagramManager.Nodes.Where(n => n.Selected).ToArray();
+            if (selectedNodes.Length != 2)
                 return;
 
-            var node1 = diagramManager.SelectedModels.ElementAt(0) as NodeModel;
-            var node2 = diagramManager.SelectedModels.ElementAt(1) as NodeModel;
+            var node1 = selectedNodes[0];
+            var node2 = selectedNodes[1];
 
             if (node1 == null || node1.Ports.Count == 0 || node2 == null || node2.Ports.Count == 0)
                 return;

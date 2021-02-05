@@ -25,7 +25,7 @@ namespace Blazor.Diagrams.Core.Default
                 return;
 
             // Don't link this linq
-            _initialPositions = DiagramManager.SelectedModels
+            _initialPositions = DiagramManager.GetSelectedModels()
                 .Where(m => m is MovableModel)
                 .Select(m => (m as MovableModel)!.Position)
                 .ToArray();
@@ -43,7 +43,7 @@ namespace Blazor.Diagrams.Core.Default
             var deltaY = (e.ClientY - _lastClientY.Value) / DiagramManager.Zoom;
             var i = 0;
 
-            foreach (var sm in DiagramManager.SelectedModels)
+            foreach (var sm in DiagramManager.GetSelectedModels())
             {
                 if (!(sm is MovableModel node) || node.Locked)
                     continue;

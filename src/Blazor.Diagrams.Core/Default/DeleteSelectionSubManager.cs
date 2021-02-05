@@ -16,8 +16,8 @@ namespace Blazor.Diagrams.Core.Default
             if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != DiagramManager.Options.DeleteKey)
                 return;
 
-            // TODO: BATCH
-            foreach (var sm in DiagramManager.SelectedModels.ToList())
+            // TODO: BATCH REFRESH
+            foreach (var sm in DiagramManager.GetSelectedModels().ToList())
             {
                 if (sm.Locked)
                     continue;

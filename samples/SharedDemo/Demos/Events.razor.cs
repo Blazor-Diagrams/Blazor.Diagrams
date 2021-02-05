@@ -35,9 +35,9 @@ namespace SharedDemo.Demos
             diagramManager.Nodes.Added += (nodes) => events.AddRange(nodes.Select(n => $"NodesAdded, NodeId={n.Id}"));
             diagramManager.Nodes.Removed += (nodes) => events.AddRange(nodes.Select(n => $"NodesRemoved, NodeId={n.Id}"));
 
-            diagramManager.SelectionChanged += (m, s) =>
+            diagramManager.SelectionChanged += (m) =>
             {
-                events.Add($"SelectionChanged, Id={m.Id}, Type={m.GetType().Name}, Selected={s}");
+                events.Add($"SelectionChanged, Id={m.Id}, Type={m.GetType().Name}, Selected={m.Selected}");
                 StateHasChanged();
             };
 

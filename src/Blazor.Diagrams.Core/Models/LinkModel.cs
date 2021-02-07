@@ -21,11 +21,12 @@ namespace Blazor.Diagrams.Core.Models
             TargetPort = targetPort;
         }
 
-        public LinkType Type { get; set; }
         public PortModel SourcePort { get; private set; }
         public PortModel? TargetPort { get; private set; }
         public bool IsAttached => TargetPort != null;
         public Point? OnGoingPosition { get; set; }
+        public Router? Router { get; set; }
+        public PathGenerator? PathGenerator { get; set; }
 
         public void SetSourcePort(PortModel port)
         {
@@ -48,12 +49,5 @@ namespace Blazor.Diagrams.Core.Models
             TargetPort.AddLink(this);
             TargetPortChanged?.Invoke();
         }
-    }
-
-    public enum LinkType
-    {
-        Curved,
-        Line,
-        LineWithArrowToTarget
     }
 }

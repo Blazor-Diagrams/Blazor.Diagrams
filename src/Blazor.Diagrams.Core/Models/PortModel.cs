@@ -30,6 +30,7 @@ namespace Blazor.Diagrams.Core.Models
         public NodeModel Parent { get; }
         public PortAlignment Alignment { get; }
         public Point Position { get; set; }
+        public Point MiddlePosition => new Point(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
         public Size Size { get; set; }
         public ReadOnlyCollection<LinkModel> Links => _links.AsReadOnly();
         public bool Initialized { get; internal set; }

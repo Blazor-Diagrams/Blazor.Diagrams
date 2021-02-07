@@ -6,41 +6,16 @@
     public LinkModel Link { get; set; }
 }
 
-@* Maybe we can use markers? *@
-
-@switch (Link.Type)
-{
-    case Core.Models.LinkType.Line:
-        <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
-              y1="@Link.GetMiddleSourceY().ToInvariantString()"
-              x2="@Link.GetTargetX().ToInvariantString()"
-              y2="@Link.GetTargetY().ToInvariantString()"
-              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
-              stroke-width="4" />
-        break;
-    case Core.Models.LinkType.Curved:
-        <path d="@Link.GenerateCurvedPath()"
-              stroke-width="3"
-              fill="none"
-              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />
-        break;
-    case Core.Models.LinkType.LineWithArrowToTarget:
-        <g>
-            <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
-                  y1="@Link.GetMiddleSourceY().ToInvariantString()"
-                  x2="@Link.GetTargetX().ToInvariantString()"
-                  y2="@Link.GetTargetY().ToInvariantString()"
-                  stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
-                  stroke-width="4" />
-        </g>
-        <g transform="translate(@Link.GetTargetX().ToInvariantString(), @Link.GetTargetY().ToInvariantString())">
-            <g style="transform: rotate(@(Link.CalculateAngleForTargetArrow())deg);">
-                <g transform="translate(0, -4)">
-                    <polygon points="0,10 8,30 -8,30"
-                             fill="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)">
-                    </polygon>
-                </g>
-            </g>
-        </g>
-        break;
+@{ 
+    var router = Link.Router ?? DiagramManager.Options.Links.DefaultRouter;
+    var pathGenerator = Link.PathGenerator ?? DiagramManager.Options.Links.DefaultPathGenerator;
+    var route = router(DiagramManager, Link, Link.SourcePort.MiddlePosition, Link.TargetPort?.MiddlePosition ?? Link.OnGoingPosition);
+    var path = pathGenerator(DiagramManager, Link, route);
 }
+
+<path d="@path"
+      stroke-width="3"
+      fill="none"
+      marker-start="url(#startMarker)"
+      marker-end="url(#endMarker)"
+      stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />

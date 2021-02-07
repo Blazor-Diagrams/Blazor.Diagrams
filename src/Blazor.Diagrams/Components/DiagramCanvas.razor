@@ -12,8 +12,7 @@
      @onwheel:stopPropagation>
 
     @* Links *@
-    <svg class="diagram-svg-layer"
-         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
+    <svg class="diagram-svg-layer" style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
         @foreach (var link in DiagramManager.Links)
         {
             @link.Id

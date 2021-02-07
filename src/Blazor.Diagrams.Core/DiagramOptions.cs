@@ -27,16 +27,16 @@ namespace Blazor.Diagrams.Core
 
     public class DiagramLinkOptions
     {
-        [Description("The default type of newly created links")]
-        public LinkType DefaultLinkType { get; set; }
         [Description("The default component for links")]
         public Type? DefaultLinkComponent { get; set; }
-        [Description("The default link model")]
-        public Type? DefaultLinkModel { get; set; }
         [Description("The default color for links")]
         public string DefaultColor { get; set; } = "black";
         [Description("The default color for selected links")]
         public string DefaultSelectedColor { get; set; } = "rgb(110, 159, 212)";
+        [Description("Default Router for links")]
+        public Router DefaultRouter { get; set; } = Routers.Normal;
+        [Description("Default PathGenerator for links")]
+        public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
     }
 
     public class DiagramZoomOptions

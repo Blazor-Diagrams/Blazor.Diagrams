@@ -347,7 +347,12 @@ namespace Blazor.Diagrams.Core
         }
 
         public Point GetRelativePoint(double clientX, double clientY)
-            => new Point((clientX - Container.Left - Pan.X) / Zoom, (clientY - Container.Top - Pan.Y) / Zoom);
+        {
+            if (Container == null)
+                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+
+            return new Point((clientX - Container.Left - Pan.X) / Zoom, (clientY - Container.Top - Pan.Y) / Zoom);
+        }
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 

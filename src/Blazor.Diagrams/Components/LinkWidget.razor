@@ -1,21 +1,28 @@
-﻿@code {
-    [CascadingParameter(Name = "DiagramManager")]
-    public DiagramManager DiagramManager { get; set; }
-
-    [Parameter]
-    public LinkModel Link { get; set; }
-}
-
-@{ 
+﻿@{
     var router = Link.Router ?? DiagramManager.Options.Links.DefaultRouter;
     var pathGenerator = Link.PathGenerator ?? DiagramManager.Options.Links.DefaultPathGenerator;
-    var route = router(DiagramManager, Link, Link.SourcePort.MiddlePosition, Link.TargetPort?.MiddlePosition ?? Link.OnGoingPosition);
-    var path = pathGenerator(DiagramManager, Link, route);
+    var sourcePosition = GetPositionBasedOnAlignment(Link.SourcePort, Link.SourceMarker);
+    var targetPosition = Link.IsAttached ? GetPositionBasedOnAlignment(Link.TargetPort, Link.TargetMarker) : Link.OnGoingPosition;
+    var route = router(DiagramManager, Link, sourcePosition, targetPosition);
+    var result = pathGenerator(DiagramManager, Link, route);
+    var color = Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor;
 }
 
-<path d="@path"
-      stroke-width="3"
+<path d="@result.Path"
+      stroke-width="2"
       fill="none"
-      marker-start="url(#startMarker)"
-      marker-end="url(#endMarker)"
-      stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />
+      stroke="@color" />
+
+@if (Link.SourceMarker != null && result.SourceMarkerAngle != null && result.SourceMarkerPosition != null)
+{
+    <g transform="@(FormattableString.Invariant($"translate({result.SourceMarkerPosition.X}, {result.SourceMarkerPosition.Y}) rotate({result.SourceMarkerAngle})"))">
+        <path d="@Link.SourceMarker.Path" fill="@color"></path>
+    </g>
+}
+
+@if (Link.TargetMarker != null && result.TargetMarkerAngle != null && result.TargetMarkerPosition != null)
+{
+    <g transform="@(FormattableString.Invariant($"translate({result.TargetMarkerPosition.X}, {result.TargetMarkerPosition.Y}) rotate({result.TargetMarkerAngle})"))">
+        <path d="@Link.TargetMarker.Path" fill="@color"></path>
+    </g>
+}

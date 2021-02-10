@@ -5,5 +5,5 @@ namespace Blazor.Diagrams.Core
 {
     public delegate Point[] Router(DiagramManager diagram, LinkModel link, Point from, Point to);
 
-    public delegate string PathGenerator(DiagramManager diagram, LinkModel link, Point[] route);
+    public delegate PathGeneratorResult PathGenerator(DiagramManager diagram, LinkModel link, Point[] route);
 }

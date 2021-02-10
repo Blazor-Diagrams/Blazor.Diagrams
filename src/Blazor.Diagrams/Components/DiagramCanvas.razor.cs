@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components
 {
-    public class DiagramCanvasComponent : ComponentBase, IDisposable
+    public partial class DiagramCanvas : IDisposable
     {
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
@@ -25,19 +24,18 @@ namespace Blazor.Diagrams.Components
         public IJSRuntime JSRuntime { get; set; }
 
         protected ElementReference elementReference;
-        private DotNetObjectReference<DiagramCanvasComponent> _reference;
+        private DotNetObjectReference<DiagramCanvas> _reference;
         private bool _shouldReRender;
 
-        public string PanX => DiagramManager.Pan.X.ToString(CultureInfo.InvariantCulture);
-        public string PanY => DiagramManager.Pan.Y.ToString(CultureInfo.InvariantCulture);
-        public string Zoom => DiagramManager.Zoom.ToString(CultureInfo.InvariantCulture);
+        private string LayerStyle
+            => FormattableString.Invariant($"transform: translate({DiagramManager.Pan.X}px, {DiagramManager.Pan.Y}px) scale({DiagramManager.Zoom});");
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            DiagramManager.Changed += DiagramManager_Changed;
+            DiagramManager.Changed += OnDiagramChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -75,7 +73,7 @@ namespace Blazor.Diagrams.Components
 
         protected void OnWheel(WheelEventArgs e) => DiagramManager.OnWheel(e);
 
-        private void DiagramManager_Changed()
+        private void OnDiagramChanged()
         {
             _shouldReRender = true;
             StateHasChanged();
@@ -83,7 +81,7 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            DiagramManager.Changed -= DiagramManager_Changed;
+            DiagramManager.Changed -= OnDiagramChanged;
 
             if (_reference == null)
                 return;

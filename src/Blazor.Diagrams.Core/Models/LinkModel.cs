@@ -27,6 +27,8 @@ namespace Blazor.Diagrams.Core.Models
         public Point? OnGoingPosition { get; set; }
         public Router? Router { get; set; }
         public PathGenerator? PathGenerator { get; set; }
+        public LinkMarker? SourceMarker { get; set; }
+        public LinkMarker? TargetMarker { get; set; }
 
         public void SetSourcePort(PortModel port)
         {

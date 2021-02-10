@@ -1,7 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Core;
 using System;
-using System.Text;
 
 namespace Blazor.Diagrams.Core
 {
@@ -9,44 +8,52 @@ namespace Blazor.Diagrams.Core
     {
         private const double _margin = 125;
 
-        public static string Smooth(DiagramManager _, LinkModel link, Point[] route)
+        public static PathGeneratorResult Smooth(DiagramManager _, LinkModel link, Point[] route)
         {
-            var sb = new StringBuilder(FormattableString.Invariant($"M {route[0].X} {route[0].Y}"));
+            if (route.Length > 2)
+                throw new NotImplementedException(); // Curved path through points
 
-            for (var i = 1; i < route.Length; i++)
+            route = GetRouteWithCurvePoints(link, route);
+            double? sourceAngle = null;
+            double? targetAngle = null;
+
+            if (link.SourceMarker != null)
             {
-                // Todo: alignments should be null for middle segments
-                sb.Append(GenerateCurvedPath(route[i - 1].X, route[i - 1].Y, route[i].X, route[i].Y,
-                    link.SourcePort.Alignment, link.TargetPort?.Alignment));
+                sourceAngle = SourceMarkerAdjustement(route, link.SourceMarker.Width);
             }
 
-            return sb.ToString();
+            if (link.TargetMarker != null)
+            {
+                targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
+            }
+
+            var path = FormattableString.Invariant($"M {route[0].X} {route[0].Y} C {route[1].X} {route[1].Y}, {route[2].X} {route[2].Y}, {route[3].X} {route[3].Y}");
+            return new PathGeneratorResult(path, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
-        private static string GenerateCurvedPath(double sX, double sY, double tX, double tY,
-            PortAlignment sourcePortAlignment, PortAlignment? targetPortAlignment)
+        private static Point[] GetRouteWithCurvePoints(LinkModel link, Point[] route)
         {
-            var cX = (sX + tX) / 2;
-            var cY = (sY + tY) / 2;
-            var curvePointA = GetCurvePoint(sX, sY, cX, cY, sourcePortAlignment);
-            var curvePointB = GetCurvePoint(tX, tY, cX, cY, targetPortAlignment);
-            return FormattableString.Invariant($" C {curvePointA}, {curvePointB}, {tX} {tY}");
+            var cX = (route[0].X + route[1].X) / 2;
+            var cY = (route[0].Y + route[1].Y) / 2;
+            var curvePointA = GetCurvePoint(route[0].X, route[0].Y, cX, cY, link.SourcePort.Alignment);
+            var curvePointB = GetCurvePoint(route[1].X, route[1].Y, cX, cY, link.TargetPort?.Alignment);
+            return new[] { route[0], curvePointA, curvePointB, route[1] };
         }
 
-        private static string GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
+        private static Point GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
         {
             var margin = Math.Min(_margin, Math.Pow(Math.Pow(pX - cX, 2) + Math.Pow(pY - cY, 2), .5));
             return alignment switch
             {
-                PortAlignment.Top => FormattableString.Invariant($"{pX} {Math.Min(pY - margin, cY)}"),
-                PortAlignment.Bottom => FormattableString.Invariant($"{pX} {Math.Max(pY + margin, cY)}"),
-                PortAlignment.TopRight => FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Min(pY - margin, cY)}"),
-                PortAlignment.BottomRight => FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {Math.Max(pY + margin, cY)}"),
-                PortAlignment.Right => FormattableString.Invariant($"{Math.Max(pX + margin, cX)} {pY}"),
-                PortAlignment.Left => FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {pY}"),
-                PortAlignment.BottomLeft => FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Max(pY + margin, cY)}"),
-                PortAlignment.TopLeft => FormattableString.Invariant($"{Math.Min(pX - margin, cX)} {Math.Min(pY - margin, cY)}"),
-                _ => FormattableString.Invariant($"{cX} {cY}"),
+                PortAlignment.Top => new Point(pX, Math.Min(pY - margin, cY)),
+                PortAlignment.Bottom => new Point(pX, Math.Max(pY + margin, cY)),
+                PortAlignment.TopRight => new Point(Math.Max(pX + margin, cX), Math.Min(pY - margin, cY)),
+                PortAlignment.BottomRight => new Point(Math.Max(pX + margin, cX), Math.Max(pY + margin, cY)),
+                PortAlignment.Right => new Point(Math.Max(pX + margin, cX), pY),
+                PortAlignment.Left => new Point(Math.Min(pX - margin, cX), pY),
+                PortAlignment.BottomLeft => new Point(Math.Min(pX - margin, cX), Math.Max(pY + margin, cY)),
+                PortAlignment.TopLeft => new Point(Math.Min(pX - margin, cX), Math.Min(pY - margin, cY)),
+                _ => new Point(cX, cY),
             };
         }
     }

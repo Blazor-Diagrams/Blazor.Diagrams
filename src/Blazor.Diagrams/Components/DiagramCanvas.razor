@@ -1,6 +1,4 @@
-﻿@inherits DiagramCanvasComponent
-
-<div class="diagram-canvas @Class"
+﻿<div class="diagram-canvas @Class"
      tabindex="-1"
      @ref="elementReference"
      @onmousedown="OnMouseDown"
@@ -12,10 +10,9 @@
      @onwheel:stopPropagation>
 
     @* Links *@
-    <svg class="diagram-svg-layer" style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
+    <svg class="diagram-svg-layer" style="@LayerStyle">
         @foreach (var link in DiagramManager.Links)
         {
-            @link.Id
             <LinkRenderer @key="link.Id" Link="link" />
         }
 
@@ -26,9 +23,7 @@
     </svg>
 
     @* Nodes *@
-    <div class="diagram-html-layer"
-         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-
+    <div class="diagram-html-layer" style="@LayerStyle">
         @foreach (var group in DiagramManager.Groups)
         {
             <GroupRenderer @key="group.Id" Group="group" />

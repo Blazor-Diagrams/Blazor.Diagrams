@@ -23,6 +23,7 @@ namespace Blazor.Diagrams.Core
         public event Action<Model, MouseEventArgs>? MouseUp;
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
+        public event Action<Model, MouseEventArgs>? MouseClick;
 
         public event Action? Changed;
         public event Action<SelectableModel>? SelectionChanged;
@@ -56,6 +57,7 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new PanBehavior(this));
             RegisterBehavior(new ZoomBehavior(this));
             RegisterBehavior(new GroupingBehavior(this));
+            RegisterBehavior(new EventsBehavior(this));
         }
 
         public Layer<NodeModel> Nodes { get; }
@@ -363,5 +365,7 @@ namespace Blazor.Diagrams.Core
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
         internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+
+        internal void OnMouseClick(Model model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
     }
 }

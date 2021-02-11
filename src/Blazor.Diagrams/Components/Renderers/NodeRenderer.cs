@@ -93,24 +93,24 @@ namespace Blazor.Diagrams.Components.Renderers
 
             builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
             builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
-            builder.AddAttribute(55, "data-id", Node.Id);
+            builder.AddAttribute(2, "data-node-id", Node.Id);
 
             if (Node.Layer == RenderLayer.HTML)
             {
-                builder.AddAttribute(2, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+                builder.AddAttribute(3, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
             }
             else
             {
-                builder.AddAttribute(2, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+                builder.AddAttribute(3, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
             }
 
-            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
-            builder.AddElementReferenceCapture(7, value => _element = value);
-            builder.OpenComponent(8, componentType);
-            builder.AddAttribute(9, "Node", Node);
+            builder.AddAttribute(4, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
+            builder.AddEventStopPropagationAttribute(5, "onmousedown", true);
+            builder.AddAttribute(6, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
+            builder.AddEventStopPropagationAttribute(7, "onmouseup", true);
+            builder.AddElementReferenceCapture(8, value => _element = value);
+            builder.OpenComponent(9, componentType);
+            builder.AddAttribute(10, "Node", Node);
             builder.CloseComponent();
             builder.CloseElement();
         }

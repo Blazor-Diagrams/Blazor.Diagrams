@@ -5,11 +5,12 @@
     var targetPosition = Link.IsAttached ? GetPositionBasedOnAlignment(Link.TargetPort, Link.TargetMarker) : Link.OnGoingPosition;
     var route = router(DiagramManager, Link, sourcePosition, targetPosition);
     var result = pathGenerator(DiagramManager, Link, route);
-    var color = Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor;
+    var color = Link.Selected ? (Link.SelectedColor ?? DiagramManager.Options.Links.DefaultSelectedColor)
+        : (Link.Color ?? DiagramManager.Options.Links.DefaultColor);
 }
 
 <path d="@result.Path"
-      stroke-width="2"
+      stroke-width="@Link.Width.ToInvariantString()"
       fill="none"
       stroke="@color" />
 

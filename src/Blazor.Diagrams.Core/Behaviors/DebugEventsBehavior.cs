@@ -38,12 +38,12 @@ namespace Blazor.Diagrams.Core.Behaviors
             Console.WriteLine($"GroupUngrouped, Id={obj.Id}");
         }
 
-        private void Links_Removed(LinkModel[] obj)
+        private void Links_Removed(BaseLinkModel[] obj)
         {
             Console.WriteLine($"Links.Removed, Links=[{string.Join(", ", obj.Select(x => x.Id))}]");
         }
 
-        private void Links_Added(LinkModel[] obj)
+        private void Links_Added(BaseLinkModel[] obj)
         {
             Console.WriteLine($"Links.Added, Links=[{string.Join(", ", obj.Select(x => x.Id))}]");
         }

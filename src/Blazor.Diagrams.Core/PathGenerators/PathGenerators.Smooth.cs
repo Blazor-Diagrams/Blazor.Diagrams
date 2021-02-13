@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using System;
 
@@ -8,7 +9,7 @@ namespace Blazor.Diagrams.Core
     {
         private const double _margin = 125;
 
-        public static PathGeneratorResult Smooth(DiagramManager _, LinkModel link, Point[] route)
+        public static PathGeneratorResult Smooth(DiagramManager _, BaseLinkModel link, Point[] route)
         {
             if (route.Length > 2)
                 throw new NotImplementedException(); // Curved path through points
@@ -31,7 +32,7 @@ namespace Blazor.Diagrams.Core
             return new PathGeneratorResult(path, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
-        private static Point[] GetRouteWithCurvePoints(LinkModel link, Point[] route)
+        private static Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)
         {
             var cX = (route[0].X + route[1].X) / 2;
             var cY = (route[0].Y + route[1].Y) / 2;

@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 using System.Linq;
 
@@ -30,7 +31,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 {
                     DiagramManager.Nodes.Remove(node);
                 }
-                else if (sm is LinkModel link)
+                else if (sm is BaseLinkModel link)
                 {
                     DiagramManager.Links.Remove(link);
                 }

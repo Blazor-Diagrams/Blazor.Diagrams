@@ -41,7 +41,7 @@ namespace Blazor.Diagrams.Core.Models
         public GroupModel? Group { get; internal set; }
 
         public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
-        public IEnumerable<LinkModel> AllLinks => Ports.SelectMany(p => p.Links);
+        public IEnumerable<BaseLinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
         public PortModel AddPort(PortModel port)
         {

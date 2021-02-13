@@ -9,7 +9,7 @@ namespace Blazor.Diagrams.Core.Behaviors
     {
         private double _initialX;
         private double _initialY;
-        private LinkModel? _ongoingLink;
+        private BaseLinkModel? _ongoingLink;
 
         public DragNewLinkBehavior(DiagramManager diagramManager) : base(diagramManager)
         {
@@ -25,6 +25,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             _initialX = e.ClientX;
             _initialY = e.ClientY;
+            // Todo: Link creator from Options
             _ongoingLink = new LinkModel(port, null);
             _ongoingLink.OnGoingPosition = new Point(port.Position.X + port.Size.Width / 2,
                 port.Position.Y + port.Size.Height / 2);

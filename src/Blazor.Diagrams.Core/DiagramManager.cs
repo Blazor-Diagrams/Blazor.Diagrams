@@ -43,7 +43,7 @@ namespace Blazor.Diagrams.Core
 
             Options = options ?? new DiagramOptions();
             Nodes = new Layer<NodeModel>();
-            Links = new Layer<LinkModel>();
+            Links = new Layer<BaseLinkModel>();
 
             Nodes.Added += OnNodesAdded;
             Nodes.Removed += OnNodesRemoved;
@@ -61,7 +61,7 @@ namespace Blazor.Diagrams.Core
         }
 
         public Layer<NodeModel> Nodes { get; }
-        public Layer<LinkModel> Links { get; }
+        public Layer<BaseLinkModel> Links { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
@@ -80,7 +80,7 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        private void OnLinksAdded(LinkModel[] links)
+        private void OnLinksAdded(BaseLinkModel[] links)
         {
             foreach (var link in links)
             {
@@ -97,7 +97,7 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        private void OnLinksRemoved(LinkModel[] links)
+        private void OnLinksRemoved(BaseLinkModel[] links)
         {
             foreach (var link in links)
             {

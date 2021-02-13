@@ -1,5 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models;
-using System;
+﻿using System;
 using System.ComponentModel;
 
 namespace Blazor.Diagrams.Core

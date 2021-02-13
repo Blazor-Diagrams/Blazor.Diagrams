@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class PortModel : Model
     {
-        private readonly List<LinkModel> _links = new List<LinkModel>(4);
+        private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>(4);
 
         public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null,
             Size? size = null)
@@ -32,7 +32,7 @@ namespace Blazor.Diagrams.Core.Models
         public Point Position { get; set; }
         public Point MiddlePosition => new Point(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
         public Size Size { get; set; }
-        public ReadOnlyCollection<LinkModel> Links => _links.AsReadOnly();
+        public ReadOnlyCollection<BaseLinkModel> Links => _links.AsReadOnly();
         public bool Initialized { get; internal set; }
 
         public void RefreshAll()
@@ -47,8 +47,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public virtual bool CanAttachTo(PortModel port) => port != this && !port.Locked && Parent != port.Parent;
 
-        internal void AddLink(LinkModel link) => _links.Add(link);
+        internal void AddLink(BaseLinkModel link) => _links.Add(link);
 
-        internal void RemoveLink(LinkModel link) => _links.Remove(link);
+        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

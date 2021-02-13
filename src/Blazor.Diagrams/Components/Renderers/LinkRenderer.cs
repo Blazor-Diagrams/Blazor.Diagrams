@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,7 +15,7 @@ namespace Blazor.Diagrams.Components.Renderers
         public DiagramManager DiagramManager { get; set; }
 
         [Parameter]
-        public LinkModel Link { get; set; }
+        public BaseLinkModel Link { get; set; }
 
         public void Dispose()
         {
@@ -59,6 +59,7 @@ namespace Blazor.Diagrams.Components.Renderers
         }
 
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Link, e);
+
         private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Link, e);
     }
 }

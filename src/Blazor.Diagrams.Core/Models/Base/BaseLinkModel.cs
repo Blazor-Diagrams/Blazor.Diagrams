@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models.Core;
 using System;
+using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Models.Base
 {
@@ -28,6 +29,8 @@ namespace Blazor.Diagrams.Core.Models.Base
         public PathGenerator? PathGenerator { get; set; }
         public LinkMarker? SourceMarker { get; set; }
         public LinkMarker? TargetMarker { get; set; }
+        public bool Segmentable { get; set; } = false;
+        public List<LinkVertexModel> Vertices { get; } = new List<LinkVertexModel>();
 
         public void SetSourcePort(PortModel port)
         {

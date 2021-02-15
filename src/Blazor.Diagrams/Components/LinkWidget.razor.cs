@@ -2,12 +2,13 @@
 using Blazor.Diagrams.Core;
 using Microsoft.AspNetCore.Components;
 using Blazor.Diagrams.Core.Models.Core;
+using Microsoft.AspNetCore.Components.Web;
+using System;
 
 namespace Blazor.Diagrams.Components
 {
     public partial class LinkWidget
     {
-
         [CascadingParameter(Name = "DiagramManager")]
         public DiagramManager DiagramManager { get; set; }
 
@@ -39,6 +40,17 @@ namespace Blazor.Diagrams.Components
                 default:
                     return pt;
             }
+        }
+
+        private void OnMouseDown(MouseEventArgs e, int index)
+        {
+            if (!Link.Segmentable)
+                return;
+
+            var rPt = DiagramManager.GetRelativePoint(e.ClientX, e.ClientY);
+            var vertex = new LinkVertexModel(Link, rPt);
+            Link.Vertices.Insert(index, vertex);
+            DiagramManager.OnMouseDown(vertex, e);
         }
     }
 }

@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
@@ -189,10 +190,29 @@ namespace Blazor.Diagrams.Core
 
         public IEnumerable<SelectableModel> GetSelectedModels()
         {
-            var selectedNodes = Nodes.Where(n => n.Selected);
-            var selectedLinks = Links.Where(n => n.Selected).Cast<SelectableModel>();
-            var selectedGroups = Groups.Where(n => n.Selected);
-            return selectedNodes.Union(selectedLinks.Union(selectedGroups));
+            foreach (var node in Nodes)
+            {
+                if (node.Selected)
+                    yield return node;
+            }
+
+            foreach (var link in Links)
+            {
+                if (link.Selected)
+                    yield return link;
+
+                foreach (var vertex in link.Vertices)
+                {
+                    if (vertex.Selected)
+                        yield return vertex;
+                }    
+            }
+
+            foreach (var group in Groups)
+            {
+                if (group.Selected)
+                    yield return group;
+            }
         }
 
         public void SelectModel(SelectableModel model, bool unselectOthers)

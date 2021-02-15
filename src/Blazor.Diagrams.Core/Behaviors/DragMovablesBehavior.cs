@@ -24,7 +24,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (!(model is MovableModel))
                 return;
 
-            // Don't link this linq
+            // Don't like this linq
             _initialPositions = DiagramManager.GetSelectedModels()
                 .Where(m => m is MovableModel)
                 .Select(m => (m as MovableModel)!.Position)

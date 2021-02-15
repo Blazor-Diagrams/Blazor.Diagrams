@@ -1,7 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using System;
-using System.Text;
 
 namespace Blazor.Diagrams.Core
 {
@@ -23,14 +22,13 @@ namespace Blazor.Diagrams.Core
                 targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
             }
 
-            var sb = new StringBuilder(FormattableString.Invariant($"M {route[0].X} {route[0].Y}"));
-
-            for (var i = 1; i < route.Length; i++)
+            var paths = new string[route.Length - 1];
+            for (var i = 0; i < route.Length - 1; i++)
             {
-                sb.Append(FormattableString.Invariant($" L {route[i].X} {route[i].Y}"));
+                paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} L {route[i + 1].X} {route[i + 1].Y}");
             }
 
-            return new PathGeneratorResult(sb.ToString(), sourceAngle, route[0], targetAngle, route[^1]);
+            return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
         }
     }
 }

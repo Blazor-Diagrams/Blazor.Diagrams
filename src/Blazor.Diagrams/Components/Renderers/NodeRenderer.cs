@@ -36,13 +36,10 @@ namespace Blazor.Diagrams.Components.Renderers
             DiagramManager.ContainerChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
-            if (_reference == null)
-                return;
-
             if (_element.Id != null)
                 _ = JsRuntime.UnobserveResizes(_element);
 
-            _reference.Dispose();
+            _reference?.Dispose();
         }
 
         [JSInvokable]

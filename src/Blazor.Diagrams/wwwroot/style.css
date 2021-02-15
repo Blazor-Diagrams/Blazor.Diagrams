@@ -41,13 +41,17 @@
 }
 
 .link {
-    pointer-events: all;
+    pointer-events: visiblePainted;
     cursor: pointer;
 }
 
-.diagram-navigator {
-    z-index: 10;
-}
+    .link path.selection-helper:hover {
+        stroke-opacity: 0.05;
+    }
+
+    .diagram-navigator {
+        z-index: 10;
+    }
 
     .diagram-navigator .current-view {
         position: absolute;

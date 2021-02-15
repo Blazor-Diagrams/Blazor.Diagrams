@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using System;
@@ -12,7 +13,7 @@ namespace Blazor.Diagrams.Core
         public static PathGeneratorResult Smooth(DiagramManager _, BaseLinkModel link, Point[] route)
         {
             if (route.Length > 2)
-                throw new NotImplementedException(); // Curved path through points
+                return CurveThroughPoints(route, link);
 
             route = GetRouteWithCurvePoints(link, route);
             double? sourceAngle = null;
@@ -29,7 +30,35 @@ namespace Blazor.Diagrams.Core
             }
 
             var path = FormattableString.Invariant($"M {route[0].X} {route[0].Y} C {route[1].X} {route[1].Y}, {route[2].X} {route[2].Y}, {route[3].X} {route[3].Y}");
-            return new PathGeneratorResult(path, sourceAngle, route[0], targetAngle, route[^1]);
+            return new PathGeneratorResult(new[] { path }, sourceAngle, route[0], targetAngle, route[^1]);
+        }
+
+        private static PathGeneratorResult CurveThroughPoints(Point[] route, BaseLinkModel link)
+        {
+            double? sourceAngle = null;
+            double? targetAngle = null;
+
+            if (link.SourceMarker != null)
+            {
+                sourceAngle = SourceMarkerAdjustement(route, link.SourceMarker.Width);
+            }
+
+            if (link.TargetMarker != null)
+            {
+                targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
+            }
+
+            BezierSpline.GetCurveControlPoints(route, out var firstControlPoints, out var secondControlPoints);
+            var paths = new string[firstControlPoints.Length];
+
+            for (var i = 0; i < firstControlPoints.Length; i++)
+            {
+                var cp1 = firstControlPoints[i];
+                var cp2 = secondControlPoints[i];
+                paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} C {cp1.X} {cp1.Y}, {cp2.X} {cp2.Y}, {route[i + 1].X} {route[i + 1].Y}");
+            }
+
+            return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
         private static Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)

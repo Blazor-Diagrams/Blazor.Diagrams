@@ -9,10 +9,27 @@
         : (Link.Color ?? DiagramManager.Options.Links.DefaultColor);
 }
 
-<path d="@result.Path"
-      stroke-width="@Link.Width.ToInvariantString()"
-      fill="none"
-      stroke="@color" />
+@for (var i = 0; i < result.Paths.Length; i++)
+{
+    var index = i;
+    <path d="@result.Paths[i]"
+          stroke-width="@Link.Width.ToInvariantString()"
+          fill="none"
+          stroke="@color" />
+
+    @if (Link.IsAttached)
+    {
+        <path class="selection-helper"
+              stroke="@color"
+              stroke-width="12"
+              d="@result.Paths[i]"
+              stroke-linecap="round"
+              stroke-opacity="0"
+              fill="none"
+              @onmousedown="e => OnMouseDown(e, index)"
+              @onmousedown:stopPropagation="@Link.Segmentable" />
+    }
+}
 
 @if (Link.SourceMarker != null && result.SourceMarkerAngle != null && result.SourceMarkerPosition != null)
 {
@@ -27,3 +44,18 @@
         <path d="@Link.TargetMarker.Path" fill="@color"></path>
     </g>
 }
+
+@if (Link.Vertices.Count > 0)
+{
+    var selectedColor = Link.SelectedColor ?? DiagramManager.Options.Links.DefaultSelectedColor;
+    var normalColor = Link.Color ?? DiagramManager.Options.Links.DefaultColor;
+    <g>
+        @foreach (var vertex in Link.Vertices)
+        {
+            <LinkVertexWidget @key="vertex.Id"
+                              Vertex="vertex"
+                              Color="@normalColor"
+                              SelectedColor="@selectedColor" />
+        }
+    </g>
+} 

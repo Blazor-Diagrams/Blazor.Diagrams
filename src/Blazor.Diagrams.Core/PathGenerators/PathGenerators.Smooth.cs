@@ -58,6 +58,7 @@ namespace Blazor.Diagrams.Core
                 paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} C {cp1.X} {cp1.Y}, {cp2.X} {cp2.Y}, {route[i + 1].X} {route[i + 1].Y}");
             }
 
+            // Todo: adjust marker positions based on closest control points
             return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
         }
 

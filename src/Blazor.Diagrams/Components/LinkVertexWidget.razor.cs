@@ -47,5 +47,11 @@ namespace Blazor.Diagrams.Components
         private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Vertex, e);
 
         private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Vertex, e);
+
+        private void OnDoubleClick(MouseEventArgs e)
+        {
+            Vertex.Parent.Vertices.Remove(Vertex);
+            Vertex.Parent.Refresh();
+        }
     }
 }

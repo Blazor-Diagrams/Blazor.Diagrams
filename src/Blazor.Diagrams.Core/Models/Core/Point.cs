@@ -1,4 +1,6 @@
-﻿namespace Blazor.Diagrams.Core.Models.Core
+﻿using System;
+
+namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Point
     {
@@ -19,6 +21,9 @@
 
         public Point Substract(double value) => new Point(X - value, Y - value);
         public Point Substract(double x, double y) => new Point(X - x, Y - y);
+
+        public double DistanceTo(Point other)
+            => Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
 
         public override string ToString() => $"Point(x={X}, y={Y})";
 

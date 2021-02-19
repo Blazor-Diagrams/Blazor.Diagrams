@@ -44,14 +44,14 @@ namespace Blazor.Diagrams.Core.Models.Base
             SourcePortChanged?.Invoke();
         }
 
-        public void SetTargetPort(PortModel port)
+        public void SetTargetPort(PortModel? port)
         {
             if (TargetPort == port)
                 return;
 
             TargetPort?.RemoveLink(this);
             TargetPort = port;
-            TargetPort.AddLink(this);
+            TargetPort?.AddLink(this);
             TargetPortChanged?.Invoke();
         }
     }

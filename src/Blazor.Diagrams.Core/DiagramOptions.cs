@@ -36,6 +36,10 @@ namespace Blazor.Diagrams.Core
         public Router DefaultRouter { get; set; } = Routers.Normal;
         [Description("Default PathGenerator for links")]
         public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
+        [Description("Whether to enable link snapping")]
+        public bool EnableSnapping { get; set; }
+        [Description("Link snapping radius")]
+        public double SnappingRadius { get; set; } = 50;
     }
 
     public class DiagramZoomOptions

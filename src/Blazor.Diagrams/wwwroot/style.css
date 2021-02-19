@@ -36,9 +36,9 @@
     pointer-events: all;
 }
 
-.node.locked {
-    cursor: pointer;
-}
+    .node.locked {
+        cursor: pointer;
+    }
 
 .link {
     pointer-events: visiblePainted;
@@ -49,9 +49,9 @@
         stroke-opacity: 0.05;
     }
 
-    .diagram-navigator {
-        z-index: 10;
-    }
+.diagram-navigator {
+    z-index: 10;
+}
 
     .diagram-navigator .current-view {
         position: absolute;
@@ -70,3 +70,8 @@
         overflow: visible;
         pointer-events: none;
     }
+
+.link foreignObject {
+    overflow: visible;
+    pointer-events: none;
+}

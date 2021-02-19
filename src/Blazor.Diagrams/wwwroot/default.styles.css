@@ -96,3 +96,16 @@
     .group.default.selected {
         outline: 2px solid #6e9fd4;
     }
+
+.link .link-label {
+    display: inline-block;
+    color: #fff;
+    background-color: rgb(110, 159, 212);
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    text-align: center;
+    font-size: 0.875rem;
+    user-select: none;
+    min-width: 3rem;
+    transform: translate(-50%, -50%);
+}

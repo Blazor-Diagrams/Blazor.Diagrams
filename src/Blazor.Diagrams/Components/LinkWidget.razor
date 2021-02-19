@@ -1,4 +1,5 @@
-﻿@{
+﻿@using SvgPathProperties;
+@{
     var router = Link.Router ?? DiagramManager.Options.Links.DefaultRouter;
     var pathGenerator = Link.PathGenerator ?? DiagramManager.Options.Links.DefaultPathGenerator;
     var sourcePosition = GetPositionBasedOnAlignment(Link.SourcePort, Link.SourceMarker);
@@ -7,6 +8,7 @@
     var result = pathGenerator(DiagramManager, Link, route);
     var color = Link.Selected ? (Link.SelectedColor ?? DiagramManager.Options.Links.DefaultSelectedColor)
         : (Link.Color ?? DiagramManager.Options.Links.DefaultColor);
+    var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();
 }
 
 @for (var i = 0; i < result.Paths.Length; i++)
@@ -58,4 +60,9 @@
                               SelectedColor="@selectedColor" />
         }
     </g>
-} 
+}
+
+@foreach (var label in Link.Labels)
+{
+    <LinkLabelRenderer @key="label.Id" Label="label" Paths="paths" />
+}

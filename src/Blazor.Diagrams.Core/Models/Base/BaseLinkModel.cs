@@ -31,6 +31,7 @@ namespace Blazor.Diagrams.Core.Models.Base
         public LinkMarker? TargetMarker { get; set; }
         public bool Segmentable { get; set; } = false;
         public List<LinkVertexModel> Vertices { get; } = new List<LinkVertexModel>();
+        public List<LinkLabelModel> Labels { get; set; } = new List<LinkLabelModel>();
 
         public void SetSourcePort(PortModel port)
         {

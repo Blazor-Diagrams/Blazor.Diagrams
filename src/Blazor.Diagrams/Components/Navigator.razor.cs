@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
@@ -73,7 +74,7 @@ namespace Blazor.Diagrams.Components
             if (nodes.Count == 0)
                 return;
 
-            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = DiagramManager.GetNodesRect(nodes);
+            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = nodes.GetBounds();
             nodesMinX *= DiagramManager.Zoom;
             nodesMaxX *= DiagramManager.Zoom;
             nodesMinY *= DiagramManager.Zoom;

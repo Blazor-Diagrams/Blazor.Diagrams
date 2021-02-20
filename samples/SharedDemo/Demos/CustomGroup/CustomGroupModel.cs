@@ -1,12 +1,11 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Models;
 
 namespace SharedDemo.Demos.CustomGroup
 {
     public class CustomGroupModel : GroupModel
     {
-        public CustomGroupModel(DiagramManager diagramManager, NodeModel[] children, string title, byte padding = 30)
-            : base(diagramManager, children, padding)
+        public CustomGroupModel(NodeModel[] children, string title, byte padding = 30)
+            : base(children, padding)
         {
             Title = title;
         }

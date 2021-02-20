@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
@@ -126,7 +127,7 @@ namespace Blazor.Diagrams.Core
             if (children.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(this, children);
+            var group = new GroupModel(children);
             AddGroup(group);
             return group;
         }
@@ -298,7 +299,8 @@ namespace Blazor.Diagrams.Core
                 return;
 
             var selectedNodes = Nodes.Where(s => s.Selected);
-            (var minX, var maxX, var minY, var maxY) = GetNodesRect(selectedNodes.Any() ? selectedNodes : Nodes);
+            var nodesToUse = selectedNodes.Any() ? selectedNodes : Nodes;
+            (var minX, var maxX, var minY, var maxY) = nodesToUse.GetBounds();
             var width = maxX - minX + 2 * margin;
             var height = maxY - minY + 2 * margin;
             minX -= margin;
@@ -311,39 +313,6 @@ namespace Blazor.Diagrams.Core
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
             UpdatePan(Container.Left - nx, Container.Top - ny);
-        }
-
-        public (double minX, double maxX, double minY, double maxY) GetNodesRect(IEnumerable<NodeModel> nodes)
-        {
-            var minX = double.MaxValue;
-            var maxX = double.MinValue;
-            var minY = double.MaxValue;
-            var maxY = double.MinValue;
-
-            foreach (var node in nodes)
-            {
-                var trX = node.Position.X + node.Size!.Width;
-                var bY = node.Position.Y + node.Size.Height;
-
-                if (node.Position.X < minX)
-                {
-                    minX = node.Position.X;
-                }
-                if (trX > maxX)
-                {
-                    maxX = trX;
-                }
-                if (node.Position.Y < minY)
-                {
-                    minY = node.Position.Y;
-                }
-                if (bY > maxY)
-                {
-                    maxY = bY;
-                }
-            }
-
-            return (minX, maxX, minY, maxY);
         }
 
         public void UpdatePan(double deltaX, double deltaY)

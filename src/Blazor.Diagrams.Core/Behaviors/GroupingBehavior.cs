@@ -1,5 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Linq;
 
@@ -14,13 +13,14 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void DiagramManager_KeyDown(KeyboardEventArgs e)
         {
-            if (!DiagramManager.Options.GroupingEnabled)
+            if (!DiagramManager.Options.Groups.Enabled)
                 return;
 
             if (!DiagramManager.GetSelectedModels().Any())
                 return;
 
-            if (!e.CtrlKey || !e.AltKey || !e.Key.Equals("g", StringComparison.InvariantCultureIgnoreCase))
+            Console.WriteLine(DiagramManager.Options.Groups.KeyboardShortcut(e));
+            if (!DiagramManager.Options.Groups.KeyboardShortcut(e))
                 return;
 
             var selectedNodes = DiagramManager.Nodes.Where(n => n.Selected).ToArray();

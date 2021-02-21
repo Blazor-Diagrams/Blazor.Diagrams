@@ -10,15 +10,13 @@ namespace SharedDemo.Demos
     public class DynamicInsertionsComponent : ComponentBase
     {
         private static readonly Random _random = new Random();
-        protected readonly DiagramManager diagramManager = new DiagramManager(new DiagramOptions
-        {
-            GroupingEnabled = true
-        });
+        protected readonly DiagramManager diagramManager = new DiagramManager();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
+            diagramManager.Options.Groups.Enabled = true;
             var node1 = new NodeModel(new Point(300, 50));
             var node2 = new NodeModel(new Point(300, 400));
             diagramManager.Nodes.Add(node1, node2);

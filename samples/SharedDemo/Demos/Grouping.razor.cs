@@ -7,15 +7,13 @@ namespace SharedDemo.Demos
 {
     public class GroupingComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager(new DiagramOptions
-        {
-            GroupingEnabled = true
-        });
+        protected readonly DiagramManager diagramManager = new DiagramManager();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
+            diagramManager.Options.Groups.Enabled = true;
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);
             var node3 = NewNode(500, 100);

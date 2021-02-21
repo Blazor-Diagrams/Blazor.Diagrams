@@ -127,7 +127,7 @@ namespace Blazor.Diagrams.Core
             if (children.Any(n => n.Group != null))
                 throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
-            var group = new GroupModel(children);
+            var group = Options.Groups.Factory(this, children);
             AddGroup(group);
             return group;
         }

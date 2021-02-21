@@ -26,11 +26,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             _initialX = e.ClientX;
             _initialY = e.ClientY;
-            // Todo: Link creator from Options
-            _ongoingLink = new LinkModel(port, null);
+            _ongoingLink = DiagramManager.Options.Links.Factory(DiagramManager, port);
             _ongoingLink.OnGoingPosition = new Point(port.Position.X + port.Size.Width / 2,
                 port.Position.Y + port.Size.Height / 2);
-            _ongoingLink.TargetMarker = LinkMarker.Arrow;
             DiagramManager.Links.Add(_ongoingLink);
         }
 

@@ -29,6 +29,10 @@ namespace Blazor.Diagrams.Core
     {
         [Description("The default component for links")]
         public Type? DefaultLinkComponent { get; set; }
+        [Description("The default color for links")]
+        public string DefaultColor { get; set; } = "black";
+        [Description("The default color for selected links")]
+        public string DefaultSelectedColor { get; set; } = "rgb(110, 159, 212)";
         [Description("Default Router for links")]
         public Router DefaultRouter { get; set; } = Routers.Normal;
         [Description("Default PathGenerator for links")]

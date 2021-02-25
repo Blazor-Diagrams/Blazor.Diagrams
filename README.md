@@ -50,7 +50,7 @@ You can get started very easily & quickly using:
 <CascadingValue Name="DiagramManager" Value="diagramManager">
   <DiagramCanvas>
     <Widgets>
-      <Navigator Width="300" Height="200" DefaultStyle="true"></Navigator>
+      <NavigatorWidget Width="300" Height="200" DefaultStyle="true"></NavigatorWidget>
     </Widgets>
   </DiagramCanvas>
 </CascadingValue>

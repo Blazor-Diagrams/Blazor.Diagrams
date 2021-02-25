@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Components
 {
-    public class NavigatorComponent : ComponentBase, IDisposable
+    public partial class NavigatorWidget : IDisposable
     {
 
         [CascadingParameter(Name = "DiagramManager")]

@@ -31,7 +31,7 @@ namespace SharedDemo.Demos
             if (_draggedType == null) // Unkown item
                 return;
 
-            var position = _diagramManager.GetRelativePoint(e.ClientX, e.ClientY);
+            var position = _diagramManager.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var node = _draggedType == 0 ? new NodeModel(position) : new BotAnswerNode(position);
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Bottom);

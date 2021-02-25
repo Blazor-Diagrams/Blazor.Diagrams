@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -19,7 +20,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!DiagramManager.Options.AllowPanning || model != null)
+            if (!DiagramManager.Options.AllowPanning || model != null || e.ShiftKey)
                 return;
 
             _initialPan = DiagramManager.Pan;

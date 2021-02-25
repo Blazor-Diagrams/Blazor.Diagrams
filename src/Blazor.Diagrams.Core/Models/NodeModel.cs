@@ -92,6 +92,8 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
         }
 
+        public Rectangle? GetBounds() => Size == null ? null : new Rectangle(Position, Size);
+
         private void UpdatePortPositions(double deltaX, double deltaY)
         {
             // Save some JS calls and update ports directly here

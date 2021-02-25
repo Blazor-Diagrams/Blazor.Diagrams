@@ -47,7 +47,7 @@ namespace Blazor.Diagrams.Components
             if (!Link.Segmentable)
                 return;
 
-            var rPt = DiagramManager.GetRelativePoint(e.ClientX, e.ClientY);
+            var rPt = DiagramManager.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var vertex = new LinkVertexModel(Link, rPt);
             Link.Vertices.Insert(index, vertex);
             DiagramManager.OnMouseDown(vertex, e);

@@ -49,6 +49,7 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Size.Zero.Equals(size))
                 return;
 
+            size = new Size(size.Width / DiagramManager.Zoom, size.Height / DiagramManager.Zoom);
             if (size.Equals(Node.Size))
                 return;
 

@@ -2,6 +2,7 @@
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
@@ -21,7 +22,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is PortModel port) || port.Locked)
+            if (!(model is PortModel port) || port.Locked || e.Button != (int)MouseEventButton.Left)
                 return;
 
             _initialX = e.ClientX;

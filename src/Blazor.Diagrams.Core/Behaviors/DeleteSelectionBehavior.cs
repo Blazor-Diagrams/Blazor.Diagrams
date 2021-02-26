@@ -7,40 +7,40 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DeleteSelectionBehavior : Behavior
     {
-        public DeleteSelectionBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public DeleteSelectionBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.KeyDown += DiagramManager_KeyDown;
+            Diagram.KeyDown += Diagram_KeyDown;
         }
 
-        private void DiagramManager_KeyDown(KeyboardEventArgs e)
+        private void Diagram_KeyDown(KeyboardEventArgs e)
         {
-            if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != DiagramManager.Options.DeleteKey)
+            if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != Diagram.Options.DeleteKey)
                 return;
 
             // TODO: BATCH REFRESH
-            foreach (var sm in DiagramManager.GetSelectedModels().ToList())
+            foreach (var sm in Diagram.GetSelectedModels().ToList())
             {
                 if (sm.Locked)
                     continue;
 
                 if (sm is GroupModel group)
                 {
-                    DiagramManager.RemoveGroup(group);
+                    Diagram.RemoveGroup(group);
                 }
                 else if (sm is NodeModel node)
                 {
-                    DiagramManager.Nodes.Remove(node);
+                    Diagram.Nodes.Remove(node);
                 }
                 else if (sm is BaseLinkModel link)
                 {
-                    DiagramManager.Links.Remove(link);
+                    Diagram.Links.Remove(link);
                 }
             }
         }
 
         public override void Dispose()
         {
-            DiagramManager.KeyDown -= DiagramManager_KeyDown;
+            Diagram.KeyDown -= Diagram_KeyDown;
         }
     }
 }

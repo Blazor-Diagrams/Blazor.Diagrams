@@ -7,7 +7,7 @@ namespace SharedDemo.Demos
 {
     public class PerformanceCompoent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
 
         protected override void OnInitialized()
         {
@@ -23,8 +23,8 @@ namespace SharedDemo.Demos
                     var sourcePort = node1.AddPort(PortAlignment.Right);
                     var targetPort = node2.AddPort(PortAlignment.Left);
 
-                    diagramManager.Nodes.Add(node1, node2);
-                    diagramManager.Links.Add(new LinkModel(sourcePort, targetPort));
+                    diagram.Nodes.Add(node1, node2);
+                    diagram.Links.Add(new LinkModel(sourcePort, targetPort));
                 }
             }
         }

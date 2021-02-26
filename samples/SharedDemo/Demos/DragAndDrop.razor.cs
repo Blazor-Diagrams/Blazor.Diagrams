@@ -6,7 +6,7 @@ namespace SharedDemo.Demos
 {
     public partial class DragAndDrop
     {
-        private readonly DiagramManager _diagramManager = new DiagramManager();
+        private readonly Diagram _diagram = new Diagram();
         private int? _draggedType;
 
         protected override void OnInitialized()
@@ -17,7 +17,7 @@ namespace SharedDemo.Demos
             LayoutData.Info = "A very simple drag & drop implementation using the HTML5 events.";
             LayoutData.DataChanged();
 
-            _diagramManager.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
+            _diagram.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
         }
 
         private void OnDragStart(int key)
@@ -31,11 +31,11 @@ namespace SharedDemo.Demos
             if (_draggedType == null) // Unkown item
                 return;
 
-            var position = _diagramManager.GetRelativeMousePoint(e.ClientX, e.ClientY);
+            var position = _diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var node = _draggedType == 0 ? new NodeModel(position) : new BotAnswerNode(position);
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Bottom);
-            _diagramManager.Nodes.Add(node);
+            _diagram.Nodes.Add(node);
             _draggedType = null;
         }
     }

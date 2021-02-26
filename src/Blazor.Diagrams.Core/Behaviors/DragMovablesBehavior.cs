@@ -12,20 +12,20 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double? _lastClientX;
         private double? _lastClientY;
 
-        public DragMovablesBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.MouseDown += DiagramManager_MouseDown;
-            DiagramManager.MouseMove += DiagramManager_MouseMove;
-            DiagramManager.MouseUp += DiagramManager_MouseUp;
+            Diagram.MouseDown += Diagram_MouseDown;
+            Diagram.MouseMove += Diagram_MouseMove;
+            Diagram.MouseUp += Diagram_MouseUp;
         }
 
-        private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
+        private void Diagram_MouseDown(Model model, MouseEventArgs e)
         {
             if (!(model is MovableModel))
                 return;
 
             // Don't like this linq
-            _initialPositions = DiagramManager.GetSelectedModels()
+            _initialPositions = Diagram.GetSelectedModels()
                 .Where(m => m is MovableModel)
                 .Select(m => (m as MovableModel)!.Position)
                 .ToArray();
@@ -34,16 +34,16 @@ namespace Blazor.Diagrams.Core.Behaviors
             _lastClientY = e.ClientY;
         }
 
-        private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
+        private void Diagram_MouseMove(Model model, MouseEventArgs e)
         {
             if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
                 return;
 
-            var deltaX = (e.ClientX - _lastClientX.Value) / DiagramManager.Zoom;
-            var deltaY = (e.ClientY - _lastClientY.Value) / DiagramManager.Zoom;
+            var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
+            var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
             var i = 0;
 
-            foreach (var sm in DiagramManager.GetSelectedModels())
+            foreach (var sm in Diagram.GetSelectedModels())
             {
                 if (!(sm is MovableModel node) || node.Locked)
                     continue;
@@ -58,10 +58,10 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private double ApplyGridSize(double n)
         {
-            if (DiagramManager.Options.GridSize == null)
+            if (Diagram.Options.GridSize == null)
                 return n;
 
-            var gridSize = DiagramManager.Options.GridSize.Value;
+            var gridSize = Diagram.Options.GridSize.Value;
 
             // 20 * floor((100 + 10) / 20) = 20 * 5 = 100
             // 20 * floor((105 + 10) / 20) = 20 * 5 = 100
@@ -69,7 +69,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             return gridSize * Math.Floor((n + gridSize / 2) / gridSize);
         }
 
-        private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
+        private void Diagram_MouseUp(Model model, MouseEventArgs e)
         {
             _initialPositions = null;
             _lastClientX = null;
@@ -78,9 +78,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            DiagramManager.MouseDown -= DiagramManager_MouseDown;
-            DiagramManager.MouseMove -= DiagramManager_MouseMove;
-            DiagramManager.MouseUp -= DiagramManager_MouseUp;
+            Diagram.MouseDown -= Diagram_MouseDown;
+            Diagram.MouseMove -= Diagram_MouseMove;
+            Diagram.MouseUp -= Diagram_MouseUp;
         }
     }
 }

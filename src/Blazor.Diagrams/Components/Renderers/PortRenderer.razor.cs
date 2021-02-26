@@ -15,8 +15,8 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _shouldRender = true;
         private ElementReference _element;
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
@@ -55,19 +55,19 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        protected virtual void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Port, e);
+        protected virtual void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Port, e);
 
-        protected virtual void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Port, e);
+        protected virtual void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Port, e);
 
         private async Task UpdateDimensions()
         {
-            var zoom = DiagramManager.Zoom;
-            var pan = DiagramManager.Pan;
+            var zoom = Diagram.Zoom;
+            var pan = Diagram.Pan;
             var rect = await JSRuntime.GetBoundingClientRect(_element);
 
             Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
-            Port.Position = new Point((rect.Left - DiagramManager.Container.Left - pan.X) / zoom,
-                (rect.Top - DiagramManager.Container.Top - pan.Y) / zoom);
+            Port.Position = new Point((rect.Left - Diagram.Container.Left - pan.X) / zoom,
+                (rect.Top - Diagram.Container.Top - pan.Y) / zoom);
 
             Port.Initialized = true;
 

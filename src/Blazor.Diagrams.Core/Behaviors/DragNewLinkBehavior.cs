@@ -13,39 +13,39 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double _initialY;
         private BaseLinkModel? _ongoingLink;
 
-        public DragNewLinkBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public DragNewLinkBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.MouseDown += DiagramManager_MouseDown;
-            DiagramManager.MouseMove += DiagramManager_MouseMove;
-            DiagramManager.MouseUp += DiagramManager_MouseUp;
+            Diagram.MouseDown += Diagram_MouseDown;
+            Diagram.MouseMove += Diagram_MouseMove;
+            Diagram.MouseUp += Diagram_MouseUp;
         }
 
-        private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
+        private void Diagram_MouseDown(Model model, MouseEventArgs e)
         {
             if (!(model is PortModel port) || port.Locked || e.Button != (int)MouseEventButton.Left)
                 return;
 
             _initialX = e.ClientX;
             _initialY = e.ClientY;
-            _ongoingLink = DiagramManager.Options.Links.Factory(DiagramManager, port);
+            _ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
             _ongoingLink.OnGoingPosition = new Point(port.Position.X + port.Size.Width / 2,
                 port.Position.Y + port.Size.Height / 2);
-            DiagramManager.Links.Add(_ongoingLink);
+            Diagram.Links.Add(_ongoingLink);
         }
 
-        private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
+        private void Diagram_MouseMove(Model model, MouseEventArgs e)
         {
             if (_ongoingLink == null || model != null)
                 return;
 
-            var deltaX = (e.ClientX - _initialX) / DiagramManager.Zoom;
-            var deltaY = (e.ClientY - _initialY) / DiagramManager.Zoom;
+            var deltaX = (e.ClientX - _initialX) / Diagram.Zoom;
+            var deltaY = (e.ClientY - _initialY) / Diagram.Zoom;
             var sX = _ongoingLink.SourcePort.Position.X + _ongoingLink.SourcePort.Size.Width / 2;
             var sY = _ongoingLink.SourcePort.Position.Y + _ongoingLink.SourcePort.Size.Height / 2;
 
             _ongoingLink.OnGoingPosition = new Point(sX + deltaX, sY + deltaY);
 
-            if (DiagramManager.Options.Links.EnableSnapping)
+            if (Diagram.Options.Links.EnableSnapping)
             {
                 var nearPort = FindNearPortToAttachTo();
                 if (nearPort != null || _ongoingLink.TargetPort != null)
@@ -60,7 +60,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             _ongoingLink.Refresh();
         }
 
-        private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
+        private void Diagram_MouseUp(Model model, MouseEventArgs e)
         {
             if (_ongoingLink == null)
                 return;
@@ -73,7 +73,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             if (!(model is PortModel port) || !_ongoingLink.SourcePort.CanAttachTo(port))
             {
-                DiagramManager.Links.Remove(_ongoingLink);
+                Diagram.Links.Remove(_ongoingLink);
                 _ongoingLink = null;
                 return;
             }
@@ -88,9 +88,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private PortModel? FindNearPortToAttachTo()
         {
-            foreach (var port in DiagramManager.Nodes.SelectMany(n => n.Ports))
+            foreach (var port in Diagram.Nodes.SelectMany(n => n.Ports))
             {
-                if (_ongoingLink!.OnGoingPosition!.DistanceTo(port.Position) < DiagramManager.Options.Links.SnappingRadius &&
+                if (_ongoingLink!.OnGoingPosition!.DistanceTo(port.Position) < Diagram.Options.Links.SnappingRadius &&
                     _ongoingLink.SourcePort.CanAttachTo(port))
                     return port;
             }
@@ -100,9 +100,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            DiagramManager.MouseDown -= DiagramManager_MouseDown;
-            DiagramManager.MouseMove -= DiagramManager_MouseMove;
-            DiagramManager.MouseUp -= DiagramManager_MouseUp;
+            Diagram.MouseDown -= Diagram_MouseDown;
+            Diagram.MouseMove -= Diagram_MouseMove;
+            Diagram.MouseUp -= Diagram_MouseUp;
         }
     }
 }

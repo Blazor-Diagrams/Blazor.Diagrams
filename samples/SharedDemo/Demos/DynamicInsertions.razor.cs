@@ -10,34 +10,34 @@ namespace SharedDemo.Demos
     public class DynamicInsertionsComponent : ComponentBase
     {
         private static readonly Random _random = new Random();
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            diagramManager.Options.Groups.Enabled = true;
+            diagram.Options.Groups.Enabled = true;
             var node1 = new NodeModel(new Point(300, 50));
             var node2 = new NodeModel(new Point(300, 400));
-            diagramManager.Nodes.Add(node1, node2);
+            diagram.Nodes.Add(node1, node2);
         }
 
         protected void AddNode()
         {
-            var x = _random.Next(0, (int)diagramManager.Container.Width - 120);
-            var y = _random.Next(0, (int)diagramManager.Container.Height - 100);
-            diagramManager.Nodes.Add(new NodeModel(new Point(x, y)));
+            var x = _random.Next(0, (int)diagram.Container.Width - 120);
+            var y = _random.Next(0, (int)diagram.Container.Height - 100);
+            diagram.Nodes.Add(new NodeModel(new Point(x, y)));
         }
 
         protected void RemoveNode()
         {
-            var i = _random.Next(0, diagramManager.Nodes.Count);
-            diagramManager.Nodes.Remove(diagramManager.Nodes[i]);
+            var i = _random.Next(0, diagram.Nodes.Count);
+            diagram.Nodes.Remove(diagram.Nodes[i]);
         }
 
         protected void AddPort()
         {
-            var node = diagramManager.Nodes.FirstOrDefault(n => n.Selected);
+            var node = diagram.Nodes.FirstOrDefault(n => n.Selected);
             if (node == null)
                 return;
 
@@ -54,7 +54,7 @@ namespace SharedDemo.Demos
 
         protected void RemovePort()
         {
-            var node = diagramManager.Nodes.FirstOrDefault(n => n.Selected);
+            var node = diagram.Nodes.FirstOrDefault(n => n.Selected);
             if (node == null)
                 return;
 
@@ -64,14 +64,14 @@ namespace SharedDemo.Demos
             var i = _random.Next(0, node.Ports.Count);
             var port = node.Ports[i];
 
-            diagramManager.Links.Remove(port.Links.ToArray());
+            diagram.Links.Remove(port.Links.ToArray());
             node.RemovePort(port);
             node.Refresh();
         }
 
         protected void AddLink()
         {
-            var selectedNodes = diagramManager.Nodes.Where(n => n.Selected).ToArray();
+            var selectedNodes = diagram.Nodes.Where(n => n.Selected).ToArray();
             if (selectedNodes.Length != 2)
                 return;
 
@@ -83,7 +83,7 @@ namespace SharedDemo.Demos
 
             var sourcePort = node1.Ports[_random.Next(0, node1.Ports.Count)];
             var targetPort = node2.Ports[_random.Next(0, node2.Ports.Count)];
-            diagramManager.Links.Add(new LinkModel(sourcePort, targetPort));
+            diagram.Links.Add(new LinkModel(sourcePort, targetPort));
         }
     }
 }

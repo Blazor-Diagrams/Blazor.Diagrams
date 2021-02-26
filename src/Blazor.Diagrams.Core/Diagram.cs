@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 namespace Blazor.Diagrams.Core
 {
-    public class DiagramManager
+    public class Diagram
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
@@ -36,7 +36,7 @@ namespace Blazor.Diagrams.Core
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
 
-        public DiagramManager(DiagramOptions? options = null)
+        public Diagram(DiagramOptions? options = null)
         {
             _behaviors = new Dictionary<Type, Behavior>();
             _componentByModelMapping = new Dictionary<Type, Type>();

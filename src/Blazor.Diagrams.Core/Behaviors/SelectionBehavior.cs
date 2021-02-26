@@ -5,33 +5,33 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class SelectionBehavior : Behavior
     {
-        public SelectionBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public SelectionBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.MouseDown += DiagramManager_MouseDown;
+            Diagram.MouseDown += Diagram_MouseDown;
         }
 
-        private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
+        private void Diagram_MouseDown(Model model, MouseEventArgs e)
         {
             if (model == null)
             {
-                DiagramManager.UnselectAll();
+                Diagram.UnselectAll();
             }
             else if (model is SelectableModel sm)
             {
                 if (e.CtrlKey && sm.Selected)
                 {
-                    DiagramManager.UnselectModel(sm);
+                    Diagram.UnselectModel(sm);
                 }
                 else if (!sm.Selected)
                 {
-                    DiagramManager.SelectModel(sm, !e.CtrlKey || !DiagramManager.Options.AllowMultiSelection);
+                    Diagram.SelectModel(sm, !e.CtrlKey || !Diagram.Options.AllowMultiSelection);
                 }
             }
         }
 
         public override void Dispose()
         {
-            DiagramManager.MouseDown -= DiagramManager_MouseDown;
+            Diagram.MouseDown -= Diagram_MouseDown;
         }
     }
 }

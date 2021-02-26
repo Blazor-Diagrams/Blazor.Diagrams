@@ -7,7 +7,7 @@ namespace SharedDemo
 {
     public class SnapToGridComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager(new DiagramOptions
+        protected readonly Diagram diagram = new Diagram(new DiagramOptions
         {
             GridSize = 50
         });
@@ -18,8 +18,8 @@ namespace SharedDemo
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagramManager.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
-            diagramManager.Nodes.Add(node1, node2, NewNode(300, 50));
+            diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            diagram.Nodes.Add(node1, node2, NewNode(300, 50));
         }
 
         private NodeModel NewNode(double x, double y)

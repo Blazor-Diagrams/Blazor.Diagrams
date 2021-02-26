@@ -21,8 +21,8 @@ namespace Blazor.Diagrams.Components.Groups
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         public void Dispose()
         {
@@ -66,8 +66,8 @@ namespace Blazor.Diagrams.Components.Groups
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Group, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e);
 
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Group, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Group, e);
     }
 }

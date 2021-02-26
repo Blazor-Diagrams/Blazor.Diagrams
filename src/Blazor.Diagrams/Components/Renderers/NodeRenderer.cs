@@ -20,8 +20,8 @@ namespace Blazor.Diagrams.Components.Renderers
         private ElementReference _element;
         private DotNetObjectReference<NodeRenderer> _reference;
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public NodeModel Node { get; set; }
@@ -31,9 +31,9 @@ namespace Blazor.Diagrams.Components.Renderers
 
         public void Dispose()
         {
-            DiagramManager.PanChanged -= CheckVisibility;
-            DiagramManager.ZoomChanged -= CheckVisibility;
-            DiagramManager.ContainerChanged -= CheckVisibility;
+            Diagram.PanChanged -= CheckVisibility;
+            Diagram.ZoomChanged -= CheckVisibility;
+            Diagram.ContainerChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
             if (_element.Id != null)
@@ -49,7 +49,7 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Size.Zero.Equals(size))
                 return;
 
-            size = new Size(size.Width / DiagramManager.Zoom, size.Height / DiagramManager.Zoom);
+            size = new Size(size.Width / Diagram.Zoom, size.Height / Diagram.Zoom);
             if (size.Equals(Node.Size))
                 return;
 
@@ -63,9 +63,9 @@ namespace Blazor.Diagrams.Components.Renderers
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            DiagramManager.PanChanged += CheckVisibility;
-            DiagramManager.ZoomChanged += CheckVisibility;
-            DiagramManager.ContainerChanged += CheckVisibility;
+            Diagram.PanChanged += CheckVisibility;
+            Diagram.ZoomChanged += CheckVisibility;
+            Diagram.ContainerChanged += CheckVisibility;
             Node.Changed += ReRender;
         }
 
@@ -85,8 +85,8 @@ namespace Blazor.Diagrams.Components.Renderers
             if (!_isVisible)
                 return;
 
-            var componentType = DiagramManager.GetComponentForModel(Node) ??
-                DiagramManager.Options.DefaultNodeComponent ??
+            var componentType = Diagram.GetComponentForModel(Node) ??
+                Diagram.Options.DefaultNodeComponent ??
                 (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
             builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
@@ -127,19 +127,19 @@ namespace Blazor.Diagrams.Components.Renderers
         private async void CheckVisibility()
         {
             // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
-            if (!DiagramManager.Options.EnableVirtualization && _isVisible)
+            if (!Diagram.Options.EnableVirtualization && _isVisible)
                 return;
 
             if (Node.Size == null)
                 return;
 
-            var left = Node.Position.X * DiagramManager.Zoom + DiagramManager.Pan.X;
-            var top = Node.Position.Y * DiagramManager.Zoom + DiagramManager.Pan.Y;
-            var right = left + Node.Size.Width * DiagramManager.Zoom;
-            var bottom = top + Node.Size.Height * DiagramManager.Zoom;
+            var left = Node.Position.X * Diagram.Zoom + Diagram.Pan.X;
+            var top = Node.Position.Y * Diagram.Zoom + Diagram.Pan.Y;
+            var right = left + Node.Size.Width * Diagram.Zoom;
+            var bottom = top + Node.Size.Height * Diagram.Zoom;
 
-            var isVisible = right > 0 && left < DiagramManager.Container.Width && bottom > 0 &&
-                top < DiagramManager.Container.Height;
+            var isVisible = right > 0 && left < Diagram.Container.Width && bottom > 0 &&
+                top < Diagram.Container.Height;
 
             if (_isVisible != isVisible)
             {
@@ -161,8 +161,8 @@ namespace Blazor.Diagrams.Components.Renderers
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Node, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e);
 
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Node, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e);
     }
 }

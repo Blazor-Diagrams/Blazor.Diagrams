@@ -11,36 +11,36 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double _lastClientX;
         private double _lastClientY;
 
-        public PanBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public PanBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.MouseDown += DiagramManager_MouseDown;
-            DiagramManager.MouseMove += DiagramManager_MouseMove;
-            DiagramManager.MouseUp += DiagramManager_MouseUp;
+            Diagram.MouseDown += Diagram_MouseDown;
+            Diagram.MouseMove += Diagram_MouseMove;
+            Diagram.MouseUp += Diagram_MouseUp;
         }
 
-        private void DiagramManager_MouseDown(Model model, MouseEventArgs e)
+        private void Diagram_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!DiagramManager.Options.AllowPanning || model != null || e.ShiftKey)
+            if (!Diagram.Options.AllowPanning || model != null || e.ShiftKey)
                 return;
 
-            _initialPan = DiagramManager.Pan;
+            _initialPan = Diagram.Pan;
             _lastClientX = e.ClientX;
             _lastClientY = e.ClientY;
         }
 
-        private void DiagramManager_MouseMove(Model model, MouseEventArgs e)
+        private void Diagram_MouseMove(Model model, MouseEventArgs e)
         {
-            if (!DiagramManager.Options.AllowPanning || _initialPan == null)
+            if (!Diagram.Options.AllowPanning || _initialPan == null)
                 return;
 
-            var deltaX = e.ClientX - _lastClientX - (DiagramManager.Pan.X - _initialPan.X);
-            var deltaY = e.ClientY - _lastClientY - (DiagramManager.Pan.Y - _initialPan.Y);
-            DiagramManager.UpdatePan(deltaX, deltaY);
+            var deltaX = e.ClientX - _lastClientX - (Diagram.Pan.X - _initialPan.X);
+            var deltaY = e.ClientY - _lastClientY - (Diagram.Pan.Y - _initialPan.Y);
+            Diagram.UpdatePan(deltaX, deltaY);
         }
 
-        private void DiagramManager_MouseUp(Model model, MouseEventArgs e)
+        private void Diagram_MouseUp(Model model, MouseEventArgs e)
         {
-            if (!DiagramManager.Options.AllowPanning)
+            if (!Diagram.Options.AllowPanning)
                 return;
 
             _initialPan = null;
@@ -48,9 +48,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            DiagramManager.MouseDown -= DiagramManager_MouseDown;
-            DiagramManager.MouseMove -= DiagramManager_MouseMove;
-            DiagramManager.MouseUp -= DiagramManager_MouseUp;
+            Diagram.MouseDown -= Diagram_MouseDown;
+            Diagram.MouseMove -= Diagram_MouseMove;
+            Diagram.MouseUp -= Diagram_MouseUp;
         }
     }
 }

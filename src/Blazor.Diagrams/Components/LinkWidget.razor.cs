@@ -9,8 +9,8 @@ namespace Blazor.Diagrams.Components
 {
     public partial class LinkWidget
     {
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public LinkModel Link { get; set; }
@@ -47,10 +47,10 @@ namespace Blazor.Diagrams.Components
             if (!Link.Segmentable)
                 return;
 
-            var rPt = DiagramManager.GetRelativeMousePoint(e.ClientX, e.ClientY);
+            var rPt = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var vertex = new LinkVertexModel(Link, rPt);
             Link.Vertices.Insert(index, vertex);
-            DiagramManager.OnMouseDown(vertex, e);
+            Diagram.OnMouseDown(vertex, e);
         }
     }
 }

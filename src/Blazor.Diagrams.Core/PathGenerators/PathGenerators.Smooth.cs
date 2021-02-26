@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Core
     {
         private const double _margin = 125;
 
-        public static PathGeneratorResult Smooth(DiagramManager _, BaseLinkModel link, Point[] route)
+        public static PathGeneratorResult Smooth(Diagram _, BaseLinkModel link, Point[] route)
         {
             if (route.Length > 2)
                 return CurveThroughPoints(route, link);

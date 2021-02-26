@@ -11,8 +11,8 @@ namespace Blazor.Diagrams.Components.Renderers
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public BaseLinkModel Link { get; set; }
@@ -33,8 +33,8 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = DiagramManager.GetComponentForModel(Link) ??
-                DiagramManager.Options.Links.DefaultLinkComponent ??
+            var componentType = Diagram.GetComponentForModel(Link) ??
+                Diagram.Options.Links.DefaultLinkComponent ??
                 typeof(LinkWidget);
 
             builder.OpenElement(0, "g");
@@ -58,8 +58,8 @@ namespace Blazor.Diagrams.Components.Renderers
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Link, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e);
 
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Link, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e);
     }
 }

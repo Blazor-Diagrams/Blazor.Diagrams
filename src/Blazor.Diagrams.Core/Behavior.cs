@@ -4,12 +4,12 @@ namespace Blazor.Diagrams.Core
 {
     public abstract class Behavior : IDisposable
     {
-        public Behavior(DiagramManager diagramManager)
+        public Behavior(Diagram diagram)
         {
-            DiagramManager = diagramManager;
+            Diagram = diagram;
         }
 
-        protected DiagramManager DiagramManager { get; }
+        protected Diagram Diagram { get; }
 
         public abstract void Dispose();
     }

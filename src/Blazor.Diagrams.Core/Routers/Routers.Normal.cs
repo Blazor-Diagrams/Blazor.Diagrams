@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core
 {
     public static partial class Routers
     {
-        public static Point[] Normal(DiagramManager _, BaseLinkModel link, Point from, Point to)
+        public static Point[] Normal(Diagram _, BaseLinkModel link, Point from, Point to)
         {
             var route = new Point[link.Vertices.Count + 2];
             route[0] = from;

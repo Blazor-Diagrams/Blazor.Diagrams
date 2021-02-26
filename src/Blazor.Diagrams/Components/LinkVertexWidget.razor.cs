@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Components
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter(Name = "DiagramManager")] public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter] public Diagram Diagram { get; set; }
         [Parameter] public LinkVertexModel Vertex { get; set; }
         [Parameter] public string Color { get; set; }
         [Parameter] public string SelectedColor { get; set; }
@@ -44,9 +44,9 @@ namespace Blazor.Diagrams.Components
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Vertex, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Vertex, e);
 
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Vertex, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Vertex, e);
 
         private void OnDoubleClick(MouseEventArgs e)
         {

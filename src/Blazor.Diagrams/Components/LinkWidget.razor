@@ -1,13 +1,13 @@
 ﻿@using SvgPathProperties;
 @{
-    var router = Link.Router ?? DiagramManager.Options.Links.DefaultRouter;
-    var pathGenerator = Link.PathGenerator ?? DiagramManager.Options.Links.DefaultPathGenerator;
+    var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
+    var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
     var sourcePosition = GetPositionBasedOnAlignment(Link.SourcePort, Link.SourceMarker);
     var targetPosition = Link.IsAttached ? GetPositionBasedOnAlignment(Link.TargetPort, Link.TargetMarker) : Link.OnGoingPosition;
-    var route = router(DiagramManager, Link, sourcePosition, targetPosition);
-    var result = pathGenerator(DiagramManager, Link, route);
-    var color = Link.Selected ? (Link.SelectedColor ?? DiagramManager.Options.Links.DefaultSelectedColor)
-        : (Link.Color ?? DiagramManager.Options.Links.DefaultColor);
+    var route = router(Diagram, Link, sourcePosition, targetPosition);
+    var result = pathGenerator(Diagram, Link, route);
+    var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
+        : (Link.Color ?? Diagram.Options.Links.DefaultColor);
     var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();
 }
 
@@ -49,8 +49,8 @@
 
 @if (Link.Vertices.Count > 0)
 {
-    var selectedColor = Link.SelectedColor ?? DiagramManager.Options.Links.DefaultSelectedColor;
-    var normalColor = Link.Color ?? DiagramManager.Options.Links.DefaultColor;
+    var selectedColor = Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor;
+    var normalColor = Link.Color ?? Diagram.Options.Links.DefaultColor;
     <g>
         @foreach (var vertex in Link.Vertices)
         {

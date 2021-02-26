@@ -6,31 +6,31 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class GroupingBehavior : Behavior
     {
-        public GroupingBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public GroupingBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.KeyDown += DiagramManager_KeyDown;
+            Diagram.KeyDown += Diagram_KeyDown;
         }
 
-        private void DiagramManager_KeyDown(KeyboardEventArgs e)
+        private void Diagram_KeyDown(KeyboardEventArgs e)
         {
-            if (!DiagramManager.Options.Groups.Enabled)
+            if (!Diagram.Options.Groups.Enabled)
                 return;
 
-            if (!DiagramManager.GetSelectedModels().Any())
+            if (!Diagram.GetSelectedModels().Any())
                 return;
 
-            Console.WriteLine(DiagramManager.Options.Groups.KeyboardShortcut(e));
-            if (!DiagramManager.Options.Groups.KeyboardShortcut(e))
+            Console.WriteLine(Diagram.Options.Groups.KeyboardShortcut(e));
+            if (!Diagram.Options.Groups.KeyboardShortcut(e))
                 return;
 
-            var selectedNodes = DiagramManager.Nodes.Where(n => n.Selected).ToArray();
+            var selectedNodes = Diagram.Nodes.Where(n => n.Selected).ToArray();
             var nodesWithGroup = selectedNodes.Where(n => n.Group != null).ToArray();
             if (nodesWithGroup.Length > 0)
             {
                 // Ungroup
                 foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
                 {
-                    DiagramManager.Ungroup(group);
+                    Diagram.Ungroup(group);
                 }
             }
             else
@@ -45,13 +45,13 @@ namespace Blazor.Diagrams.Core.Behaviors
                 if (selectedNodes.Select(n => n.Layer).Distinct().Count() > 1)
                     return;
 
-                DiagramManager.Group(selectedNodes);
+                Diagram.Group(selectedNodes);
             }
         }
 
         public override void Dispose()
         {
-            DiagramManager.KeyDown -= DiagramManager_KeyDown;
+            Diagram.KeyDown -= Diagram_KeyDown;
         }
     }
 }

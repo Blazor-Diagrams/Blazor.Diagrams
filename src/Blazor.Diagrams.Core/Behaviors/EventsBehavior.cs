@@ -9,11 +9,11 @@ namespace Blazor.Diagrams.Core.Behaviors
         private bool _captureMouseMove;
         private int _mouseMovedCount;
 
-        public EventsBehavior(DiagramManager diagramManager) : base(diagramManager)
+        public EventsBehavior(Diagram diagram) : base(diagram)
         {
-            DiagramManager.MouseDown += OnMouseDown;
-            DiagramManager.MouseMove += OnMouseMove;
-            DiagramManager.MouseUp += OnMouseUp;
+            Diagram.MouseDown += OnMouseDown;
+            Diagram.MouseMove += OnMouseMove;
+            Diagram.MouseUp += OnMouseUp;
         }
 
         private void OnMouseDown(Model model, MouseEventArgs e)
@@ -38,14 +38,14 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
             }
 
-            DiagramManager.OnMouseClick(model, e);
+            Diagram.OnMouseClick(model, e);
         }
 
         public override void Dispose()
         {
-            DiagramManager.MouseDown -= OnMouseDown;
-            DiagramManager.MouseMove -= OnMouseMove;
-            DiagramManager.MouseUp -= OnMouseUp;
+            Diagram.MouseDown -= OnMouseDown;
+            Diagram.MouseMove -= OnMouseMove;
+            Diagram.MouseUp -= OnMouseUp;
         }
     }
 }

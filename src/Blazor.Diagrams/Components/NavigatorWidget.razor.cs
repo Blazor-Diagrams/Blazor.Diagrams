@@ -11,8 +11,8 @@ namespace Blazor.Diagrams.Components
     public partial class NavigatorWidget : IDisposable
     {
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public double Width { get; set; }
@@ -30,22 +30,22 @@ namespace Blazor.Diagrams.Components
         {
             base.OnParametersSet();
 
-            foreach (var node in DiagramManager.Nodes)
+            foreach (var node in Diagram.Nodes)
                 node.Changed += Refresh;
 
-            foreach (var group in DiagramManager.Groups)
+            foreach (var group in Diagram.Groups)
                 group.Changed += Refresh;
 
-            DiagramManager.Changed += DiagramManager_Changed;
-            DiagramManager.Nodes.Added += DiagramManager_NodesAdded;
-            DiagramManager.Nodes.Removed += DiagramManager_NodesRemoved;
-            DiagramManager.GroupAdded += DiagramManager_GroupAdded;
-            DiagramManager.GroupRemoved += DiagramManager_GroupRemoved;
+            Diagram.Changed += Diagram_Changed;
+            Diagram.Nodes.Added += Diagram_NodesAdded;
+            Diagram.Nodes.Removed += Diagram_NodesRemoved;
+            Diagram.GroupAdded += Diagram_GroupAdded;
+            Diagram.GroupRemoved += Diagram_GroupRemoved;
         }
 
-        private void DiagramManager_Changed() => Refresh();
+        private void Diagram_Changed() => Refresh();
 
-        private void DiagramManager_NodesAdded(NodeModel[] nodes)
+        private void Diagram_NodesAdded(NodeModel[] nodes)
         {
             foreach (var node in nodes)
             {
@@ -53,7 +53,7 @@ namespace Blazor.Diagrams.Components
             }
         }
 
-        private void DiagramManager_NodesRemoved(NodeModel[] nodes)
+        private void Diagram_NodesRemoved(NodeModel[] nodes)
         {
             foreach (var node in nodes)
             {
@@ -61,24 +61,24 @@ namespace Blazor.Diagrams.Components
             }
         }
 
-        private void DiagramManager_GroupAdded(GroupModel group) => group.Changed += Refresh;
+        private void Diagram_GroupAdded(GroupModel group) => group.Changed += Refresh;
 
-        private void DiagramManager_GroupRemoved(GroupModel group) => group.Changed -= Refresh;
+        private void Diagram_GroupRemoved(GroupModel group) => group.Changed -= Refresh;
 
         private void Refresh()
         {
-            var nodes = DiagramManager.Nodes
-                .Union(DiagramManager.Groups)
+            var nodes = Diagram.Nodes
+                .Union(Diagram.Groups)
                 .Where(n => n.Size?.Equals(Size.Zero) == false).ToList();
 
             if (nodes.Count == 0)
                 return;
 
             var bounds = nodes.GetBounds();
-            var nodesMinX = bounds.Left * DiagramManager.Zoom;
-            var nodesMaxX = bounds.Right * DiagramManager.Zoom;
-            var nodesMinY = bounds.Top * DiagramManager.Zoom;
-            var nodesMaxY = bounds.Bottom * DiagramManager.Zoom;
+            var nodesMinX = bounds.Left * Diagram.Zoom;
+            var nodesMaxX = bounds.Right * Diagram.Zoom;
+            var nodesMinY = bounds.Top * Diagram.Zoom;
+            var nodesMaxY = bounds.Bottom * Diagram.Zoom;
 
             (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
             AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
@@ -94,12 +94,12 @@ namespace Blazor.Diagrams.Components
             // Width
             if (nodesMinX < 0)
             {
-                var temp = nodesMinX + DiagramManager.Pan.X;
-                if (DiagramManager.Pan.X > 0 && temp < 0)
+                var temp = nodesMinX + Diagram.Pan.X;
+                if (Diagram.Pan.X > 0 && temp < 0)
                 {
                     fullSizeWidth += Math.Abs(temp);
                 }
-                else if (DiagramManager.Pan.X <= 0)
+                else if (Diagram.Pan.X <= 0)
                 {
                     fullSizeWidth += Math.Abs(nodesMinX);
                 }
@@ -108,12 +108,12 @@ namespace Blazor.Diagrams.Components
             // Height
             if (nodesMinY < 0)
             {
-                var temp = nodesMinY + DiagramManager.Pan.Y;
-                if (DiagramManager.Pan.Y > 0 && temp < 0)
+                var temp = nodesMinY + Diagram.Pan.Y;
+                if (Diagram.Pan.Y > 0 && temp < 0)
                 {
                     fullSizeHeight += Math.Abs(temp);
                 }
-                else if (DiagramManager.Pan.Y <= 0)
+                else if (Diagram.Pan.Y <= 0)
                 {
                     fullSizeHeight += Math.Abs(nodesMinY);
                 }
@@ -122,24 +122,24 @@ namespace Blazor.Diagrams.Components
 
         private (double width, double height) GetFullSize(double nodesMaxX, double nodesMaxY)
         {
-            var nodesLayerWidth = Math.Max(DiagramManager.Container.Width * DiagramManager.Zoom, nodesMaxX);
-            var nodesLayerHeight = Math.Max(DiagramManager.Container.Height * DiagramManager.Zoom, nodesMaxY);
+            var nodesLayerWidth = Math.Max(Diagram.Container.Width * Diagram.Zoom, nodesMaxX);
+            var nodesLayerHeight = Math.Max(Diagram.Container.Height * Diagram.Zoom, nodesMaxY);
             double fullWidth;
             double fullHeight;
 
-            if (DiagramManager.Zoom == 1)
+            if (Diagram.Zoom == 1)
             {
-                fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
-                fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+                fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
+                fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
             }
-            else if (DiagramManager.Zoom > 1)
+            else if (Diagram.Zoom > 1)
             {
                 // Width
-                if (DiagramManager.Pan.X < 0)
+                if (Diagram.Pan.X < 0)
                 {
-                    if (nodesLayerWidth + DiagramManager.Pan.X < DiagramManager.Container.Width)
+                    if (nodesLayerWidth + Diagram.Pan.X < Diagram.Container.Width)
                     {
-                        fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
+                        fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
                     }
                     else
                     {
@@ -148,15 +148,15 @@ namespace Blazor.Diagrams.Components
                 }
                 else
                 {
-                    fullWidth = nodesLayerWidth + DiagramManager.Pan.X;
+                    fullWidth = nodesLayerWidth + Diagram.Pan.X;
                 }
 
                 // Height
-                if (DiagramManager.Pan.Y < 0)
+                if (Diagram.Pan.Y < 0)
                 {
-                    if (nodesLayerHeight + DiagramManager.Pan.Y < DiagramManager.Container.Height)
+                    if (nodesLayerHeight + Diagram.Pan.Y < Diagram.Container.Height)
                     {
-                        fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+                        fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
                     }
                     else
                     {
@@ -165,29 +165,29 @@ namespace Blazor.Diagrams.Components
                 }
                 else
                 {
-                    fullHeight = nodesLayerHeight + DiagramManager.Pan.Y;
+                    fullHeight = nodesLayerHeight + Diagram.Pan.Y;
                 }
             }
             else
             {
                 // Width
-                if (DiagramManager.Pan.X > 0)
+                if (Diagram.Pan.X > 0)
                 {
-                    fullWidth = Math.Max(nodesLayerWidth + DiagramManager.Pan.X, DiagramManager.Container.Width);
+                    fullWidth = Math.Max(nodesLayerWidth + Diagram.Pan.X, Diagram.Container.Width);
                 }
                 else
                 {
-                    fullWidth = DiagramManager.Container.Width + Math.Abs(DiagramManager.Pan.X);
+                    fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
                 }
 
                 // Height
-                if (DiagramManager.Pan.Y > 0)
+                if (Diagram.Pan.Y > 0)
                 {
-                    fullHeight = Math.Max(nodesLayerHeight + DiagramManager.Pan.Y, DiagramManager.Container.Height);
+                    fullHeight = Math.Max(nodesLayerHeight + Diagram.Pan.Y, Diagram.Container.Height);
                 }
                 else
                 {
-                    fullHeight = DiagramManager.Container.Height + Math.Abs(DiagramManager.Pan.Y);
+                    fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
                 }
             }
 
@@ -196,9 +196,9 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            DiagramManager.Changed -= DiagramManager_Changed;
-            DiagramManager.Nodes.Added -= DiagramManager_NodesAdded;
-            DiagramManager.Nodes.Removed -= DiagramManager_NodesRemoved;
+            Diagram.Changed -= Diagram_Changed;
+            Diagram.Nodes.Added -= Diagram_NodesAdded;
+            Diagram.Nodes.Removed -= Diagram_NodesRemoved;
 
             // Todo: unregister node/group changed events
         }

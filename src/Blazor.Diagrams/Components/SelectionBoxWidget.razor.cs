@@ -13,17 +13,17 @@ namespace Blazor.Diagrams.Components
         private Point _selectionBoxTopLeft;
         private Size _selectionBoxSize;
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public string Background { get; set; } = "rgb(110 159 212 / 25%);";
 
         protected override void OnInitialized()
         {
-            DiagramManager.MouseDown += OnMouseDown;
-            DiagramManager.MouseMove += OnMouseMove;
-            DiagramManager.MouseUp += OnMouseUp;
+            Diagram.MouseDown += OnMouseDown;
+            Diagram.MouseMove += OnMouseMove;
+            Diagram.MouseUp += OnMouseUp;
         }
 
         private string GenerateStyle()
@@ -44,21 +44,21 @@ namespace Blazor.Diagrams.Components
 
             SetSelectionBoxInformation(e);
 
-            var start = DiagramManager.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
-            var end = DiagramManager.GetRelativeMousePoint(e.ClientX, e.ClientY);
+            var start = Diagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
+            var end = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
             (var sX, var sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             (var eX, var eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
             var bounds = new Rectangle(sX, sY, eX, eY);
             
-            foreach (var node in DiagramManager.Nodes)
+            foreach (var node in Diagram.Nodes)
             {
                 if (bounds.Overlap(node.GetBounds()))
                 {
-                    DiagramManager.SelectModel(node, false);
+                    Diagram.SelectModel(node, false);
                 }
                 else if (node.Selected)
                 {
-                    DiagramManager.UnselectModel(node);
+                    Diagram.UnselectModel(node);
                 }
             }
 
@@ -67,8 +67,8 @@ namespace Blazor.Diagrams.Components
 
         private void SetSelectionBoxInformation(MouseEventArgs e)
         {
-            var start = DiagramManager.GetRelativePoint(_initialClientPoint.X, _initialClientPoint.Y);
-            var end = DiagramManager.GetRelativePoint(e.ClientX, e.ClientY);
+            var start = Diagram.GetRelativePoint(_initialClientPoint.X, _initialClientPoint.Y);
+            var end = Diagram.GetRelativePoint(e.ClientX, e.ClientY);
             (var sX, var sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             (var eX, var eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
             _selectionBoxTopLeft = new Point(sX, sY);
@@ -85,9 +85,9 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            DiagramManager.MouseDown -= OnMouseDown;
-            DiagramManager.MouseMove -= OnMouseMove;
-            DiagramManager.MouseUp -= OnMouseUp;
+            Diagram.MouseDown -= OnMouseDown;
+            Diagram.MouseMove -= OnMouseMove;
+            Diagram.MouseUp -= OnMouseUp;
         }
     }
 }

@@ -69,22 +69,22 @@
                 <div class="code-block">
                     <h3 class="block-title">Creating a diagram manager</h3>
                     <p>
-                        Every diagram has a <code>DiagramManager</code>, go ahead and create one in the component
+                        Every diagram has a <code>Diagram</code>, go ahead and create one in the component
                         where you want to show it:
                     </p>
-                    <pre><code class="language-csharp line-numbers">private DiagramManager DiagramManager { get; private set; }
+                    <pre><code class="language-csharp line-numbers">private Diagram Diagram { get; private set; }
 
 protected override void OnInitialized()
 {
     base.OnInitialized();
 
-    DiagramManager = new DiagramManager();
+    Diagram = new Diagram();
 }</code></pre>
                 </div>
                 <div class="code-block">
                     <h3 class="block-title">Changing options</h3>
                     <p>
-                        Every <code>DiagramManager</code> has a list of options that you can change:
+                        Every <code>Diagram</code> has a list of options that you can change:
                     </p>
                     <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
 {
@@ -101,7 +101,7 @@ protected override void OnInitialized()
             // Options related to links
         }
     };
-    DiagramManager = new DiagramManager(options);
+    Diagram = new Diagram(options);
 }</code></pre>
                 </div>
             </div>
@@ -118,7 +118,7 @@ protected override void OnInitialized()
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(300, 50);
-    DiagramManager.Nodes.Add(node1, node2, node3);
+    Diagram.Nodes.Add(node1, node2, node3);
 }
 
 private NodeModel NewNode(double x, double y)
@@ -143,8 +143,8 @@ private NodeModel NewNode(double x, double y)
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(300, 50);
-    DiagramManager.Nodes.Add(node1, node2, node3);
-    DiagramManager.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
+    Diagram.Nodes.Add(node1, node2, node3);
+    Diagram.AddLink(node1.GetPort(PortAlignment.RIGHT), node2.GetPort(PortAlignment.LEFT));
 }</code></pre>
                 <p>
                     The <code>AddLink</code> method adds a link of type <code>LinkModel</code>, which is the default
@@ -167,7 +167,7 @@ private NodeModel NewNode(double x, double y)
             <div class="code-block">
                 <h4 class="block-title">Adding the canvas</h4>
                 <pre><code class="language-markup line-numbers">&lt;!-- Add this where you want to show the diagram --&gt;
-&lt;CascadingValue Name=&quot;DiagramManager&quot; Value=&quot;DiagramManager&quot;&gt;
+&lt;CascadingValue Name=&quot;Diagram&quot; Value=&quot;Diagram&quot;&gt;
     &lt;DiagramCanvas&gt;&lt;/DiagramCanvas&gt;
 &lt;/CascadingValue&gt;</code></pre>
             </div>

@@ -11,8 +11,8 @@ namespace Blazor.Diagrams.Components
 {
     public partial class DiagramCanvas : IDisposable
     {
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public RenderFragment Widgets { get; set; }
@@ -28,14 +28,14 @@ namespace Blazor.Diagrams.Components
         private bool _shouldReRender;
 
         private string LayerStyle
-            => FormattableString.Invariant($"transform: translate({DiagramManager.Pan.X}px, {DiagramManager.Pan.Y}px) scale({DiagramManager.Zoom});");
+            => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            DiagramManager.Changed += OnDiagramChanged;
+            Diagram.Changed += OnDiagramChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -44,13 +44,13 @@ namespace Blazor.Diagrams.Components
 
             if (firstRender)
             {
-                DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
+                Diagram.Container = await JSRuntime.GetBoundingClientRect(elementReference);
                 await JSRuntime.ObserveResizes(elementReference, _reference, isCanvas: true);
             }
         }
 
         [JSInvokable]
-        public void OnResize(Rectangle rect) => DiagramManager.SetContainer(rect);
+        public void OnResize(Rectangle rect) => Diagram.SetContainer(rect);
 
         protected override bool ShouldRender()
         {
@@ -63,15 +63,15 @@ namespace Blazor.Diagrams.Components
             return false;
         }
 
-        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(null, e);
+        protected void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e);
 
-        protected void OnMouseMove(MouseEventArgs e) => DiagramManager.OnMouseMove(null, e);
+        protected void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e);
 
-        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(null, e);
+        protected void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e);
 
-        protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
+        protected void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e);
 
-        protected void OnWheel(WheelEventArgs e) => DiagramManager.OnWheel(e);
+        protected void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e);
 
         private void OnDiagramChanged()
         {
@@ -81,7 +81,7 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            DiagramManager.Changed -= OnDiagramChanged;
+            Diagram.Changed -= OnDiagramChanged;
 
             if (_reference == null)
                 return;

@@ -205,7 +205,7 @@ namespace Blazor.Diagrams.Core
                 {
                     if (vertex.Selected)
                         yield return vertex;
-                }    
+                }
             }
 
             foreach (var group in Groups)
@@ -300,11 +300,11 @@ namespace Blazor.Diagrams.Core
 
             var selectedNodes = Nodes.Where(s => s.Selected);
             var nodesToUse = selectedNodes.Any() ? selectedNodes : Nodes;
-            (var minX, var maxX, var minY, var maxY) = nodesToUse.GetBounds();
-            var width = maxX - minX + 2 * margin;
-            var height = maxY - minY + 2 * margin;
-            minX -= margin;
-            minY -= margin;
+            var bounds = nodesToUse.GetBounds();
+            var width = bounds.Width + 2 * margin;
+            var height = bounds.Height + 2 * margin;
+            var minX = bounds.Left - margin;
+            var minY = bounds.Top - margin;
 
             var xf = Container.Width / width;
             var yf = Container.Height / height;

@@ -74,11 +74,11 @@ namespace Blazor.Diagrams.Components
             if (nodes.Count == 0)
                 return;
 
-            (var nodesMinX, var nodesMaxX, var nodesMinY, var nodesMaxY) = nodes.GetBounds();
-            nodesMinX *= DiagramManager.Zoom;
-            nodesMaxX *= DiagramManager.Zoom;
-            nodesMinY *= DiagramManager.Zoom;
-            nodesMaxY *= DiagramManager.Zoom;
+            var bounds = nodes.GetBounds();
+            var nodesMinX = bounds.Left * DiagramManager.Zoom;
+            var nodesMaxX = bounds.Right * DiagramManager.Zoom;
+            var nodesMinY = bounds.Top * DiagramManager.Zoom;
+            var nodesMaxY = bounds.Bottom * DiagramManager.Zoom;
 
             (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
             AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);

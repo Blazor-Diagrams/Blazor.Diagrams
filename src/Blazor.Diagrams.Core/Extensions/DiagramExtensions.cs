@@ -1,11 +1,12 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Core;
 using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Extensions
 {
     public static class DiagramExtensions
     {
-        public static (double minX, double maxX, double minY, double maxY) GetBounds(this IEnumerable<NodeModel> nodes)
+        public static Rectangle GetBounds(this IEnumerable<NodeModel> nodes)
         {
             var minX = double.MaxValue;
             var maxX = double.MinValue;
@@ -35,7 +36,7 @@ namespace Blazor.Diagrams.Core.Extensions
                 }
             }
 
-            return (minX, maxX, minY, maxY);
+            return new Rectangle(minX, minY, maxX, maxY);
         }
     }
 }

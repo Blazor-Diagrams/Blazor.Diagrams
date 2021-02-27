@@ -1,6 +1,4 @@
-﻿using Blazor.Diagrams.Core.Extensions;
-
-namespace Blazor.Diagrams.Core.Models.Core
+﻿namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Size
     {
@@ -19,7 +17,7 @@ namespace Blazor.Diagrams.Core.Models.Core
 
         public Size Add(double value) => new Size(Width + value, Height + value);
 
-        public bool Equals(Size? size) => size != null && Width.AlmostEqualTo(size.Width) && Height.AlmostEqualTo(size.Height);
+        public bool Equals(Size? size) => size != null && Width == size.Width && Height == size.Height;
 
         public override string ToString() => $"Size(width={Width}, height={Height})";
     }

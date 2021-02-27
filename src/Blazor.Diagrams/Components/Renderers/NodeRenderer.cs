@@ -50,9 +50,10 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             size = new Size(size.Width / Diagram.Zoom, size.Height / Diagram.Zoom);
-            if (size.Equals(Node.Size))
+            if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) && Node.Size.Height.AlmostEqualTo(size.Height))
                 return;
 
+            Console.WriteLine($"Update! {Node.Size} vs {size}");
             Node.Size = size;
             Node.Refresh();
             Node.ReinitializePorts();

@@ -24,9 +24,19 @@
     <PackageReference Include="SvgPathProperties" Version="1.0.0" />
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
   </ItemGroup>
+
+  <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
+    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+  </Target>
+
+  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
+  </Target>
 
 </Project>

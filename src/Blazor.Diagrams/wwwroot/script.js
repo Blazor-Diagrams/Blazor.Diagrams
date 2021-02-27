@@ -29,9 +29,9 @@ var s = {
         s.ro.unobserve(element);
         delete s.tracked[id];
     },
-    
+
 };
 window.ZBlazorDiagrams = s;
 window.addEventListener('scroll', () => {
-    s.canvas.ref.invokeMethodAsync('OnResize', s.canvas.elem.getBoundingClientRect());
+    s.canvas && s.canvas.ref.invokeMethodAsync('OnResize', s.canvas.elem.getBoundingClientRect());
 });

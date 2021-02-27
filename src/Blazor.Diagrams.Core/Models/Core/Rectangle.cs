@@ -4,6 +4,8 @@ namespace Blazor.Diagrams.Core.Models.Core
 {
     public class Rectangle
     {
+        public static Rectangle Zero { get; } = new Rectangle(0, 0, 0, 0);
+
         public double Width { get; set; }
         public double Height { get; set; }
         public double Top { get; set; }

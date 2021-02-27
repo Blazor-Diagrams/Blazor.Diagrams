@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Extensions
 {
@@ -8,6 +9,9 @@ namespace Blazor.Diagrams.Core.Extensions
     {
         public static Rectangle GetBounds(this IEnumerable<NodeModel> nodes)
         {
+            if (!nodes.Any())
+                return Rectangle.Zero;
+
             var minX = double.MaxValue;
             var maxX = double.MinValue;
             var minY = double.MaxValue;

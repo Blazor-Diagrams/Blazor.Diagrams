@@ -49,7 +49,7 @@ namespace Blazor.Diagrams.Components.Renderers
             await base.OnAfterRenderAsync(firstRender);
             _shouldRender = false;
 
-            if (!Port.Initialized || firstRender)
+            if (!Port.Initialized)
             {
                 await UpdateDimensions();
             }

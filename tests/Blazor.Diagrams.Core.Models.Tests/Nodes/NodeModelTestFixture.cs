@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Blazor.Diagrams.Core.Tests.Nodes
+namespace Blazor.Diagrams.Core.Models.Tests.Nodes
 {
     public class NodeModelTestFixture
     {

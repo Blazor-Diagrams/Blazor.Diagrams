@@ -321,6 +321,60 @@ namespace Blazor.Diagrams.Core.Tests.Diagrams
            
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void SelectGroup(bool unselectAll)
+        {
+            //Arrange
+            NodeModel node1 = new NodeModel();
+            node1.AddPort();
+            NodeModel node2 = new NodeModel();
+            node2.AddPort();
+            Fixture.Diagram.Nodes.Add(node1,node2);
+            var group=Fixture.Diagram.Group(node1, node2);
+            //Act
+            Fixture.Diagram.SelectModel(group, unselectAll);
+            //Assert
+
+            Assert.Single(Fixture.Diagram.GetSelectedModels());
+            Assert.IsType<GroupModel>(Fixture.Diagram.GetSelectedModels().First());
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void SelectSeveralGroups(bool unselectAll)
+        {
+            //Arrange
+            NodeModel node1 = new NodeModel();
+            node1.AddPort();
+            NodeModel node2 = new NodeModel();
+            node2.AddPort();
+            NodeModel node3 = new NodeModel();
+            node3.AddPort();
+            NodeModel node4 = new NodeModel();
+            node3.AddPort();
+            Fixture.Diagram.Nodes.Add(node1,node2,node3,node4);
+
+            var group1 = Fixture.Diagram.Group(node1, node2);
+            var group2 = Fixture.Diagram.Group(node3, node4);
+            //Act
+            Fixture.Diagram.SelectModel(group1, unselectAll);
+            Fixture.Diagram.SelectModel(group2, unselectAll);
+            //Assert
+            if (unselectAll)
+            {
+                Assert.Single(Fixture.Diagram.GetSelectedModels());
+                Assert.IsType<GroupModel>(Fixture.Diagram.GetSelectedModels().First());
+            }
+            else
+            {
+                Assert.Equal(2, Fixture.Diagram.GetSelectedModels().Count());
+            }
+
+        }
+
 
 
         [Fact]

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Blazor.Diagrams.Core.Tests.Links
+namespace Blazor.Diagrams.Core.Models.Tests.Links
 {
     public class LinkModelTests
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Blazor.Diagrams.Core.Tests.Nodes
+namespace Blazor.Diagrams.Core.Models.Tests.Nodes
 {
     public class NodeModelTests
     {
@@ -30,9 +30,20 @@ namespace Blazor.Diagrams.Core.Tests.Nodes
             //Act
             //Arrange
             Fixture.Node.AddPort();
-            var port=Fixture.Node.GetPort(Core.Models.PortAlignment.Bottom);
+            var port = Fixture.Node.GetPort(PortAlignment.Bottom);
             //Assert
             Assert.NotNull(port);
+        }
+        [Fact]
+        public void RemovePort()
+        {
+            //Act
+            Fixture.Node.AddPort();
+            var port=Fixture.Node.GetPort(PortAlignment.Bottom);
+            //Arrange
+            Fixture.Node.RemovePort(port);
+            //Assert
+            Assert.Null(Fixture.Node.GetPort(PortAlignment.Bottom));
         }
 
         [Fact]
@@ -40,10 +51,10 @@ namespace Blazor.Diagrams.Core.Tests.Nodes
         {
             //Act
             //Arrange
-            Fixture.Node.SetPosition(100,200);
+            Fixture.Node.SetPosition(100, 200);
             //Assert
-            Assert.Equal(100,Fixture.Node.Position.X);
-            Assert.Equal(200,Fixture.Node.Position.Y);
+            Assert.Equal(100, Fixture.Node.Position.X);
+            Assert.Equal(200, Fixture.Node.Position.Y);
         }
 
         [Fact]
@@ -52,7 +63,7 @@ namespace Blazor.Diagrams.Core.Tests.Nodes
 
             //Arrange
             Fixture.Node.AddPort();
-            Fixture.Node.AddPort(Core.Models.PortAlignment.BottomLeft);
+            Fixture.Node.AddPort(PortAlignment.BottomLeft);
             //Act
             Fixture.Node.ReinitializePorts();
             //Assert

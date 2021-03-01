@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Blazor.Diagrams.Core.Tests.Groups
+namespace Blazor.Diagrams.Core.Models.Tests.Groups
 {
     public class GroupModelTests
     {
@@ -17,8 +17,6 @@ namespace Blazor.Diagrams.Core.Tests.Groups
         [Fact]
         public void AddPort()
         {
-            //arrange
-
             //act
             Fixture.GroupModel.AddPort();
             //Assert

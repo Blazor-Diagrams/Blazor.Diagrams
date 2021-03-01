@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Core.Models.Tests.Nodes
 {
     public class NodeModelTests
     {
-        public NodeModelTestFixture Fixture;
+        public readonly NodeModelTestFixture Fixture;
         public NodeModelTests()
         {
             Fixture = new NodeModelTestFixture();

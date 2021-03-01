@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Core.Models.Tests.Links
 {
     public class LinkModelTests
     {
-        LinkModelTestFixture Fixture;
+        readonly LinkModelTestFixture Fixture;
 
         public LinkModelTests()
         {

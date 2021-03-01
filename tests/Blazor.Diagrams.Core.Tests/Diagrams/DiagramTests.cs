@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Core.Tests.Diagrams
 {
     public class DiagramTests
     {
-        DiagramTestFixture Fixture;
+        readonly DiagramTestFixture Fixture;
         public DiagramTests()
         {
             Fixture = new DiagramTestFixture();
@@ -273,7 +273,6 @@ namespace Blazor.Diagrams.Core.Tests.Diagrams
             node1.AddPort();
             NodeModel node2 = new NodeModel();
             node2.AddPort();
-            NodeModel node3 = new NodeModel();
             Fixture.Diagram.Nodes.Add(node1);
             Fixture.Diagram.Nodes.Add(node2);
             var link = new LinkModel(node1.GetPort(PortAlignment.Bottom), node2.GetPort(PortAlignment.Bottom));

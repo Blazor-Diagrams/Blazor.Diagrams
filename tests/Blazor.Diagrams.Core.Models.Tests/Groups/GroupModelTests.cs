@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core.Models.Tests.Groups
 {
     public class GroupModelTests
     {
-        GroupModelFixture Fixture;
+        readonly GroupModelFixture Fixture;
         public GroupModelTests()
         {
             Fixture = new GroupModelFixture();

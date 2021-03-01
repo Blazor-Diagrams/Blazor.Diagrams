@@ -4,7 +4,7 @@ namespace Blazor.Diagrams.Core.Models.Tests.Ports
 {
     public class PortModelTests
     {
-        PortModelFixture Fixture;
+        readonly PortModelFixture Fixture;
         public PortModelTests()
         {
             Fixture = new PortModelFixture();

@@ -138,7 +138,7 @@ namespace Blazor.Diagrams.Core
         /// <param name="group">A group instance.</param>
         public void AddGroup(GroupModel group)
         {
-            if (group.Children.Length > 0)
+            if (group.Children.Count > 0)
             {
                 var layers = group.Children.Select(n => n.Layer).Distinct();
                 if (layers.Count() > 1)
@@ -178,7 +178,7 @@ namespace Blazor.Diagrams.Core
 
             // Todo: batch Refresh()
             group.Ungroup();
-            Nodes.Remove(group.Children);
+            Nodes.Remove(group.Children.ToArray());
             Links.Remove(group.AllLinks.ToArray());
             GroupRemoved?.Invoke(group);
             Refresh();

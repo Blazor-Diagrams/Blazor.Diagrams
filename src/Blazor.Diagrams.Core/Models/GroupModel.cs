@@ -8,18 +8,48 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class GroupModel : NodeModel
     {
-        public GroupModel(NodeModel[] children, byte padding = 30)
+        private readonly List<NodeModel> _children;
+
+        public GroupModel(IEnumerable<NodeModel> children, byte padding = 30)
         {
+            _children = new List<NodeModel>();
+
             Size = Size.Zero;
-            Children = children;
             Padding = padding;
-            Initialize();
+            Initialize(children);
         }
 
-        public NodeModel[] Children { get; private set; }
+        public IReadOnlyList<NodeModel> Children => _children;
         public byte Padding { get; }
+        public IEnumerable<BaseLinkModel> HandledLinks => _children.SelectMany(c => c.AllLinks).Distinct();
 
-        public IEnumerable<BaseLinkModel> HandledLinks => Children.SelectMany(c => c.AllLinks).Distinct();
+        public void AddChild(NodeModel child)
+        {
+            _children.Add(child);
+            child.Group = this;
+            child.SizeChanged += OnNodeChanged;
+            child.Moving += OnNodeChanged;
+
+            if (UpdateDimensions())
+            {
+                Refresh();
+            }
+        }
+
+        public void RemoveChild(NodeModel child)
+        {
+            if (!_children.Remove(child))
+                return;
+
+            child.Group = null;
+            child.SizeChanged -= OnNodeChanged;
+            child.Moving -= OnNodeChanged;
+
+            if (UpdateDimensions())
+            {
+                Refresh();
+            }
+        }
 
         public override void SetPosition(double x, double y)
         {
@@ -49,12 +79,15 @@ namespace Blazor.Diagrams.Core.Models
                 child.SizeChanged -= OnNodeChanged;
                 child.Moving -= OnNodeChanged;
             }
+
+            _children.Clear();
         }
 
-        private void Initialize()
+        private void Initialize(IEnumerable<NodeModel> children)
         {
-            foreach (var child in Children)
+            foreach (var child in children)
             {
+                _children.Add(child);
                 child.Group = this;
                 child.SizeChanged += OnNodeChanged;
                 child.Moving += OnNodeChanged;

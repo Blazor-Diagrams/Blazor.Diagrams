@@ -19,7 +19,6 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (!Diagram.GetSelectedModels().Any())
                 return;
 
-            Console.WriteLine(Diagram.Options.Groups.KeyboardShortcut(e));
             if (!Diagram.Options.Groups.KeyboardShortcut(e))
                 return;
 

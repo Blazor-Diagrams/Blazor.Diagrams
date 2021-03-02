@@ -13,9 +13,9 @@ namespace Blazor.Diagrams.Extensions
         }
 
         public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element, 
-            DotNetObjectReference<T> reference, bool isCanvas = false) where T : class
+            DotNetObjectReference<T> reference) where T : class
         {
-            await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.observe", element, reference, element.Id, isCanvas);
+            await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.observe", element, reference, element.Id);
         }
 
         public static async Task UnobserveResizes(this IJSRuntime jsRuntime, ElementReference element)

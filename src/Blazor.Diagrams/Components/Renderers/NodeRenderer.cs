@@ -53,7 +53,6 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) && Node.Size.Height.AlmostEqualTo(size.Height))
                 return;
 
-            Console.WriteLine($"Update! {Node.Size} vs {size}");
             Node.Size = size;
             Node.Refresh();
             Node.ReinitializePorts();

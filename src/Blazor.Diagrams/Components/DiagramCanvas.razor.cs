@@ -45,7 +45,7 @@ namespace Blazor.Diagrams.Components
             if (firstRender)
             {
                 Diagram.Container = await JSRuntime.GetBoundingClientRect(elementReference);
-                await JSRuntime.ObserveResizes(elementReference, _reference, isCanvas: true);
+                await JSRuntime.ObserveResizes(elementReference, _reference);
             }
         }
 

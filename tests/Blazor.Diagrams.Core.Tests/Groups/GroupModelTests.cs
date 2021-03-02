@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Blazor.Diagrams.Core.Models.Tests.Groups
+namespace Blazor.Diagrams.Core.Tests.Groups
 {
     public class GroupModelTests
     {

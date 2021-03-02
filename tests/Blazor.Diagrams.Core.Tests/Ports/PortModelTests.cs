@@ -1,6 +1,7 @@
 ﻿using Xunit;
+using Blazor.Diagrams.Core.Models;
 
-namespace Blazor.Diagrams.Core.Models.Tests.Ports
+namespace Blazor.Diagrams.Core.Tests.Ports
 {
     public class PortModelTests
     {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Blazor.Diagrams.Core.Models;
 
-namespace Blazor.Diagrams.Core.Models.Tests.Nodes
+namespace Blazor.Diagrams.Core.Tests.Nodes
 {
     public class NodeModelTests
     {

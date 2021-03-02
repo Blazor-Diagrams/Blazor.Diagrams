@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Blazor.Diagrams.Core.Models.Tests.Groups
+namespace Blazor.Diagrams.Core.Tests.Groups
 {
     public class GroupModelFixture : IDisposable
     {

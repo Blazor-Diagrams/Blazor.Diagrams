@@ -301,7 +301,7 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        internal void SetContainer(Rectangle newRect)
+        public void SetContainer(Rectangle newRect)
         {
             Container = newRect;
             ContainerChanged?.Invoke();

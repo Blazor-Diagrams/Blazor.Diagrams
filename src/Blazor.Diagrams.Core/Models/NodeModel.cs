@@ -87,7 +87,6 @@ namespace Blazor.Diagrams.Core.Models
         public virtual void UpdatePositionSilently(double deltaX, double deltaY)
         {
             base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
-
             UpdatePortPositions(deltaX, deltaY);
             Refresh();
         }

@@ -3,7 +3,6 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SharedDemo.Demos
 {
@@ -20,7 +19,7 @@ namespace SharedDemo.Demos
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagram.Nodes.Add(node1, node2, NewNode(300, 50));
+            diagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
             diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
         }
 
@@ -32,8 +31,8 @@ namespace SharedDemo.Demos
                 StateHasChanged();
             };
 
-            diagram.Nodes.Added += (nodes) => events.AddRange(nodes.Select(n => $"NodesAdded, NodeId={n.Id}"));
-            diagram.Nodes.Removed += (nodes) => events.AddRange(nodes.Select(n => $"NodesRemoved, NodeId={n.Id}"));
+            diagram.Nodes.Added += (n) => events.Add($"NodesAdded, NodeId={n.Id}");
+            diagram.Nodes.Removed += (n) => events.Add($"NodesRemoved, NodeId={n.Id}");
 
             diagram.SelectionChanged += (m) =>
             {
@@ -41,7 +40,7 @@ namespace SharedDemo.Demos
                 StateHasChanged();
             };
 
-            diagram.Links.Added += (links) => events.AddRange(links.Select(l => $"Links.Added, LinkId={l.Id}"));
+            diagram.Links.Added += (l) => events.Add($"Links.Added, LinkId={l.Id}");
 
             // Todo: replace with TargetPortChanged
             //diagram.LinkAttached += (l) =>
@@ -50,7 +49,7 @@ namespace SharedDemo.Demos
             //    StateHasChanged();
             //};
 
-            diagram.Links.Removed += (links) => events.AddRange(links.Select(l => $"Links.Removed, LinkId={l.Id}"));
+            diagram.Links.Removed += (l) => events.Add($"Links.Removed, LinkId={l.Id}");
 
             diagram.MouseUp += (m, e) =>
             {

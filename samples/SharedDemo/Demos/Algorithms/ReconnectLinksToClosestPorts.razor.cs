@@ -19,7 +19,7 @@ namespace SharedDemo.Demos.Algorithms
             var node3 = NewNode(300, 50);
             diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Right)));
             diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Bottom), node3.GetPort(PortAlignment.Top)));
-            diagram.Nodes.Add(node1, node2, node3);
+            diagram.Nodes.Add(new[] { node1, node2, node3 });
         }
 
 

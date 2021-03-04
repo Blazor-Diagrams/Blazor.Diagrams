@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Extensions;
+using Blazor.Diagrams.Core.Layers;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Models.Core;
@@ -13,7 +14,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 namespace Blazor.Diagrams.Core
 {
-    public class Diagram
+    public class Diagram : Model
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly Dictionary<Type, Type> _componentByModelMapping;
@@ -26,7 +27,6 @@ namespace Blazor.Diagrams.Core
         public event Action<WheelEventArgs>? Wheel;
         public event Action<Model, MouseEventArgs>? MouseClick;
 
-        public event Action? Changed;
         public event Action<SelectableModel>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
         public event Action<GroupModel>? GroupUngrouped;
@@ -43,13 +43,8 @@ namespace Blazor.Diagrams.Core
             _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
-            Nodes = new Layer<NodeModel>();
-            Links = new Layer<BaseLinkModel>();
-
-            Nodes.Added += OnNodesAdded;
-            Nodes.Removed += OnNodesRemoved;
-            Links.Added += OnLinksAdded;
-            Links.Removed += OnLinksRemoved;
+            Nodes = new NodeLayer(this);
+            Links = new LinkLayer(this);
 
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
@@ -61,57 +56,36 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new EventsBehavior(this));
         }
 
-        public Layer<NodeModel> Nodes { get; }
-        public Layer<BaseLinkModel> Links { get; }
+        public NodeLayer Nodes { get; }
+        public LinkLayer Links { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
         public Point Pan { get; internal set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
+        public bool SuspendRefresh { get; set; }
 
-        private void OnNodesAdded(NodeModel[] _) => Refresh();
-
-        private void OnNodesRemoved(NodeModel[] nodes)
+        public override void Refresh()
         {
-            foreach (var node in nodes)
-            {
-                Links.Remove(node.AllLinks.ToArray());
-            }
+            if (SuspendRefresh)
+                return;
 
-            Refresh();
+            base.Refresh();
         }
 
-        private void OnLinksAdded(BaseLinkModel[] links)
+        public void Batch(Action action)
         {
-            foreach (var link in links)
+            if (SuspendRefresh)
             {
-                link.SourcePort.AddLink(link);
-                link.TargetPort?.AddLink(link);
-
-                link.SourcePort.Refresh();
-                link.TargetPort?.Refresh();
-
-                link.SourcePort.Parent.Group?.Refresh();
-                link.TargetPort?.Parent.Group?.Refresh();
+                // If it's already suspended, just execute the action and leave it suspended
+                // It's probably handled by an outer batch
+                action();
+                return;
             }
 
-            Refresh();
-        }
-
-        private void OnLinksRemoved(BaseLinkModel[] links)
-        {
-            foreach (var link in links)
-            {
-                link.SourcePort.RemoveLink(link);
-                link.TargetPort?.RemoveLink(link);
-
-                link.SourcePort.Refresh();
-                link.TargetPort?.Refresh();
-
-                link.SourcePort.Parent.Group?.Refresh();
-                link.TargetPort?.Parent.Group?.Refresh();
-            }
-
+            SuspendRefresh = true;
+            action();
+            SuspendRefresh = false;
             Refresh();
         }
 
@@ -290,8 +264,6 @@ namespace Blazor.Diagrams.Core
             var modelType = model.GetType();
             return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
         }
-
-        public void Refresh() => Changed?.Invoke();
 
         public void ZoomToFit(double margin = 10)
         {

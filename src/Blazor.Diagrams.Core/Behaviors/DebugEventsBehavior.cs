@@ -38,24 +38,24 @@ namespace Blazor.Diagrams.Core.Behaviors
             Console.WriteLine($"GroupUngrouped, Id={obj.Id}");
         }
 
-        private void Links_Removed(BaseLinkModel[] obj)
+        private void Links_Removed(BaseLinkModel obj)
         {
-            Console.WriteLine($"Links.Removed, Links=[{string.Join(", ", obj.Select(x => x.Id))}]");
+            Console.WriteLine($"Links.Removed, Links=[{obj}]");
         }
 
-        private void Links_Added(BaseLinkModel[] obj)
+        private void Links_Added(BaseLinkModel obj)
         {
-            Console.WriteLine($"Links.Added, Links=[{string.Join(", ", obj.Select(x => x.Id))}]");
+            Console.WriteLine($"Links.Added, Links=[{obj}]");
         }
 
-        private void Nodes_Removed(NodeModel[] obj)
+        private void Nodes_Removed(NodeModel obj)
         {
-            Console.WriteLine($"Nodes.Removed, Nodes=[{string.Join(", ", obj.Select(x => x.Id))}]");
+            Console.WriteLine($"Nodes.Removed, Nodes=[{obj}]");
         }
 
-        private void Nodes_Added(NodeModel[] obj)
+        private void Nodes_Added(NodeModel obj)
         {
-            Console.WriteLine($"Nodes.Added, Nodes=[{string.Join(", ", obj.Select(x => x.Id))}]");
+            Console.WriteLine($"Nodes.Added, Nodes=[{obj}]");
         }
 
         private void Diagram_PanChanged()

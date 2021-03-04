@@ -17,7 +17,7 @@ namespace SharedDemo.Demos
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);
             var node3 = NewNode(500, 100);
-            diagram.Nodes.Add(node1, node2, node3);
+            diagram.Nodes.Add(new[] { node1, node2, node3 });
 
             var group = diagram.Group(node1, node2);
             group.AddPort(PortAlignment.Bottom);

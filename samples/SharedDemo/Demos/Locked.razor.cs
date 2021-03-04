@@ -15,7 +15,7 @@ namespace SharedDemo
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagram.Nodes.Add(node1, node2, NewNode(300, 50));
+            diagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
 
             var link = new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
             {

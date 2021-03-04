@@ -22,7 +22,7 @@ namespace SharedDemo.Demos.CustomGroup
             var node2 = NewNode(300, 300);
             var node3 = NewNode(500, 100);
 
-            _diagram.Nodes.Add(node1, node2, node3);
+            _diagram.Nodes.Add(new[] { node1, node2, node3 });
             _diagram.AddGroup(new CustomGroupModel(new[] { node2, node3 }, "Group 1"));
 
             _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));

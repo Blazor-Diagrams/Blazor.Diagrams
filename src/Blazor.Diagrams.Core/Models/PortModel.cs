@@ -45,7 +45,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public T GetParent<T>() where T : NodeModel => (T)Parent;
 
-        public virtual bool CanAttachTo(PortModel port) => port != this && !port.Locked && Parent != port.Parent;
+        public virtual bool CanAttachTo(PortModel port)
+            => port != this && !port.Locked && Parent != port.Parent;
 
         internal void AddLink(BaseLinkModel link) => _links.Add(link);
 

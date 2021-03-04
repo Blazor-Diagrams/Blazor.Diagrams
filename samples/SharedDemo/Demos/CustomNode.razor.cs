@@ -21,7 +21,7 @@ namespace SharedDemo.Demos
             node.AddPort(PortAlignment.Bottom);
             node.AddPort(PortAlignment.Left);
 
-            diagram.Nodes.Add(node, NewNode(100, 100), NewNode(300, 300));
+            diagram.Nodes.Add(new[] { node, NewNode(100, 100), NewNode(300, 300) });
         }
 
         private BotAnswerNode NewNode(double x, double y)

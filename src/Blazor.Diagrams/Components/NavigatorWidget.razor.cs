@@ -45,20 +45,14 @@ namespace Blazor.Diagrams.Components
 
         private void Diagram_Changed() => Refresh();
 
-        private void Diagram_NodesAdded(NodeModel[] nodes)
+        private void Diagram_NodesAdded(NodeModel node)
         {
-            foreach (var node in nodes)
-            {
-                node.Changed += Refresh;
-            }
+            node.Changed += Refresh;
         }
 
-        private void Diagram_NodesRemoved(NodeModel[] nodes)
+        private void Diagram_NodesRemoved(NodeModel node)
         {
-            foreach (var node in nodes)
-            {
-                node.Changed -= Refresh;
-            }
+            node.Changed -= Refresh;
         }
 
         private void Diagram_GroupAdded(GroupModel group) => group.Changed += Refresh;

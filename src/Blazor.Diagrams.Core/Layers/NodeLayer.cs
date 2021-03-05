@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Models;
-using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Layers
@@ -16,6 +15,7 @@ namespace Blazor.Diagrams.Core.Layers
         protected override void OnItemRemoved(NodeModel node)
         {
             Diagram.Links.Remove(node.AllLinks.ToList());
+            node.Group?.RemoveChild(node);
         }
     }
 }

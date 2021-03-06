@@ -91,10 +91,6 @@
     background-color: white;
 }
 
-.diagram-navigator.default .current-view {
-    border: 2px solid #40babd;
-}
-
 .group.default {
     outline: 2px solid black;
     background: rgb(198, 198, 198);

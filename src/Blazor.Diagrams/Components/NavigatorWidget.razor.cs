@@ -10,21 +10,15 @@ namespace Blazor.Diagrams.Components
 {
     public partial class NavigatorWidget : IDisposable
     {
+        [CascadingParameter] public Diagram Diagram { get; set; }
+        [Parameter] public double Width { get; set; }
+        [Parameter] public double Height { get; set; }
+        [Parameter] public string FillColor { get; set; } = "#40babd";
+        [Parameter] public bool DefaultStyle { get; set; }
 
-        [CascadingParameter]
-        public Diagram Diagram { get; set; }
-
-        [Parameter]
-        public double Width { get; set; }
-
-        [Parameter]
-        public double Height { get; set; }
-
-        [Parameter]
-        public bool DefaultStyle { get; set; }
-
-        protected double XFactor { get; set; }
-        protected double YFactor { get; set; }
+        private Point NodePositionAdjustment { get; set; }
+        private double XFactor { get; set; }
+        private double YFactor { get; set; }
 
         protected override void OnParametersSet()
         {
@@ -77,6 +71,7 @@ namespace Blazor.Diagrams.Components
             (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
             AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
 
+            NodePositionAdjustment = new Point(nodesMinX < 0 ? Math.Abs(nodesMinX) : 0, nodesMinY < 0 ? Math.Abs(nodesMinY) : 0);
             XFactor = Width / fullSizeWidth;
             YFactor = Height / fullSizeHeight;
             StateHasChanged();

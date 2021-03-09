@@ -91,7 +91,28 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
         }
 
-        public Rectangle? GetBounds() => Size == null ? null : new Rectangle(Position, Size);
+        public Rectangle? GetBounds(bool includePorts = false)
+        {
+            if (Size == null)
+                return null;
+
+            if (!includePorts)
+                return new Rectangle(Position, Size);
+
+            var leftPort = GetPort(PortAlignment.Left);
+            var topPort = GetPort(PortAlignment.Top);
+            var rightPort = GetPort(PortAlignment.Right);
+            var bottomPort = GetPort(PortAlignment.Bottom);
+
+            var left = leftPort == null ? Position.X : Math.Min(Position.X, leftPort.Position.X);
+            var top = topPort == null ? Position.Y : Math.Min(Position.Y, topPort.Position.Y);
+            var right = rightPort == null ? Position.X + Size!.Width :
+                Math.Max(rightPort.Position.X + rightPort.Size.Width, Position.X + Size!.Width);
+            var bottom = bottomPort == null ? Position.Y + Size!.Height :
+                Math.Max(bottomPort.Position.Y + bottomPort.Size.Height, Position.Y + Size!.Height);
+
+            return new Rectangle(left, top, right, bottom);
+        }
 
         private void UpdatePortPositions(double deltaX, double deltaY)
         {

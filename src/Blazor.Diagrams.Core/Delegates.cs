@@ -4,7 +4,7 @@ using Blazor.Diagrams.Core.Models.Core;
 
 namespace Blazor.Diagrams.Core
 {
-    public delegate Point[] Router(Diagram diagram, BaseLinkModel link, Point from, Point to);
+    public delegate Point[] Router(Diagram diagram, BaseLinkModel link);
 
     public delegate PathGeneratorResult PathGenerator(Diagram diagram, BaseLinkModel link, Point[] route);
 

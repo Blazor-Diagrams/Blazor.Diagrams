@@ -2,9 +2,7 @@
 @{
     var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
     var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
-    var sourcePosition = GetPositionBasedOnAlignment(Link.SourcePort, Link.SourceMarker);
-    var targetPosition = Link.IsAttached ? GetPositionBasedOnAlignment(Link.TargetPort, Link.TargetMarker) : Link.OnGoingPosition;
-    var route = router(Diagram, Link, sourcePosition, targetPosition);
+    var route = router(Diagram, Link);
     var result = pathGenerator(Diagram, Link, route);
     var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
         : (Link.Color ?? Diagram.Options.Links.DefaultColor);

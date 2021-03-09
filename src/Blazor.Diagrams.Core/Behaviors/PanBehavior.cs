@@ -20,7 +20,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void Diagram_MouseDown(Model model, MouseEventArgs e)
         {
-            if (!Diagram.Options.AllowPanning || model != null || e.ShiftKey)
+            if (!Diagram.Options.AllowPanning || model != null || e.ShiftKey || e.Button != (int)MouseEventButton.Left)
                 return;
 
             _initialPan = Diagram.Pan;

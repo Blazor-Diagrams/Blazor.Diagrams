@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Core
 {

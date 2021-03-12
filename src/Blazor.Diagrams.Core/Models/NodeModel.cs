@@ -1,8 +1,7 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
@@ -10,22 +9,29 @@ namespace Blazor.Diagrams.Core.Models
     public class NodeModel : MovableModel
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
+        private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>();
+        private readonly ShapeDefiner _shapeDefiner;
         private Size? _size;
 
         public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
-        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(position)
+        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML,
+            ShapeDefiner? shape = null) : base(position)
         {
             Layer = layer;
+            _shapeDefiner = shape ?? Shapes.Rectangle;
         }
 
-        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML) : base(id, position)
+        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML,
+            ShapeDefiner? shape = null) : base(id, position)
         {
             Layer = layer;
+            _shapeDefiner = shape ?? Shapes.Rectangle;
         }
 
         public RenderLayer Layer { get; }
+        public IShape Shape => _shapeDefiner(this);
         public Size? Size
         {
             get => _size;
@@ -40,7 +46,8 @@ namespace Blazor.Diagrams.Core.Models
         }
         public GroupModel? Group { get; internal set; }
 
-        public ReadOnlyCollection<PortModel> Ports => _ports.AsReadOnly();
+        public IReadOnlyList<PortModel> Ports => _ports;
+        public IReadOnlyList<BaseLinkModel> Links => _links;
         public IEnumerable<BaseLinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
         public PortModel AddPort(PortModel port)
@@ -62,6 +69,14 @@ namespace Blazor.Diagrams.Core.Models
             _ports.ForEach(p => p.RefreshAll());
         }
 
+        public void RefreshLinks()
+        {
+            foreach (var link in Links)
+            {
+                link.Refresh();
+            }
+        }
+
         public void ReinitializePorts()
         {
             foreach (var port in Ports)
@@ -81,6 +96,7 @@ namespace Blazor.Diagrams.Core.Models
 
             UpdatePortPositions(deltaX, deltaY);
             Refresh();
+            RefreshLinks();
             Moving?.Invoke(this);
         }
 
@@ -123,5 +139,9 @@ namespace Blazor.Diagrams.Core.Models
                 port.RefreshLinks();
             }
         }
+
+        internal void AddLink(BaseLinkModel link) => _links.Add(link);
+
+        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

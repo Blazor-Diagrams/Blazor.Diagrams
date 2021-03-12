@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,6 +61,7 @@ namespace Blazor.Diagrams.Core.Models
                 node.UpdatePositionSilently(deltaX, deltaY);
 
             Refresh();
+            RefreshLinks();
         }
 
         public override void UpdatePositionSilently(double deltaX, double deltaY)

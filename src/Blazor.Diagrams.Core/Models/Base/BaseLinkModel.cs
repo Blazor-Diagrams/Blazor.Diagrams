@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
 using System;
 using System.Collections.Generic;
 
@@ -10,28 +10,47 @@ namespace Blazor.Diagrams.Core.Models.Base
         /// An event that fires when the SourcePort changes.
         /// <para>The PortModel instance in the parameters is the old value.</para>
         /// </summary>
-        public event Action<PortModel>? SourcePortChanged;
+        public event Action<PortModel?>? SourcePortChanged;
         /// <summary>
         /// An event that fires when the TargetPort changes.
         /// <para>The PortModel instance in the parameters is the old value.</para>
         /// </summary>
         public event Action<PortModel?>? TargetPortChanged;
 
+        public BaseLinkModel(NodeModel sourceNode, NodeModel? targetNode)
+        {
+            SourceNode = sourceNode;
+            TargetNode = targetNode;
+        }
+
+        public BaseLinkModel(string id, NodeModel sourceNode, NodeModel? targetNode) : base(id)
+        {
+            SourceNode = sourceNode;
+            TargetNode = targetNode;
+        }
+
         public BaseLinkModel(PortModel sourcePort, PortModel? targetPort = null)
         {
             SourcePort = sourcePort;
             TargetPort = targetPort;
+            SourceNode = SourcePort.Parent;
+            TargetNode = targetPort?.Parent;
         }
 
         public BaseLinkModel(string id, PortModel sourcePort, PortModel? targetPort = null) : base(id)
         {
             SourcePort = sourcePort;
             TargetPort = targetPort;
+            SourceNode = SourcePort.Parent;
+            TargetNode = targetPort?.Parent;
         }
 
-        public PortModel SourcePort { get; private set; }
+        public NodeModel SourceNode { get; }
+        public NodeModel? TargetNode { get; }
+        public PortModel? SourcePort { get; private set; }
         public PortModel? TargetPort { get; private set; }
-        public bool IsAttached => TargetPort != null;
+        public bool IsAttached => TargetNode != null || TargetPort != null;
+        public bool IsPortless => SourcePort == null;
         public Point? OnGoingPosition { get; set; }
         public Router? Router { get; set; }
         public PathGenerator? PathGenerator { get; set; }
@@ -47,7 +66,7 @@ namespace Blazor.Diagrams.Core.Models.Base
                 return;
 
             var old = SourcePort;
-            SourcePort.RemoveLink(this);
+            SourcePort?.RemoveLink(this);
             SourcePort = port;
             SourcePort.AddLink(this);
             SourcePortChanged?.Invoke(old);

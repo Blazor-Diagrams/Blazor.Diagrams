@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazor.Diagrams.Core.Models.Core
+namespace Blazor.Diagrams.Core.Geometry
 {
     public class Point
     {

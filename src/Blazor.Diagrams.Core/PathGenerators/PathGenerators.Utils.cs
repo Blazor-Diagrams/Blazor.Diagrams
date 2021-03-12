@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
 using System;
 
 namespace Blazor.Diagrams.Core
@@ -21,6 +21,15 @@ namespace Blazor.Diagrams.Core
             var yChange = markerWidth * Math.Sin(angleInRadians);
             route[^1] = new Point(route[^1].X - xChange, route[^1].Y - yChange);
             return angleInRadians * 180 / Math.PI;
+        }
+
+        public static Point[] ConcatRouteAndSourceAndTarget(Point[] route, Point source, Point target)
+        {
+            var result = new Point[route.Length + 2];
+            result[0] = source;
+            route.CopyTo(result, 1);
+            result[^1] = target;
+            return result;
         }
     }
 }

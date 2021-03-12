@@ -1,5 +1,5 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Models
 {

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Blazor.Diagrams.Core.Models.Core
+namespace Blazor.Diagrams.Core.Geometry
 {
-    public class Rectangle
+    public class Rectangle : IShape
     {
         public static Rectangle Zero { get; } = new Rectangle(0, 0, 0, 0);
 
@@ -51,7 +52,7 @@ namespace Blazor.Diagrams.Core.Models.Core
             var rectY = r.Top;
             var rectW = r.Width;
             var rectH = r.Height;
-            return (rectX < thisX + thisW) && (thisX < (rectX + rectW)) && (rectY < thisY + thisH) && (thisY < rectY + rectH);
+            return rectX < thisX + thisW && thisX < rectX + rectW && rectY < thisY + thisH && thisY < rectY + rectH;
         }
 
         public Rectangle Inflate(double horizontal, double vertical)
@@ -70,6 +71,23 @@ namespace Blazor.Diagrams.Core.Models.Core
 
         public bool ContainsPoint(double x, double y)
             => x >= Left && x <= Right && y >= Top && y <= Bottom;
+
+        public IEnumerable<Point> GetIntersectionsWithLine(Line line)
+        {
+            var borders = new[] {
+                new Line(NorthWest, NorthEast),
+                new Line(NorthEast, SouthEast),
+                new Line(SouthWest, SouthEast),
+                new Line(NorthWest, SouthWest)
+            };
+
+            for (var i = 0; i < borders.Length; i++)
+            {
+                var intersectionPt = borders[i].GetIntersection(line);
+                if (intersectionPt != null)
+                    yield return intersectionPt;
+            }
+        }
 
         public Point Center => new Point(Left + Width / 2, Top + Height / 2);
         public Point NorthEast => new Point(Right, Top);

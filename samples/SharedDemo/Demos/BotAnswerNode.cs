@@ -1,5 +1,5 @@
-﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 
 namespace SharedDemo.Demos
 {

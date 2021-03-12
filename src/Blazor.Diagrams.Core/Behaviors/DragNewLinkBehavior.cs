@@ -1,8 +1,7 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components.Web;
-using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
@@ -40,7 +39,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             var deltaX = (e.ClientX - _initialX) / Diagram.Zoom;
             var deltaY = (e.ClientY - _initialY) / Diagram.Zoom;
-            var sX = _ongoingLink.SourcePort.Position.X + _ongoingLink.SourcePort.Size.Width / 2;
+            var sX = _ongoingLink.SourcePort!.Position.X + _ongoingLink.SourcePort.Size.Width / 2;
             var sY = _ongoingLink.SourcePort.Position.Y + _ongoingLink.SourcePort.Size.Height / 2;
 
             _ongoingLink.OnGoingPosition = new Point(sX + deltaX, sY + deltaY);
@@ -71,13 +70,14 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
             }
 
-            if (!(model is PortModel port) || !_ongoingLink.SourcePort.CanAttachTo(port))
+            if (!(model is PortModel port) || !_ongoingLink.SourcePort!.CanAttachTo(port))
             {
                 Diagram.Links.Remove(_ongoingLink);
                 _ongoingLink = null;
                 return;
             }
 
+            _ongoingLink.OnGoingPosition = null;
             _ongoingLink.SetTargetPort(port);
             _ongoingLink.Refresh();
             port.Refresh();
@@ -91,7 +91,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             foreach (var port in Diagram.Nodes.SelectMany(n => n.Ports))
             {
                 if (_ongoingLink!.OnGoingPosition!.DistanceTo(port.Position) < Diagram.Options.Links.SnappingRadius &&
-                    _ongoingLink.SourcePort.CanAttachTo(port))
+                    _ongoingLink.SourcePort!.CanAttachTo(port))
                     return port;
             }
 

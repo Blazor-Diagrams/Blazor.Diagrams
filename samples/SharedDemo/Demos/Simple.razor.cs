@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 
 namespace SharedDemo
@@ -16,6 +16,12 @@ namespace SharedDemo
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
             diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            diagram.Links.Add(new LinkModel(node1, node2)
+            {
+                SourceMarker = LinkMarker.Arrow,
+                TargetMarker = LinkMarker.Arrow,
+                Segmentable = true
+            });
             diagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
         }
 

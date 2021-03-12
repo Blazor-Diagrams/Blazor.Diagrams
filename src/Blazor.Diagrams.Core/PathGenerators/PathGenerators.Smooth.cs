@@ -1,7 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
 using System;
 
 namespace Blazor.Diagrams.Core
@@ -10,8 +9,10 @@ namespace Blazor.Diagrams.Core
     {
         private const double _margin = 125;
 
-        public static PathGeneratorResult Smooth(Diagram _, BaseLinkModel link, Point[] route)
+        public static PathGeneratorResult Smooth(Diagram _, BaseLinkModel link, Point[] route, Point source, Point target)
         {
+            route = ConcatRouteAndSourceAndTarget(route, source, target);
+
             if (route.Length > 2)
                 return CurveThroughPoints(route, link);
 
@@ -64,11 +65,27 @@ namespace Blazor.Diagrams.Core
 
         private static Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)
         {
-            var cX = (route[0].X + route[1].X) / 2;
-            var cY = (route[0].Y + route[1].Y) / 2;
-            var curvePointA = GetCurvePoint(route[0].X, route[0].Y, cX, cY, link.SourcePort.Alignment);
-            var curvePointB = GetCurvePoint(route[1].X, route[1].Y, cX, cY, link.TargetPort?.Alignment);
-            return new[] { route[0], curvePointA, curvePointB, route[1] };
+            if (link.IsPortless)
+            {
+                if (Math.Abs(route[0].X - route[1].X) >= Math.Abs(route[0].Y - route[1].Y))
+                {
+                    var cX = (route[0].X + route[1].X) / 2;
+                    return new[] { route[0], new Point(cX, route[0].Y), new Point(cX, route[1].Y), route[1] };
+                }
+                else
+                {
+                    var cY = (route[0].Y + route[1].Y) / 2;
+                    return new[] { route[0], new Point(route[0].X, cY), new Point(route[1].X, cY), route[1] };
+                }
+            }
+            else
+            {
+                var cX = (route[0].X + route[1].X) / 2;
+                var cY = (route[0].Y + route[1].Y) / 2;
+                var curvePointA = GetCurvePoint(route[0].X, route[0].Y, cX, cY, link.SourcePort?.Alignment);
+                var curvePointB = GetCurvePoint(route[1].X, route[1].Y, cX, cY, link.TargetPort?.Alignment);
+                return new[] { route[0], curvePointA, curvePointB, route[1] };
+            }
         }
 
         private static Point GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)

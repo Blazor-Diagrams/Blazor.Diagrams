@@ -5,6 +5,7 @@ using System.Globalization;
 
 namespace Blazor.Diagrams.Core.Extensions
 {
+    [Obsolete]
     public static class BaseLinkModelExtensions
     {
         private const double _margin = 125;

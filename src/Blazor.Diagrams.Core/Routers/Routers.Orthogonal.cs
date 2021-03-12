@@ -1,7 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +15,10 @@ namespace Blazor.Diagrams.Core
     {
         public static Point[] Orthogonal(Diagram _, BaseLinkModel link)
         {
-            if (link.TargetPort == null || link.SourcePort.Parent.Size == null || link.TargetPort.Parent.Size == null)
+            if (link.IsPortless)
+                throw new Exception("Orthogonal router doesn't work with portless links yet");
+
+            if (link.TargetPort == null || link.SourcePort!.Parent.Size == null || link.TargetPort.Parent.Size == null)
                 return Normal(_, link);
 
             var shapeMargin = 10;
@@ -29,8 +32,8 @@ namespace Blazor.Diagrams.Core
             var sideBVertical = IsVerticalSide(sideB);
             var originA = GetPortPositionBasedOnAlignment(link.SourcePort);
             var originB = GetPortPositionBasedOnAlignment(link.TargetPort);
-            var shapeA = link.SourcePort.Parent.GetBounds(includePorts: true);
-            var shapeB = link.TargetPort.Parent.GetBounds(includePorts: true);
+            var shapeA = link.SourcePort.Parent.GetBounds(includePorts: true)!;
+            var shapeB = link.TargetPort.Parent.GetBounds(includePorts: true)!;
             var inflatedA = shapeA.Inflate(shapeMargin, shapeMargin);
             var inflatedB = shapeB.Inflate(shapeMargin, shapeMargin);
 

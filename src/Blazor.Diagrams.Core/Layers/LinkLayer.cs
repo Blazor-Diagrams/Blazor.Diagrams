@@ -8,26 +8,42 @@ namespace Blazor.Diagrams.Core.Layers
 
         protected override void OnItemAdded(BaseLinkModel link)
         {
-            link.SourcePort.AddLink(link);
-            link.TargetPort?.AddLink(link);
+            if (!link.IsPortless)
+            {
+                link.SourcePort!.AddLink(link);
+                link.TargetPort?.AddLink(link);
 
-            link.SourcePort.Refresh();
-            link.TargetPort?.Refresh();
+                link.SourcePort.Refresh();
+                link.TargetPort?.Refresh();
+            }
+            else
+            {
+                link.SourceNode.AddLink(link);
+                link.TargetNode?.AddLink(link);
+            }
 
-            link.SourcePort.Parent.Group?.Refresh();
-            link.TargetPort?.Parent.Group?.Refresh();
+            link.SourceNode.Group?.Refresh();
+            link.TargetNode?.Group?.Refresh();
         }
 
         protected override void OnItemRemoved(BaseLinkModel link)
         {
-            link.SourcePort.RemoveLink(link);
-            link.TargetPort?.RemoveLink(link);
+            if (!link.IsPortless)
+            {
+                link.SourcePort!.RemoveLink(link);
+                link.TargetPort?.RemoveLink(link);
 
-            link.SourcePort.Refresh();
-            link.TargetPort?.Refresh();
+                link.SourcePort.Refresh();
+                link.TargetPort?.Refresh();
+            }
+            else
+            {
+                link.SourceNode.AddLink(link);
+                link.TargetNode?.AddLink(link);
+            }
 
-            link.SourcePort.Parent.Group?.Refresh();
-            link.TargetPort?.Parent.Group?.Refresh();
+            link.SourceNode.Group?.Refresh();
+            link.TargetNode?.Group?.Refresh();
         }
     }
 }

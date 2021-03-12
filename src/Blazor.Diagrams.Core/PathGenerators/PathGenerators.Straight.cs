@@ -1,14 +1,14 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models.Base;
 using System;
 
 namespace Blazor.Diagrams.Core
 {
     public static partial class PathGenerators
     {
-        public static PathGeneratorResult Straight(Diagram _, BaseLinkModel link, Point[] route)
+        public static PathGeneratorResult Straight(Diagram _, BaseLinkModel link, Point[] route, Point source, Point target)
         {
-            route = (Point[])route.Clone();
+            route = ConcatRouteAndSourceAndTarget(route, source, target);
             double? sourceAngle = null;
             double? targetAngle = null;
 

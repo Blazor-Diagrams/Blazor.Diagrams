@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models.Core;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

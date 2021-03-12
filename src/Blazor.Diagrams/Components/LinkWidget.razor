@@ -1,9 +1,11 @@
 ﻿@using SvgPathProperties;
+
 @{
     var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
     var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
     var route = router(Diagram, Link);
-    var result = pathGenerator(Diagram, Link, route);
+    (var source, var target) = FindConnectionPoints(route);
+    var result = pathGenerator(Diagram, Link, route, source, target);
     var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
         : (Link.Color ?? Diagram.Options.Links.DefaultColor);
     var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();

@@ -1,8 +1,8 @@
 ﻿using Blazor.Diagrams.Algorithms;
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace SharedDemo.Demos.Algorithms
 {

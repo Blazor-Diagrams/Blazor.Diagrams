@@ -15,6 +15,10 @@ namespace Blazor.Diagrams.Core.Geometry
         public double X { get; }
         public double Y { get; }
 
+        public double Dot(Point other) => X * other.X + Y * other.Y;
+        public Point Lerp(Point other, double t)
+            => new Point(X * (1.0 - t) + other.X * t, Y * (1.0 - t) + other.Y * t);
+
         // Maybe just make Points mutable?
         public Point Add(double value) => new Point(X + value, Y + value);
         public Point Add(double x, double y) => new Point(X + x, Y + y);

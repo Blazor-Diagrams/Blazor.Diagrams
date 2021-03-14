@@ -5,16 +5,16 @@ namespace Blazor.Diagrams.Core.Geometry
 {
     public class Ellipse : IShape
     {
-        public Ellipse(double x, double y, double rx, double ry)
+        public Ellipse(double cx, double cy, double rx, double ry)
         {
-            X = x;
-            Y = y;
+            Cx = cx;
+            Cy = cy;
             Rx = rx;
             Ry = ry;
         }
 
-        public double X { get; }
-        public double Y { get; }
+        public double Cx { get; }
+        public double Cy { get; }
         public double Rx { get; }
         public double Ry { get; }
 
@@ -23,7 +23,7 @@ namespace Blazor.Diagrams.Core.Geometry
             var a1 = line.Start;
             var a2 = line.End;
             var dir = new Point(line.End.X - line.Start.X, line.End.Y - line.Start.Y);
-            var diff = a1.Substract(X, Y);
+            var diff = a1.Substract(Cx, Cy);
             var mDir = new Point(dir.X / (Rx * Rx), dir.Y / (Ry * Ry));
             var mDiff = new Point(diff.X / (Rx * Rx), diff.Y / (Ry * Ry));
 

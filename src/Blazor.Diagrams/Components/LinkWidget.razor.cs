@@ -42,8 +42,8 @@ namespace Blazor.Diagrams.Components
                 var secondPt = route.Length > 0 ? route[0] : sourceCenter;
                 var sourceLine = new Line(firstPt, sourceCenter);
                 var targetLine = new Line(secondPt, targetCenter);
-                var sourceIntersections = Link.SourceNode.Shape.GetIntersectionsWithLine(sourceLine);
-                var targetIntersections = Link.TargetNode.Shape.GetIntersectionsWithLine(targetLine);
+                var sourceIntersections = Link.SourceNode.GetShape().GetIntersectionsWithLine(sourceLine);
+                var targetIntersections = Link.TargetNode.GetShape().GetIntersectionsWithLine(targetLine);
                 var sourceIntersection = GetClosestPointTo(sourceIntersections, firstPt);
                 var targetIntersection = GetClosestPointTo(targetIntersections, secondPt);
                 return (sourceIntersection ?? sourceCenter, targetIntersection ?? targetCenter);

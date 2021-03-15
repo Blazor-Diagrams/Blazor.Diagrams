@@ -10,7 +10,6 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
         private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>();
-        private readonly ShapeDefiner _shapeDefiner;
         private Size? _size;
 
         public event Action<NodeModel>? SizeChanged;
@@ -20,18 +19,18 @@ namespace Blazor.Diagrams.Core.Models
             ShapeDefiner? shape = null) : base(position)
         {
             Layer = layer;
-            _shapeDefiner = shape ?? Shapes.Rectangle;
+            ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
         public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML,
             ShapeDefiner? shape = null) : base(id, position)
         {
             Layer = layer;
-            _shapeDefiner = shape ?? Shapes.Rectangle;
+            ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
         public RenderLayer Layer { get; }
-        public IShape Shape => _shapeDefiner(this);
+        public ShapeDefiner ShapeDefiner { get; }
         public Size? Size
         {
             get => _size;
@@ -129,6 +128,8 @@ namespace Blazor.Diagrams.Core.Models
 
             return new Rectangle(left, top, right, bottom);
         }
+
+        public IShape GetShape() => ShapeDefiner(this);
 
         private void UpdatePortPositions(double deltaX, double deltaY)
         {

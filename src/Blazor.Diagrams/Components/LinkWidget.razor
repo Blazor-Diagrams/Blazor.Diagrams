@@ -5,6 +5,9 @@
     var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
     var route = router(Diagram, Link);
     (var source, var target) = FindConnectionPoints(route);
+    if (source == null || target == null)
+        return;
+
     var result = pathGenerator(Diagram, Link, route, source, target);
     var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
         : (Link.Color ?? Diagram.Options.Links.DefaultColor);

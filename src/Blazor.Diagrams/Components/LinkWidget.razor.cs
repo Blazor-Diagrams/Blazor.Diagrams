@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Blazor.Diagrams.Core.Geometry;
 using System.Collections.Generic;
+using System;
 
 namespace Blazor.Diagrams.Components
 {
@@ -30,11 +31,8 @@ namespace Blazor.Diagrams.Components
         {
             if (Link.SourcePort == null) // Portless
             {
-                var source = Point.Zero;
-                var target = Point.Zero;
-
                 if (Link.SourceNode.Size == null || Link.TargetNode?.Size == null)
-                    return (source, target);
+                    return (null, null);
 
                 var sourceCenter = Link.SourceNode.GetBounds().Center;
                 var targetCenter = Link.TargetNode?.GetBounds().Center ?? Link.OnGoingPosition;
@@ -50,6 +48,9 @@ namespace Blazor.Diagrams.Components
             }
             else
             {
+                if (!Link.SourcePort.Initialized || Link.TargetPort?.Initialized == false)
+                    return (null, null);
+
                 return (Link.SourcePort.MiddlePosition, Link.TargetPort?.MiddlePosition ?? Link.OnGoingPosition);
             }
         }

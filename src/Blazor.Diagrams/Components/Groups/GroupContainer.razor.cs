@@ -56,6 +56,7 @@ namespace Blazor.Diagrams.Components.Groups
             if (_lastSize == null || !_lastSize.Equals(Group.Size))
             {
                 Group.ReinitializePorts();
+                Group.RefreshLinks();
                 _lastSize = Group.Size;
             }
         }

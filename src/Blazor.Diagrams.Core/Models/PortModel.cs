@@ -33,7 +33,10 @@ namespace Blazor.Diagrams.Core.Models
         public Point MiddlePosition => new Point(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
         public Size Size { get; set; }
         public ReadOnlyCollection<BaseLinkModel> Links => _links.AsReadOnly();
-        public bool Initialized { get; internal set; }
+        /// <summary>
+        /// If set to false, a call to Refresh() will force the port to update its position/size using JS
+        /// </summary>
+        public bool Initialized { get; set; }
 
         public void RefreshAll()
         {

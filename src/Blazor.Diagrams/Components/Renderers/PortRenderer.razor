@@ -1,9 +1,0 @@
-﻿<div class="port @Port.Alignment.ToString().ToLower() @(Port.Links.Count > 0 ? "has-links" : "") @Class"
-     data-port-id="@Port.Id"
-     @ref="_element"
-     @onmousedown="OnMouseDown"
-     @onmousedown:stopPropagation
-     @onmouseup="OnMouseUp"
-     @onmouseup:stopPropagation>
-    @ChildContent
-</div>

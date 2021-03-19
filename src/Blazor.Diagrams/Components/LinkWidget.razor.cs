@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Blazor.Diagrams.Core.Geometry;
 using System.Collections.Generic;
-using System;
 
 namespace Blazor.Diagrams.Components
 {

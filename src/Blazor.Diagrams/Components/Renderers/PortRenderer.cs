@@ -7,10 +7,11 @@ using System;
 using System.Threading.Tasks;
 using Blazor.Diagrams.Extensions;
 using Blazor.Diagrams.Core.Geometry;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
-    public partial class PortRenderer : IDisposable
+    public class PortRenderer : ComponentBase, IDisposable
     {
         private bool _shouldRender = true;
         private ElementReference _element;
@@ -43,6 +44,20 @@ namespace Blazor.Diagrams.Components.Renderers
         }
 
         protected override bool ShouldRender() => _shouldRender;
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            builder.OpenElement(0, Port.Parent.Layer == RenderLayer.HTML ? "div" : "g");
+            builder.AddAttribute(1, "class", "port" + " " + (Port.Alignment.ToString().ToLower()) + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " + (Class));
+            builder.AddAttribute(2, "data-port-id", Port.Id);
+            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
+            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
+            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
+            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
+            builder.AddElementReferenceCapture(7, (__value) => { _element = __value; });
+            builder.AddContent(8, ChildContent);
+            builder.CloseElement();
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

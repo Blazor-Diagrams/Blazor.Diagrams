@@ -20,10 +20,25 @@ namespace Blazor.Diagrams.Components
             if (!Link.Segmentable)
                 return;
 
-            var rPt = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
+            var vertex = CreateVertex(e.ClientX, e.ClientY, index);
+            Diagram.OnMouseDown(vertex, e);
+        }
+
+        private void OnTouchStart(TouchEventArgs e, int index)
+        {
+            if (!Link.Segmentable)
+                return;
+
+            var vertex = CreateVertex(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY, index);
+            Diagram.OnTouchStart(vertex, e);
+        }
+
+        private LinkVertexModel CreateVertex(double clientX, double clientY, int index)
+        {
+            var rPt = Diagram.GetRelativeMousePoint(clientX, clientY);
             var vertex = new LinkVertexModel(Link, rPt);
             Link.Vertices.Insert(index, vertex);
-            Diagram.OnMouseDown(vertex, e);
+            return vertex;
         }
 
         private (Point source, Point target) FindConnectionPoints(Point[] route)

@@ -73,7 +73,11 @@ namespace Blazor.Diagrams.Components
 
         private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e);
 
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e);
+
         private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e);
+
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e);
 
         private void OnDiagramChanged()
         {

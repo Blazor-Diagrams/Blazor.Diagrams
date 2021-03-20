@@ -48,6 +48,10 @@ namespace Blazor.Diagrams.Components
 
         private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Vertex, e);
 
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Vertex, e);
+
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Vertex, e);
+
         private void OnDoubleClick(MouseEventArgs e)
         {
             Vertex.Parent.Vertices.Remove(Vertex);

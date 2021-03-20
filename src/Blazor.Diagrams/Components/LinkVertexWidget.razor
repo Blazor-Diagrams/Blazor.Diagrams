@@ -7,4 +7,9 @@
         @onmousedown="OnMouseDown"
         @onmousedown:stopPropagation
         @onmouseup="OnMouseUp"
-        @onmouseup:stopPropagation />
+        @onmouseup:stopPropagation
+        @ontouchstart="OnTouchStart"
+        @ontouchstart:stopPropagation
+        @ontouchend="OnTouchEnd"
+        @ontouchend:preventDefault
+        @ontouchend:stopPropagation />

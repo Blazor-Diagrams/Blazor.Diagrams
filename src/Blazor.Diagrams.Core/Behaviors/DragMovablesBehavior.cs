@@ -14,12 +14,29 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
-            Diagram.MouseDown += Diagram_MouseDown;
-            Diagram.MouseMove += Diagram_MouseMove;
-            Diagram.MouseUp += Diagram_MouseUp;
+            Diagram.MouseDown += OnMouseDown;
+            Diagram.MouseMove += OnMouseMove;
+            Diagram.MouseUp += OnMouseUp;
+            Diagram.TouchStart += OnTouchStart;
+            Diagram.TouchMove += OnTouchMove;
+            Diagram.TouchEnd += OnTouchEnd;
         }
 
-        private void Diagram_MouseDown(Model model, MouseEventArgs e)
+        private void OnTouchStart(Model model, TouchEventArgs e)
+            => Start(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+
+        private void OnTouchMove(Model model, TouchEventArgs e)
+            => Move(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+
+        private void OnTouchEnd(Model model, TouchEventArgs e) => End();
+
+        private void OnMouseDown(Model model, MouseEventArgs e) => Start(model, e.ClientX, e.ClientY);
+
+        private void OnMouseMove(Model model, MouseEventArgs e) => Move(e.ClientX, e.ClientY);
+
+        private void OnMouseUp(Model model, MouseEventArgs e) => End();
+
+        private void Start(Model model, double clientX, double clientY)
         {
             if (!(model is MovableModel))
                 return;
@@ -30,17 +47,17 @@ namespace Blazor.Diagrams.Core.Behaviors
                 .Select(m => (m as MovableModel)!.Position)
                 .ToArray();
 
-            _lastClientX = e.ClientX;
-            _lastClientY = e.ClientY;
+            _lastClientX = clientX;
+            _lastClientY = clientY;
         }
 
-        private void Diagram_MouseMove(Model model, MouseEventArgs e)
+        private void Move(double clientX, double clientY)
         {
             if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
                 return;
 
-            var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
-            var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
+            var deltaX = (clientX - _lastClientX.Value) / Diagram.Zoom;
+            var deltaY = (clientY - _lastClientY.Value) / Diagram.Zoom;
             var i = 0;
 
             foreach (var sm in Diagram.GetSelectedModels())
@@ -56,6 +73,13 @@ namespace Blazor.Diagrams.Core.Behaviors
             }
         }
 
+        private void End()
+        {
+            _initialPositions = null;
+            _lastClientX = null;
+            _lastClientY = null;
+        }
+
         private double ApplyGridSize(double n)
         {
             if (Diagram.Options.GridSize == null)
@@ -69,18 +93,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             return gridSize * Math.Floor((n + gridSize / 2) / gridSize);
         }
 
-        private void Diagram_MouseUp(Model model, MouseEventArgs e)
-        {
-            _initialPositions = null;
-            _lastClientX = null;
-            _lastClientY = null;
-        }
-
         public override void Dispose()
         {
-            Diagram.MouseDown -= Diagram_MouseDown;
-            Diagram.MouseMove -= Diagram_MouseMove;
-            Diagram.MouseUp -= Diagram_MouseUp;
+            Diagram.MouseDown -= OnMouseDown;
+            Diagram.MouseMove -= OnMouseMove;
+            Diagram.MouseUp -= OnMouseUp;
+            Diagram.TouchStart -= OnTouchStart;
+            Diagram.TouchMove -= OnTouchMove;
+            Diagram.TouchEnd -= OnTouchEnd;
         }
     }
 }

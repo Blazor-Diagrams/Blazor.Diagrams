@@ -32,7 +32,9 @@
               stroke-opacity="0"
               fill="none"
               @onmousedown="e => OnMouseDown(e, index)"
-              @onmousedown:stopPropagation="@Link.Segmentable" />
+              @onmousedown:stopPropagation="@Link.Segmentable"
+              @ontouchstart="e => OnTouchStart(e, index)"
+              @ontouchstart:stopPropagation="@Link.Segmentable"/>
     }
 }
 

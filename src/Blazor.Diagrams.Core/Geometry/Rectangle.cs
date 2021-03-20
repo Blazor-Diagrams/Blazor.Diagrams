@@ -99,6 +99,12 @@ namespace Blazor.Diagrams.Core.Geometry
         public Point South => new Point(Left + Width / 2, Bottom);
         public Point West => new Point(Left, Top + Height / 2);
 
+        public bool Equals(Rectangle? other)
+        {
+            return other != null && Left == other.Left && Right == other.Right && Top == other.Top &&
+                Bottom == other.Bottom && Width == other.Width && Height == other.Height;
+        }
+
         public override string ToString()
                     => $"Rectangle(width={Width}, height={Height}, top={Top}, right={Right}, bottom={Bottom}, left={Left})";
     }

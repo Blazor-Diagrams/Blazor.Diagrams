@@ -26,6 +26,9 @@ namespace Blazor.Diagrams.Core
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
         public event Action<Model, MouseEventArgs>? MouseClick;
+        public event Action<Model, TouchEventArgs>? TouchStart;
+        public event Action<Model, TouchEventArgs>? TouchMove;
+        public event Action<Model, TouchEventArgs>? TouchEnd;
 
         public event Action<SelectableModel>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
@@ -335,5 +338,11 @@ namespace Blazor.Diagrams.Core
         internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
 
         internal void OnMouseClick(Model model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
+
+        internal void OnTouchStart(Model model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
+
+        internal void OnTouchMove(Model model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
+
+        internal void OnTouchEnd(Model model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
     }
 }

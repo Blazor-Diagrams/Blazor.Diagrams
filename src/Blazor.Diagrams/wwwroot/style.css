@@ -6,6 +6,7 @@
     overflow: hidden;
     cursor: -webkit-grab;
     cursor: grab;
+    touch-action: none;
 }
 
 .diagram-svg-layer, .diagram-html-layer {

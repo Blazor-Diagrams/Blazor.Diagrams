@@ -14,31 +14,54 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public DragNewLinkBehavior(Diagram diagram) : base(diagram)
         {
-            Diagram.MouseDown += Diagram_MouseDown;
-            Diagram.MouseMove += Diagram_MouseMove;
-            Diagram.MouseUp += Diagram_MouseUp;
+            Diagram.MouseDown += OnMouseDown;
+            Diagram.MouseMove += OnMouseMove;
+            Diagram.MouseUp += OnMouseUp;
+            Diagram.TouchStart += OnTouchStart;
+            Diagram.TouchMove += OnTouchMove;
+            Diagram.TouchEnd += OnTouchEnd;
         }
 
-        private void Diagram_MouseDown(Model model, MouseEventArgs e)
+        private void OnTouchStart(Model model, TouchEventArgs e)
+            => Start(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+
+        private void OnTouchMove(Model model, TouchEventArgs e)
+            => Move(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+
+        private void OnTouchEnd(Model model, TouchEventArgs e) => End(model);
+
+        private void OnMouseDown(Model model, MouseEventArgs e)
         {
-            if (!(model is PortModel port) || port.Locked || e.Button != (int)MouseEventButton.Left)
+            if (e.Button != (int)MouseEventButton.Left)
                 return;
 
-            _initialX = e.ClientX;
-            _initialY = e.ClientY;
+            Start(model, e.ClientX, e.ClientY);
+        }
+
+        private void OnMouseMove(Model model, MouseEventArgs e) => Move(model, e.ClientX, e.ClientY);
+
+        private void OnMouseUp(Model model, MouseEventArgs e) => End(model);
+
+        private void Start(Model model, double clientX, double clientY)
+        {
+            if (!(model is PortModel port) || port.Locked)
+                return;
+
+            _initialX = clientX;
+            _initialY = clientY;
             _ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
             _ongoingLink.OnGoingPosition = new Point(port.Position.X + port.Size.Width / 2,
                 port.Position.Y + port.Size.Height / 2);
             Diagram.Links.Add(_ongoingLink);
         }
 
-        private void Diagram_MouseMove(Model model, MouseEventArgs e)
+        private void Move(Model model, double clientX, double clientY)
         {
             if (_ongoingLink == null || model != null)
                 return;
 
-            var deltaX = (e.ClientX - _initialX) / Diagram.Zoom;
-            var deltaY = (e.ClientY - _initialY) / Diagram.Zoom;
+            var deltaX = (clientX - _initialX) / Diagram.Zoom;
+            var deltaY = (clientY - _initialY) / Diagram.Zoom;
             var sX = _ongoingLink.SourcePort!.Position.X + _ongoingLink.SourcePort.Size.Width / 2;
             var sY = _ongoingLink.SourcePort.Position.Y + _ongoingLink.SourcePort.Size.Height / 2;
 
@@ -59,7 +82,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             _ongoingLink.Refresh();
         }
 
-        private void Diagram_MouseUp(Model model, MouseEventArgs e)
+        private void End(Model model)
         {
             if (_ongoingLink == null)
                 return;
@@ -100,9 +123,12 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= Diagram_MouseDown;
-            Diagram.MouseMove -= Diagram_MouseMove;
-            Diagram.MouseUp -= Diagram_MouseUp;
+            Diagram.MouseDown -= OnMouseDown;
+            Diagram.MouseMove -= OnMouseMove;
+            Diagram.MouseUp -= OnMouseUp;
+            Diagram.TouchStart -= OnTouchStart;
+            Diagram.TouchMove -= OnTouchMove;
+            Diagram.TouchEnd -= OnTouchEnd;
         }
     }
 }

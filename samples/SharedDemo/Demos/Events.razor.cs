@@ -42,18 +42,29 @@ namespace SharedDemo.Demos
 
             diagram.Links.Added += (l) => events.Add($"Links.Added, LinkId={l.Id}");
 
-            // Todo: replace with TargetPortChanged
-            //diagram.LinkAttached += (l) =>
-            //{
-            //    events.Add($"LinkAttached, LinkId={l.Id}");
-            //    StateHasChanged();
-            //};
-
             diagram.Links.Removed += (l) => events.Add($"Links.Removed, LinkId={l.Id}");
+
+            diagram.MouseDown += (m, e) =>
+            {
+                events.Add($"MouseDown, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
 
             diagram.MouseUp += (m, e) =>
             {
                 events.Add($"MouseUp, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
+
+            diagram.TouchStart += (m, e) =>
+            {
+                events.Add($"TouchStart, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
+
+            diagram.TouchEnd += (m, e) =>
+            {
+                events.Add($"TouchEnd, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
 

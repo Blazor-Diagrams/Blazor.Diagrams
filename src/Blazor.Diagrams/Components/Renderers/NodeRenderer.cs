@@ -107,9 +107,14 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddEventStopPropagationAttribute(5, "onmousedown", true);
             builder.AddAttribute(6, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
             builder.AddEventStopPropagationAttribute(7, "onmouseup", true);
-            builder.AddElementReferenceCapture(8, value => _element = value);
-            builder.OpenComponent(9, componentType);
-            builder.AddAttribute(10, "Node", Node);
+            builder.AddAttribute(8, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
+            builder.AddEventStopPropagationAttribute(9, "ontouchstart", true);
+            builder.AddAttribute(10, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
+            builder.AddEventStopPropagationAttribute(11, "ontouchend", true);
+            builder.AddEventPreventDefaultAttribute(12, "ontouchend", true);
+            builder.AddElementReferenceCapture(13, value => _element = value);
+            builder.OpenComponent(14, componentType);
+            builder.AddAttribute(15, "Node", Node);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -165,5 +170,9 @@ namespace Blazor.Diagrams.Components.Renderers
         private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e);
 
         private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e);
+
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Node, e);
+
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Node, e);
     }
 }

@@ -7,10 +7,15 @@ namespace Blazor.Diagrams.Core.Behaviors
     {
         public SelectionBehavior(Diagram diagram) : base(diagram)
         {
-            Diagram.MouseDown += Diagram_MouseDown;
+            Diagram.MouseDown += OnMouseDown;
+            Diagram.TouchStart += OnTouchStart;
         }
 
-        private void Diagram_MouseDown(Model model, MouseEventArgs e)
+        private void OnTouchStart(Model model, TouchEventArgs e) => Process(model, e.CtrlKey);
+
+        private void OnMouseDown(Model model, MouseEventArgs e) => Process(model, e.CtrlKey);
+
+        private void Process(Model model, bool ctrlKey)
         {
             if (model == null)
             {
@@ -18,20 +23,21 @@ namespace Blazor.Diagrams.Core.Behaviors
             }
             else if (model is SelectableModel sm)
             {
-                if (e.CtrlKey && sm.Selected)
+                if (ctrlKey && sm.Selected)
                 {
                     Diagram.UnselectModel(sm);
                 }
                 else if (!sm.Selected)
                 {
-                    Diagram.SelectModel(sm, !e.CtrlKey || !Diagram.Options.AllowMultiSelection);
+                    Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
                 }
             }
         }
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= Diagram_MouseDown;
+            Diagram.MouseDown -= OnMouseDown;
+            Diagram.TouchStart -= OnTouchStart;
         }
     }
 }

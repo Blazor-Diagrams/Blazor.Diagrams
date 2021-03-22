@@ -83,17 +83,10 @@ namespace Blazor.Diagrams.Core
             var origin = ExtrudeCp(originA, shapeMargin, sideA);
             var destination = ExtrudeCp(originB, shapeMargin, sideB);
 
-            var start = originA;
-            var end = originB;
-
             var path = ShortestPath(graph, origin, destination);
             if (path.Length > 0)
             {
-                var result = new List<Point>();
-                result.Add(start);
-                result.AddRange(SimplifyPath(path));
-                result.Add(end);
-                return result.ToArray();
+                return SimplifyPath(path);
             }
             else
             {

@@ -65,7 +65,36 @@ namespace Blazor.Diagrams.Components
                 if (!Link.SourcePort.Initialized || Link.TargetPort?.Initialized == false)
                     return (null, null);
 
-                return (Link.SourcePort.MiddlePosition, Link.TargetPort?.MiddlePosition ?? Link.OnGoingPosition);
+                var source = GetPortPositionBasedOnAlignment(Link.SourcePort, Link.SourceMarker);
+                var target = GetPortPositionBasedOnAlignment(Link.TargetPort, Link.TargetMarker);
+                return (source, target ?? Link.OnGoingPosition);
+            }
+        }
+
+        private Point GetPortPositionBasedOnAlignment(PortModel port, LinkMarker marker)
+        {
+            if (marker == null)
+                return port.MiddlePosition;
+
+            var pt = port.Position;
+            switch (port.Alignment)
+            {
+                case PortAlignment.Top:
+                    return new Point(pt.X + port.Size.Width / 2, pt.Y);
+                case PortAlignment.TopRight:
+                    return new Point(pt.X + port.Size.Width, pt.Y);
+                case PortAlignment.Right:
+                    return new Point(pt.X + port.Size.Width, pt.Y + port.Size.Height / 2);
+                case PortAlignment.BottomRight:
+                    return new Point(pt.X + port.Size.Width, pt.Y + port.Size.Height);
+                case PortAlignment.Bottom:
+                    return new Point(pt.X + port.Size.Width / 2, pt.Y + port.Size.Height);
+                case PortAlignment.BottomLeft:
+                    return new Point(pt.X, pt.Y + port.Size.Height);
+                case PortAlignment.Left:
+                    return new Point(pt.X, pt.Y + port.Size.Height / 2);
+                default:
+                    return pt;
             }
         }
 

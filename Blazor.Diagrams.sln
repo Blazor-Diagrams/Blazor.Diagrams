@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CEEAE4C2-CE68-4FC3-9E0F-D4781B91F7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Diagrams.Core.Tests", "tests\Blazor.Diagrams.Core.Tests\Blazor.Diagrams.Core.Tests.csproj", "{36B4DCCD-45AB-4338-9224-DDAF386A23A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Core.Tests", "tests\Blazor.Diagrams.Core.Tests\Blazor.Diagrams.Core.Tests.csproj", "{36B4DCCD-45AB-4338-9224-DDAF386A23A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

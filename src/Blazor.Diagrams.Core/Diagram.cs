@@ -153,12 +153,13 @@ namespace Blazor.Diagrams.Core
             if (!_groups.Remove(group))
                 return;
 
-            // Todo: batch Refresh()
-            group.Ungroup();
-            Nodes.Remove(group.Children.ToArray());
-            Links.Remove(group.AllLinks.ToArray());
-            GroupRemoved?.Invoke(group);
-            Refresh();
+            Batch(() =>
+            {
+                Nodes.Remove(group.Children.ToArray());
+                Links.Remove(group.AllLinks.ToArray());
+                group.Ungroup();
+                GroupRemoved?.Invoke(group);
+            });
         }
 
         #endregion

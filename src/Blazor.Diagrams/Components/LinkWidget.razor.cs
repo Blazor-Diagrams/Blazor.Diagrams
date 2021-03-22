@@ -73,6 +73,9 @@ namespace Blazor.Diagrams.Components
 
         private Point GetPortPositionBasedOnAlignment(PortModel port, LinkMarker marker)
         {
+            if (port == null)
+                return null;
+
             if (marker == null)
                 return port.MiddlePosition;
 

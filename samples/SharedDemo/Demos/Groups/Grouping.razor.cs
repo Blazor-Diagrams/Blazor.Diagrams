@@ -19,14 +19,7 @@ namespace SharedDemo.Demos
             var node3 = NewNode(500, 100);
             diagram.Nodes.Add(new[] { node1, node2, node3 });
 
-            var group = diagram.Group(node1, node2);
-            group.AddPort(PortAlignment.Bottom);
-            group.AddPort(PortAlignment.Top);
-            group.AddPort(PortAlignment.Left);
-            group.AddPort(PortAlignment.Right);
-
             diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
-            diagram.Links.Add(new LinkModel(group.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
         }
 
         private NodeModel NewNode(double x, double y)

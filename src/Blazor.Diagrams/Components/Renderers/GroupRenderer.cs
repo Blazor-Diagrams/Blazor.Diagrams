@@ -8,15 +8,15 @@ namespace Blazor.Diagrams.Components.Renderers
 {
     public class GroupRenderer : ComponentBase
     {
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public GroupModel Group { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = DiagramManager.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
+            var componentType = Diagram.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
             builder.OpenComponent(0, componentType);
             builder.AddAttribute(1, "Group", Group);
             builder.CloseComponent();

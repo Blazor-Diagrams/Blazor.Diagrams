@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -21,8 +21,8 @@ namespace Blazor.Diagrams.Components.Groups
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         public void Dispose()
         {
@@ -56,6 +56,7 @@ namespace Blazor.Diagrams.Components.Groups
             if (_lastSize == null || !_lastSize.Equals(Group.Size))
             {
                 Group.ReinitializePorts();
+                Group.RefreshLinks();
                 _lastSize = Group.Size;
             }
         }
@@ -66,8 +67,8 @@ namespace Blazor.Diagrams.Components.Groups
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Group, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e);
 
-        private void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(Group, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Group, e);
     }
 }

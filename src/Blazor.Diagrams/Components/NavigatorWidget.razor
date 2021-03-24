@@ -1,0 +1,51 @@
+﻿@if (Diagram.Container != null)
+{
+    var addedNodeX = Math.Max(0, Diagram.Pan.X) + NodePositionAdjustment.X;
+    var addedNodeY = Math.Max(0, Diagram.Pan.Y) + NodePositionAdjustment.Y;
+    var addedCurrentViewX = (Math.Abs(Math.Min(0, Diagram.Pan.X)) + NodePositionAdjustment.X) * XFactor;
+    var addedCurrentViewY = (Math.Abs(Math.Min(0, Diagram.Pan.Y)) + NodePositionAdjustment.Y) * YFactor;
+    var currentViewWidth = Diagram.Container.Width * XFactor;
+    var currentViewHeight = Diagram.Container.Height * YFactor;
+
+    <div class="diagram-navigator@(DefaultStyle ? " default" : "")">
+        <div style="position: relative;">
+            <div class="current-view"
+                 style="top: @(addedCurrentViewY.ToInvariantString())px;
+                        left: @(addedCurrentViewX.ToInvariantString())px;
+                        width: @(currentViewWidth.ToInvariantString())px;
+                        height: @(currentViewHeight.ToInvariantString())px;
+                        border: 2px solid @FillColor;"></div>
+        </div>
+        <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
+            @foreach (var node in Diagram.Nodes.Where(n => n.Size != null))
+            {
+                var left = ((node.Position.X * Diagram.Zoom) + addedNodeX) * XFactor;
+                var top = ((node.Position.Y * Diagram.Zoom) + addedNodeY) * YFactor;
+                var width = node.Size.Width * Diagram.Zoom * XFactor;
+                var height = node.Size.Height * Diagram.Zoom * YFactor;
+
+                <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
+                    <rect fill="@FillColor"
+                          width="@width.ToInvariantString()"
+                          height="@height.ToInvariantString()"></rect>
+                </g>
+            }
+
+            @foreach (var group in Diagram.Groups.Where(g => !Size.Zero.Equals(g.Size)))
+            {
+                var left = (Math.Max(0, group.Position.X * Diagram.Zoom) + addedNodeX) * XFactor;
+                var top = (Math.Max(0, group.Position.Y * Diagram.Zoom) + addedNodeY) * YFactor;
+                var width = group.Size.Width * Diagram.Zoom * XFactor;
+                var height = group.Size.Height * Diagram.Zoom * YFactor;
+
+                <g @key="group.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
+                    <rect stroke="@FillColor"
+                          stroke-width="2"
+                          fill="none"
+                          width="@width.ToInvariantString()"
+                          height="@height.ToInvariantString()"></rect>
+                </g>
+            }
+        </svg>
+    </div>
+}

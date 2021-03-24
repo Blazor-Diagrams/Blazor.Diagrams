@@ -10,13 +10,13 @@
 
         LayoutData.Title = "Events";
         LayoutData.Info = "The current available events are: NodeAdded, NodeRemoved, SelectionChanged, LinkAdded, LinkAttached and LinkRemoved.<br />" +
-                "Also, the DiagramManager and every Model have a Changed event.";
+                "Also, the Diagram and every Model have a Changed event.";
         LayoutData.DataChanged();
     }
 }
 
 <div style="height: 500px">
-    <CascadingValue Name="DiagramManager" Value="diagramManager">
+    <CascadingValue Value="diagram">
         <DiagramCanvas></DiagramCanvas>
     </CascadingValue>
 </div>

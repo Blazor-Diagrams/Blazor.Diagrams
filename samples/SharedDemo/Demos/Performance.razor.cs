@@ -1,13 +1,13 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace SharedDemo.Demos
 {
     public class PerformanceCompoent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
 
         protected override void OnInitialized()
         {
@@ -23,20 +23,10 @@ namespace SharedDemo.Demos
                     var sourcePort = node1.AddPort(PortAlignment.Right);
                     var targetPort = node2.AddPort(PortAlignment.Left);
 
-                    diagramManager.AddNodes(node1, node2);
-                    diagramManager.AddLink(sourcePort, targetPort);
+                    diagram.Nodes.Add(new[] { node1, node2 });
+                    diagram.Links.Add(new LinkModel(sourcePort, targetPort));
                 }
             }
-        }
-
-        private NodeModel NewNode(double x, double y)
-        {
-            var node = new NodeModel(new Point(x, y));
-            node.AddPort(PortAlignment.Bottom);
-            node.AddPort(PortAlignment.Top);
-            node.AddPort(PortAlignment.Left);
-            node.AddPort(PortAlignment.Right);
-            return node;
         }
     }
 }

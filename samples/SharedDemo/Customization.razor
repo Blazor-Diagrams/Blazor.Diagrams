@@ -43,7 +43,9 @@
                 <p>
                     Second, we'll create a component <code>AddTwoNumbersComponent</code> that handles our new type of nodes.
                 </p>
-                <pre><code class="language-markup line-numbers">&#x3C;div class=&#x22;card&#x22; style=&#x22;width: 250px;&#x22;&#x3E;
+                <pre><code class="language-markup line-numbers">@@using Blazor.Diagrams.Components.Renderers;
+
+&#x3C;div class=&#x22;card&#x22; style=&#x22;width: 250px;&#x22;&#x3E;
     &#x3C;div class=&#x22;card-body&#x22;&#x3E;
         &#x3C;h5 class=&#x22;card-title&#x22;&#x3E;Add&#x3C;/h5&#x3E;
         &#x3C;div class=&#x22;form-group&#x22;&#x3E;
@@ -73,16 +75,16 @@
             <div id="register-custom-node" class="section-block">
                 <h3 class="block-title">Registering the custom node</h3>
                 <p>
-                    Lastly, we'll register the custom node and its component in the <code>DiagramManager</code>:
+                    Lastly, we'll register the custom node and its component in the <code>Diagram</code>:
                 </p>
-                <pre><code class="language-csharp line-numbers">private DiagramManager DiagramManager { get; private set; }
+                <pre><code class="language-csharp line-numbers">private Diagram Diagram { get; private set; }
 
 protected override void OnInitialized()
 {
     base.OnInitialized();
 
-    DiagramManager = new DiagramManager();
-    DiagramManager.RegisterModelComponent&lt;AddTwoNumbersNode, AddTwoNumbersComponent&gt;();
+    Diagram = new Diagram();
+    Diagram.RegisterModelComponent&lt;AddTwoNumbersNode, AddTwoNumbersComponent&gt;();
 }</code></pre>
                 <p>This tells the Diagram manager to render a <code>AddTwoNumbersComponent</code> for every node of type <code>AddTwoNumbersNode</code>.</p>
             </div>
@@ -169,21 +171,21 @@ protected override void OnInitialized()
                 <p>
                     Lastly, we'll put everything together:
                 </p>
-                <pre><code class="language-csharp line-numbers">private readonly DiagramManager _diagramManager = new DiagramManager();
+                <pre><code class="language-csharp line-numbers">private readonly Diagram _diagram = new Diagram();
 
 protected override void OnInitialized()
 {
     base.OnInitialized();
 
-    _diagramManager.Options.DefaultNodeComponent = typeof(ColoredNodeWidget);
+    _diagram.Options.DefaultNodeComponent = typeof(ColoredNodeWidget);
 
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
-    _diagramManager.AddNode(node1);
-    _diagramManager.AddNode(node2);
-    _diagramManager.AddNode(NewNode(500, 50));
+    _diagram.Nodes.Add(node1);
+    _diagram.Nodes.Add(node2);
+    _diagram.Nodes.Add(NewNode(500, 50));
 
-    _diagramManager.AddLink(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top));
+    _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top)));
 }
 
 private NodeModel NewNode(double x, double y)
@@ -240,25 +242,25 @@ private NodeModel NewNode(double x, double y)
             <div id="register-custom-link" class="section-block">
                 <h3 class="block-title">Registering the custom link</h3>
                 <p>
-                    Lastly, we'll register the custom link and its component in the <code>DiagramManager</code>:
+                    Lastly, we'll register the custom link and its component in the <code>Diagram</code>:
                 </p>
                 <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
 {
     base.OnInitialized();
 
-    _diagramManager.RegisterModelComponent&#x3C;ThickLink, ThickLinkWidget&#x3E;();
-    // Also usable: _diagramManager.Options.Links.DefaultLinkComponent = typeof(ThickLink);
+    _diagram.RegisterModelComponent&#x3C;ThickLink, ThickLinkWidget&#x3E;();
+    // Also usable: _diagram.Options.Links.DefaultLinkComponent = typeof(ThickLink);
 
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(500, 50);
 
-    _diagramManager.AddNode(node1);
-    _diagramManager.AddNode(node2);
-    _diagramManager.AddNode(node3);
+    _diagram.Nodes.Add(node1);
+    _diagram.Nodes.Add(node2);
+    _diagram.Nodes.Add(node3);
 
-    _diagramManager.AddLink&#x3C;ThickLink&#x3E;(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-    _diagramManager.AddLink&#x3C;ThickLink&#x3E;(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left));
+    _diagram.Links.Add(new ThickLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+    _diagram.Links.Add(new ThickLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
 }
 
 private NodeModel NewNode(double x, double y)
@@ -273,7 +275,7 @@ private NodeModel NewNode(double x, double y)
                 <p>
                     As you can see, you can either set the <code>DefaultLinkComponent</code> option so that every new
                     link is rendered as a <code>ThickLinkWidget</code>, or specify the type of the link everytime you call
-                    <code>DiagramManager.AddLink</code>.
+                    <code>Diagram.AddLink</code>.
                 </p>
             </div>
         </section>
@@ -289,8 +291,8 @@ private NodeModel NewNode(double x, double y)
                 </p>
                 <pre><code class="language-csharp line-numbers">public class CustomGroupModel : GroupModel
 {
-    public CustomGroupModel(DiagramManager diagramManager, NodeModel[] children, string title, byte padding = 30)
-        : base(diagramManager, children, padding)
+    public CustomGroupModel(Diagram diagram, NodeModel[] children, string title, byte padding = 30)
+        : base(diagram, children, padding)
     {
         Title = title;
     }
@@ -306,7 +308,9 @@ private NodeModel NewNode(double x, double y)
                 <p>
                     Second, we'll create a component <code>CustomGroupWidget</code> that handles our new type of links.
                 </p>
-                <pre><code class="language-markup line-numbers">&lt;GroupContainer Group=&quot;Group&quot; Class=&quot;custom&quot;&gt;
+                <pre><code class="language-markup line-numbers">@@using Blazor.Diagrams.Components.Renderers;
+                    
+&lt;GroupContainer Group=&quot;Group&quot; Class=&quot;custom&quot;&gt;
     &lt;span class=&quot;title&quot;&gt;@@Group.Title&lt;/span&gt;
     &lt;GroupLinks&gt;&lt;/GroupLinks&gt;
     &lt;GroupNodes&gt;&lt;/GroupNodes&gt;
@@ -352,25 +356,23 @@ private NodeModel NewNode(double x, double y)
             <div id="register-custom-group" class="section-block">
                 <h3 class="block-title">Registering the custom group</h3>
                 <p>
-                    Lastly, we'll register the custom link and its component in the <code>DiagramManager</code>:
+                    Lastly, we'll register the custom link and its component in the <code>Diagram</code>:
                 </p>
                 <pre><code class="language-csharp line-numbers">protected override void OnInitialized()
 {
     base.OnInitialized();
                     
-    _diagramManager.RegisterModelComponent&lt;CustomGroupModel, CustomGroupWidget&gt;();
+    _diagram.RegisterModelComponent&lt;CustomGroupModel, CustomGroupWidget&gt;();
 
     var node1 = NewNode(50, 50);
     var node2 = NewNode(300, 300);
     var node3 = NewNode(500, 100);
 
-    _diagramManager.AddNode(node1);
-    // You can create your own group directly and add it
-    // You don't have to add its children to the diagram
-    _diagramManager.AddGroup(new CustomGroupModel(_diagramManager, new[] { node2, node3 }, &quot;Group 1&quot;));
+    _diagram.Nodes.Add(new [] { node1, node2, node3 });
+    _diagram.AddGroup(new CustomGroupModel(new[] { node2, node3 }, &quot;Group 1&quot;));
 
-    _diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
-    _diagramManager.AddLink(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Bottom));
+    _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+    _diagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Bottom)));
 }
 
 private NodeModel NewNode(double x, double y)

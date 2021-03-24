@@ -1,37 +1,55 @@
 var s = {
-    canvas: null,
+    canvases: {},
+    tracked: {},
     getBoundingClientRect: el => {
         return el.getBoundingClientRect();
     },
-    tracked: {},
+    mo: new MutationObserver(() => {
+        for (id in s.canvases) {
+            const canvas = s.canvases[id];
+            const lastBounds = canvas.lastBounds;
+            const bounds = canvas.elem.getBoundingClientRect();
+            if (lastBounds.left !== bounds.left || lastBounds.top !== bounds.top || lastBounds.width !== bounds.width ||
+                lastBounds.height !== bounds.height) {
+                canvas.lastBounds = bounds;
+                canvas.ref.invokeMethodAsync('OnResize', bounds);
+            }
+        }
+    }),
     ro: new ResizeObserver(entries => {
         for (const entry of entries) {
             let id = Array.from(entry.target.attributes).find(e => e.name.startsWith('_bl')).name.substring(4);
-            let element = window.ZBlazorDiagrams.tracked[id];
+            let element = s.tracked[id];
             if (element) {
                 element.ref.invokeMethodAsync('OnResize', entry.target.getBoundingClientRect());
             }
         }
     }),
-    observe: (element, ref, id, isCanvas) => {
+    observe: (element, ref, id) => {
         s.ro.observe(element);
         s.tracked[id] = {
             ref: ref
         };
-        if (isCanvas) {
-            s.canvas = {
+        if (element.classList.contains("diagram-canvas")) {
+            s.canvases[id] = {
                 elem: element,
-                ref: ref
-            }
+                ref: ref,
+                lastBounds: element.getBoundingClientRect()
+            };
         }
     },
     unobserve: (element, id) => {
         s.ro.unobserve(element);
         delete s.tracked[id];
-    },
-    
+        delete s.canvases[id];
+    }
 };
 window.ZBlazorDiagrams = s;
 window.addEventListener('scroll', () => {
-    s.canvas.ref.invokeMethodAsync('OnResize', s.canvas.elem.getBoundingClientRect());
+    for (id in s.canvases) {
+        const canvas = s.canvases[id];
+        canvas.lastBounds = canvas.elem.getBoundingClientRect();
+        canvas.ref.invokeMethodAsync('OnResize', canvas.lastBounds);
+    }
 });
+s.mo.observe(document.body, { childList: true, subtree: true });

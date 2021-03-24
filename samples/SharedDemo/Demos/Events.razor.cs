@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace SharedDemo.Demos
 {
     public class EventsComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
         protected readonly List<string> events = new List<string>();
 
         protected override void OnInitialized()
@@ -19,43 +19,58 @@ namespace SharedDemo.Demos
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(NewNode(300, 50));
-
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+            diagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
+            diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
         }
 
         private void RegisterEvents()
         {
-            diagramManager.Changed += () =>
+            diagram.Changed += () =>
             {
                 events.Add("Changed");
                 StateHasChanged();
             };
 
-            diagramManager.NodeAdded += (n) => events.Add($"NodeAdded, NodeId={n.Id}");
-            diagramManager.NodeRemoved += (n) => events.Add($"NodeRemoved, NodeId={n.Id}");
+            diagram.Nodes.Added += (n) => events.Add($"NodesAdded, NodeId={n.Id}");
+            diagram.Nodes.Removed += (n) => events.Add($"NodesRemoved, NodeId={n.Id}");
 
-            diagramManager.SelectionChanged += (m, s) =>
+            diagram.SelectionChanged += (m) =>
             {
-                events.Add($"SelectionChanged, Id={m.Id}, Type={m.GetType().Name}, Selected={s}");
+                events.Add($"SelectionChanged, Id={m.Id}, Type={m.GetType().Name}, Selected={m.Selected}");
                 StateHasChanged();
             };
 
-            diagramManager.LinkAdded += (l) => events.Add($"LinkAdded, LinkId={l.Id}");
+            diagram.Links.Added += (l) => events.Add($"Links.Added, LinkId={l.Id}");
 
-            diagramManager.LinkAttached += (l) =>
+            diagram.Links.Removed += (l) => events.Add($"Links.Removed, LinkId={l.Id}");
+
+            diagram.MouseDown += (m, e) =>
             {
-                events.Add($"LinkAttached, LinkId={l.Id}");
+                events.Add($"MouseDown, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
 
-            diagramManager.LinkRemoved += (l) => events.Add($"LinkRemoved, LinkId={l.Id}");
-
-            diagramManager.MouseUp += (m, e) =>
+            diagram.MouseUp += (m, e) =>
             {
-                events.Add($"MouseUp, ModelId={m?.Id}");
+                events.Add($"MouseUp, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
+
+            diagram.TouchStart += (m, e) =>
+            {
+                events.Add($"TouchStart, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
+
+            diagram.TouchEnd += (m, e) =>
+            {
+                events.Add($"TouchEnd, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
+
+            diagram.MouseClick += (m, e) =>
+            {
+                events.Add($"MouseClick, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
         }

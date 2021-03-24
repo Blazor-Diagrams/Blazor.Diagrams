@@ -1,19 +1,18 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models.Core;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components
 {
-    public class DiagramCanvasComponent : ComponentBase, IDisposable
+    public partial class DiagramCanvas : IDisposable
     {
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
         public RenderFragment Widgets { get; set; }
@@ -25,19 +24,18 @@ namespace Blazor.Diagrams.Components
         public IJSRuntime JSRuntime { get; set; }
 
         protected ElementReference elementReference;
-        private DotNetObjectReference<DiagramCanvasComponent> _reference;
+        private DotNetObjectReference<DiagramCanvas> _reference;
         private bool _shouldReRender;
 
-        public string PanX => DiagramManager.Pan.X.ToString(CultureInfo.InvariantCulture);
-        public string PanY => DiagramManager.Pan.Y.ToString(CultureInfo.InvariantCulture);
-        public string Zoom => DiagramManager.Zoom.ToString(CultureInfo.InvariantCulture);
+        private string LayerStyle
+            => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            DiagramManager.Changed += DiagramManager_Changed;
+            Diagram.Changed += OnDiagramChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -46,13 +44,13 @@ namespace Blazor.Diagrams.Components
 
             if (firstRender)
             {
-                DiagramManager.Container = await JSRuntime.GetBoundingClientRect(elementReference);
-                await JSRuntime.ObserveResizes(elementReference, _reference, isCanvas: true);
+                Diagram.Container = await JSRuntime.GetBoundingClientRect(elementReference);
+                await JSRuntime.ObserveResizes(elementReference, _reference);
             }
         }
 
         [JSInvokable]
-        public void OnResize(Rectangle rect) => DiagramManager.SetContainer(rect);
+        public void OnResize(Rectangle rect) => Diagram.SetContainer(rect);
 
         protected override bool ShouldRender()
         {
@@ -65,17 +63,23 @@ namespace Blazor.Diagrams.Components
             return false;
         }
 
-        protected void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(null, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e);
 
-        protected void OnMouseMove(MouseEventArgs e) => DiagramManager.OnMouseMove(null, e);
+        private void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e);
 
-        protected void OnMouseUp(MouseEventArgs e) => DiagramManager.OnMouseUp(null, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e);
 
-        protected void OnKeyDown(KeyboardEventArgs e) => DiagramManager.OnKeyDown(e);
+        private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e);
 
-        protected void OnWheel(WheelEventArgs e) => DiagramManager.OnWheel(e);
+        private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e);
 
-        private void DiagramManager_Changed()
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e);
+
+        private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e);
+
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e);
+
+        private void OnDiagramChanged()
         {
             _shouldReRender = true;
             StateHasChanged();
@@ -83,7 +87,7 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            DiagramManager.Changed -= DiagramManager_Changed;
+            Diagram.Changed -= OnDiagramChanged;
 
             if (_reference == null)
                 return;

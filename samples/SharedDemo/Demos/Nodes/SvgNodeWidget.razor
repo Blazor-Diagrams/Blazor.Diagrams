@@ -1,0 +1,14 @@
+﻿<path d="M 0 -50 L 50 -50 L 50 -10 A 1 1 0 0 0 50 10 L 50 50 L 0 50 L 0 10 A 1 1 0 0 0 0 -10 Z"
+      fill="black"></path>
+
+<PortRenderer Port="Node.GetPort(PortAlignment.Left)">
+    <circle cx="0" cy="0" r="8"></circle>
+</PortRenderer>
+
+<PortRenderer Port="Node.GetPort(PortAlignment.Right)">
+    <circle cx="50" cy="0" r="8"></circle>
+</PortRenderer>
+
+@code {
+    [Parameter] public NodeModel Node { get; set; }
+}

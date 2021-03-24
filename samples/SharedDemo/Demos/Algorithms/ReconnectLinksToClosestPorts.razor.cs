@@ -1,14 +1,14 @@
 ﻿using Blazor.Diagrams.Algorithms;
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace SharedDemo.Demos.Algorithms
 {
     public class ReconnectLinksToClosestPortsComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
 
         protected override void OnInitialized()
         {
@@ -17,15 +17,13 @@ namespace SharedDemo.Demos.Algorithms
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
             var node3 = NewNode(300, 50);
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Right));
-            diagramManager.AddLink(node1.GetPort(PortAlignment.Bottom), node3.GetPort(PortAlignment.Top));
-            diagramManager.AddNode(node1);
-            diagramManager.AddNode(node2);
-            diagramManager.AddNode(node3);
+            diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Right)));
+            diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Bottom), node3.GetPort(PortAlignment.Top)));
+            diagram.Nodes.Add(new[] { node1, node2, node3 });
         }
 
 
-        protected void ReconnectLinks() => diagramManager.ReconnectLinksToClosestPorts();
+        protected void ReconnectLinks() => diagram.ReconnectLinksToClosestPorts();
 
 
         private NodeModel NewNode(double x, double y)

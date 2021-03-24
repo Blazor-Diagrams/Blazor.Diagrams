@@ -1,46 +1,73 @@
-﻿@code {
-    [CascadingParameter(Name = "DiagramManager")]
-    public DiagramManager DiagramManager { get; set; }
+﻿@using SvgPathProperties;
 
-    [Parameter]
-    public LinkModel Link { get; set; }
+@{
+    var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
+    var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
+    var route = router(Diagram, Link);
+    (var source, var target) = FindConnectionPoints(route);
+    if (source == null || target == null)
+        return;
+
+    var result = pathGenerator(Diagram, Link, route, source, target);
+    var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
+        : (Link.Color ?? Diagram.Options.Links.DefaultColor);
+    var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();
 }
 
-@* Maybe we can use markers? *@
-
-@switch (Link.Type)
+@for (var i = 0; i < result.Paths.Length; i++)
 {
-    case Core.Models.LinkType.Line:
-        <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
-              y1="@Link.GetMiddleSourceY().ToInvariantString()"
-              x2="@Link.GetTargetX().ToInvariantString()"
-              y2="@Link.GetTargetY().ToInvariantString()"
-              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
-              stroke-width="4" />
-        break;
-    case Core.Models.LinkType.Curved:
-        <path d="@Link.GenerateCurvedPath()"
-              stroke-width="3"
+    var index = i;
+    <path d="@result.Paths[i]"
+          stroke-width="@Link.Width.ToInvariantString()"
+          fill="none"
+          stroke="@color" />
+
+    @if (Link.IsAttached)
+    {
+        <path class="selection-helper"
+              stroke="@color"
+              stroke-width="12"
+              d="@result.Paths[i]"
+              stroke-linecap="round"
+              stroke-opacity="0"
               fill="none"
-              stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)" />
-        break;
-    case Core.Models.LinkType.LineWithArrowToTarget:
-        <g>
-            <line x1="@Link.GetMiddleSourceX().ToInvariantString()"
-                  y1="@Link.GetMiddleSourceY().ToInvariantString()"
-                  x2="@Link.GetTargetX().ToInvariantString()"
-                  y2="@Link.GetTargetY().ToInvariantString()"
-                  stroke="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)"
-                  stroke-width="4" />
-        </g>
-        <g transform="translate(@Link.GetTargetX().ToInvariantString(), @Link.GetTargetY().ToInvariantString())">
-            <g style="transform: rotate(@(Link.CalculateAngleForTargetArrow())deg);">
-                <g transform="translate(0, -4)">
-                    <polygon points="0,10 8,30 -8,30"
-                             fill="@(Link.Selected ? DiagramManager.Options.Links.DefaultSelectedColor : DiagramManager.Options.Links.DefaultColor)">
-                    </polygon>
-                </g>
-            </g>
-        </g>
-        break;
+              @onmousedown="e => OnMouseDown(e, index)"
+              @onmousedown:stopPropagation="@Link.Segmentable"
+              @ontouchstart="e => OnTouchStart(e, index)"
+              @ontouchstart:stopPropagation="@Link.Segmentable"/>
+    }
+}
+
+@if (Link.SourceMarker != null && result.SourceMarkerAngle != null && result.SourceMarkerPosition != null)
+{
+    <g transform="@(FormattableString.Invariant($"translate({result.SourceMarkerPosition.X}, {result.SourceMarkerPosition.Y}) rotate({result.SourceMarkerAngle})"))">
+        <path d="@Link.SourceMarker.Path" fill="@color"></path>
+    </g>
+}
+
+@if (Link.TargetMarker != null && result.TargetMarkerAngle != null && result.TargetMarkerPosition != null)
+{
+    <g transform="@(FormattableString.Invariant($"translate({result.TargetMarkerPosition.X}, {result.TargetMarkerPosition.Y}) rotate({result.TargetMarkerAngle})"))">
+        <path d="@Link.TargetMarker.Path" fill="@color"></path>
+    </g>
+}
+
+@if (Link.Vertices.Count > 0)
+{
+    var selectedColor = Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor;
+    var normalColor = Link.Color ?? Diagram.Options.Links.DefaultColor;
+    <g>
+        @foreach (var vertex in Link.Vertices)
+        {
+            <LinkVertexWidget @key="vertex.Id"
+                              Vertex="vertex"
+                              Color="@normalColor"
+                              SelectedColor="@selectedColor" />
+        }
+    </g>
+}
+
+@foreach (var label in Link.Labels)
+{
+    <LinkLabelRenderer @key="label.Id" Label="label" Paths="paths" />
 }

@@ -17,8 +17,8 @@
 
 <button class="btn btn-primary position-absolute m-2"
         style="z-index: 999;"
-        @onclick="() => diagramManager.ZoomToFit(50)">Zoom to fit</button>
+        @onclick="() => diagram.ZoomToFit(50)">Zoom to fit</button>
 
-<CascadingValue Name="DiagramManager" Value="diagramManager">
+<CascadingValue Value="diagram">
     <DiagramCanvas></DiagramCanvas>
 </CascadingValue>

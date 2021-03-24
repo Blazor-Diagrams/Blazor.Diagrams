@@ -15,6 +15,7 @@
     <PackageId>Z.Blazor.Diagrams</PackageId>
     <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
     <Product>Z.Blazor.Diagrams</Product>
+    <PackageIcon>ZBD.png</PackageIcon>
   </PropertyGroup>
 
 
@@ -26,6 +27,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\ZBD.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">

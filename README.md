@@ -10,12 +10,12 @@ Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams li
 | Z.Blazor.Diagrams            | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       |
 | Z.Blazor.Diagrams.Algorithms | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) |
 
-| Badges     |                                                                                                                                    |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.min.js) |
-| CSS        | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/style.css)     |
-| Activity   | [![GitHub](https://img.shields.io/github/last-commit/zHaytam/Blazor.Diagrams/develop)](https://github.com/zHaytam/Blazor.Diagrams) |
-| License    | [![GitHub](https://img.shields.io/github/license/zHaytam/Blazor.Diagrams.svg)](https://github.com/zHaytam/Blazor.Diagrams)         |
+| Badges     |                                                                                                                                                    |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/Blazor-Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.min.js)         |
+| CSS        | ![GitHub file size in bytes](https://img.shields.io/github/size/Blazor-Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/style.css)             |
+| Activity   | [![GitHub](https://img.shields.io/github/last-commit/Blazor-Diagrams/Blazor.Diagrams/develop)](https://github.com/Blazor-Diagrams/Blazor.Diagrams) |
+| License    | [![GitHub](https://img.shields.io/github/license/Blazor-Diagrams/Blazor.Diagrams.svg)](https://github.com/Blazor-Diagrams/Blazor.Diagrams)         |
 
 ## Mindset/Goals
 

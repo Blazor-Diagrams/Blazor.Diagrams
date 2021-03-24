@@ -1,23 +1,47 @@
 # Blazor.Diagrams
 
-Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams).
+![](ZBD.png)
 
-Blazor.Diagrams can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. It is very code/OOP oriented, representing a diagram (using models) is seperate from rendering. This has a lot of benefits, for example if you want to (de)serialize diagrams or make an engine that runs at runtime (visual programming).
+Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was first inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams), but then evolved into something much bigger. ZBD can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. 
 
-This library aims to provide most of its features using C#/Blazor while minimizing Javascript.
-
-| NuGet Package          | Version                                                                                                                      | Download                                                                                                                      |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Z.Blazor.Diagrams.Core | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core) |
-| Z.Blazor.Diagrams      | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)           | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)           |
-| Z.Blazor.Diagrams.Algorithms      | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms)           | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms)           |
+| NuGet Package                | Version                                                                                                                                  | Download                                                                                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Z.Blazor.Diagrams.Core       | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core)             | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core)             |
+| Z.Blazor.Diagrams            | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       |
+| Z.Blazor.Diagrams.Algorithms | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) |
 
 | Badges     |                                                                                                                                    |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.min.js)     |
+| JavaScript | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/script.min.js) |
 | CSS        | ![GitHub file size in bytes](https://img.shields.io/github/size/zHaytam/Blazor.Diagrams/src/Blazor.Diagrams/wwwroot/style.css)     |
 | Activity   | [![GitHub](https://img.shields.io/github/last-commit/zHaytam/Blazor.Diagrams/develop)](https://github.com/zHaytam/Blazor.Diagrams) |
 | License    | [![GitHub](https://img.shields.io/github/license/zHaytam/Blazor.Diagrams.svg)](https://github.com/zHaytam/Blazor.Diagrams)         |
+
+## Mindset/Goals
+
+- **Be multi purpose and useful for most diagramming use cases**. ZBD started as a diagramming library for specific use cases, but it is now expanding to be more generic and more useful.
+- **Performance** is very important, especially in WebAssembly.
+- **Separate the data layer (models) and the UI layer (widgets)**. Representing diagrams as a model has a lot of benefits, and the separation makes things easier, such as saving snapshots or mutating models, regardless of how/where it's gonna be rendered.
+- **Be fully customizable, either in how things look or how things behave**. All of the UI can be customized by either providing Blazor components or using CSS. All of the default behaviors are customizable by replacing them with your own custom behaviors.
+- **Avoid JavaScript**. 95% of ZBD is made using C#/Blazor, JS is only used when absolutely necessary (e.g. bounds and observers). JS interop calls are costly, in the future, we strive to have most of them batched and/or replaced.
+
+## Features
+
+- Multi purpose
+- Touch support
+- SVG layer for links/nodes and HTML layer for nodes for maximum customizability
+- Links between nodes directly or node ports
+- Link routers, path generators, markers and labels
+- Panning, Zooming and Zooming to fit a set of nodes
+- Multi selection, deletion and region selection
+- Groups as first class citizen, with all the features of nodes
+- Custom nodes, links and groups
+- Replaceable ("Hackable") behaviors (e.g. link dragging, model deletion, etc..)
+- Customizable Diagram overview/navigator for large diagrams
+- Snap to Grid
+- Virtualization, only draw nodes that are visible to the users
+- Locking mechanism (read-only)
+- Algorithms
 
 ## Getting Started
 
@@ -27,58 +51,12 @@ You can get started very easily & quickly using:
 - [Quick Start](https://blazor-diagrams.zhaytam.com/quickstart)
 - [Demos](https://blazor-diagrams.zhaytam.com/demos/simple)
 
-## Functionalities
-
-- Panning/Zooming
-- Ports & Links (no free links for now)
-- Multi selection / deletion
-- Locking mechanism
-- Custom nodes/links
-- SVG layer for links/nodes and HTML layer for nodes for maximum customizability
-- Replaceable behaviors (e.g. link dragging, model deletion, ...)
-- Zoom to fit (all nodes or selected ones only)
-- Customizable Diagram Overview/Preview/Navigator (on the bottom right by default)
-- Snap to Grid
-- Grouping: [CTRL + ALT + G] to (un)group
-- Groups with ports/links and nested groups (**experimental**)
-- Virtualization: only draw nodes that are visible to the users
-- Algorithms
-
-## Preview
-
-```html
-<CascadingValue Name="DiagramManager" Value="diagramManager">
-  <DiagramCanvas>
-    <Widgets>
-      <NavigatorWidget Width="300" Height="200" DefaultStyle="true"></NavigatorWidget>
-    </Widgets>
-  </DiagramCanvas>
-</CascadingValue>
-```
-
-![](https://i.imgur.com/WZYL2PW.png)
-
-
 ### Sample project
 
-Repository: https://github.com/zHaytam/Blazor.DatabaseDesigner
+Repository: https://github.com/Blazor-Diagrams/Blazor.DatabaseDesigner
 
-![](https://i.imgur.com/yFXZ0JN.png)
-
-## Roadmap
-
-- [x] Better way to handle/render groups
-- [ ] Pluggable history (undo/redo)
-- [ ] Auto layout
-
-### Thinking about
-
-- [ ] Razor-oriented diagram creation
-- [ ] Send to front/back (limited since there are 2 layers)
-- [ ] Free links, no need for ports (useful in simple diagram scenarios, like a flowchart)
-- [ ] A set of common shapes (depends on the above feature)
+![](DBDesigner.png)
 
 ## Feedback
 
-If you find a bug or you want to see a functionality in this library, feel free to open an issue in the repository!  
-Of course, PRs are very welcome.
+If you find a bug or you want to see a functionality in this library, feel free to open an issue. All kinds of contributions are welcome!

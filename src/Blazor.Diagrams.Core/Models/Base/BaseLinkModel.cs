@@ -8,14 +8,12 @@ namespace Blazor.Diagrams.Core.Models.Base
     {
         /// <summary>
         /// An event that fires when the SourcePort changes.
-        /// <para>The PortModel instance in the parameters is the old value.</para>
         /// </summary>
-        public event Action<PortModel?>? SourcePortChanged;
+        public event Action<BaseLinkModel, PortModel?, PortModel?>? SourcePortChanged;
         /// <summary>
         /// An event that fires when the TargetPort changes.
-        /// <para>The PortModel instance in the parameters is the old value.</para>
         /// </summary>
-        public event Action<PortModel?>? TargetPortChanged;
+        public event Action<BaseLinkModel, PortModel?, PortModel?>? TargetPortChanged;
 
         public BaseLinkModel(NodeModel sourceNode, NodeModel? targetNode)
         {
@@ -69,7 +67,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             SourcePort?.RemoveLink(this);
             SourcePort = port;
             SourcePort.AddLink(this);
-            SourcePortChanged?.Invoke(old);
+            SourcePortChanged?.Invoke(this, old, SourcePort);
         }
 
         public void SetTargetPort(PortModel? port)
@@ -81,7 +79,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             TargetPort?.RemoveLink(this);
             TargetPort = port;
             TargetPort?.AddLink(this);
-            TargetPortChanged?.Invoke(old);
+            TargetPortChanged?.Invoke(this, old, TargetPort);
         }
     }
 }

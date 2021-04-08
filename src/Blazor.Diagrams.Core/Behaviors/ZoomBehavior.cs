@@ -6,8 +6,6 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class ZoomBehavior : Behavior
     {
-        private const float _scaleBy = 1.05f;
-
         public ZoomBehavior(Diagram diagram) : base(diagram)
         {
             Diagram.Wheel += Diagram_Wheel;
@@ -18,9 +16,11 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (!Diagram.Options.Zoom.Enabled)
                 return;
 
+            var scale = Math.Clamp(Diagram.Options.Zoom.ScaleFactor, 1.01, 2);
+
             var oldZoom = Diagram.Zoom;
             var deltaY = Diagram.Options.Zoom.Inverse ? e.DeltaY * -1 : e.DeltaY;
-            var newZoom = deltaY > 0 ? oldZoom * _scaleBy : oldZoom / _scaleBy;
+            var newZoom = deltaY > 0 ? oldZoom * scale : oldZoom / scale;
 
             if (newZoom < 0)
                 return;

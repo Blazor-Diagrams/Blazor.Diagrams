@@ -1,0 +1,14 @@
+﻿@code {
+    [Parameter]
+    public GroupModel Group { get; set; }
+}
+
+<GroupContainer Group="Group" Class="default">
+    <GroupLinks></GroupLinks>
+    <GroupNodes></GroupNodes>
+
+    @foreach (var port in Group.Ports)
+    {
+        <PortRenderer Port="port" Class="group-port"></PortRenderer>
+    }
+</GroupContainer>

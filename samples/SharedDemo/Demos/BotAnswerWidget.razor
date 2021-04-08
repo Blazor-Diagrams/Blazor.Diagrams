@@ -3,7 +3,12 @@
         <div class="card-body">
             <h5 class="card-title">Bot Answer</h5>
             <div class="form-group">
-                <input type="text" class="form-control" @bind-value="Node.Answer" placeholder="Answer" />
+                <input type="text" class="form-control"
+                       @bind-value="Node.Answer"
+                       placeholder="Answer"
+                       @onmousedown:stopPropagation
+                       @onmouseup:stopPropagation
+                       @onmousemove:stopPropagation />
             </div>
         </div>
     </div>

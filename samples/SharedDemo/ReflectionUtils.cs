@@ -48,7 +48,8 @@ namespace SharedDemo
             return type == typeof(object) ||
                 type == typeof(Type) ||
                 Type.GetTypeCode(type) != TypeCode.Object ||
-                Nullable.GetUnderlyingType(type) != null;
+                Nullable.GetUnderlyingType(type) != null ||
+                typeof(Delegate).IsAssignableFrom(type);
         }
     }
 

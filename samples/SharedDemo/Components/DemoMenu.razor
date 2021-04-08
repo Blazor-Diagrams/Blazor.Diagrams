@@ -1,0 +1,34 @@
+﻿<li class="list-group-item list-group-item-action bg-light">
+    <a href="@Href"
+       class="w-100 list-group-item-action text-decoration-none d-flex justify-content-between align-items-center"
+       @onclick="OnItemClicked"
+       @onclick:preventDefault="ChildContent != null">
+        @Text
+        @if (ChildContent != null)
+        {
+            <i class="fas fa-chevron-up@(Collapsed ? " fa-rotate-180" : "")"></i>
+        }
+    </a>
+
+    @if (ChildContent != null && !Collapsed)
+    {
+        <ul class="list-unstyled mt-2">
+            @ChildContent
+        </ul>
+    }
+</li>
+
+@code {
+    [Parameter] public string Href { get; set; } = "#";
+    [Parameter] public string Text { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    public bool Collapsed { get; set; } = true;
+
+    private void OnItemClicked()
+    {
+        if (ChildContent == null)
+            return;
+
+        Collapsed = !Collapsed;
+    }
+}

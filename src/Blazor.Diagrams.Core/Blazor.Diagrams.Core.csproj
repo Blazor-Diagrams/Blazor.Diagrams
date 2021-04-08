@@ -7,16 +7,26 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>zHaytam</Authors>
     <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <AssemblyVersion>1.1.3</AssemblyVersion>
-    <FileVersion>1.1.3</FileVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>1.1.3</Version>
+    <Version>2.0.0</Version>
     <PackageId>Z.Blazor.Diagrams.Core</PackageId>
     <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
+    <Product>Z.Blazor.Diagrams.Core</Product>
+    <PackageIcon>ZBD.png</PackageIcon>
+    <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\ZBD.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
-﻿@inherits DiagramCanvasComponent
-
-<div class="diagram-canvas @Class"
+﻿<div class="diagram-canvas @Class"
      tabindex="-1"
      @ref="elementReference"
      @onmousedown="OnMouseDown"
@@ -9,30 +7,37 @@
      @onmouseup="OnMouseUp"
      @onkeydown="OnKeyDown"
      @onwheel="OnWheel"
-     @onwheel:stopPropagation>
+     @onwheel:stopPropagation
+     @ontouchstart="OnTouchStart"
+     @ontouchmove="OnTouchMove"
+     @ontouchend="OnTouchEnd"
+     @ontouchend:preventDefault>
 
     @* Links *@
-    <svg class="diagram-svg-layer"
-         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-        @foreach (var link in DiagramManager.AllLinks)
+    <svg class="diagram-svg-layer" style="@LayerStyle">
+        @foreach (var link in Diagram.Links)
         {
             <LinkRenderer @key="link.Id" Link="link" />
         }
 
-        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.SVG))
+        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.SVG))
         {
             <NodeRenderer @key="node.Id" Node="node" />
         }
     </svg>
 
     @* Nodes *@
-    <div class="diagram-html-layer"
-         style="transform: translate(@(PanX)px, @(PanY)px) scale(@Zoom);">
-        @foreach (var node in DiagramManager.Nodes.Where(n => n.Layer == RenderLayer.HTML))
+    <div class="diagram-html-layer" style="@LayerStyle">
+        @foreach (var group in Diagram.Groups)
+        {
+            <GroupRenderer @key="group.Id" Group="group" />
+        }
+
+        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
         {
             <NodeRenderer @key="node.Id" Node="node" />
         }
     </div>
-</div>
 
-@Widgets
+    @Widgets
+</div>

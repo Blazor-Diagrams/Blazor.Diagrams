@@ -1,0 +1,9 @@
+﻿@((MarkupString)$"<foreignObject x=\"{X.ToInvariantString()}\" y=\"{Y.ToInvariantString()}\"><div class=\"link-label\">{Label.Content}</div></foreignObject>")
+
+@code {
+    [Parameter] public LinkLabelModel Label { get; set; }
+    [Parameter] public Point Position { get; set; }
+
+    private double X => Position.X + (Label.Offset?.X ?? 0);
+    private double Y => Position.Y + (Label.Offset?.Y ?? 0);
+}

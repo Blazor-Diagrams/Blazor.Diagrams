@@ -1,0 +1,19 @@
+﻿@code {
+    [CascadingParameter]
+    public GroupModel Group { get; set; }
+}
+
+<div class="layer"
+     style="top: @((-Group.Position.Y).ToInvariantString())px; left: @((-Group.Position.X).ToInvariantString())px">
+    @foreach (var node in Group.Children)
+    {
+        if (node is GroupModel g)
+        {
+            <GroupRenderer @key="g.Id" Group="g"></GroupRenderer>
+        }
+        else
+        {
+            <NodeRenderer @key="node.Id" Node="node"></NodeRenderer>
+        }
+    }
+</div>

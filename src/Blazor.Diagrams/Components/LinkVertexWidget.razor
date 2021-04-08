@@ -1,0 +1,15 @@
+﻿<circle cx="@Vertex.Position.X.ToInvariantString()"
+        cy="@Vertex.Position.Y.ToInvariantString()"
+        r="5"
+        fill="@ColorToUse"
+        cursor="move"
+        @ondblclick="OnDoubleClick"
+        @onmousedown="OnMouseDown"
+        @onmousedown:stopPropagation
+        @onmouseup="OnMouseUp"
+        @onmouseup:stopPropagation
+        @ontouchstart="OnTouchStart"
+        @ontouchstart:stopPropagation
+        @ontouchend="OnTouchEnd"
+        @ontouchend:preventDefault
+        @ontouchend:stopPropagation />

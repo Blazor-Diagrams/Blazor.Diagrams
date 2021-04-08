@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,11 +11,11 @@ namespace Blazor.Diagrams.Components.Renderers
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter(Name = "DiagramManager")]
-        public DiagramManager DiagramManager { get; set; }
+        [CascadingParameter]
+        public Diagram Diagram { get; set; }
 
         [Parameter]
-        public LinkModel Link { get; set; }
+        public BaseLinkModel Link { get; set; }
 
         public void Dispose()
         {
@@ -33,16 +33,24 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = DiagramManager.GetComponentForModel(Link) ??
-                DiagramManager.Options.Links.DefaultLinkComponent ??
+            var componentType = Diagram.GetComponentForModel(Link) ??
+                Diagram.Options.Links.DefaultLinkComponent ??
                 typeof(LinkWidget);
 
             builder.OpenElement(0, "g");
             builder.AddAttribute(1, "class", "link");
-            builder.AddAttribute(2, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(3, "onmousedown", true);
-            builder.OpenComponent(4, componentType);
-            builder.AddAttribute(5, "Link", Link);
+            builder.AddAttribute(2, "data-link-id", Link.Id);
+            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
+            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
+            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
+            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
+            builder.AddAttribute(7, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
+            builder.AddEventStopPropagationAttribute(8, "ontouchstart", true);
+            builder.AddAttribute(9, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
+            builder.AddEventStopPropagationAttribute(10, "ontouchend", true);
+            builder.AddEventPreventDefaultAttribute(11, "ontouchend", true);
+            builder.OpenComponent(12, componentType);
+            builder.AddAttribute(13, "Link", Link);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -55,6 +63,12 @@ namespace Blazor.Diagrams.Components.Renderers
             StateHasChanged();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => DiagramManager.OnMouseDown(Link, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e);
+
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e);
+
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Link, e);
+
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Link, e);
     }
 }

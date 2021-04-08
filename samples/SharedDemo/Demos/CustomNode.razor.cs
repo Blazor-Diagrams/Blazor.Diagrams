@@ -1,28 +1,27 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Core;
 using Microsoft.AspNetCore.Components;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace SharedDemo.Demos
 {
     public class CustomNodeComponent : ComponentBase
     {
-        protected readonly DiagramManager diagramManager = new DiagramManager();
+        protected readonly Diagram diagram = new Diagram();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            diagramManager.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
-            diagramManager.AddNode(NewNode(100, 100));
-            diagramManager.AddNode(NewNode(300, 300));
+            diagram.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
 
             var node = new NodeModel(new Point(20, 20));
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Right);
             node.AddPort(PortAlignment.Bottom);
             node.AddPort(PortAlignment.Left);
-            diagramManager.AddNode(node);
+
+            diagram.Nodes.Add(new[] { node, NewNode(100, 100), NewNode(300, 300) });
         }
 
         private BotAnswerNode NewNode(double x, double y)

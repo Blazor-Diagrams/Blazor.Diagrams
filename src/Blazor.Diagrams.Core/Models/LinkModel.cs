@@ -1,41 +1,19 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Models.Core;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class LinkModel : SelectableModel
+    public class LinkModel : BaseLinkModel
     {
-        public LinkModel(PortModel sourcePort, PortModel? targetPort = null)
-        {
-            SourcePort = sourcePort;
-            TargetPort = targetPort;
-        }
+        public LinkModel(PortModel sourcePort, PortModel? targetPort = null) : base(sourcePort, targetPort) { }
 
-        public LinkModel(string id, PortModel sourcePort, PortModel? targetPort = null) : base(id)
-        {
-            SourcePort = sourcePort;
-            TargetPort = targetPort;
-        }
+        public LinkModel(NodeModel sourceNode, NodeModel? targetNode) : base(sourceNode, targetNode) { }
 
-        public LinkType Type { get; set; }
-        public PortModel SourcePort { get; }
-        public PortModel? TargetPort { get; private set; }
-        public bool IsAttached => TargetPort != null;
-        public Point? OnGoingPosition { get; set; }
+        public LinkModel(string id, PortModel sourcePort, PortModel? targetPort = null) : base(id, sourcePort, targetPort) { }
 
-        public void SetTargetPort(PortModel port)
-        {
-            if (IsAttached)
-                return;
+        public LinkModel(string id, NodeModel sourceNode, NodeModel? targetNode) : base(id, sourceNode, targetNode) { }
 
-            TargetPort = port;
-        }
-    }
-
-    public enum LinkType
-    {
-        Curved,
-        Line,
-        LineWithArrowToTarget
+        public string? Color { get; set; }
+        public string? SelectedColor { get; set; }
+        public double Width { get; set; } = 2;
     }
 }

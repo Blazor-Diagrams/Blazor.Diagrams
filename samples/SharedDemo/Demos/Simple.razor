@@ -23,12 +23,16 @@
         <input id="panningCheckbox" type="checkbox" class="custom-control-input" @onchange="TogglePanning" checked />
         <label class="custom-control-label" for="panningCheckbox">Toggle Panning</label>
     </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="virtualizationCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleVirtualization" checked />
+        <label class="custom-control-label" for="virtualizationCheckbox">Toggle Virtualization</label>
+    </div>
 </div>
 
-<CascadingValue Name="DiagramManager" Value="diagramManager">
+<CascadingValue Value="diagram">
     <DiagramCanvas>
         <Widgets>
-            <Navigator Width="300" Height="200" DefaultStyle="true"></Navigator>
+            <NavigatorWidget Width="300" Height="200" DefaultStyle="true"></NavigatorWidget>
         </Widgets>
     </DiagramCanvas>
 </CascadingValue>

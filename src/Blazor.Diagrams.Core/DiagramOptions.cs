@@ -55,6 +55,8 @@ namespace Blazor.Diagrams.Core
         public double Minimum { get; set; } = 0.1;
         [Description("Maximum value allowed")]
         public double Maximum { get; set; } = 2;
+        [Description("Zoom Scale Factor. Should be between 1.01 and 2.  Default is 1.05.")]
+        public double ScaleFactor { get; set; } = 1.05;
     }
 
     public class DiagramGroupOptions

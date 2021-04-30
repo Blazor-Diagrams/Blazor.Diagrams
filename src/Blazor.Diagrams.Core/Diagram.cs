@@ -141,11 +141,12 @@ namespace Blazor.Diagrams.Core
             if (!_groups.Remove(group))
                 return;
 
-            // Todo: batch Refresh()
-            group.Ungroup();
-            Links.Remove(group.AllLinks.ToArray());
-            GroupUngrouped?.Invoke(group);
-            Refresh();
+            Batch(() =>
+            {
+                group.Ungroup();
+                Links.Remove(group.AllLinks.ToArray());
+                GroupUngrouped?.Invoke(group);
+            });
         }
 
         public void RemoveGroup(GroupModel group)

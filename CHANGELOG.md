@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (2.1.0) - 2021-03-24
+
+## Added
+
+- `ScaleFactor` zoom option ([@joezearing](https://github.com/joezearing))
+- Add `Constraints` options which gives you more control on what happens in the diagram:
+	- `ShouldDeleteNode`: Whether a selected node should be deleted or not
+	- `ShouldDeleteLink`: Whether a selected link should be deleted or not
+	- `ShouldDeleteGroup`: Whether a selected group should be deleted or not
+- `DeleteSelectionBehavior` unit tests
+
 ## Diagrams (2.0.0) - 2021-03-24
 
 ## Added

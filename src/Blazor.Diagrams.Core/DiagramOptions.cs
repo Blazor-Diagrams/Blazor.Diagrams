@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.ComponentModel;
@@ -23,8 +24,12 @@ namespace Blazor.Diagrams.Core
         public DiagramZoomOptions Zoom { get; set; } = new DiagramZoomOptions();
         public DiagramLinkOptions Links { get; set; } = new DiagramLinkOptions();
         public DiagramGroupOptions Groups { get; set; } = new DiagramGroupOptions();
+        public DiagramConstraintsOptions Constraints { get; set; } = new DiagramConstraintsOptions();
     }
 
+    /// <summary>
+    /// All the options regarding links.
+    /// </summary>
     public class DiagramLinkOptions
     {
         [Description("The default component for links")]
@@ -45,6 +50,9 @@ namespace Blazor.Diagrams.Core
         public LinkFactory Factory { get; set; } = (diagram, sourcePort) => new LinkModel(sourcePort);
     }
 
+    /// <summary>
+    /// All the options regarding zooming.
+    /// </summary>
     public class DiagramZoomOptions
     {
         [Description("Whether to allow zooming or not")]
@@ -59,6 +67,9 @@ namespace Blazor.Diagrams.Core
         public double ScaleFactor { get; set; } = 1.05;
     }
 
+    /// <summary>
+    /// All the options regarding groups.
+    /// </summary>
     public class DiagramGroupOptions
     {
         [Description("Whether to allow users to group/ungroup nodes")]
@@ -67,5 +78,15 @@ namespace Blazor.Diagrams.Core
         public Func<KeyboardEventArgs, bool> KeyboardShortcut { get; set; } = e => e.CtrlKey && e.AltKey && e.Key == "g";
         [Description("Group model factory")]
         public GroupFactory Factory { get; set; } = (diagram, children) => new GroupModel(children);
+    }
+
+    /// <summary>
+    /// All the options regarding diagram constraints, such as deciding whether to delete a node or not.
+    /// </summary>
+    public class DiagramConstraintsOptions
+    {
+        public Func<NodeModel, bool> ShouldDeleteNode { get; set; } = _ => true;
+        public Func<BaseLinkModel, bool> ShouldDeleteLink { get; set; } = _ => true;
+        public Func<GroupModel, bool> ShouldDeleteGroup { get; set; } = _ => true;
     }
 }

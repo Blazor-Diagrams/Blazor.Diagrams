@@ -17,25 +17,27 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != Diagram.Options.DeleteKey)
                 return;
 
-            // TODO: BATCH REFRESH
-            foreach (var sm in Diagram.GetSelectedModels().ToList())
+            Diagram.Batch(() =>
             {
-                if (sm.Locked)
-                    continue;
+                foreach (var sm in Diagram.GetSelectedModels().ToList())
+                {
+                    if (sm.Locked)
+                        continue;
 
-                if (sm is GroupModel group)
-                {
-                    Diagram.RemoveGroup(group);
+                    if (sm is GroupModel group && Diagram.Options.Constraints.ShouldDeleteGroup(group))
+                    {
+                        Diagram.RemoveGroup(group);
+                    }
+                    else if (sm is NodeModel node && Diagram.Options.Constraints.ShouldDeleteNode(node))
+                    {
+                        Diagram.Nodes.Remove(node);
+                    }
+                    else if (sm is BaseLinkModel link && Diagram.Options.Constraints.ShouldDeleteLink(link))
+                    {
+                        Diagram.Links.Remove(link);
+                    }
                 }
-                else if (sm is NodeModel node)
-                {
-                    Diagram.Nodes.Remove(node);
-                }
-                else if (sm is BaseLinkModel link)
-                {
-                    Diagram.Links.Remove(link);
-                }
-            }
+            });
         }
 
         public override void Dispose()

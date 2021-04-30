@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
+[assembly: InternalsVisibleTo("Blazor.Diagrams.Core.Tests")]
 namespace Blazor.Diagrams.Core
 {
     public class Diagram : Model
@@ -136,6 +137,10 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
+        /// <summary>
+        /// Splits up the group by deleting the group and keeping the children.
+        /// </summary>
+        /// <param name="group">A group instance.</param>
         public void Ungroup(GroupModel group)
         {
             if (!_groups.Remove(group))
@@ -149,6 +154,10 @@ namespace Blazor.Diagrams.Core
             });
         }
 
+        /// <summary>
+        /// Deletes the group and all its children from the diagram.
+        /// </summary>
+        /// <param name="group">A group instnace.</param>
         public void RemoveGroup(GroupModel group)
         {
             if (!_groups.Remove(group))

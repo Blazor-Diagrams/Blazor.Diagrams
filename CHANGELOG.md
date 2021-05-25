@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (2.1.1) - 2021-05-25
+
+### Fixed
+
+- Exception when navigating to the Options page (#95).
+- Portless links not deleted when node is deleted (#96).
+
 ## Diagrams (2.1.0) - 2021-03-24
 
 ## Added
@@ -17,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Diagrams (2.0.0) - 2021-03-24
 
-## Added
+### Added
 
 - `GroupUngrouped` event (not the greatest name 😄)
 - Touch events `TouchStart`, `TouchMove` and `TouchEnd`
@@ -91,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- This also works for groups, since groups are nodes
 - Unit tests
 
-## Changed
+### Changed
 
 - Renamed `DiagramManager` to `Diagram`
 - Remove need to specify `Name` in diagram's `CascadingValue`
@@ -127,7 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Only render links when ports/nodes are initialized (position and/or size received)
 	- This will avoid the weird flicker where links show at (0, 0) then move to the correct position
 
-## Fixed
+### Fixed
 
 - Remove links when groups are removed
 - Issue where links are clickable outside the visible stroke
@@ -147,30 +154,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Diagrams [1.5.2] - 2021-01-18
 
-## Fixed
+### Fixed
 
 - Missing MouseUp event on links.
 
 ## Diagrams [1.5.1] - 2021-01-09
 
-## Added
+### Added
 
 - `AddGroup`: add an instance of a group to the diagram.
 - Custom group documentation/demo.
 
-## Fixed
+### Fixed
 
 - Clicking the canvas in the Events demo throws an exception.
 
 ## Diagrams [1.5.0] - 2021-01-05
 
-## Added
+### Added
 
 - The ability to have ports on groups.
 - **EXPERIMENTAL/INCOMPLETE** Nested groups. Since `GroupModel` now inherits `NodeMode`, it became possible to have nested groups, but there are still problems with the order of links between groups.
 - A `Class` parameter to `GroupContainer`.
 
-## Changed
+### Changed
 
 - Only rerender groups when necessary.
 - Receiving the same size from `ResizeObserver` doesn't trigger a rerender anymore.
@@ -178,14 +185,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid rerendering ports when their parent node is moving.
 - Padding is now handled in `GroupModel` instead of `GroupContainer` (UI). This is because the padding is necessary to have accurate size/position in the group model directly.
 
-## Fixed
+### Fixed
 
 - Use `@key` when rendering the list of groups. Not using it caused big/weird render times.
 - Groups not showing in Navigator/Overview.
 
 ## Diagrams [1.4.2] - 2020-12-30
 
-## Added
+### Added
 
 - Locked nodes now have a `locked` class and their cursor is changed to `pointer`.
 

@@ -85,8 +85,11 @@ namespace Blazor.Diagrams.Core
     /// </summary>
     public class DiagramConstraintsOptions
     {
+        [Description("Decide if a node can/should be deleted")]
         public Func<NodeModel, bool> ShouldDeleteNode { get; set; } = _ => true;
+        [Description("Decide if a link can/should be deleted")]
         public Func<BaseLinkModel, bool> ShouldDeleteLink { get; set; } = _ => true;
+        [Description("Decide if a group can/should be deleted")]
         public Func<GroupModel, bool> ShouldDeleteGroup { get; set; } = _ => true;
     }
 }

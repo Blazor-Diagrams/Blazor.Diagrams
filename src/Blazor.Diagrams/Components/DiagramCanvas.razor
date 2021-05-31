@@ -17,12 +17,12 @@
     <svg class="diagram-svg-layer" style="@LayerStyle">
         @foreach (var link in Diagram.Links)
         {
-            <LinkRenderer @key="link.Id" Link="link" />
+            <LinkRenderer @key="link" Link="link" />
         }
 
         @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.SVG))
         {
-            <NodeRenderer @key="node.Id" Node="node" />
+            <NodeRenderer @key="node" Node="node" />
         }
     </svg>
 
@@ -30,12 +30,12 @@
     <div class="diagram-html-layer" style="@LayerStyle">
         @foreach (var group in Diagram.Groups)
         {
-            <GroupRenderer @key="group.Id" Group="group" />
+            <GroupRenderer @key="group" Group="group" />
         }
 
         @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
         {
-            <NodeRenderer @key="node.Id" Node="node" />
+            <NodeRenderer @key="node" Node="node" />
         }
     </div>
 

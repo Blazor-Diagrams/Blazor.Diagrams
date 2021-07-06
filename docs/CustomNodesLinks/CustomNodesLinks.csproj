@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Z.Blazor.Diagrams" Version="2.1.2" />
+    <PackageReference Include="Z.Blazor.Diagrams.Core" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
+    <ProjectReference Include="..\..\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
+  </ItemGroup>
+
+</Project>

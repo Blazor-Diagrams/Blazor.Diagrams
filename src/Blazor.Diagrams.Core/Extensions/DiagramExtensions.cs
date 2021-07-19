@@ -19,6 +19,9 @@ namespace Blazor.Diagrams.Core.Extensions
 
             foreach (var node in nodes)
             {
+                if (node.Size == null) // Ignore nodes that didn't get a size yet
+                    continue;
+
                 var trX = node.Position.X + node.Size!.Width;
                 var bY = node.Position.Y + node.Size.Height;
 

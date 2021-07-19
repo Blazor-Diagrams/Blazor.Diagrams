@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (2.1.3) - 2021-07-19
+
+### Added
+
+- Multiple demo projects by [TrevorDArcyEvans](https://github.com/TrevorDArcyEvans) showing:
+	- Minimal project setup
+	- Custom nodes & links
+	- GraphShape layout algorithms
+
+### Fixed
+
+- Link labels not appearing (fixes #109).
+- `ZoomToFit` throwing a `NullReferenceException` when one of the nodes doesn't have a size yet (fixes #118).
+
 ## Diagrams (2.1.2) - 2021-05-31
 
 ### Fixed

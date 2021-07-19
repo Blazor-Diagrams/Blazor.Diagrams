@@ -49,7 +49,8 @@ You can get started very easily & quickly using:
 
 - [Documentation](https://blazor-diagrams.zhaytam.com/)
 - [Quick Start](https://blazor-diagrams.zhaytam.com/quickstart)
-- [Demos](https://blazor-diagrams.zhaytam.com/demos/simple)
+- [Samples](https://blazor-diagrams.zhaytam.com/demos/simple)
+- [Docs/Demos](https://github.com/Blazor-Diagrams/Blazor.Diagrams/tree/master/docs)
 
 ### Sample project
 

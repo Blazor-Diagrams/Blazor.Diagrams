@@ -35,12 +35,10 @@ namespace Blazor.Diagrams.Components.Renderers
             if (position == null)
                 return;
 
-            builder.OpenElement(0, "g");
-            builder.OpenComponent(1, component);
-            builder.AddAttribute(2, "Label", Label);
-            builder.AddAttribute(3, "Position", position);
+            builder.OpenComponent(0, component);
+            builder.AddAttribute(1, "Label", Label);
+            builder.AddAttribute(2, "Position", position);
             builder.CloseComponent();
-            builder.CloseElement(); // g
         }
 
         private void OnLabelChanged() => StateHasChanged();

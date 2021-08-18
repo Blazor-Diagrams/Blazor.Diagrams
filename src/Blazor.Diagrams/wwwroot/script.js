@@ -42,6 +42,26 @@ var s = {
         s.ro.unobserve(element);
         delete s.tracked[id];
         delete s.canvases[id];
+    },
+    getSizeForLabel: function (content) {
+        var div = document.createElement('div');
+
+        // Disables block layout and outside wrapping and hides the div
+        div.style.position = 'absolute';
+        div.style.visibility = 'hidden';
+        div.style.display = 'inline-block';
+        div.style.zoom = '1';
+        div.style.whiteSpace = 'nowrap';
+
+        // Adds the text and inserts into DOM for updating of size
+        div.innerHTML = content;
+        document.body.appendChild(div);
+
+        // Gets the size and removes from DOM
+        var size = { Height: div.offsetHeight, Width: div.offsetWidth };
+        document.body.removeChild(div);
+
+        return size;
     }
 };
 window.ZBlazorDiagrams = s;

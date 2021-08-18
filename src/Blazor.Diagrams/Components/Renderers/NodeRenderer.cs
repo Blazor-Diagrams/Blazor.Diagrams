@@ -116,7 +116,11 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.OpenComponent(14, componentType);
             builder.AddAttribute(15, "Node", Node);
             builder.CloseComponent();
-            builder.CloseElement();
+            builder.CloseElement(); 
+            
+            builder.OpenComponent(16, typeof(NodeLabelRenderer));
+            builder.AddAttribute(17, "Label", Node.LabelModel);
+            builder.CloseComponent();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

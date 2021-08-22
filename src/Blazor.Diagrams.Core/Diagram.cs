@@ -342,6 +342,14 @@ namespace Blazor.Diagrams.Core
             return new Point(clientX - Container.Left, clientY - Container.Top);
         }
 
+        public Point GetScreenPoint(double clientX, double clientY)
+        {
+            if (Container == null)
+                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+
+            return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
+        }
+
         #region Events
 
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);

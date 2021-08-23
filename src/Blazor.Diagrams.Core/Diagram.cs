@@ -295,11 +295,15 @@ namespace Blazor.Diagrams.Core
 
             var xf = Container.Width / width;
             var yf = Container.Height / height;
-            Zoom = Math.Min(xf, yf);
 
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
+
+            SuspendRefresh = true;
+            SetZoom(Math.Min(xf, yf));
             UpdatePan(Container.Left - nx, Container.Top - ny);
+            SuspendRefresh = false;
+            Refresh();
         }
 
         public void UpdatePan(double deltaX, double deltaY)

@@ -87,4 +87,14 @@
     overflow: visible;
     pointer-events: none;
 }
+
+.nodelabel {
+    position: absolute;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: move;
+    pointer-events: all;
+}
 /*# sourceMappingURL=wwwroot\style.css.map */

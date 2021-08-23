@@ -22,5 +22,10 @@ namespace Blazor.Diagrams.Extensions
         {
             await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.unobserve", element, element.Id);
         }
+
+        public static async Task<Size> GetSizeForLabel(this IJSRuntime jsRuntime, string content)
+        {
+            return await jsRuntime.InvokeAsync<Size>("ZBlazorDiagrams.getSizeForLabel", content);
+        }
     }
 }

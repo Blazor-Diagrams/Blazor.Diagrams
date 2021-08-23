@@ -49,6 +49,26 @@ namespace Blazor.Diagrams.Core.Models
         public IReadOnlyList<BaseLinkModel> Links => _links;
         public IEnumerable<BaseLinkModel> AllLinks => Ports.SelectMany(p => p.Links);
 
+        public string Label
+        {
+            get { return LabelModel.Content; }
+            set { LabelModel.Content = value; }
+        }
+
+        NodeLabelModel _LabelModel;
+        public NodeLabelModel LabelModel
+        {
+            get
+            {
+                if (_LabelModel == null)
+                {
+                    _LabelModel = new NodeLabelModel(this, "Node Title");
+                }
+                return _LabelModel;
+            }
+            set { _LabelModel = value; }
+        }
+
         public PortModel AddPort(PortModel port)
         {
             _ports.Add(port);

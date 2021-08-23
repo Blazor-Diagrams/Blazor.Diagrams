@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -21,6 +22,74 @@ namespace Blazor.Diagrams.Core.Tests
             // Assert
             pt.X.Should().Be(203.4); // 2*X + panX + left
             pt.Y.Should().Be(361.8); // 2*Y + panY + top
+        }
+
+        [Fact]
+        public void ZoomToFit_ShouldUseSelectedNodesIfAny()
+        {
+            // Arrange
+            var diagram = new Diagram();
+            diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
+            diagram.Nodes.Add(new NodeModel(new Point(50, 50))
+            {
+                Size = new Size(100, 80)
+            });
+            diagram.SelectModel(diagram.Nodes[0], true);
+
+            // Act
+            diagram.ZoomToFit(10);
+
+            // Assert
+            diagram.Zoom.Should().BeApproximately(7.68, 0.001);
+            diagram.Pan.X.Should().Be(-40);
+            diagram.Pan.Y.Should().Be(-40);
+        }
+
+        [Fact]
+        public void ZoomToFit_ShouldUseNodesWhenNoneSelected()
+        {
+            // Arrange
+            var diagram = new Diagram();
+            diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
+            diagram.Nodes.Add(new NodeModel(new Point(50, 50))
+            {
+                Size = new Size(100, 80)
+            });
+
+            // Act
+            diagram.ZoomToFit(10);
+
+            // Assert
+            diagram.Zoom.Should().BeApproximately(7.68, 0.001);
+            diagram.Pan.X.Should().Be(-40);
+            diagram.Pan.Y.Should().Be(-40);
+        }
+
+        [Fact]
+        public void ZoomToFit_ShouldTriggerAppropriateEvents()
+        {
+            // Arrange
+            var diagram = new Diagram();
+            diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
+            diagram.Nodes.Add(new NodeModel(new Point(50, 50))
+            {
+                Size = new Size(100, 80)
+            });
+
+            var refreshes = 0;
+            var zoomChanges = 0;
+            var panChanges = 0;
+
+            // Act
+            diagram.Changed += () => refreshes++;
+            diagram.ZoomChanged += () => zoomChanges++;
+            diagram.PanChanged += () => panChanges++;
+            diagram.ZoomToFit(10);
+
+            // Assert
+            refreshes.Should().Be(1);
+            zoomChanges.Should().Be(1);
+            panChanges.Should().Be(1);
         }
     }
 }

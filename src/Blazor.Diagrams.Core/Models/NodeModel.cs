@@ -44,6 +44,7 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
         public GroupModel? Group { get; internal set; }
+        public string Title { get; set; }
 
         public IReadOnlyList<PortModel> Ports => _ports;
         public IReadOnlyList<BaseLinkModel> Links => _links;

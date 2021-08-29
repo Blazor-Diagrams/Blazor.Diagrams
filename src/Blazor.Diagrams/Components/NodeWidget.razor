@@ -1,5 +1,5 @@
 ﻿<div class="default-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")">
-    Node Title
+    @(Node.Title ?? "Title")
     @foreach (var port in Node.Ports)
     {
         <PortRenderer Port="port" Class="default"></PortRenderer>

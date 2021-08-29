@@ -7,10 +7,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>zHaytam</Authors>
     <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <AssemblyVersion>2.1.3</AssemblyVersion>
-    <FileVersion>2.1.3</FileVersion>
+    <AssemblyVersion>2.1.4</AssemblyVersion>
+    <FileVersion>2.1.4</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>2.1.3</Version>
+    <Version>2.1.4</Version>
     <PackageId>Z.Blazor.Diagrams.Core</PackageId>
     <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
     <Product>Z.Blazor.Diagrams.Core</Product>

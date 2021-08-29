@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (2.1.4) - 2021-08-29
+
+### Added
+
+- `MouseDoubleClick` (500ms interval) event in `Diagram`.
+- `GetScreenPoint` in `Diagram` in order to get the screen points from a diagram point (e.g. node position).
+- `Title` property in `NodeModel`, used by the default node widget.
+
+### Fixed
+
+- `ZoomToFit` not triggering `ZoomChanged` event.
+- `SourceNode` and `TargetNode` not being set in `BaseLinkModel` when the ports change.
+
 ## Diagrams (2.1.3) - 2021-07-19
 
 ### Added

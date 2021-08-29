@@ -27,6 +27,7 @@ namespace Blazor.Diagrams.Core
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
         public event Action<Model, MouseEventArgs>? MouseClick;
+        public event Action<Model, MouseEventArgs>? MouseDoubleClick;
         public event Action<Model, TouchEventArgs>? TouchStart;
         public event Action<Model, TouchEventArgs>? TouchMove;
         public event Action<Model, TouchEventArgs>? TouchEnd;
@@ -294,11 +295,15 @@ namespace Blazor.Diagrams.Core
 
             var xf = Container.Width / width;
             var yf = Container.Height / height;
-            Zoom = Math.Min(xf, yf);
 
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
+
+            SuspendRefresh = true;
+            SetZoom(Math.Min(xf, yf));
             UpdatePan(Container.Left - nx, Container.Top - ny);
+            SuspendRefresh = false;
+            Refresh();
         }
 
         public void UpdatePan(double deltaX, double deltaY)
@@ -341,6 +346,16 @@ namespace Blazor.Diagrams.Core
             return new Point(clientX - Container.Left, clientY - Container.Top);
         }
 
+        public Point GetScreenPoint(double clientX, double clientY)
+        {
+            if (Container == null)
+                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+
+            return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
+        }
+
+        #region Events
+
         internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 
         internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
@@ -353,10 +368,14 @@ namespace Blazor.Diagrams.Core
 
         internal void OnMouseClick(Model model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
 
+        internal void OnMouseDoubleClick(Model model, MouseEventArgs e) => MouseDoubleClick?.Invoke(model, e);
+
         internal void OnTouchStart(Model model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
 
         internal void OnTouchMove(Model model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
 
         internal void OnTouchEnd(Model model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
+
+        #endregion
     }
 }

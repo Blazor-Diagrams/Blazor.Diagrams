@@ -43,8 +43,8 @@ namespace Blazor.Diagrams.Core.Models.Base
             TargetNode = targetPort?.Parent;
         }
 
-        public NodeModel SourceNode { get; }
-        public NodeModel? TargetNode { get; }
+        public NodeModel SourceNode { get; private set; }
+        public NodeModel? TargetNode { get; private set; }
         public PortModel? SourcePort { get; private set; }
         public PortModel? TargetPort { get; private set; }
         public bool IsAttached => TargetNode != null || TargetPort != null;
@@ -67,6 +67,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             SourcePort?.RemoveLink(this);
             SourcePort = port;
             SourcePort.AddLink(this);
+            SourceNode = SourcePort.Parent;
             SourcePortChanged?.Invoke(this, old, SourcePort);
         }
 
@@ -79,6 +80,7 @@ namespace Blazor.Diagrams.Core.Models.Base
             TargetPort?.RemoveLink(this);
             TargetPort = port;
             TargetPort?.AddLink(this);
+            TargetNode = TargetPort?.Parent;
             TargetPortChanged?.Invoke(this, old, TargetPort);
         }
     }

@@ -73,6 +73,12 @@ namespace SharedDemo.Demos
                 events.Add($"MouseClick, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
+
+            diagram.MouseDoubleClick += (m, e) =>
+            {
+                events.Add($"MouseDoubleClick, Type={m?.GetType().Name}, ModelId={m?.Id}");
+                StateHasChanged();
+            };
         }
 
         private NodeModel NewNode(double x, double y)

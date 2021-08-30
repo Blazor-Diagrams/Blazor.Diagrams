@@ -41,8 +41,8 @@ namespace Blazor.Diagrams.Core.Tests
 
             // Assert
             diagram.Zoom.Should().BeApproximately(7.68, 0.001);
-            diagram.Pan.X.Should().Be(-40);
-            diagram.Pan.Y.Should().Be(-40);
+            diagram.Pan.X.Should().Be(-307.2);
+            diagram.Pan.Y.Should().Be(-307.2);
         }
 
         [Fact]
@@ -61,8 +61,8 @@ namespace Blazor.Diagrams.Core.Tests
 
             // Assert
             diagram.Zoom.Should().BeApproximately(7.68, 0.001);
-            diagram.Pan.X.Should().Be(-40);
-            diagram.Pan.Y.Should().Be(-40);
+            diagram.Pan.X.Should().Be(-307.2);
+            diagram.Pan.Y.Should().Be(-307.2);
         }
 
         [Fact]

@@ -38,8 +38,8 @@ namespace Blazor.Diagrams.Core.Layers
             }
             else
             {
-                link.SourceNode.AddLink(link);
-                link.TargetNode?.AddLink(link);
+                link.SourceNode.RemoveLink(link);
+                link.TargetNode?.RemoveLink(link);
             }
 
             link.SourceNode.Group?.Refresh();

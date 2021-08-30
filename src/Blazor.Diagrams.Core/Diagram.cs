@@ -293,15 +293,16 @@ namespace Blazor.Diagrams.Core
             var minX = bounds.Left - margin;
             var minY = bounds.Top - margin;
 
+            SuspendRefresh = true;
+
             var xf = Container.Width / width;
             var yf = Container.Height / height;
+            SetZoom(Math.Min(xf, yf));
 
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;
-
-            SuspendRefresh = true;
-            SetZoom(Math.Min(xf, yf));
             UpdatePan(Container.Left - nx, Container.Top - ny);
+
             SuspendRefresh = false;
             Refresh();
         }

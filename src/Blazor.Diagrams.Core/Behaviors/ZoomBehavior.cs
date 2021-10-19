@@ -15,7 +15,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void Diagram_Wheel(WheelEventArgs e)
         {
-            if (Diagram.Container == null)
+            if (Diagram.Container == null || e.DeltaY == 0)
                 return;
 
             if (!Diagram.Options.Zoom.Enabled)
@@ -26,7 +26,6 @@ namespace Blazor.Diagrams.Core.Behaviors
             var deltaY = Diagram.Options.Zoom.Inverse ? e.DeltaY * -1 : e.DeltaY;
             var newZoom = deltaY > 0 ? oldZoom * scale : oldZoom / scale;
             newZoom = Math.Clamp(newZoom, Diagram.Options.Zoom.Minimum, Diagram.Options.Zoom.Maximum);
-            Console.WriteLine($"{e.DeltaY}, {oldZoom}, {newZoom}");
 
             if (newZoom < 0 || newZoom == Diagram.Zoom)
                 return;

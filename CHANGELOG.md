@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (2.1.6) - 2021-10-31
+
+### Fixed
+
+- `ZoomBehavior` using new zoom before Clamp to set Pan. (fixes #141)
+- `PanChanged` not triggering when zooming with the mouse wheel.
+- Zoom value decreasing when the mouse wheel delta is zero.
+- Ports aren't refreshed when links are added in `OnInitializedAsync`. (fixes #111)
+
 ## Diagrams (2.1.5) - 2021-08-30
 
 ### Fixed

@@ -65,7 +65,7 @@ namespace Blazor.Diagrams.Core
         public LinkLayer Links { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; internal set; }
-        public Point Pan { get; internal set; } = Point.Zero;
+        public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }
         public bool SuspendRefresh { get; set; }
@@ -304,6 +304,13 @@ namespace Blazor.Diagrams.Core
             UpdatePan(Container.Left - nx, Container.Top - ny);
 
             SuspendRefresh = false;
+            Refresh();
+        }
+
+        public void SetPan(double x, double y)
+        {
+            Pan = new Point(x, y);
+            PanChanged?.Invoke();
             Refresh();
         }
 

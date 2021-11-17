@@ -107,6 +107,9 @@ namespace Blazor.Diagrams.Core.Models
 
         private bool UpdateDimensions()
         {
+            if (Children.Count == 0)
+                return true;
+
             if (Children.Any(n => n.Size == null))
                 return false;
 

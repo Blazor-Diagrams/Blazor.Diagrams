@@ -166,6 +166,7 @@ namespace Blazor.Diagrams.Core
 
             Batch(() =>
             {
+                _groups.RemoveAll(g => ((NodeModel)g).Group?.Equals(group) ?? false);
                 Nodes.Remove(group.Children.ToArray());
                 Links.Remove(group.AllLinks.ToArray());
                 group.Ungroup();

@@ -101,12 +101,6 @@ namespace Blazor.Diagrams.Core.Models
         {
             if (UpdateDimensions())
             {
-                if (Group?.UpdateDimensions() ?? false)
-                {
-                    // Update the parent group's dimensions
-                    Group.Refresh();
-                }
-
                 Refresh();
             }
         }

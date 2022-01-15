@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
+[assembly: InternalsVisibleTo("Blazor.Diagrams.Tests")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Core.Tests")]
 namespace Blazor.Diagrams.Core
 {

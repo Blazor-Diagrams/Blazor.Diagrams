@@ -64,7 +64,7 @@ namespace Blazor.Diagrams.Components.Groups
         private void OnGroupChanged()
         {
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e);

@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Components
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter] public Diagram Diagram { get; set; }
+        [CascadingParameter] public IDiagram Diagram { get; set; }
         [Parameter] public LinkVertexModel Vertex { get; set; }
         [Parameter] public string Color { get; set; }
         [Parameter] public string SelectedColor { get; set; }
@@ -41,7 +41,7 @@ namespace Blazor.Diagrams.Components
         private void OnVertexChanged()
         {
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Vertex, e);

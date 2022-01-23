@@ -142,7 +142,7 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Port.Initialized)
             {
                 _shouldRender = true;
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             }
             else
             {

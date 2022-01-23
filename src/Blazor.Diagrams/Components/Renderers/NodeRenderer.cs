@@ -164,7 +164,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private void ReRender()
         {
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e);

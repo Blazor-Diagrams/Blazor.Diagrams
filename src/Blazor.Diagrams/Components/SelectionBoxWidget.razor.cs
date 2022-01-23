@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Components
                 }
             }
 
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void SetSelectionBoxInformation(MouseEventArgs e)
@@ -80,7 +80,7 @@ namespace Blazor.Diagrams.Components
             _initialClientPoint = null;
             _selectionBoxTopLeft = null;
             _selectionBoxSize = null;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()

@@ -41,7 +41,7 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.CloseComponent();
         }
 
-        private void OnLabelChanged() => StateHasChanged();
+        private void OnLabelChanged() => InvokeAsync(StateHasChanged);
 
         private Point FindPosition()
         {

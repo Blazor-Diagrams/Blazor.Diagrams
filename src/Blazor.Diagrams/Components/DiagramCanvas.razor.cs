@@ -25,7 +25,7 @@ namespace Blazor.Diagrams.Components
 
         protected ElementReference elementReference;
         private DotNetObjectReference<DiagramCanvas> _reference;
-        private bool _shouldReRender;
+        private bool _shouldRender;
 
         private string LayerStyle
             => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
@@ -54,9 +54,9 @@ namespace Blazor.Diagrams.Components
 
         protected override bool ShouldRender()
         {
-            if (_shouldReRender)
+            if (_shouldRender)
             {
-                _shouldReRender = false;
+                _shouldRender = false;
                 return true;
             }
 
@@ -81,8 +81,8 @@ namespace Blazor.Diagrams.Components
 
         private void OnDiagramChanged()
         {
-            _shouldReRender = true;
-            StateHasChanged();
+            _shouldRender = true;
+            InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()

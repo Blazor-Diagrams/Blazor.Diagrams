@@ -19,14 +19,14 @@ namespace Blazor.Diagrams.Components.Renderers
 
         public void Dispose()
         {
-            Link.Changed -= Link_Changed;
+            Link.Changed -= OnLinkChanged;
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            Link.Changed += Link_Changed;
+            Link.Changed += OnLinkChanged;
         }
 
         protected override bool ShouldRender() => _shouldRender;
@@ -57,10 +57,10 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void OnAfterRender(bool firstRender) => _shouldRender = false;
 
-        private void Link_Changed()
+        private void OnLinkChanged()
         {
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e);

@@ -74,7 +74,7 @@ namespace Blazor.Diagrams.Components
             NodePositionAdjustment = new Point(nodesMinX < 0 ? Math.Abs(nodesMinX) : 0, nodesMinY < 0 ? Math.Abs(nodesMinY) : 0);
             XFactor = Width / fullSizeWidth;
             YFactor = Height / fullSizeHeight;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void AdjustFullSizeWithNodesRect(double nodesMinX, double nodesMinY, ref double fullSizeWidth,

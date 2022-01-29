@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Components
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter] public IDiagram Diagram { get; set; }
+        [CascadingParameter] public Diagram Diagram { get; set; }
         [Parameter] public LinkVertexModel Vertex { get; set; }
         [Parameter] public string Color { get; set; }
         [Parameter] public string SelectedColor { get; set; }

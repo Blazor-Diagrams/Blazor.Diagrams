@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -27,6 +28,7 @@ namespace Blazor.Diagrams.Core.Models
             Size = size ?? Size.Zero;
         }
 
+        public event Action<BaseLinkModel> LinkRemoved;
         public NodeModel Parent { get; }
         public PortAlignment Alignment { get; }
         public Point Position { get; set; }
@@ -55,6 +57,10 @@ namespace Blazor.Diagrams.Core.Models
 
         internal void AddLink(BaseLinkModel link) => _links.Add(link);
 
-        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
+        internal void RemoveLink(BaseLinkModel link)
+        {
+            _links.Remove(link);
+            LinkRemoved.Invoke(link);
+        }
     }
 }

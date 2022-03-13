@@ -281,6 +281,10 @@ namespace Blazor.Diagrams.Core
             return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
         }
 
+        /// <summary>
+        /// Zoom in on selected Nodes
+        /// </summary>
+        /// <param name="margin"></param>
         public void ZoomToFit(double margin = 10)
         {
             if (Container == null || Nodes.Count == 0)
@@ -289,6 +293,11 @@ namespace Blazor.Diagrams.Core
             var selectedNodes = Nodes.Where(s => s.Selected);
             var nodesToUse = selectedNodes.Any() ? selectedNodes : Nodes;
             var bounds = nodesToUse.GetBounds();
+            ZoomToFit(bounds, margin);
+           
+        }
+        private void ZoomToFit(Rectangle bounds, double margin)
+        {
             var width = bounds.Width + 2 * margin;
             var height = bounds.Height + 2 * margin;
             var minX = bounds.Left - margin;
@@ -307,6 +316,29 @@ namespace Blazor.Diagrams.Core
             SuspendRefresh = false;
             Refresh();
         }
+
+        /// <summary>
+        /// Zooms in on a model
+        /// </summary>
+        /// <param name="model">Model to zoom into</param>
+        /// <param name="margin">Spacing in pixels</param>
+        /// <param name="zoom">Zoom level</param>
+        /// <param name="select">Select the model after zoom. False by default</param>
+        public void ZoomToFit(Model model, double margin = 10, bool select = false)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), $"{nameof(model)} can't be null.");
+            }
+
+            ZoomToFit(model.GetBounds(), margin);
+            if (select && model is SelectableModel sm)
+            {
+                SelectModel(sm, true);
+            }
+        }
+
+
 
         public void SetPan(double x, double y)
         {
@@ -362,6 +394,12 @@ namespace Blazor.Diagrams.Core
 
             return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
         }
+
+
+       
+
+
+      
 
         #region Events
 

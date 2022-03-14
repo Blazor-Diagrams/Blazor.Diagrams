@@ -307,7 +307,8 @@ namespace Blazor.Diagrams.Core
 
             var xf = Container.Width / width;
             var yf = Container.Height / height;
-            SetZoom(Math.Min(xf, yf));
+            var zoom = Math.Min(xf, yf);
+            SetZoom(zoom);
 
             var nx = Container.Left + Pan.X + minX * Zoom;
             var ny = Container.Top + Pan.Y + minY * Zoom;

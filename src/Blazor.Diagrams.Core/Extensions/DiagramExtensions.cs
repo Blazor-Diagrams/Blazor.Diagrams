@@ -48,6 +48,37 @@ namespace Blazor.Diagrams.Core.Extensions
             return new Rectangle(minX, minY, maxX, maxY);
         }
 
+        public static Rectangle GetBounds(Point Position, Size Size)
+        {
+            var minX = double.MaxValue;
+            var maxX = double.MinValue;
+            var minY = double.MaxValue;
+            var maxY = double.MinValue;
+
+
+            var trX = Position.X + Size!.Width;
+            var bY = Position.Y + Size.Height;
+
+            if (Position.X < minX)
+            {
+                minX = Position.X;
+            }
+            if (trX > maxX)
+            {
+                maxX = trX;
+            }
+            if (Position.Y < minY)
+            {
+                minY = Position.Y;
+            }
+            if (bY > maxY)
+            {
+                maxY = bY;
+            }
+
+            return new Rectangle(minX, minY, maxX, maxY);
+        }
+
         /// <summary>
         /// Gets a rectangle that represents the model's position
         /// </summary>
@@ -55,58 +86,39 @@ namespace Blazor.Diagrams.Core.Extensions
         /// <returns></returns>
         public static Rectangle GetBounds(this Model model)
         {
+            if (model is GroupModel group)
+            {
+                return new Rectangle(group.Position, group.Size);
+            }
             if (model is NodeModel nodeModel)
             {
                 return new Rectangle(nodeModel.Position, nodeModel.Size);
             }
             if (model is BaseLinkModel linkModel)
             {
-                if (linkModel?.SourcePort?.Position != null && linkModel?.TargetPort?.Position != null)
+                //For the link its usefull to see what its connected to
+                if (linkModel?.SourceNode?.Position != null && linkModel?.TargetNode?.Position != null)
                 {
-                    var minX = double.MaxValue;
-                    var maxX = double.MinValue;
-                    var minY = double.MaxValue;
-                    var maxY = double.MinValue;
 
-                    var linkX = linkModel.SourcePort.Position.X < linkModel.TargetPort.Position.X ? linkModel.SourcePort.Position.X : linkModel.TargetPort.Position.X;
-                    var linkY = linkModel.SourcePort.Position.Y > linkModel.TargetPort.Position.Y ? linkModel.SourcePort.Position.Y : linkModel.TargetPort.Position.Y;
-                    var Position = new Point(linkX, linkY);
-                    var linkWidth = Math.Abs(linkModel.SourcePort.Position.X - linkModel.TargetPort.Position.X);
-                    var linkHeight = Math.Abs(linkModel.SourcePort.Position.Y - linkModel.TargetPort.Position.Y);
+                    var smallestXNode = linkModel.SourceNode.Position.X < linkModel.TargetNode.Position.X ? linkModel.SourceNode : linkModel.TargetNode;
+                    var biggestXNode = linkModel.SourceNode.Position.X > linkModel.TargetNode.Position.X ? linkModel.SourceNode : linkModel.TargetNode;
+                    var biggestYNode = linkModel.SourceNode.Position.Y > linkModel.TargetNode.Position.Y ? linkModel.SourceNode : linkModel.TargetNode;
+                    var smallestYNode = linkModel.SourceNode.Position.Y < linkModel.TargetNode.Position.Y ? linkModel.SourceNode : linkModel.TargetNode;
+
+                    var Position = new Point(smallestXNode.Position.X, smallestYNode.Position.Y);
+
+                    var linkWidth = Math.Abs(biggestXNode.Position.X - smallestXNode.Position.X + biggestXNode.Size.Width);
+                    var linkHeight = Math.Abs(biggestYNode.Position.Y - smallestYNode.Position.Y + biggestYNode.Size.Height);
+
+
                     var Size = new Size(linkWidth, linkHeight);
-
-                    var trX = Position.X + Size!.Width;
-                    var bY = Position.Y + Size.Height;
-
-                    if (Position.X < minX)
-                    {
-                        minX = Position.X;
-                    }
-                    if (trX > maxX)
-                    {
-                        maxX = trX;
-                    }
-                    if (Position.Y < minY)
-                    {
-                        minY = Position.Y;
-                    }
-                    if (bY > maxY)
-                    {
-                        maxY = bY;
-                    }
-
-                    return new Rectangle(minX, minY, maxX, maxY);
+                    return GetBounds(Position, Size);
                 }
 
             }
             if (model is PortModel portModel)
             {
                 return new Rectangle(portModel.MiddlePosition, portModel.Size);
-
-            }
-            if (model is GroupModel group)
-            {
-                return new Rectangle(group.Position, group.Size);
             }
             else
             {

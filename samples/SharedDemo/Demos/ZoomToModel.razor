@@ -58,7 +58,7 @@
         base.OnInitialized();
        
         LayoutData.Title = "Zoom to model";
-        LayoutData.Info = "Select a Model and click the button to zoom onto it.";
+        LayoutData.Info = "Click the buttons to zoom onto a model.";
         LayoutData.DataChanged();
     }
 
@@ -78,13 +78,13 @@
                 Title = $"Node 1",
 
             };
-        Node1.SetPosition(100, 100);
+        Node1.SetPosition(300, 100);
 
         Node2 = new NodeModel()
             {
                 Title = "Node 2"
             };
-        Node2.SetPosition(300, 100);
+        Node2.SetPosition(600,100);
         Port1 = new PortModel(Node1, PortAlignment.Right);
         Port2 = new PortModel(Node2, PortAlignment.Left);
         Node1.AddPort(Port1);

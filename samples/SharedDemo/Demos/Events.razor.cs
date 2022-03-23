@@ -40,7 +40,14 @@ namespace SharedDemo.Demos
                 StateHasChanged();
             };
 
-            diagram.Links.Added += (l) => events.Add($"Links.Added, LinkId={l.Id}");
+            diagram.Links.Added += (l) =>
+            {
+                l.NodesLinked += (model, sourcePort, targetPort) =>
+                {
+                    events.Add($"Two Nodes Linked, {sourcePort.Id} and {targetPort.Id}");
+                };
+                events.Add($"Links.Added, LinkId={l.Id}");
+            };
 
             diagram.Links.Removed += (l) => events.Add($"Links.Removed, LinkId={l.Id}");
 

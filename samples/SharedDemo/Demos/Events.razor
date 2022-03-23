@@ -15,6 +15,32 @@
     }
 }
 
+<div style="position: absolute; z-index: 9999;">
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="mouseCheckbox" type="checkbox" class="custom-control-input" @bind="MouseEvents" />
+        <label class="custom-control-label" for="mouseCheckbox">Display Mouse Events</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="touchCheckbox" type="checkbox" class="custom-control-input" @bind="TouchEvents" />
+        <label class="custom-control-label" for="touchCheckbox">Display Touch Events</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="diagramCheckbox" type="checkbox" class="custom-control-input" @bind="DiagramEvents" />
+        <label class="custom-control-label" for="diagramCheckbox">Display Diagram Events</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="nodeCheckbox" type="checkbox" class="custom-control-input" @bind="NodeEvents" />
+        <label class="custom-control-label" for="nodeCheckbox">Display Node Events</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="linkCheckbox" type="checkbox" class="custom-control-input" @bind="LinkEvents" />
+        <label class="custom-control-label" for="linkCheckbox">Display Link Events</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="selectionCheckbox" type="checkbox" class="custom-control-input" @bind="SelectionEvents" />
+        <label class="custom-control-label" for="selectionCheckbox">Display Selection Events</label>
+    </div>
+</div>
 <div style="height: 500px">
     <CascadingValue Value="diagram">
         <DiagramCanvas></DiagramCanvas>
@@ -22,7 +48,7 @@
 </div>
 <h2 class="ml-3">
     Events
-    <button class="btn btn-sm text-danger" @onclick="() => events.Clear()"><i class="fas fa-trash"></i></button>
+    <button class="btn btn-sm text-danger" @onclick="() => events.Clear()"><i class="fas fa-trash"></i></button>    
 </h2>
 <div class="mx-2" style="max-height: 300px; overflow: auto;">
     @foreach (var e in events)

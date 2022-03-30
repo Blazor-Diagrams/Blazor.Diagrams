@@ -23,18 +23,21 @@ namespace Blazor.Diagrams.Components
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            if(Diagram != null)
+            {
+                foreach (var node in Diagram.Nodes)
+                    node.Changed += Refresh;
 
-            foreach (var node in Diagram.Nodes)
-                node.Changed += Refresh;
+                foreach (var group in Diagram.Groups)
+                    group.Changed += Refresh;
 
-            foreach (var group in Diagram.Groups)
-                group.Changed += Refresh;
-
-            Diagram.Changed += Diagram_Changed;
-            Diagram.Nodes.Added += Diagram_NodesAdded;
-            Diagram.Nodes.Removed += Diagram_NodesRemoved;
-            Diagram.GroupAdded += Diagram_GroupAdded;
-            Diagram.GroupRemoved += Diagram_GroupRemoved;
+                Diagram.Changed += Diagram_Changed;
+                Diagram.Nodes.Added += Diagram_NodesAdded;
+                Diagram.Nodes.Removed += Diagram_NodesRemoved;
+                Diagram.GroupAdded += Diagram_GroupAdded;
+                Diagram.GroupRemoved += Diagram_GroupRemoved;
+            }
+           
         }
 
         private void Diagram_Changed() => Refresh();

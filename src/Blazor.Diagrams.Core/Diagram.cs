@@ -40,7 +40,6 @@ namespace Blazor.Diagrams.Core
         public event Action? PanChanged;
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
-        public const double MIN_ZOOM_VALUE = 0.1;
 
         public Diagram(DiagramOptions? options = null)
         {
@@ -325,9 +324,10 @@ namespace Blazor.Diagrams.Core
         public void SetZoom(double newZoom)
         {
             if (newZoom <= 0)
-            {
-                newZoom = MIN_ZOOM_VALUE;
-            }
+                newZoom = Options.Zoom.Minimum;
+            else if (newZoom > Options.Zoom.Maximum)
+                newZoom = Options.Zoom.Maximum;
+
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();

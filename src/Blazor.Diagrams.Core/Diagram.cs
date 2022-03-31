@@ -40,7 +40,7 @@ namespace Blazor.Diagrams.Core
         public event Action? PanChanged;
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
-        public const double MIN_ZOOM_VALUE = 0.01;
+        public const double MIN_ZOOM_VALUE = 0.1;
 
         public Diagram(DiagramOptions? options = null)
         {

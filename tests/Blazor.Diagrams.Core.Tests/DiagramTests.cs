@@ -91,5 +91,29 @@ namespace Blazor.Diagrams.Core.Tests
             zoomChanges.Should().Be(1);
             panChanges.Should().Be(1);
         }
+
+        [Theory]
+        [InlineData(-0.5)]
+        [InlineData(-0.00001)]
+        [InlineData(0)]
+        [InlineData(-3)]
+        public void Zoom_ShoulClampToMinimumValue(double zoomValue)
+        {
+            var diagram = new Diagram();
+            diagram.SetZoom(zoomValue);
+            Assert.Equal(diagram.Zoom, Diagram.MIN_ZOOM_VALUE);
+        }
+
+        [Theory]
+        [InlineData(0.000001)]
+        [InlineData(1)]
+        [InlineData(1.5)]
+        [InlineData(0.1)]
+        public void Zoom_SetZoom(double zoomValue)
+        {
+            var diagram = new Diagram();
+            diagram.SetZoom(zoomValue);
+            Assert.Equal(diagram.Zoom, zoomValue);
+        }
     }
 }

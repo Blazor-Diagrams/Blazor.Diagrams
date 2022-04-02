@@ -23,18 +23,21 @@ namespace Blazor.Diagrams.Components
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            if (Diagram != null)
+            {
+                foreach (var node in Diagram.Nodes)
+                    node.Changed += Refresh;
 
-            foreach (var node in Diagram.Nodes)
-                node.Changed += Refresh;
+                foreach (var group in Diagram.Groups)
+                    group.Changed += Refresh;
 
-            foreach (var group in Diagram.Groups)
-                group.Changed += Refresh;
+                Diagram.Changed += Diagram_Changed;
+                Diagram.Nodes.Added += Diagram_NodesAdded;
+                Diagram.Nodes.Removed += Diagram_NodesRemoved;
+                Diagram.GroupAdded += Diagram_GroupAdded;
+                Diagram.GroupRemoved += Diagram_GroupRemoved;
+            }
 
-            Diagram.Changed += Diagram_Changed;
-            Diagram.Nodes.Added += Diagram_NodesAdded;
-            Diagram.Nodes.Removed += Diagram_NodesRemoved;
-            Diagram.GroupAdded += Diagram_GroupAdded;
-            Diagram.GroupRemoved += Diagram_GroupRemoved;
         }
 
         private void Diagram_Changed() => Refresh();
@@ -55,26 +58,30 @@ namespace Blazor.Diagrams.Components
 
         private void Refresh()
         {
-            var nodes = Diagram.Nodes
-                .Union(Diagram.Groups)
-                .Where(n => n.Size?.Equals(Size.Zero) == false).ToList();
+            if (Diagram != null)
+            {
+                var nodes = Diagram.Nodes
+              .Union(Diagram.Groups)
+              .Where(n => n.Size?.Equals(Size.Zero) == false).ToList();
 
-            if (nodes.Count == 0)
-                return;
+                if (nodes.Count == 0)
+                    return;
 
-            var bounds = nodes.GetBounds();
-            var nodesMinX = bounds.Left * Diagram.Zoom;
-            var nodesMaxX = bounds.Right * Diagram.Zoom;
-            var nodesMinY = bounds.Top * Diagram.Zoom;
-            var nodesMaxY = bounds.Bottom * Diagram.Zoom;
+                var bounds = nodes.GetBounds();
+                var nodesMinX = bounds.Left * Diagram.Zoom;
+                var nodesMaxX = bounds.Right * Diagram.Zoom;
+                var nodesMinY = bounds.Top * Diagram.Zoom;
+                var nodesMaxY = bounds.Bottom * Diagram.Zoom;
 
-            (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
-            AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
+                (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
+                AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
 
-            NodePositionAdjustment = new Point(nodesMinX < 0 ? Math.Abs(nodesMinX) : 0, nodesMinY < 0 ? Math.Abs(nodesMinY) : 0);
-            XFactor = Width / fullSizeWidth;
-            YFactor = Height / fullSizeHeight;
-            InvokeAsync(StateHasChanged);
+                NodePositionAdjustment = new Point(nodesMinX < 0 ? Math.Abs(nodesMinX) : 0, nodesMinY < 0 ? Math.Abs(nodesMinY) : 0);
+                XFactor = Width / fullSizeWidth;
+                YFactor = Height / fullSizeHeight;
+                InvokeAsync(StateHasChanged);
+            }
+
         }
 
         private void AdjustFullSizeWithNodesRect(double nodesMinX, double nodesMinY, ref double fullSizeWidth,
@@ -185,11 +192,17 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            Diagram.Changed -= Diagram_Changed;
-            Diagram.Nodes.Added -= Diagram_NodesAdded;
-            Diagram.Nodes.Removed -= Diagram_NodesRemoved;
+            if (Diagram != null)
+            {
+                Diagram.Changed -= Diagram_Changed;
+                Diagram.Nodes.Added -= Diagram_NodesAdded;
+                Diagram.Nodes.Removed -= Diagram_NodesRemoved;
+                foreach (var node in Diagram.Nodes)
+                    node.Changed -= Refresh;
 
-            // Todo: unregister node/group changed events
+                foreach (var group in Diagram.Groups)
+                    group.Changed -= Refresh;
+            }
         }
     }
 }

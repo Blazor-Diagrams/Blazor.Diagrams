@@ -60,11 +60,19 @@ namespace Blazor.Diagrams.Core
         [Description("Whether to inverse the zoom direction or not")]
         public bool Inverse { get; set; }
         [Description("Minimum value allowed")]
-        public double Minimum { get; set; } = 0.1;
+        public double Minimum { get { return _minimum; } set { SetMinimum(value); } }
+        private double _minimum = 0.1;
         [Description("Maximum value allowed")]
         public double Maximum { get; set; } = 2;
         [Description("Zoom Scale Factor. Should be between 1.01 and 2.  Default is 1.05.")]
         public double ScaleFactor { get; set; } = 1.05;
+
+        private void SetMinimum(double minValue)
+        {
+            if (minValue <= 0)
+                throw new ArgumentException($"(Zoom Options) =>{nameof(Minimum)} cannot be equal or lower than 0");
+            _minimum = minValue;
+        }
     }
 
     /// <summary>

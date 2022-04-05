@@ -107,10 +107,20 @@ namespace Blazor.Diagrams.Core.Tests
         [InlineData(0)]
         [InlineData(-0.1)]
         [InlineData(-0.00001)]
-        public void Zoom_ThrowExceptionWehnLessThan0(double zoomValue)
+        public void Zoom_ThrowExceptionWhenLessThan0(double zoomValue)
         {
             var diagram = new Diagram();
-            Assert.Throws<ArgumentException>(()=>diagram.SetZoom(zoomValue));
+            Assert.Throws<ArgumentException>(() => diagram.SetZoom(zoomValue));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-0.1)]
+        [InlineData(-0.00001)]
+        public void ZoomOptions_ThrowExceptionWhenLessThan0(double zoomValue)
+        {
+            var diagram = new Diagram();
+            Assert.Throws<ArgumentException>(() => diagram.Options.Zoom.Minimum = zoomValue);
         }
     }
 }

@@ -324,6 +324,16 @@ namespace Blazor.Diagrams.Core
 
         public void SetZoom(double newZoom)
         {
+            if (newZoom <= 0)
+                throw new ArgumentException($"{nameof(newZoom)} cannot be equal or lower than 0");
+
+           
+
+            if (newZoom < Options.Zoom.Minimum)
+                newZoom = Options.Zoom.Minimum;
+           
+           
+
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();

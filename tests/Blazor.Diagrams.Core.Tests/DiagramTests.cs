@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests
@@ -90,6 +91,36 @@ namespace Blazor.Diagrams.Core.Tests
             refreshes.Should().Be(1);
             zoomChanges.Should().Be(1);
             panChanges.Should().Be(1);
+        }
+
+        [Theory]
+        [InlineData(0.001)]
+        [InlineData(0.1)]
+        public void Zoom_ShoulClampToMinimumValue(double zoomValue)
+        {
+            var diagram = new Diagram();
+            diagram.SetZoom(zoomValue);
+            Assert.Equal(diagram.Zoom, diagram.Options.Zoom.Minimum);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-0.1)]
+        [InlineData(-0.00001)]
+        public void Zoom_ThrowExceptionWhenLessThan0(double zoomValue)
+        {
+            var diagram = new Diagram();
+            Assert.Throws<ArgumentException>(() => diagram.SetZoom(zoomValue));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-0.1)]
+        [InlineData(-0.00001)]
+        public void ZoomOptions_ThrowExceptionWhenLessThan0(double zoomValue)
+        {
+            var diagram = new Diagram();
+            Assert.Throws<ArgumentException>(() => diagram.Options.Zoom.Minimum = zoomValue);
         }
     }
 }

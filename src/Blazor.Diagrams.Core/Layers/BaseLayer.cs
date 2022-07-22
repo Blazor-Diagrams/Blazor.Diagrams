@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core
         public event Action<T>? Added;
         public event Action<T>? Removed;
 
-        public BaseLayer(Diagram diagram)
+        public BaseLayer(DiagramBase diagram)
         {
             Diagram = diagram;
         }
@@ -98,7 +98,7 @@ namespace Blazor.Diagrams.Core
 
         protected virtual void OnItemRemoved(T item) { }
 
-        public Diagram Diagram { get; }
+        public DiagramBase Diagram { get; }
 
         public int Count => _items.Count;
         public T this[int index] => _items[index];

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Blazor.Diagrams.Core.Events;
 using System;
 using System.Linq;
 
@@ -6,7 +6,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class GroupingBehavior : Behavior
     {
-        public GroupingBehavior(Diagram diagram) : base(diagram)
+        public GroupingBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.KeyDown += Diagram_KeyDown;
         }

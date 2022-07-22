@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Algorithms
 {
     public static class LinksReconnectionAlgorithms
     {
-        public static void ReconnectLinksToClosestPorts(this Diagram diagram)
+        public static void ReconnectLinksToClosestPorts(this DiagramBase diagram)
         {
             // Only refresh ports once
             var portsToRefresh = new HashSet<PortModel>();

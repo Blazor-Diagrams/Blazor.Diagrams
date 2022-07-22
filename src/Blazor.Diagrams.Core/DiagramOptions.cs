@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System;
 using System.ComponentModel;
 

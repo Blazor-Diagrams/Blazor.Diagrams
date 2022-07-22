@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Blazor.Diagrams.Core.Geometry;
 using System.Collections.Generic;
+using Blazor.Diagrams.Extensions;
 
 namespace Blazor.Diagrams.Components
 {
@@ -21,7 +22,7 @@ namespace Blazor.Diagrams.Components
                 return;
 
             var vertex = CreateVertex(e.ClientX, e.ClientY, index);
-            Diagram.OnMouseDown(vertex, e);
+            Diagram.OnMouseDown(vertex, e.ToCore());
         }
 
         private void OnTouchStart(TouchEventArgs e, int index)
@@ -30,7 +31,7 @@ namespace Blazor.Diagrams.Components
                 return;
 
             var vertex = CreateVertex(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY, index);
-            Diagram.OnTouchStart(vertex, e);
+            Diagram.OnTouchStart(vertex, e.ToCore());
         }
 
         private LinkVertexModel CreateVertex(double clientX, double clientY, int index)

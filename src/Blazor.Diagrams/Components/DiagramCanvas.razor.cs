@@ -1,5 +1,4 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -63,21 +62,21 @@ namespace Blazor.Diagrams.Components
             return false;
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e.ToCore());
 
-        private void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e);
+        private void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e.ToCore());
 
-        private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e);
+        private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e.ToCore());
 
-        private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e);
+        private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e.ToCore());
 
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e);
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e.ToCore());
 
-        private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e);
+        private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e.ToCore());
 
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e);
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e.ToCore());
 
         private void OnDiagramChanged()
         {

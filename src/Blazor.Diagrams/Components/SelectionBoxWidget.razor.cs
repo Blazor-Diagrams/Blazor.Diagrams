@@ -1,8 +1,8 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Events;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using System;
 
 namespace Blazor.Diagrams.Components

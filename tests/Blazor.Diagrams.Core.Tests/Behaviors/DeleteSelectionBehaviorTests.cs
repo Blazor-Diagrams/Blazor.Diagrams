@@ -1,7 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
-using Microsoft.AspNetCore.Components.Web;
 using System;
 using Xunit;
 
@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotRun_WhenItsRemoved()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.UnregisterBehavior<DeleteSelectionBehavior>();
             diagram.Nodes.Add(new NodeModel
             {
@@ -21,13 +21,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             diagram.Nodes.Count.Should().Be(1);
@@ -37,7 +31,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldTakeIntoAccountDeleteKeyOption()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Options.DeleteKey = "Test";
             diagram.Nodes.Add(new NodeModel
             {
@@ -45,13 +39,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Test",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Test", "Test", 0, false, false ,false));
 
             // Assert
             diagram.Nodes.Count.Should().Be(0);
@@ -61,7 +49,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotDeleteModel_WhenItsLocked()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Nodes.Add(new NodeModel
             {
                 Selected = true,
@@ -69,13 +57,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             diagram.Nodes.Count.Should().Be(1);
@@ -86,7 +68,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Options.Constraints.ShouldDeleteGroup = _ =>
             {
                 funcCalled = true;
@@ -98,13 +80,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -116,7 +92,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Options.Constraints.ShouldDeleteNode = _ =>
             {
                 funcCalled = true;
@@ -128,13 +104,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -146,7 +116,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Options.Constraints.ShouldDeleteLink = _ =>
             {
                 funcCalled = true;
@@ -163,13 +133,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -180,7 +144,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldResultInSingleRefresh()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Nodes.Add(new NodeModel[]
             {
                 new NodeModel { Selected = true },
@@ -191,13 +155,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.Changed += () => refreshes++;
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = false,
-                CtrlKey = false,
-                ShiftKey = false,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
 
             // Assert
             diagram.Nodes.Count.Should().Be(0);
@@ -211,20 +169,14 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotDeleteModel_WhenCtrlAltOrShiftIsPressed(bool ctrl, bool shift, bool alt)
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new DiagramBase();
             diagram.Nodes.Add(new NodeModel
             {
                 Selected = true
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs
-            {
-                AltKey = alt,
-                CtrlKey = ctrl,
-                ShiftKey = shift,
-                Code = "Delete",
-            });
+            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, ctrl, shift, alt));
 
             // Assert
             diagram.Nodes.Count.Should().Be(1);

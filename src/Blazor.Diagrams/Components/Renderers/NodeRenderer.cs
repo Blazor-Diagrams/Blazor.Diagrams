@@ -167,12 +167,12 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e.ToCore());
 
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Node, e);
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Node, e.ToCore());
 
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Node, e);
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Node, e.ToCore());
     }
 }

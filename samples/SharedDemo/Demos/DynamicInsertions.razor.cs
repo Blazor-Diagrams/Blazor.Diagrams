@@ -1,7 +1,7 @@
-﻿using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
-using Blazor.Diagrams.Core.Geometry;
 using System;
 using System.Linq;
 
@@ -40,15 +40,15 @@ namespace SharedDemo.Demos
             if (node == null)
                 return;
 
-            foreach(PortAlignment portAlignment in Enum.GetValues(typeof(PortAlignment)))
+            foreach (PortAlignment portAlignment in Enum.GetValues(typeof(PortAlignment)))
             {
-                if(node.GetPort(portAlignment) == null)
+                if (node.GetPort(portAlignment) == null)
                 {
                     node.AddPort(portAlignment);
                     node.Refresh();
                     break;
                 }
-            }            
+            }
         }
 
         protected void RemovePort()

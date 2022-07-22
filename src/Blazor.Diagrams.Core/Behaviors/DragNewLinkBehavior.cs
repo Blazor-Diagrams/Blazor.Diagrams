@@ -1,7 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double _initialY;
         private BaseLinkModel? _ongoingLink;
 
-        public DragNewLinkBehavior(Diagram diagram) : base(diagram)
+        public DragNewLinkBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.MouseDown += OnMouseDown;
             Diagram.MouseMove += OnMouseMove;

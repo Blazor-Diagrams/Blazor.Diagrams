@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -67,8 +68,8 @@ namespace Blazor.Diagrams.Components.Groups
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Group, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Group, e.ToCore());
     }
 }

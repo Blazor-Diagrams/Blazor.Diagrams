@@ -78,14 +78,14 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Port, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Port, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Port, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Port, e.ToCore());
 
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Port, e);
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Port, e.ToCore());
 
         private void OnTouchEnd(TouchEventArgs e)
-            => Diagram.OnTouchEnd(FindPortOn(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY), e);
+            => Diagram.OnTouchEnd(FindPortOn(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY), e.ToCore());
 
         private PortModel FindPortOn(double clientX, double clientY)
         {

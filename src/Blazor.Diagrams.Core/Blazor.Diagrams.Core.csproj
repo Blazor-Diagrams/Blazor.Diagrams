@@ -1,32 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>zHaytam</Authors>
-    <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <AssemblyVersion>2.1.6</AssemblyVersion>
-    <FileVersion>2.1.6</FileVersion>
-    <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>2.1.6</Version>
-    <PackageId>Z.Blazor.Diagrams.Core</PackageId>
-    <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
-    <Product>Z.Blazor.Diagrams.Core</Product>
-    <PackageIcon>ZBD.png</PackageIcon>
-    <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Authors>zHaytam</Authors>
+		<Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
+		<AssemblyVersion>2.1.6</AssemblyVersion>
+		<FileVersion>2.1.6</FileVersion>
+		<RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
+		<Version>2.1.6</Version>
+		<PackageId>Z.Blazor.Diagrams.Core</PackageId>
+		<PackageTags>blazor diagrams diagramming svg drag</PackageTags>
+		<Product>Z.Blazor.Diagrams.Core</Product>
+		<PackageIcon>ZBD.png</PackageIcon>
+		<PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\ZBD.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\ZBD.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

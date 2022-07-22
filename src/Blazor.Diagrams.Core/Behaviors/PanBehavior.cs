@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double _lastClientX;
         private double _lastClientY;
 
-        public PanBehavior(Diagram diagram) : base(diagram)
+        public PanBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.MouseDown += OnMouseDown;
             Diagram.MouseMove += OnMouseMove;

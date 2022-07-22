@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -63,12 +64,12 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e);
+        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e);
+        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e.ToCore());
 
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Link, e);
+        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Link, e.ToCore());
 
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Link, e);
+        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Link, e.ToCore());
     }
 }

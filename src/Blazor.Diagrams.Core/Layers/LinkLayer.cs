@@ -4,7 +4,7 @@ namespace Blazor.Diagrams.Core.Layers
 {
     public class LinkLayer : BaseLayer<BaseLinkModel>
     {
-        public LinkLayer(Diagram diagram) : base(diagram) { }
+        public LinkLayer(DiagramBase diagram) : base(diagram) { }
 
         protected override void OnItemAdded(BaseLinkModel link)
         {

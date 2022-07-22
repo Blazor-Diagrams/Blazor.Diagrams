@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams;
+using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;

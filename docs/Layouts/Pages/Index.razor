@@ -36,7 +36,7 @@ or it will not be rendered.
 </div>
 
 @code {
-  private Diagram _diagram { get; set; }
+  private DiagramBase _diagram { get; set; }
 
   private string _layout;
 
@@ -58,7 +58,7 @@ or it will not be rendered.
         Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
       }
     };
-    _diagram = new Diagram(options);
+    _diagram = new DiagramBase(options);
 
     Setup();
   }

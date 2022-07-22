@@ -1,11 +1,11 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
     public class SelectionBehavior : Behavior
     {
-        public SelectionBehavior(Diagram diagram) : base(diagram)
+        public SelectionBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.MouseDown += OnMouseDown;
             Diagram.TouchStart += OnTouchStart;

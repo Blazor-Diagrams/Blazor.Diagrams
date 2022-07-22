@@ -1,10 +1,6 @@
-﻿using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharedDemo.Demos.Links
 {

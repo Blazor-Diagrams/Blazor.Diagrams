@@ -1,13 +1,13 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DeleteSelectionBehavior : Behavior
     {
-        public DeleteSelectionBehavior(Diagram diagram) : base(diagram)
+        public DeleteSelectionBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.KeyDown += Diagram_KeyDown;
         }

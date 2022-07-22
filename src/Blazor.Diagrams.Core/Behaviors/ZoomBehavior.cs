@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
 using System;
 
@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class ZoomBehavior : Behavior
     {
-        public ZoomBehavior(Diagram diagram) : base(diagram)
+        public ZoomBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.Wheel += Diagram_Wheel;
         }

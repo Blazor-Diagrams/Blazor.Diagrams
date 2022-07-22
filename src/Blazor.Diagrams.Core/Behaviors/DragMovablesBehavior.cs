@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System;
 using System.Linq;
 
@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double? _lastClientX;
         private double? _lastClientY;
 
-        public DragMovablesBehavior(Diagram diagram) : base(diagram)
+        public DragMovablesBehavior(DiagramBase diagram) : base(diagram)
         {
             Diagram.MouseDown += OnMouseDown;
             Diagram.MouseMove += OnMouseMove;

@@ -1,9 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams;
 
 namespace SharedDemo.Demos.Nodes
 {

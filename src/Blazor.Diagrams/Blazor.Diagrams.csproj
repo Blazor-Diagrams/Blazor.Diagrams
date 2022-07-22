@@ -1,49 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Authors>zHaytam</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>2.1.6</AssemblyVersion>
-    <FileVersion>2.1.6</FileVersion>
-    <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <Version>2.1.6</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
-    <PackageId>Z.Blazor.Diagrams</PackageId>
-    <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
-    <Product>Z.Blazor.Diagrams</Product>
-    <PackageIcon>ZBD.png</PackageIcon>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<Authors>zHaytam</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<AssemblyVersion>2.1.6</AssemblyVersion>
+		<FileVersion>2.1.6</FileVersion>
+		<RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
+		<Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
+		<Version>2.1.6</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageTags>blazor diagrams diagramming svg drag</PackageTags>
+		<PackageId>Z.Blazor.Diagrams</PackageId>
+		<PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+		<Product>Z.Blazor.Diagrams</Product>
+		<PackageIcon>ZBD.png</PackageIcon>
+	</PropertyGroup>
 
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    <PackageReference Include="SvgPathProperties" Version="1.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+		<PackageReference Include="SvgPathProperties" Version="1.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\ZBD.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\ZBD.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
-    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
-    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-    </Exec>
-  </Target>
+	<Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
+		<!-- Test if Excubo.WebCompiler is installed (recommended) -->
+		<Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+	</Target>
 
-  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
-  </Target>
+	<Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
+		<Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
+	</Target>
 
 </Project>

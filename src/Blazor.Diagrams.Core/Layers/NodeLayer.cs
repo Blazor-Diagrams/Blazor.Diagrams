@@ -5,7 +5,7 @@ namespace Blazor.Diagrams.Core.Layers
 {
     public class NodeLayer : BaseLayer<NodeModel>
     {
-        public NodeLayer(Diagram diagram) : base(diagram) { }
+        public NodeLayer(DiagramBase diagram) : base(diagram) { }
 
         public override void Remove(NodeModel node)
         {

@@ -4,8 +4,7 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +15,21 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Core.Tests")]
 namespace Blazor.Diagrams.Core
 {
-    public class Diagram : Model
+    public class DiagramBase : Model
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
-        private readonly Dictionary<Type, Type> _componentByModelMapping;
         private readonly List<GroupModel> _groups;
 
-        public event Action<Model, MouseEventArgs>? MouseDown;
-        public event Action<Model, MouseEventArgs>? MouseMove;
-        public event Action<Model, MouseEventArgs>? MouseUp;
+        public event Action<Model?, MouseEventArgs>? MouseDown;
+        public event Action<Model?, MouseEventArgs>? MouseMove;
+        public event Action<Model?, MouseEventArgs>? MouseUp;
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
-        public event Action<Model, MouseEventArgs>? MouseClick;
-        public event Action<Model, MouseEventArgs>? MouseDoubleClick;
-        public event Action<Model, TouchEventArgs>? TouchStart;
-        public event Action<Model, TouchEventArgs>? TouchMove;
-        public event Action<Model, TouchEventArgs>? TouchEnd;
+        public event Action<Model?, MouseEventArgs>? MouseClick;
+        public event Action<Model?, MouseEventArgs>? MouseDoubleClick;
+        public event Action<Model?, TouchEventArgs>? TouchStart;
+        public event Action<Model?, TouchEventArgs>? TouchMove;
+        public event Action<Model?, TouchEventArgs>? TouchEnd;
 
         public event Action<SelectableModel>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
@@ -42,10 +40,9 @@ namespace Blazor.Diagrams.Core
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
 
-        public Diagram(DiagramOptions? options = null)
+        public DiagramBase(DiagramOptions? options = null)
         {
             _behaviors = new Dictionary<Type, Behavior>();
-            _componentByModelMapping = new Dictionary<Type, Type>();
             _groups = new List<GroupModel>();
 
             Options = options ?? new DiagramOptions();
@@ -264,23 +261,6 @@ namespace Blazor.Diagrams.Core
 
         #endregion
 
-        public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
-            => RegisterModelComponent(typeof(M), typeof(C));
-
-        public void RegisterModelComponent(Type modelType, Type componentType)
-        {
-            if (_componentByModelMapping.ContainsKey(modelType))
-                throw new Exception($"Component already registered for model '{modelType.Name}'.");
-
-            _componentByModelMapping.Add(modelType, componentType);
-        }
-
-        public Type? GetComponentForModel<M>(M model) where M : Model
-        {
-            var modelType = model.GetType();
-            return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
-        }
-
         public void ZoomToFit(double margin = 10)
         {
             if (Container == null || Nodes.Count == 0)
@@ -327,13 +307,9 @@ namespace Blazor.Diagrams.Core
             if (newZoom <= 0)
                 throw new ArgumentException($"{nameof(newZoom)} cannot be equal or lower than 0");
 
-           
-
             if (newZoom < Options.Zoom.Minimum)
                 newZoom = Options.Zoom.Minimum;
            
-           
-
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();
@@ -375,25 +351,25 @@ namespace Blazor.Diagrams.Core
 
         #region Events
 
-        internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
+        internal void OnMouseDown(Model? model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
 
-        internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
+        internal void OnMouseMove(Model? model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
 
-        internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
+        internal void OnMouseUp(Model? model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
 
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
         internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
 
-        internal void OnMouseClick(Model model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
+        internal void OnMouseClick(Model? model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
 
-        internal void OnMouseDoubleClick(Model model, MouseEventArgs e) => MouseDoubleClick?.Invoke(model, e);
+        internal void OnMouseDoubleClick(Model? model, MouseEventArgs e) => MouseDoubleClick?.Invoke(model, e);
 
-        internal void OnTouchStart(Model model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
+        internal void OnTouchStart(Model? model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
 
-        internal void OnTouchMove(Model model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
+        internal void OnTouchMove(Model? model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
 
-        internal void OnTouchEnd(Model model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
+        internal void OnTouchEnd(Model? model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
 
         #endregion
     }

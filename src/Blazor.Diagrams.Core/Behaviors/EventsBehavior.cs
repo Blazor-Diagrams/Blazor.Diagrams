@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System;
 using System.Diagnostics;
 
@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private bool _captureMouseMove;
         private int _mouseMovedCount;
 
-        public EventsBehavior(Diagram diagram) : base(diagram)
+        public EventsBehavior(DiagramBase diagram) : base(diagram)
         {
             _mouseClickSw = new Stopwatch();
 

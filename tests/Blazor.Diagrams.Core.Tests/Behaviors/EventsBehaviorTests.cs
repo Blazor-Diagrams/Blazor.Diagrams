@@ -90,5 +90,20 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Assert
             eventTriggered.Should().BeFalse();
         }
+
+        [Fact]
+        public void Behavior_ShouldTriggerMouseClick_OnlyWhenMouseDownWasAlsoTriggered_Issue204()
+        {
+            // Arrange
+            var diagram = new DiagramBase();
+            var eventTriggered = false;
+
+            // Act
+            diagram.MouseClick += (m, e) => eventTriggered = true;
+            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+
+            // Assert
+            eventTriggered.Should().BeFalse();
+        }
     }
 }

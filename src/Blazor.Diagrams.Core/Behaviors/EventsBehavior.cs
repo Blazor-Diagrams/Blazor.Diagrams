@@ -8,6 +8,7 @@ namespace Blazor.Diagrams.Core.Behaviors
     public class EventsBehavior : Behavior
     {
         private readonly Stopwatch _mouseClickSw;
+        private Model? _model;
         private bool _captureMouseMove;
         private int _mouseMovedCount;
 
@@ -21,7 +22,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.MouseClick += OnMouseClick;
         }
 
-        private void OnMouseClick(Model model, MouseEventArgs e)
+        private void OnMouseClick(Model? model, MouseEventArgs e)
         {
             if (_mouseClickSw.IsRunning && _mouseClickSw.ElapsedMilliseconds <= 500)
             {
@@ -31,12 +32,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             _mouseClickSw.Restart();
         }
 
-        private void OnMouseDown(Model model, MouseEventArgs e)
+        private void OnMouseDown(Model? model, MouseEventArgs e)
         {
             _captureMouseMove = true;
+            _mouseMovedCount = 0;
+            _model = model;
         }
 
-        private void OnMouseMove(Model model, MouseEventArgs e)
+        private void OnMouseMove(Model? model, MouseEventArgs e)
         {
             if (!_captureMouseMove)
                 return;
@@ -44,16 +47,17 @@ namespace Blazor.Diagrams.Core.Behaviors
             _mouseMovedCount++;
         }
 
-        private void OnMouseUp(Model model, MouseEventArgs e)
+        private void OnMouseUp(Model? model, MouseEventArgs e)
         {
+            if (!_captureMouseMove) return; // Only set by OnMouseDown
             _captureMouseMove = false;
-            if (_mouseMovedCount > 0)
-            {
-                _mouseMovedCount = 0;
-                return;
-            }
+            if (_mouseMovedCount > 0) return;
 
-            Diagram.OnMouseClick(model, e);
+            if (_model == model)
+            {
+                Diagram.OnMouseClick(model, e);
+                _model = null;
+            }
         }
 
         public override void Dispose()
@@ -61,6 +65,8 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.MouseDown -= OnMouseDown;
             Diagram.MouseMove -= OnMouseMove;
             Diagram.MouseUp -= OnMouseUp;
+            Diagram.MouseClick -= OnMouseClick;
+            _model = null;
         }
     }
 }

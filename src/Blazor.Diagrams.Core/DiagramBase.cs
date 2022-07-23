@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
-        public Rectangle? Container { get; internal set; }
+        public Rectangle? Container { get; private set; }
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public DiagramOptions Options { get; }

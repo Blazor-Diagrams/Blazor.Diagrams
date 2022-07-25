@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Blazor.Diagrams.Core.Geometry
 {
@@ -14,6 +15,7 @@ namespace Blazor.Diagrams.Core.Geometry
         public double Bottom { get; }
         public double Left { get; }
 
+        [JsonConstructor]
         public Rectangle(double left, double top, double right, double bottom)
         {
             Left = left;

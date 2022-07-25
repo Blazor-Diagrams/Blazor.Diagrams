@@ -130,7 +130,7 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private async void CheckVisibility()
+        private void CheckVisibility()
         {
             // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
             if (!Diagram.Options.EnableVirtualization && _isVisible)
@@ -151,12 +151,6 @@ namespace Blazor.Diagrams.Components.Renderers
             {
                 _isVisible = isVisible;
                 _becameVisible = isVisible;
-
-                if (!_isVisible)
-                {
-                    await JsRuntime.UnobserveResizes(_element);
-                }
-
                 ReRender();
             }
         }

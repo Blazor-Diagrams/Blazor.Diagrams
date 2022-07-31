@@ -15,21 +15,40 @@ namespace Blazor.Diagrams
             _componentByModelMapping = new Dictionary<Type, Type>();
         }
 
-        public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
-            => RegisterModelComponent(typeof(M), typeof(C));
+        public void RegisterModelComponent<M, C>(bool replace = false) where M : Model where C : ComponentBase
+            => RegisterModelComponent(typeof(M), typeof(C), replace);
 
-        public void RegisterModelComponent(Type modelType, Type componentType)
+        public void RegisterModelComponent(Type modelType, Type componentType, bool replace = false)
         {
-            if (_componentByModelMapping.ContainsKey(modelType))
+            if (!replace && _componentByModelMapping.ContainsKey(modelType))
                 throw new Exception($"Component already registered for model '{modelType.Name}'.");
 
-            _componentByModelMapping.Add(modelType, componentType);
+            _componentByModelMapping[modelType] = componentType;
         }
 
-        public Type? GetComponentForModel<M>(M model) where M : Model
+        public Type? GetComponentForModel(Type modelType, bool checkSubclasses = true)
         {
-            var modelType = model.GetType();
-            return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
+            if (_componentByModelMapping.ContainsKey(modelType))
+            {
+                return _componentByModelMapping[modelType];
+            }
+
+            if (checkSubclasses)
+            {
+                foreach (var rmt in _componentByModelMapping.Keys)
+                {
+                    if (modelType.IsSubclassOf(rmt))
+                        return _componentByModelMapping[rmt];
+                }
+            }
+
+            return null;
         }
+
+        public Type? GetComponentForModel<M>(bool checkSubclasses = true) where M : Model
+            => GetComponentForModel(typeof(M), checkSubclasses);
+
+        public Type? GetComponentForModel(Model model, bool checkSubclasses = true)
+            => GetComponentForModel(model.GetType(), checkSubclasses);
     }
 }

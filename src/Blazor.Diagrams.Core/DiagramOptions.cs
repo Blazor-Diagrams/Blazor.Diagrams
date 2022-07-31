@@ -10,8 +10,6 @@ namespace Blazor.Diagrams.Core
     {
         [Description("Key code for deleting entities")]
         public string DeleteKey { get; set; } = "Delete";
-        [Description("The default component for nodes")]
-        public Type? DefaultNodeComponent { get; set; }
         [Description("The grid size (grid-based snaping")]
         public int? GridSize { get; set; }
         [Description("Whether to allow users to select multiple nodes at once using CTRL or not")]
@@ -32,8 +30,6 @@ namespace Blazor.Diagrams.Core
     /// </summary>
     public class DiagramLinkOptions
     {
-        [Description("The default component for links")]
-        public Type? DefaultLinkComponent { get; set; }
         [Description("The default color for links")]
         public string DefaultColor { get; set; } = "black";
         [Description("The default color for selected links")]

@@ -87,7 +87,6 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             var componentType = Diagram.GetComponentForModel(Node) ??
-                Diagram.Options.DefaultNodeComponent ??
                 (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
 
             builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");

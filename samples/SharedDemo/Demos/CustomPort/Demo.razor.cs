@@ -17,7 +17,7 @@ namespace SharedDemo.Demos.CustomPort
                 "In this example, you can only attach links from/to ports with the same color.";
             LayoutData.DataChanged();
 
-            _diagram.Options.DefaultNodeComponent = typeof(ColoredNodeWidget);
+            _diagram.RegisterModelComponent<NodeModel, ColoredNodeWidget>(replace: true);
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);

@@ -21,7 +21,7 @@ namespace SharedDemo.Demos.Nodes
 
         private void InitializeDiagram()
         {
-            _diagram.Options.DefaultNodeComponent = typeof(SvgNodeWidget);
+            _diagram.RegisterModelComponent<NodeModel, SvgNodeWidget>();
 
             var node1 = NewNode(80, 80);
             var node2 = NewNode(280, 150);

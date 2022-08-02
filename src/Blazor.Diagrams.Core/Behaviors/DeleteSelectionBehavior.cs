@@ -9,40 +9,46 @@ namespace Blazor.Diagrams.Core.Behaviors
     {
         public DeleteSelectionBehavior(DiagramBase diagram) : base(diagram)
         {
-            Diagram.KeyDown += Diagram_KeyDown;
+            Diagram.KeyDown += OnKeyDown;
         }
 
-        private void Diagram_KeyDown(KeyboardEventArgs e)
+        private async void OnKeyDown(KeyboardEventArgs e)
         {
             if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != Diagram.Options.DeleteKey)
                 return;
 
-            Diagram.Batch(() =>
-            {
-                foreach (var sm in Diagram.GetSelectedModels().ToList())
-                {
-                    if (sm.Locked)
-                        continue;
+            var wasSuspended = Diagram.SuspendRefresh;
+            if (!wasSuspended) Diagram.SuspendRefresh = true;
 
-                    if (sm is GroupModel group && Diagram.Options.Constraints.ShouldDeleteGroup(group))
-                    {
-                        Diagram.RemoveGroup(group);
-                    }
-                    else if (sm is NodeModel node && Diagram.Options.Constraints.ShouldDeleteNode(node))
-                    {
-                        Diagram.Nodes.Remove(node);
-                    }
-                    else if (sm is BaseLinkModel link && Diagram.Options.Constraints.ShouldDeleteLink(link))
-                    {
-                        Diagram.Links.Remove(link);
-                    }
+            foreach (var sm in Diagram.GetSelectedModels().ToList())
+            {
+                if (sm.Locked)
+                    continue;
+
+                if (sm is GroupModel group && (await Diagram.Options.Constraints.ShouldDeleteGroup(group)))
+                {
+                    Diagram.RemoveGroup(group);
                 }
-            });
+                else if (sm is NodeModel node && (await Diagram.Options.Constraints.ShouldDeleteNode(node)))
+                {
+                    Diagram.Nodes.Remove(node);
+                }
+                else if (sm is BaseLinkModel link && (await Diagram.Options.Constraints.ShouldDeleteLink(link)))
+                {
+                    Diagram.Links.Remove(link);
+                }
+            }
+
+            if (!wasSuspended)
+            {
+                Diagram.SuspendRefresh = false;
+                Diagram.Refresh();
+            }
         }
 
         public override void Dispose()
         {
-            Diagram.KeyDown -= Diagram_KeyDown;
+            Diagram.KeyDown -= OnKeyDown;
         }
     }
 }

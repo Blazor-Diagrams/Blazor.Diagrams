@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors
@@ -72,7 +73,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.Options.Constraints.ShouldDeleteGroup = _ =>
             {
                 funcCalled = true;
-                return false;
+                return ValueTask.FromResult(false);
             };
             diagram.AddGroup(new GroupModel(Array.Empty<NodeModel>())
             {
@@ -96,7 +97,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.Options.Constraints.ShouldDeleteNode = _ =>
             {
                 funcCalled = true;
-                return false;
+                return ValueTask.FromResult(false);
             };
             diagram.Nodes.Add(new NodeModel
             {
@@ -120,7 +121,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.Options.Constraints.ShouldDeleteLink = _ =>
             {
                 funcCalled = true;
-                return false;
+                return ValueTask.FromResult(false);
             };
             diagram.Nodes.Add(new NodeModel[]
             {

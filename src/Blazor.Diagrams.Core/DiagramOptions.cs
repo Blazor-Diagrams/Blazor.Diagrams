@@ -9,8 +9,6 @@ namespace Blazor.Diagrams.Core
 {
     public class DiagramOptions
     {
-        [Description("Key code for deleting entities")]
-        public string DeleteKey { get; set; } = "Delete";
         [Description("The grid size (grid-based snaping")]
         public int? GridSize { get; set; }
         [Description("Whether to allow users to select multiple nodes at once using CTRL or not")]
@@ -79,8 +77,6 @@ namespace Blazor.Diagrams.Core
     {
         [Description("Whether to allow users to group/ungroup nodes")]
         public bool Enabled { get; set; }
-        [Description("Keyboard shortcut (CTRL+ALT+G by default)")]
-        public Func<KeyboardEventArgs, bool> KeyboardShortcut { get; set; } = e => e.CtrlKey && e.AltKey && e.Key == "g";
         [Description("Group model factory")]
         public GroupFactory Factory { get; set; } = (diagram, children) => new GroupModel(children);
     }

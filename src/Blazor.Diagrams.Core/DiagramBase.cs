@@ -52,11 +52,10 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
             RegisterBehavior(new DragNewLinkBehavior(this));
-            RegisterBehavior(new DeleteSelectionBehavior(this));
             RegisterBehavior(new PanBehavior(this));
             RegisterBehavior(new ZoomBehavior(this));
-            RegisterBehavior(new GroupingBehavior(this));
             RegisterBehavior(new EventsBehavior(this));
+            RegisterBehavior(new KeyboardShortcutsBehavior(this));
         }
 
         public NodeLayer Nodes { get; }
@@ -237,6 +236,12 @@ namespace Blazor.Diagrams.Core
                 throw new Exception($"Behavior '{type.Name}' already registered");
 
             _behaviors.Add(type, behavior);
+        }
+
+        public T? GetBehavior<T>() where T : Behavior
+        {
+            var type = typeof(T);
+            return (T?)(_behaviors.ContainsKey(type) ? _behaviors[type] : null);
         }
 
         public void UnregisterBehavior<T>() where T : Behavior

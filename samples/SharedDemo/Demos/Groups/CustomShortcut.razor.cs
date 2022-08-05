@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 
@@ -13,11 +14,13 @@ namespace SharedDemo.Demos.Groups
             base.OnInitialized();
 
             LayoutData.Title = "Custom Shortcut";
-            LayoutData.Info = "You can customize what needs to be pressed to group selected nodes. CTRL+SHIFT+K in this example.";
+            LayoutData.Info = "You can customize what needs to be pressed to group selected nodes. Ctrl+Shift+k in this example.";
             LayoutData.DataChanged();
 
             _diagram.Options.Groups.Enabled = true;
-            _diagram.Options.Groups.KeyboardShortcut = e => e.CtrlKey && e.ShiftKey && e.Key.ToLower() == "k";
+            var ksb = _diagram.GetBehavior<KeyboardShortcutsBehavior>();
+            ksb.RemoveShortcut("G", true, false, true);
+            ksb.SetShortcut("K", true, true, false, KeyboardShortcutsDefaults.Grouping);
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);

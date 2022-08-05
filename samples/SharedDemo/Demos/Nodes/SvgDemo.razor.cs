@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Models;
 
 namespace SharedDemo.Demos.Nodes
 {
@@ -32,7 +33,7 @@ namespace SharedDemo.Demos.Nodes
 
         private NodeModel NewNode(double x, double y)
         {
-            var node = new NodeModel(new Point(x, y), RenderLayer.SVG);
+            var node = new SvgNodeModel(new Point(x, y));
             node.AddPort(PortAlignment.Left);
             node.AddPort(PortAlignment.Right);
             return node;

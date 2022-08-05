@@ -20,7 +20,7 @@
             <LinkRenderer @key="link" Link="link" />
         }
 
-        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.SVG))
+        @foreach (var node in Diagram.Nodes.OfType<SvgNodeModel>())
         {
             <NodeRenderer @key="node" Node="node" />
         }
@@ -33,7 +33,7 @@
             <GroupRenderer @key="group" Group="group" />
         }
 
-        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
+        @foreach (var node in Diagram.Nodes.Where(n => n is not SvgNodeModel && n.Group == null))
         {
             <NodeRenderer @key="node" Node="node" />
         }

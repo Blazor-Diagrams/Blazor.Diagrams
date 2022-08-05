@@ -15,21 +15,16 @@ namespace Blazor.Diagrams.Core.Models
         public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
-        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML,
-            ShapeDefiner? shape = null) : base(position)
+        public NodeModel(Point? position = null, ShapeDefiner? shape = null) : base(position)
         {
-            Layer = layer;
             ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
-        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML,
-            ShapeDefiner? shape = null) : base(id, position)
+        public NodeModel(string id, Point? position = null, ShapeDefiner? shape = null) : base(id, position)
         {
-            Layer = layer;
             ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
-        public RenderLayer Layer { get; }
         public ShapeDefiner ShapeDefiner { get; }
         public Size? Size
         {
@@ -44,7 +39,7 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
         public GroupModel? Group { get; internal set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public IReadOnlyList<PortModel> Ports => _ports;
         public IReadOnlyList<BaseLinkModel> Links => _links;
@@ -59,9 +54,9 @@ namespace Blazor.Diagrams.Core.Models
         public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
             => AddPort(new PortModel(this, alignment, Position));
 
-        public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
+        public PortModel? GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
-        public T GetPort<T>(PortAlignment alignment) where T : PortModel => (T)GetPort(alignment);
+        public T? GetPort<T>(PortAlignment alignment) where T : PortModel => (T?)GetPort(alignment);
 
         public void RefreshAll()
         {

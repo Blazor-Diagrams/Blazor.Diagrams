@@ -38,6 +38,6 @@ namespace SharedDemo.Demos.Nodes
 
     class RoundedNode : NodeModel
     {
-        public RoundedNode(Point position = null, ShapeDefiner shape = null) : base(position, RenderLayer.HTML, shape) { }
+        public RoundedNode(Point position = null, ShapeDefiner shape = null) : base(position, shape) { }
     }
 }

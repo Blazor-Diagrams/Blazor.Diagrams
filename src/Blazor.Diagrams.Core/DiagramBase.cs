@@ -115,16 +115,6 @@ namespace Blazor.Diagrams.Core
         /// <param name="group">A group instance.</param>
         public void AddGroup(GroupModel group)
         {
-            if (group.Children.Count > 0)
-            {
-                var layers = group.Children.Select(n => n.Layer).Distinct();
-                if (layers.Count() > 1)
-                    throw new InvalidOperationException("Cannot group nodes with different layers");
-
-                if (layers.First() == RenderLayer.SVG)
-                    throw new InvalidOperationException("SVG groups aren't implemented yet");
-            }
-
             foreach (var child in group.Children)
             {
                 if (child is NodeModel node && !Nodes.Contains(node))

@@ -1,8 +1,8 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Extensions;
+﻿using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Extensions;
+using Blazor.Diagrams.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -18,16 +18,17 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _isVisible = true;
         private bool _becameVisible;
         private ElementReference _element;
-        private DotNetObjectReference<NodeRenderer> _reference;
+        private DotNetObjectReference<NodeRenderer>? _reference;
+        private bool _isSvg;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        public Diagram Diagram { get; set; } = null!;
 
         [Parameter]
-        public NodeModel Node { get; set; }
+        public NodeModel Node { get; set; } = null!;
 
         [Inject]
-        private IJSRuntime JsRuntime { get; set; }
+        private IJSRuntime JsRuntime { get; set; } = null!;
 
         public void Dispose()
         {
@@ -70,6 +71,13 @@ namespace Blazor.Diagrams.Components.Renderers
             Node.Changed += ReRender;
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            _isSvg = Node is SvgNodeModel;
+        }
+
         protected override bool ShouldRender()
         {
             if (_shouldRender)
@@ -86,20 +94,19 @@ namespace Blazor.Diagrams.Components.Renderers
             if (!_isVisible)
                 return;
 
-            var componentType = Diagram.GetComponentForModel(Node) ??
-                (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
+            var componentType = Diagram.GetComponentForModel(Node) ?? (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
 
-            builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
+            builder.OpenElement(0, _isSvg ? "g" : "div");
             builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
             builder.AddAttribute(2, "data-node-id", Node.Id);
 
-            if (Node.Layer == RenderLayer.HTML)
+            if (_isSvg)
             {
-                builder.AddAttribute(3, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+                builder.AddAttribute(3, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
             }
             else
             {
-                builder.AddAttribute(3, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+                builder.AddAttribute(3, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
             }
 
             builder.AddAttribute(4, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));

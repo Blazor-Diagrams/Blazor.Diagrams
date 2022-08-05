@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -9,6 +8,7 @@ using Blazor.Diagrams.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Microsoft.AspNetCore.Components.Rendering;
 using System.Linq;
+using Blazor.Diagrams.Models;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
@@ -18,21 +18,22 @@ namespace Blazor.Diagrams.Components.Renderers
         private ElementReference _element;
         private bool _updatingDimensions;
         private bool _shouldRefreshPort;
+        private bool _isParentSvg;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        public Diagram Diagram { get; set; } = null!;
 
         [Inject]
-        private IJSRuntime JSRuntime { get; set; }
+        private IJSRuntime JSRuntime { get; set; } = null!;
 
         [Parameter]
-        public PortModel Port { get; set; }
+        public PortModel Port { get; set; } = null!;
 
         [Parameter]
-        public string Class { get; set; }
+        public string? Class { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         public void Dispose()
         {
@@ -46,11 +47,18 @@ namespace Blazor.Diagrams.Components.Renderers
             Port.Changed += OnPortChanged;
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            _isParentSvg = Port.Parent is SvgNodeModel;
+        }
+
         protected override bool ShouldRender() => _shouldRender;
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.OpenElement(0, Port.Parent.Layer == RenderLayer.HTML ? "div" : "g");
+            builder.OpenElement(0, _isParentSvg ? "g" : "div");
             builder.AddAttribute(1, "class", "port" + " " + (Port.Alignment.ToString().ToLower()) + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " + (Class));
             builder.AddAttribute(2, "data-port-id", Port.Id);
             builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
@@ -87,7 +95,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private void OnTouchEnd(TouchEventArgs e)
             => Diagram.OnTouchEnd(FindPortOn(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY), e.ToCore());
 
-        private PortModel FindPortOn(double clientX, double clientY)
+        private PortModel? FindPortOn(double clientX, double clientY)
         {
             var allPorts = Diagram.Nodes.SelectMany(n => n.Ports)
                 .Union(Diagram.Groups.SelectMany(g => g.Ports));

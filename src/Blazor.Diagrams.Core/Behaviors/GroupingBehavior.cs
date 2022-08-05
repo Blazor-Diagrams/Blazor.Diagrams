@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Events;
-using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
@@ -39,9 +38,6 @@ namespace Blazor.Diagrams.Core.Behaviors
                     return;
 
                 if (selectedNodes.Any(n => n.Group != null))
-                    return;
-
-                if (selectedNodes.Select(n => n.Layer).Distinct().Count() > 1)
                     return;
 
                 Diagram.Group(selectedNodes);

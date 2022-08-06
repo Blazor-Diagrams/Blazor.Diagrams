@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
-using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
 using System;
@@ -8,46 +7,10 @@ using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors
 {
-    public class DeleteSelectionBehaviorTests
+    public class KeyboardShortcutsDefaultsTests
     {
         [Fact]
-        public void Behavior_ShouldNotRun_WhenItsRemoved()
-        {
-            // Arrange
-            var diagram = new DiagramBase();
-            diagram.UnregisterBehavior<DeleteSelectionBehavior>();
-            diagram.Nodes.Add(new NodeModel
-            {
-                Selected = true
-            });
-
-            // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
-
-            // Assert
-            diagram.Nodes.Count.Should().Be(1);
-        }
-
-        [Fact]
-        public void Behavior_ShouldTakeIntoAccountDeleteKeyOption()
-        {
-            // Arrange
-            var diagram = new DiagramBase();
-            diagram.Options.DeleteKey = "Test";
-            diagram.Nodes.Add(new NodeModel
-            {
-                Selected = true
-            });
-
-            // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Test", "Test", 0, false, false ,false));
-
-            // Assert
-            diagram.Nodes.Count.Should().Be(0);
-        }
-
-        [Fact]
-        public void Behavior_ShouldNotDeleteModel_WhenItsLocked()
+        public async Task DeleteSelection_ShouldNotDeleteModel_WhenItsLocked()
         {
             // Arrange
             var diagram = new DiagramBase();
@@ -58,14 +21,14 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
+            await KeyboardShortcutsDefaults.DeleteSelection(diagram);
 
             // Assert
             diagram.Nodes.Count.Should().Be(1);
         }
 
         [Fact]
-        public void Behavior_ShouldTakeIntoAccountGroupConstraint()
+        public async Task DeleteSelection_ShouldTakeIntoAccountGroupConstraint()
         {
             // Arrange
             var funcCalled = false;
@@ -81,7 +44,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
+            await KeyboardShortcutsDefaults.DeleteSelection(diagram);
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -89,7 +52,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
-        public void Behavior_ShouldTakeIntoAccountNodeConstraint()
+        public async Task DeleteSelection_ShouldTakeIntoAccountNodeConstraint()
         {
             // Arrange
             var funcCalled = false;
@@ -105,7 +68,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
+            await KeyboardShortcutsDefaults.DeleteSelection(diagram);
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -113,7 +76,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
-        public void Behavior_ShouldTakeIntoAccountLinkConstraint()
+        public async Task DeleteSelection_ShouldTakeIntoAccountLinkConstraint()
         {
             // Arrange
             var funcCalled = false;
@@ -134,7 +97,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
+            await KeyboardShortcutsDefaults.DeleteSelection(diagram);
 
             // Assert
             funcCalled.Should().BeTrue();
@@ -142,7 +105,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
-        public void Behavior_ShouldResultInSingleRefresh()
+        public async Task DeleteSelection_ShouldResultInSingleRefresh()
         {
             // Arrange
             var diagram = new DiagramBase();
@@ -151,36 +114,21 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 new NodeModel { Selected = true },
                 new NodeModel { Selected = true }
             });
+            diagram.Links.Add(new LinkModel(diagram.Nodes[0], diagram.Nodes[1])
+            {
+                Selected = true
+            });
 
             var refreshes = 0;
             diagram.Changed += () => refreshes++;
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, false, false, false));
+            await KeyboardShortcutsDefaults.DeleteSelection(diagram);
 
             // Assert
             diagram.Nodes.Count.Should().Be(0);
+            diagram.Links.Count.Should().Be(0);
             refreshes.Should().Be(1);
-        }
-
-        [Theory]
-        [InlineData(true, false, false)]
-        [InlineData(false, true, false)]
-        [InlineData(false, false, true)]
-        public void Behavior_ShouldNotDeleteModel_WhenCtrlAltOrShiftIsPressed(bool ctrl, bool shift, bool alt)
-        {
-            // Arrange
-            var diagram = new DiagramBase();
-            diagram.Nodes.Add(new NodeModel
-            {
-                Selected = true
-            });
-
-            // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("Delete", "Delete", 0, ctrl, shift, alt));
-
-            // Assert
-            diagram.Nodes.Count.Should().Be(1);
         }
     }
 }

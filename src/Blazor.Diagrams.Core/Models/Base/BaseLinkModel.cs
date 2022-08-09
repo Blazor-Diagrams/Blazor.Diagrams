@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Geometry;
 using System;
 using System.Collections.Generic;
 
@@ -6,49 +7,24 @@ namespace Blazor.Diagrams.Core.Models.Base
 {
     public abstract class BaseLinkModel : SelectableModel
     {
-        /// <summary>
-        /// An event that fires when the SourcePort changes.
-        /// </summary>
-        public event Action<BaseLinkModel, PortModel?, PortModel?>? SourcePortChanged;
-        /// <summary>
-        /// An event that fires when the TargetPort changes.
-        /// </summary>
-        public event Action<BaseLinkModel, PortModel?, PortModel?>? TargetPortChanged;
+        public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
+        public event Action<BaseLinkModel, Anchor?, Anchor?>? TargetChanged;
 
-        public BaseLinkModel(NodeModel sourceNode, NodeModel? targetNode)
+        protected BaseLinkModel(Anchor source, Anchor? target = null)
         {
-            SourceNode = sourceNode;
-            TargetNode = targetNode;
+            Source = source;
+            Target = target;
         }
 
-        public BaseLinkModel(string id, NodeModel sourceNode, NodeModel? targetNode) : base(id)
+        protected BaseLinkModel(string id, Anchor source, Anchor? target = null) : base(id)
         {
-            SourceNode = sourceNode;
-            TargetNode = targetNode;
+            Source = source;
+            Target = target;
         }
 
-        public BaseLinkModel(PortModel sourcePort, PortModel? targetPort = null)
-        {
-            SourcePort = sourcePort;
-            TargetPort = targetPort;
-            SourceNode = SourcePort.Parent;
-            TargetNode = targetPort?.Parent;
-        }
-
-        public BaseLinkModel(string id, PortModel sourcePort, PortModel? targetPort = null) : base(id)
-        {
-            SourcePort = sourcePort;
-            TargetPort = targetPort;
-            SourceNode = SourcePort.Parent;
-            TargetNode = targetPort?.Parent;
-        }
-
-        public NodeModel SourceNode { get; private set; }
-        public NodeModel? TargetNode { get; private set; }
-        public PortModel? SourcePort { get; private set; }
-        public PortModel? TargetPort { get; private set; }
-        public bool IsAttached => TargetNode != null || TargetPort != null;
-        public bool IsPortless => SourcePort == null;
+        public Anchor Source { get; private set; }
+        public Anchor? Target { get; private set; }
+        public bool IsAttached => Target != null;
         public Point? OnGoingPosition { get; set; }
         public Router? Router { get; set; }
         public PathGenerator? PathGenerator { get; set; }
@@ -58,30 +34,26 @@ namespace Blazor.Diagrams.Core.Models.Base
         public List<LinkVertexModel> Vertices { get; } = new List<LinkVertexModel>();
         public List<LinkLabelModel> Labels { get; set; } = new List<LinkLabelModel>();
 
-        public void SetSourcePort(PortModel port)
+        public void SetSource(Anchor anchor)
         {
-            if (SourcePort == port)
+            ArgumentNullException.ThrowIfNull(anchor, nameof(anchor));
+
+            if (Source == anchor)
                 return;
 
-            var old = SourcePort;
-            SourcePort?.RemoveLink(this);
-            SourcePort = port;
-            SourcePort.AddLink(this);
-            SourceNode = SourcePort.Parent;
-            SourcePortChanged?.Invoke(this, old, SourcePort);
+            var old = Source;
+            Source = anchor;
+            SourceChanged?.Invoke(this, old, Source);
         }
 
-        public void SetTargetPort(PortModel? port)
+        public void SetTarget(Anchor? anchor)
         {
-            if (TargetPort == port)
+            if (Target == anchor)
                 return;
 
-            var old = TargetPort;
-            TargetPort?.RemoveLink(this);
-            TargetPort = port;
-            TargetPort?.AddLink(this);
-            TargetNode = TargetPort?.Parent;
-            TargetPortChanged?.Invoke(this, old, TargetPort);
+            var old = Target;
+            Target = anchor;
+            TargetChanged?.Invoke(this, old, Target);
         }
     }
 }

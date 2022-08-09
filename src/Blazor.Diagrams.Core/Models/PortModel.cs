@@ -1,13 +1,12 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Blazor.Diagrams.Core.Models
 {
     public class PortModel : Model
     {
-        private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>(4);
+        private readonly List<BaseLinkModel> _links = new(4);
 
         public PortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null,
             Size? size = null)
@@ -30,9 +29,9 @@ namespace Blazor.Diagrams.Core.Models
         public NodeModel Parent { get; }
         public PortAlignment Alignment { get; }
         public Point Position { get; set; }
-        public Point MiddlePosition => new Point(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
+        public Point MiddlePosition => new(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
         public Size Size { get; set; }
-        public ReadOnlyCollection<BaseLinkModel> Links => _links.AsReadOnly();
+        public IReadOnlyList<BaseLinkModel> Links => _links;
         /// <summary>
         /// If set to false, a call to Refresh() will force the port to update its position/size using JS
         /// </summary>
@@ -49,9 +48,9 @@ namespace Blazor.Diagrams.Core.Models
         public T GetParent<T>() where T : NodeModel => (T)Parent;
 
         public virtual bool CanAttachTo(PortModel port)
-            => port != this && !port.Locked && Parent != port.Parent;
+            => port != this && !port.Locked && Parent != port.Parent; // Todo: remove in order to support same node links
 
-        public Rectangle GetBounds() => new Rectangle(Position, Size);
+        public Rectangle GetBounds() => new(Position, Size);
 
         internal void AddLink(BaseLinkModel link) => _links.Add(link);
 

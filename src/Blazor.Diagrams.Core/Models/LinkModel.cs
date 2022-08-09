@@ -1,16 +1,25 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Models
 {
     public class LinkModel : BaseLinkModel
     {
-        public LinkModel(PortModel sourcePort, PortModel? targetPort = null) : base(sourcePort, targetPort) { }
+        public LinkModel(Anchor source, Anchor? target = null) : base(source, target) { }
 
-        public LinkModel(NodeModel sourceNode, NodeModel? targetNode) : base(sourceNode, targetNode) { }
+        public LinkModel(string id, Anchor source, Anchor? target = null) : base(id, source, target) { }
 
-        public LinkModel(string id, PortModel sourcePort, PortModel? targetPort = null) : base(id, sourcePort, targetPort) { }
+        public LinkModel(PortModel sourcePort, PortModel? targetPort = null)
+            : base(new SinglePortAnchor(sourcePort), targetPort is null ? null : new SinglePortAnchor(targetPort)) { }
 
-        public LinkModel(string id, NodeModel sourceNode, NodeModel? targetNode) : base(id, sourceNode, targetNode) { }
+        public LinkModel(NodeModel sourceNode, NodeModel? targetNode)
+            : base(new ShapeIntersectionAnchor(sourceNode), targetNode is null ? null : new ShapeIntersectionAnchor(targetNode)) { }
+
+        public LinkModel(string id, PortModel sourcePort, PortModel? targetPort = null)
+            : base(id, new SinglePortAnchor(sourcePort), targetPort is null ? null : new SinglePortAnchor(targetPort)) { }
+
+        public LinkModel(string id, NodeModel sourceNode, NodeModel? targetNode)
+            : base(id, new ShapeIntersectionAnchor(sourceNode), targetNode is null ? null : new ShapeIntersectionAnchor(targetNode)) { }
 
         public string? Color { get; set; }
         public string? SelectedColor { get; set; }

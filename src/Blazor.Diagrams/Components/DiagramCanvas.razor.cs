@@ -11,19 +11,19 @@ namespace Blazor.Diagrams.Components
     public partial class DiagramCanvas : IDisposable
     {
         [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        public Diagram Diagram { get; set; } = null!;
 
         [Parameter]
-        public RenderFragment Widgets { get; set; }
+        public RenderFragment? Widgets { get; set; }
 
         [Parameter]
-        public string Class { get; set; }
+        public string? Class { get; set; }
 
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        public IJSRuntime JSRuntime { get; set; } = null!;
 
         protected ElementReference elementReference;
-        private DotNetObjectReference<DiagramCanvas> _reference;
+        private DotNetObjectReference<DiagramCanvas>? _reference;
         private bool _shouldRender;
 
         private string LayerStyle

@@ -1,5 +1,5 @@
-﻿using Blazor.Diagrams.Algorithms.Extensions;
-using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +15,19 @@ namespace Blazor.Diagrams.Algorithms
 
             foreach (var link in diagram.Links.ToArray())
             {
-                if (link.TargetPort == null)
+                if (link.Target == null)
                     continue;
 
-                var sourcePorts = link.SourcePort.Parent.Ports;
-                var targetPorts = link.TargetPort.Parent.Ports;
+                if (link.Source is not SinglePortAnchor spa1 || link.Target is not SinglePortAnchor spa2)
+                    continue;
+
+                var sourcePorts = spa1.Node.Ports;
+                var targetPorts = spa2.Node.Ports;
 
                 // Find the ports with minimal distance
                 var minDistance = double.MaxValue;
-                var minSourcePort = link.SourcePort;
-                var minTargetPort = link.TargetPort;
+                var minSourcePort = spa1.Port;
+                var minTargetPort = spa2.Port;
                 foreach (var sourcePort in sourcePorts)
                 {
                     foreach (var targetPort in targetPorts)
@@ -40,18 +43,18 @@ namespace Blazor.Diagrams.Algorithms
                 }
 
                 // Reconnect
-                if (link.SourcePort != minSourcePort)
+                if (spa1.Port != minSourcePort)
                 {
-                    portsToRefresh.Add(link.SourcePort);
+                    portsToRefresh.Add(spa1.Port);
                     portsToRefresh.Add(minSourcePort);
-                    link.SetSourcePort(minSourcePort);
+                    link.SetSource(new SinglePortAnchor(minSourcePort));
                 }
 
-                if (link.TargetPort != minTargetPort)
+                if (spa2.Port != minTargetPort)
                 {
-                    portsToRefresh.Add(link.TargetPort);
+                    portsToRefresh.Add(spa2.Port);
                     portsToRefresh.Add(minTargetPort);
-                    link.SetTargetPort(minTargetPort);
+                    link.SetTarget(new SinglePortAnchor(minTargetPort));
                 }
             }
 

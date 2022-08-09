@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Components.Groups;
-using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;

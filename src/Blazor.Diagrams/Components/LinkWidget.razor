@@ -4,7 +4,8 @@
     var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
     var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
     var route = router(Diagram, Link);
-    (var source, var target) = FindConnectionPoints(route);
+    var source = Link.Source.GetPosition(Link, route);
+    var target = Link.Target is null ? Link.OnGoingPosition : Link.Target.GetPosition(Link, route);
     if (source == null || target == null)
         return;
 

@@ -100,8 +100,8 @@ namespace Blazor.Diagrams.Core
         /// <returns>The created group instance.</returns>
         public GroupModel Group(params NodeModel[] children)
         {
-            if (children.Any(n => n.Group != null))
-                throw new InvalidOperationException("Cannot group nodes that already belong to another group");
+            //if (children.Any(n => n.Group != null))
+            //    throw new InvalidOperationException("Cannot group nodes that already belong to another group");
 
             var group = Options.Groups.Factory(this, children);
             AddGroup(group);
@@ -114,11 +114,11 @@ namespace Blazor.Diagrams.Core
         /// <param name="group">A group instance.</param>
         public void AddGroup(GroupModel group)
         {
-            foreach (var child in group.Children)
-            {
-                if (child is NodeModel node && !Nodes.Contains(node))
-                    throw new Exception("One of the nodes isn't in the diagram. Make sure to add all the nodes before creating the group.");
-            }
+            //foreach (var child in group.Children)
+            //{
+            //    if (child is NodeModel node && !Nodes.Contains(node))
+            //        throw new Exception("One of the nodes isn't in the diagram. Make sure to add all the nodes before creating the group.");
+            //}
 
             _groups.Add(group);
             GroupAdded?.Invoke(group);

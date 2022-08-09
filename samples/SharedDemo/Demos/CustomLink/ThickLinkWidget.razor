@@ -3,9 +3,19 @@
     public LinkModel Link { get; set; }
 }
 
-<line x1="@Link.GetMiddleSourceX().ToInvariantString()"
-      y1="@Link.GetMiddleSourceY().ToInvariantString()"
-      x2="@Link.GetTargetX().ToInvariantString()"
-      y2="@Link.GetTargetY().ToInvariantString()"
+@{
+    Console.WriteLine(Link.Source);
+    Console.WriteLine(Link.Target);
+    var sourcePosition = Link.Source.GetPosition(Link);
+    var targetPosition = Link.Target is null ? Link.OnGoingPosition : Link.Target.GetPosition(Link);
+
+    if (sourcePosition is null || targetPosition is null)
+        return;
+}
+
+<line x1="@sourcePosition.X.ToInvariantString()"
+      y1="@sourcePosition.Y.ToInvariantString()"
+      x2="@targetPosition.X.ToInvariantString()"
+      y2="@targetPosition.Y.ToInvariantString()"
       stroke="@(Link.Selected ? "red" : "blue")"
       stroke-width="6" />

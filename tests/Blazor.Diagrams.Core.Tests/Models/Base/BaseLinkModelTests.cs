@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using FluentAssertions;
 using Xunit;
@@ -8,19 +9,19 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
     public class BaseLinkModelTests
     {
         [Fact]
-        public void SetSourcePort_ShouldChangePropertiesAndTriggerEvent()
+        public void SetSource_ShouldChangePropertiesAndTriggerEvent()
         {
             // Arrange
-            var link = new TestLink(sourcePort: new PortModel(null), targetPort: null);
+            var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
             var parent = new NodeModel();
-            var sp = new PortModel(parent);
+            var sp = new SinglePortAnchor(new PortModel(parent));
             var eventsTriggered = 0;
-            PortModel oldSp = null;
-            PortModel newSp = null;
-            BaseLinkModel linkInstance = null;
+            Anchor? oldSp = null;
+            Anchor? newSp = null;
+            BaseLinkModel? linkInstance = null;
 
             // Act
-            link.SourcePortChanged += (l, o, n) =>
+            link.SourceChanged += (l, o, n) =>
             {
                 eventsTriggered++;
                 linkInstance = l;
@@ -28,31 +29,31 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
                 newSp = n;
             };
 
-            link.SetSourcePort(sp);
+            link.SetSource(sp);
 
             // Assert
             eventsTriggered.Should().Be(1);
-            link.SourcePort.Should().BeSameAs(sp);
+            link.Source.Should().BeSameAs(sp);
             oldSp.Should().NotBeNull();
             newSp.Should().BeSameAs(sp);
             linkInstance.Should().BeSameAs(link);
-            link.SourceNode.Should().BeSameAs(parent);
+            link.Source.Node.Should().BeSameAs(parent);
         }
 
         [Fact]
-        public void SetTargetPort_ShouldChangePropertiesAndTriggerEvent()
+        public void SetTarget_ShouldChangePropertiesAndTriggerEvent()
         {
             // Arrange
-            var link = new TestLink(sourcePort: new PortModel(null), targetPort: null);
+            var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
             var parent = new NodeModel();
-            var tp = new PortModel(parent);
+            var tp = new SinglePortAnchor(new PortModel(parent));
             var eventsTriggered = 0;
-            PortModel oldTp = null;
-            PortModel newTp = null;
-            BaseLinkModel linkInstance = null;
+            Anchor? oldTp = null;
+            Anchor? newTp = null;
+            BaseLinkModel? linkInstance = null;
 
             // Act
-            link.TargetPortChanged += (l, o, n) =>
+            link.TargetChanged += (l, o, n) =>
             {
                 eventsTriggered++;
                 linkInstance = l;
@@ -60,34 +61,15 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
                 newTp = n;
             };
 
-            link.SetTargetPort(tp);
+            link.SetTarget(tp);
 
             // Assert
             eventsTriggered.Should().Be(1);
-            link.TargetPort.Should().BeSameAs(tp);
+            link.Target.Should().BeSameAs(tp);
             oldTp.Should().BeNull();
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
-            link.TargetNode.Should().BeSameAs(parent);
-        }
-
-        private class TestLink : BaseLinkModel
-        {
-            public TestLink(NodeModel sourceNode, NodeModel targetNode) : base(sourceNode, targetNode)
-            {
-            }
-
-            public TestLink(PortModel sourcePort, PortModel targetPort = null) : base(sourcePort, targetPort)
-            {
-            }
-
-            public TestLink(string id, NodeModel sourceNode, NodeModel targetNode) : base(id, sourceNode, targetNode)
-            {
-            }
-
-            public TestLink(string id, PortModel sourcePort, PortModel targetPort = null) : base(id, sourcePort, targetPort)
-            {
-            }
+            link.Target!.Node.Should().BeSameAs(parent);
         }
     }
 }

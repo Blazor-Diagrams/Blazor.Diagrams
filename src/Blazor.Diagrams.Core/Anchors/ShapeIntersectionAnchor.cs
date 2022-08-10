@@ -47,10 +47,10 @@ namespace Blazor.Diagrams.Core.Anchors
             };
         }
 
-        private static Point GetClosestPointTo(IEnumerable<Point> points, Point point)
+        private static Point? GetClosestPointTo(IEnumerable<Point> points, Point point)
         {
             var minDist = double.MaxValue;
-            Point minPoint = null;
+            Point? minPoint = null;
 
             foreach (var pt in points)
             {

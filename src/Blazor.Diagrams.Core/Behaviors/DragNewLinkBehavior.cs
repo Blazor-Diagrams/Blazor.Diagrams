@@ -79,10 +79,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 var nearPort = FindNearPortToAttachTo();
                 if (nearPort != null || _ongoingLink.Target != null)
                 {
-                    var oldPort = (_ongoingLink.Target as SinglePortAnchor)?.Port; // Assumption for now
                     _ongoingLink.SetTarget(nearPort is null ? null : new SinglePortAnchor(nearPort));
-                    oldPort?.Refresh();
-                    nearPort?.Refresh();
                 }
             }
 
@@ -112,7 +109,6 @@ namespace Blazor.Diagrams.Core.Behaviors
             _ongoingLink.OnGoingPosition = null;
             _ongoingLink.SetTarget(new SinglePortAnchor(port));
             _ongoingLink.Refresh();
-            port.Refresh();
             sourcePort.Parent.Group?.Refresh();
             port?.Parent.Group?.Refresh();
             _ongoingLink = null;

@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Core
         [Description("Default PathGenerator for links")]
         public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
         [Description("Whether to enable link snapping")]
-        public bool EnableSnapping { get; set; }
+        public bool EnableSnapping { get; set; } = false;
         [Description("Link snapping radius")]
         public double SnappingRadius { get; set; } = 50;
         [Description("Link model factory")]

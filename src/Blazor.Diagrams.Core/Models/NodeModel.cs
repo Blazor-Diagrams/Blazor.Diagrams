@@ -15,17 +15,10 @@ namespace Blazor.Diagrams.Core.Models
         public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
-        public NodeModel(Point? position = null, ShapeDefiner? shape = null) : base(position)
-        {
-            ShapeDefiner = shape ?? Shapes.Rectangle;
-        }
+        public NodeModel(Point? position = null) : base(position) { }
 
-        public NodeModel(string id, Point? position = null, ShapeDefiner? shape = null) : base(id, position)
-        {
-            ShapeDefiner = shape ?? Shapes.Rectangle;
-        }
+        public NodeModel(string id, Point? position = null) : base(id, position) { }
 
-        public ShapeDefiner ShapeDefiner { get; }
         public Size? Size
         {
             get => _size;
@@ -45,6 +38,8 @@ namespace Blazor.Diagrams.Core.Models
         public IReadOnlyList<BaseLinkModel> Links => _links;
         public IEnumerable<BaseLinkModel> PortLinks => Ports.SelectMany(p => p.Links);
 
+        #region Ports
+
         public PortModel AddPort(PortModel port)
         {
             _ports.Add(port);
@@ -57,6 +52,12 @@ namespace Blazor.Diagrams.Core.Models
         public PortModel? GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
         public T? GetPort<T>(PortAlignment alignment) where T : PortModel => (T?)GetPort(alignment);
+
+        public bool RemovePort(PortModel port) => _ports.Remove(port);
+
+        #endregion
+
+        #region Refreshing
 
         public void RefreshAll()
         {
@@ -81,7 +82,7 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        public bool RemovePort(PortModel port) => _ports.Remove(port);
+        #endregion
 
         public override void SetPosition(double x, double y)
         {
@@ -125,7 +126,7 @@ namespace Blazor.Diagrams.Core.Models
             return new Rectangle(left, top, right, bottom);
         }
 
-        public IShape GetShape() => ShapeDefiner(this);
+        public virtual IShape GetShape() => Shapes.Rectangle(this);
 
         private void UpdatePortPositions(double deltaX, double deltaY)
         {

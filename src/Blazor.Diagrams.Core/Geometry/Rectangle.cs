@@ -28,6 +28,9 @@ namespace Blazor.Diagrams.Core.Geometry
 
         public Rectangle(Point position, Size size)
         {
+            ArgumentNullException.ThrowIfNull(position, nameof(position));
+            ArgumentNullException.ThrowIfNull(size, nameof(size));
+
             Left = position.X;
             Top = position.Y;
             Right = Left + size.Width;

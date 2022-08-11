@@ -25,9 +25,9 @@ namespace SharedDemo.Demos.Nodes
         {
             _diagram.RegisterModelComponent<RoundedNode, RoundedNodeWidget>();
 
-            var node1 = new NodeModel(new Point(80, 80), shape: Shapes.Rectangle);
-            var node2 = new RoundedNode(new Point(280, 150), shape: Shapes.Circle);
-            var node3 = new NodeModel(new Point(400, 300), shape: Shapes.Rectangle);
+            var node1 = new NodeModel(new Point(80, 80));
+            var node2 = new RoundedNode(new Point(280, 150));
+            var node3 = new NodeModel(new Point(400, 300));
             node3.AddPort(PortAlignment.Left);
             _diagram.Nodes.Add(node1);
             _diagram.Nodes.Add(node2);
@@ -49,6 +49,11 @@ namespace SharedDemo.Demos.Nodes
 
     class RoundedNode : NodeModel
     {
-        public RoundedNode(Point position = null, ShapeDefiner shape = null) : base(position, shape) { }
+        public RoundedNode(Point position = null) : base(position) { }
+
+        public override IShape GetShape()
+        {
+            return Shapes.Circle(this);
+        }
     }
 }

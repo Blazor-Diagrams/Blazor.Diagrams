@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models.Base;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +20,6 @@ namespace Blazor.Diagrams.Core.Models
 
         public IReadOnlyList<NodeModel> Children => _children;
         public byte Padding { get; }
-        public IEnumerable<BaseLinkModel> HandledLinks => _children.SelectMany(c => c.AllLinks).Distinct();
 
         public void AddChild(NodeModel child)
         {

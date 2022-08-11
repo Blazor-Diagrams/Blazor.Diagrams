@@ -49,7 +49,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             {
                 if (port.Locked) return;
                 _ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
-                _ongoingLink.OnGoingPosition = _ongoingLink.Source.GetPosition(_ongoingLink);
+                _ongoingLink.OnGoingPosition = Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5);
             }
             else
             {
@@ -66,13 +66,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (_ongoingLink == null || model != null)
                 return;
 
-            var deltaX = (clientX - _initialX) / Diagram.Zoom;
-            var deltaY = (clientY - _initialY) / Diagram.Zoom;
-            var sourcePosition = _ongoingLink.Source.GetPosition(_ongoingLink)!; // Port should be initialized already, so no null here
-            var sX = sourcePosition.X;
-            var sY = sourcePosition.Y;
-
-            _ongoingLink.OnGoingPosition = new Point(sX + deltaX, sY + deltaY);
+            _ongoingLink.OnGoingPosition = Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5);
 
             if (Diagram.Options.Links.EnableSnapping)
             {

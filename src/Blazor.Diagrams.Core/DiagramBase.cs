@@ -137,7 +137,7 @@ namespace Blazor.Diagrams.Core
             Batch(() =>
             {
                 group.Ungroup();
-                Links.Remove(group.AllLinks.ToArray());
+                Links.Remove(group.PortLinks.ToArray());
                 GroupUngrouped?.Invoke(group);
             });
         }
@@ -154,7 +154,7 @@ namespace Blazor.Diagrams.Core
             Batch(() =>
             {
                 Nodes.Remove(group.Children.ToArray());
-                Links.Remove(group.AllLinks.ToArray());
+                Links.Remove(group.PortLinks.ToArray());
                 group.Ungroup();
                 GroupRemoved?.Invoke(group);
             });

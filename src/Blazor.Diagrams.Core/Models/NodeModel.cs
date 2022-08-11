@@ -43,7 +43,7 @@ namespace Blazor.Diagrams.Core.Models
 
         public IReadOnlyList<PortModel> Ports => _ports;
         public IReadOnlyList<BaseLinkModel> Links => _links;
-        public IEnumerable<BaseLinkModel> AllLinks => Ports.SelectMany(p => p.Links);
+        public IEnumerable<BaseLinkModel> PortLinks => Ports.SelectMany(p => p.Links);
 
         public PortModel AddPort(PortModel port)
         {

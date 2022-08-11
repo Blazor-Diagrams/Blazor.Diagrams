@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0) - 2022-X-X
+
+### Added
+
+- `Diagram` class (inherits `DiagramBase`) to the blazor package to replace the old Core one
+- `Blazor.Diagrams.Models.SvgNodeModel` class to represent a node that needs to be rendered in the SVG layer
+- `GetBehavior<T>` method to `DiagramBase` in order to retrieve a registered behavior
+- `KeyboardShortcutsBehavior` class which handles keyboard shortcuts/actions:
+	- `SetShortcut`: sets an action (`Func<Diagrambase, ValueTask>`) to be executed whenever the specified combination is pressed
+	- `RemoveShortcut`: removes a defined action (if it exists)
+- `KeyboardShortcutsDefaults` containing the default shortcuts that were deleted (`DeleteSelection` and `Grouping`)
+- Anchors functionality:
+	- An Anchor determines where on an element the link will connect
+	- Instead of links requiring the source and target to be either both nodes or both ports, there is now only one `Source` and `Target` of type `Anchor`
+	- This lets the link not worry about the details of from/to where its going, as long as the anchor provides it with its position when asked for
+	- Current implementations:
+		- `SinglePortAnchor`: Specifies that the connection point is a specific port (replaces a link)
+		- `ShapeIntersectionAnchor`: Specifies that the connection point is the intersection of the line with the node's shape
+
+- Lot of unit tests
+	
+### Changed
+
+- Core package changes:
+	- Web dependency was removed from the Core package
+	- `Diagram` in the Core package was renamed to `DiagramBase`
+	- These changes were done to decouple the core from the rendering, in the future we might have a MAUI renderer
+- `Diagram.GetComponentForModel` now accepts a `checkSubclasses` argument (default `true`)
+- Constraints now must return a `ValueTask<bool>` instead of a simple `bool`
+
+### Fixed
+
+- Virtualization throwing a JSException (#155)
+
+### Removed
+
+- `DefaultNodeComponent` and `DefaultLinkComponent` options (see `GetComponentForModel` changes)
+- `RenderLayer` from the Core package and all its usage
+- `DeleteSelectionBehavior` since there is a new keyboard shortcuts system
+- `GroupingBehavior` since there is a new keyboard shortcuts system
+- `BaseLinkModelExtensions` since it was Obselete
+- Unnecessary port refreshes when dragging a link ends or when link snapping
+
 ## Diagrams (2.1.6) - 2021-10-31
 
 ### Fixed

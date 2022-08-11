@@ -12,13 +12,14 @@ namespace Blazor.Diagrams.Core.Anchors
         }
 
         public PortModel Port { get; }
+        public bool MiddleIfNoMarker { get; set; } = false;
 
         public override Point? GetPosition(BaseLinkModel link, Point[] route)
         {
             if (!Port.Initialized)
                 return null;
 
-            if ((link.Source == this && link.SourceMarker is null) || (link.Target == this && link.TargetMarker is null))
+            if (MiddleIfNoMarker && ((link.Source == this && link.SourceMarker is null) || (link.Target == this && link.TargetMarker is null)))
                 return Port.MiddlePosition;
 
             var pt = Port.Position;

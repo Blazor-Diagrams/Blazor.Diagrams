@@ -56,5 +56,13 @@ namespace Blazor.Diagrams.Core.Geometry
                 }
             }
         }
+
+        public Point? GetPointAtAngle(double a)
+        {
+            var t = Math.Tan(a / 360 * Math.PI);
+            var px = Rx * (1 - Math.Pow(t, 2)) / (1 + Math.Pow(t, 2));
+            var py = Ry * 2 * t / (1 + Math.Pow(t, 2));
+            return new Point(Cx + px, Cy + py);
+        }
     }
 }

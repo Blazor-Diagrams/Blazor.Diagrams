@@ -52,6 +52,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public Rectangle GetBounds() => new(Position, Size);
 
+        public virtual IShape GetShape() => Shapes.Circle(this);
+
         internal void AddLink(BaseLinkModel link) => _links.Add(link);
 
         internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);

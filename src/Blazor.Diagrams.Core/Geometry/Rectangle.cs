@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Blazor.Diagrams.Core.Geometry
@@ -87,6 +88,24 @@ namespace Blazor.Diagrams.Core.Geometry
                 if (intersectionPt != null)
                     yield return intersectionPt;
             }
+        }
+
+        public Point? GetPointAtAngle(double a)
+        {
+            var vx = Math.Cos(a * Math.PI / 180);
+            var vy = Math.Sin(a * Math.PI / 180);
+            var px = Left + Width / 2;
+            var py = Top + Height / 2;
+            double? t1 = (Left - px) / vx; // left
+            double? t2 = (Right - px) / vx; // right
+            double? t3 = (Top - py) / vy; // top
+            double? t4 = (Bottom - py) / vy; // bottom
+            var t = (new[] { t1, t2, t3, t4 }).Where(n => n.HasValue && double.IsFinite(n.Value) && n.Value > 0).DefaultIfEmpty(null).Min();
+            if (t == null) return null;
+
+            var x = px + t.Value * vx;
+            var y = py + t.Value * vy;
+            return new Point(x, y);
         }
 
         public Point Center => new(Left + Width / 2, Top + Height / 2);

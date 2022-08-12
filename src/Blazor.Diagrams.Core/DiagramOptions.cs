@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Events;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -17,6 +16,10 @@ namespace Blazor.Diagrams.Core
         public bool AllowPanning { get; set; } = true;
         [Description("Only render visible nodes")]
         public bool EnableVirtualization { get; set; } = true;
+        [Description("Links layer order")]
+        public int LinksLayerOrder { get; set; } = 0;
+        [Description("Nodes layer order")]
+        public int NodesLayerOrder { get; set; } = 0;
 
         public DiagramZoomOptions Zoom { get; set; } = new DiagramZoomOptions();
         public DiagramLinkOptions Links { get; set; } = new DiagramLinkOptions();

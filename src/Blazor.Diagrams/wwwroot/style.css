@@ -77,7 +77,7 @@
     pointer-events: all;
 }
 
-    .group .layer {
+    .group .children {
         position: absolute;
         overflow: visible;
         pointer-events: none;

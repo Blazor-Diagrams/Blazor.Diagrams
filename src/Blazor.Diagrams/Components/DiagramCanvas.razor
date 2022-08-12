@@ -14,7 +14,7 @@
      @ontouchend:preventDefault>
 
     @* Links *@
-    <svg class="diagram-svg-layer" style="@LayerStyle">
+    <svg class="diagram-svg-layer" style="@GetLayerStyle(Diagram.Options.LinksLayerOrder)">
         @foreach (var link in Diagram.Links)
         {
             <LinkRenderer @key="link" Link="link" />
@@ -27,9 +27,10 @@
     </svg>
 
     @* Nodes *@
-    <div class="diagram-html-layer" style="@LayerStyle">
+    <div class="diagram-html-layer" style="@GetLayerStyle(Diagram.Options.NodesLayerOrder)">
         @foreach (var group in Diagram.Groups)
         {
+            if (group.Group != null) continue;
             <GroupRenderer @key="group" Group="group" />
         }
 

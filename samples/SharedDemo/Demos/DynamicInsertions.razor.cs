@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
@@ -19,6 +20,18 @@ namespace SharedDemo.Demos
             diagram.Options.Groups.Enabled = true;
             diagram.Nodes.Add(new NodeModel(new Point(300, 50)));
             diagram.Nodes.Add(new NodeModel(new Point(300, 400)));
+
+            diagram.Options.Links.Factory = (d, sp) =>
+            {
+                var link = new LinkModel(new SinglePortAnchor(sp)
+                {
+                    UseShapeAndAlignment = false
+                })
+                {
+                    SourceMarker = LinkMarker.Arrow
+                };
+                return link;
+            };
         }
 
         protected void AddNode()

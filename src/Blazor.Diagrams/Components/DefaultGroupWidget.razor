@@ -1,13 +1,11 @@
-﻿<span class="title">@Group.Title</span>
+﻿@code {
+    [Parameter]
+    public GroupModel Group { get; set; } = null!;
+}
 
 <GroupNodes Group="Group" />
 
 @foreach (var port in Group.Ports)
 {
     <PortRenderer Port="port" Class="group-port"></PortRenderer>
-}
-
-
-@code {
-    [Parameter] public CustomGroupModel Group { get; set; }
 }

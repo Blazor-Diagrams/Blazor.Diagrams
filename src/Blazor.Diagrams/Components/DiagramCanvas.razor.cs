@@ -26,8 +26,10 @@ namespace Blazor.Diagrams.Components
         private DotNetObjectReference<DiagramCanvas>? _reference;
         private bool _shouldRender;
 
-        private string LayerStyle
-            => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
+        private string GetLayerStyle(int order)
+        {
+            return FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom}); z-index: {order};");
+        }
 
         protected override void OnInitialized()
         {

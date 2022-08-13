@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Extensions
@@ -15,7 +16,18 @@ namespace Blazor.Diagrams.Extensions
         public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element, 
             DotNetObjectReference<T> reference) where T : class
         {
-            await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.observe", element, reference, element.Id);
+            try
+            {
+                await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.observe", element, reference, element.Id);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Ignore, DotNetObjectReference was likely disposed
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public static async Task UnobserveResizes(this IJSRuntime jsRuntime, ElementReference element)

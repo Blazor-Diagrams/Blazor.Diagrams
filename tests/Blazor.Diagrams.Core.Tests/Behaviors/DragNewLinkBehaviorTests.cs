@@ -15,6 +15,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
             {
@@ -24,7 +25,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
 
             // Assert
             var link = diagram.Links.Single();
@@ -33,9 +34,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             link.Target.Should().BeNull();
             source!.Port.Should().BeSameAs(port);
             link.OnGoingPosition.Should().NotBeNull();
-            var sourcePosition = source.GetPosition(link)!;
-            link.OnGoingPosition!.X.Should().Be(sourcePosition.X);
-            link.OnGoingPosition.Y.Should().Be(sourcePosition.Y);
+            link.OnGoingPosition!.X.Should().Be(95);
+            link.OnGoingPosition.Y.Should().Be(95);
         }
 
         [Fact]
@@ -43,6 +43,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var factoryCalled = false;
             diagram.Options.Links.Factory = (d, sp) =>
             {
@@ -58,7 +59,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
 
             // Assert
             factoryCalled.Should().BeTrue();
@@ -68,9 +69,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             link.Target.Should().BeNull();
             source!.Port.Should().BeSameAs(port);
             link.OnGoingPosition.Should().NotBeNull();
-            var sourcePosition = source.GetPosition(link)!;
-            link.OnGoingPosition!.X.Should().Be(sourcePosition.X);
-            link.OnGoingPosition.Y.Should().Be(sourcePosition.Y);
+            link.OnGoingPosition!.X.Should().Be(95);
+            link.OnGoingPosition.Y.Should().Be(95);
         }
 
         [Fact]
@@ -78,6 +78,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var linkRefreshed = false;
             var port = node.AddPort(new PortModel(node)
@@ -95,9 +96,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var source = link.Source as SinglePortAnchor;
-            var sourcePosition = source!.GetPosition(link)!;
-            link.OnGoingPosition!.X.Should().Be(sourcePosition.X + 50);
-            link.OnGoingPosition.Y.Should().Be(sourcePosition.Y + 50);
+            link.OnGoingPosition!.X.Should().Be(145);
+            link.OnGoingPosition.Y.Should().Be(145);
             linkRefreshed.Should().BeTrue();
         }
 
@@ -106,6 +106,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.SetZoom(1.5);
             var node = new NodeModel(position: new Point(100, 50));
             var linkRefreshed = false;
@@ -124,9 +125,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var source = link.Source as SinglePortAnchor;
-            var sourcePosition = source!.GetPosition(link)!;
-            link.OnGoingPosition!.X.Should().Be(sourcePosition.X + 40);
-            link.OnGoingPosition.Y.Should().Be(sourcePosition.Y + 40);
+            link.OnGoingPosition!.X.Should().BeApproximately(101.6, 0.1);
+            link.OnGoingPosition.Y.Should().BeApproximately(101.6, 0.1);
             linkRefreshed.Should().BeTrue();
         }
 
@@ -135,6 +135,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 60;
             var node1 = new NodeModel(position: new Point(100, 50));
@@ -157,7 +158,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Act
             diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(105, 105, 0, 0, false, false, false));
+            diagram.OnMouseMove(null, new MouseEventArgs(140, 100, 0, 0, false, false, false));
 
             // Assert
             var link = diagram.Links.Single();
@@ -172,6 +173,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 50;
             var node1 = new NodeModel(position: new Point(100, 50));
@@ -204,6 +206,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 56;
             var node1 = new NodeModel(position: new Point(100, 50));
@@ -226,7 +229,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Act
             diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(105, 105, 0, 0, false, false, false)); // Move towards the other port
+            diagram.OnMouseMove(null, new MouseEventArgs(140, 100, 0, 0, false, false, false)); // Move towards the other port
             diagram.OnMouseMove(null, new MouseEventArgs(100, 100, 0, 0, false, false, false)); // Move back to unsnap
 
             // Assert
@@ -241,6 +244,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
             {
@@ -262,6 +266,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
             {
@@ -283,6 +288,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new DiagramBase();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node1 = new NodeModel(position: new Point(100, 50));
             var node2 = new NodeModel(position: new Point(160, 50));
             diagram.Nodes.Add(new[] { node1, node2 });

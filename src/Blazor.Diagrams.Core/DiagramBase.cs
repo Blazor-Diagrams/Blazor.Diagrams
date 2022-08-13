@@ -113,11 +113,14 @@ namespace Blazor.Diagrams.Core
         {
             foreach (var child in group.Children)
             {
-                if (child is NodeModel n && !Nodes.Contains(n))
-                    throw new Exception("One of the children isn't in the diagram (Nodes). Make sure to add all the nodes before creating the group.");
-                
-                if (child is GroupModel g && !Groups.Contains(g))
-                    throw new Exception("One of the children isn't in the diagram (Groups). Make sure to add all the nodes before creating the group.");
+                if (child is GroupModel g)
+                {
+                    if (!Groups.Contains(g))
+                        throw new Exception("One of the children isn't in the diagram (Groups). Make sure to add all the nodes before creating the group.");
+                }
+                else if (child is NodeModel n)
+                    if (!Nodes.Contains(n))
+                        throw new Exception("One of the children isn't in the diagram (Nodes). Make sure to add all the nodes before creating the group.");
             }
 
             _groups.Add(group);
@@ -304,7 +307,7 @@ namespace Blazor.Diagrams.Core
 
             if (newZoom < Options.Zoom.Minimum)
                 newZoom = Options.Zoom.Minimum;
-           
+
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();

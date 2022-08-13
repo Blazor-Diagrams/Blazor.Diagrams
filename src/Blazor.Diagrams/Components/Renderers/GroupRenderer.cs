@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Extensions;
+using Blazor.Diagrams.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,6 +30,13 @@ namespace Blazor.Diagrams.Components.Renderers
         protected override void OnInitialized()
         {
             Group.Changed += OnGroupChanged;
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            _isSvg = Group is SvgGroupModel;
         }
 
         protected override bool ShouldRender()
@@ -83,7 +91,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             if (_isSvg)
             {
-                // Todo
+                builder.AddAttribute(3, "transform", FormattableString.Invariant($"translate({Group.Position.X} {Group.Position.Y})"));
             }
             else
             {
@@ -99,8 +107,18 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddAttribute(10, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
             builder.AddEventStopPropagationAttribute(11, "ontouchend", true);
             builder.AddEventPreventDefaultAttribute(12, "ontouchend", true);
-            builder.OpenComponent(13, componentType);
-            builder.AddAttribute(14, "Group", Group);
+
+            if (_isSvg)
+            {
+                builder.OpenElement(13, "rect");
+                builder.AddAttribute(14, "width", Group.Size!.Width);
+                builder.AddAttribute(15, "height", Group.Size.Height);
+                builder.AddAttribute(16, "fill", "none");
+                builder.CloseElement();
+            }
+
+            builder.OpenComponent(17, componentType);
+            builder.AddAttribute(18, "Group", Group);
             builder.CloseComponent();
             builder.CloseElement();
         }

@@ -15,20 +15,26 @@
 
     @* Links *@
     <svg class="diagram-svg-layer" style="@GetLayerStyle(Diagram.Options.LinksLayerOrder)">
+        @foreach (var node in Diagram.Nodes.OfType<SvgNodeModel>().Where(n => n.Group == null))
+        {
+            <NodeRenderer @key="node" Node="node" />
+        }
+
+        @foreach (var group in Diagram.Groups.OfType<SvgGroupModel>())
+        {
+            <GroupRenderer @key="group" Group="group" />
+        }
+
         @foreach (var link in Diagram.Links)
         {
             <LinkRenderer @key="link" Link="link" />
         }
 
-        @foreach (var node in Diagram.Nodes.OfType<SvgNodeModel>())
-        {
-            <NodeRenderer @key="node" Node="node" />
-        }
     </svg>
 
     @* Nodes *@
     <div class="diagram-html-layer" style="@GetLayerStyle(Diagram.Options.NodesLayerOrder)">
-        @foreach (var group in Diagram.Groups)
+        @foreach (var group in Diagram.Groups.Where(n => n is not SvgGroupModel))
         {
             if (group.Group != null) continue;
             <GroupRenderer @key="group" Group="group" />

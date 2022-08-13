@@ -86,7 +86,7 @@ namespace Blazor.Diagrams.Components.Renderers
                 .AppendIf(" default", componentType == typeof(DefaultGroupWidget));
 
             builder.OpenElement(0, _isSvg ? "g" : "div");
-            builder.AddAttribute(1, "class", classes);
+            builder.AddAttribute(1, "class", classes.ToString());
             builder.AddAttribute(2, "data-group-id", Group.Id);
 
             if (_isSvg)

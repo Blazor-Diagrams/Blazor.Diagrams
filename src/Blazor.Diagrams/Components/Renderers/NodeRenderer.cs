@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Components.Renderers
@@ -95,9 +96,13 @@ namespace Blazor.Diagrams.Components.Renderers
                 return;
 
             var componentType = Diagram.GetComponentForModel(Node) ?? (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
+            var classes = new StringBuilder("node")
+                .AppendIf(" locked", Node.Locked)
+                .AppendIf(" selected", Node.Selected)
+                .AppendIf(" grouped", Node.Group != null);
 
             builder.OpenElement(0, _isSvg ? "g" : "div");
-            builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
+            builder.AddAttribute(1, "class", classes.ToString());
             builder.AddAttribute(2, "data-node-id", Node.Id);
 
             if (_isSvg)

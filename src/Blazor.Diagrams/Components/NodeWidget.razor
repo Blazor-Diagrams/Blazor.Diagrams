@@ -2,11 +2,11 @@
     @(Node.Title ?? "Title")
     @foreach (var port in Node.Ports)
     {
-        <PortRenderer Port="port" Class="default"></PortRenderer>
+        <PortRenderer @key="port" Port="port" Class="default"></PortRenderer>
     }
 </div>
 
 @code {
     [Parameter]
-    public NodeModel Node { get; set; }
+    public NodeModel Node { get; set; } = null!;
 }

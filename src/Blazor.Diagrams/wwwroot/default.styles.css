@@ -91,14 +91,23 @@
     background-color: white;
 }
 
-.group.default {
+div.group.default {
     outline: 2px solid black;
     background: rgb(198, 198, 198);
 }
 
-    .group.default.selected {
+    div.group.default.selected {
         outline: 2px solid #6e9fd4;
     }
+
+g.group.default rect {
+    outline: 2px solid black;
+    fill: rgb(198, 198, 50);
+}
+
+g.group.default.selected rect {
+    outline: 2px solid green;
+}
 
 .link .link-label {
     display: inline-block;

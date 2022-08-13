@@ -11,7 +11,7 @@
 
 @foreach (var port in Group.Ports)
 {
-    <PortRenderer Port="port" Class="group-port"></PortRenderer>
+    <PortRenderer @key="port" Port="port" Class="group-port"></PortRenderer>
 }
 
 

@@ -58,15 +58,15 @@ namespace Blazor.Diagrams.Core.Layers
 
                 spa.Port.Refresh();
             }
-            else if (anchor is ShapeIntersectionAnchor sia)
+            else if (anchor is ShapeIntersectionAnchor || anchor is DynamicAnchor)
             {
                 if (add)
                 {
-                    sia.Node.AddLink(link);
+                    anchor.Node.AddLink(link);
                 }
                 else
                 {
-                    sia.Node.RemoveLink(link);
+                    anchor.Node.RemoveLink(link);
                 }
             }
             else

@@ -82,7 +82,7 @@ namespace Blazor.Diagrams.Core
             {
                 return GetCurvePoint(pX, pY, cX, cY, spa.Port.Alignment);
             }
-            else if (anchor is ShapeIntersectionAnchor)
+            else if (anchor is ShapeIntersectionAnchor || anchor is DynamicAnchor)
             {
                 if (Math.Abs(route[0].X - route[1].X) >= Math.Abs(route[0].Y - route[1].Y))
                 {

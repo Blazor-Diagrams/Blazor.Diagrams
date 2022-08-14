@@ -20,7 +20,7 @@
             <NodeRenderer @key="node" Node="node" />
         }
 
-        @foreach (var group in Diagram.Groups.OfType<SvgGroupModel>())
+        @foreach (var group in Diagram.Groups.OfType<SvgGroupModel>().Where(n => n.Group == null))
         {
             <GroupRenderer @key="group" Group="group" />
         }

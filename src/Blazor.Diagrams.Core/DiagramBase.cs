@@ -109,7 +109,7 @@ namespace Blazor.Diagrams.Core
         /// Adds the group to the diagram after validating it.
         /// </summary>
         /// <param name="group">A group instance.</param>
-        public void AddGroup(GroupModel group)
+        public GroupModel AddGroup(GroupModel group)
         {
             foreach (var child in group.Children)
             {
@@ -126,6 +126,7 @@ namespace Blazor.Diagrams.Core
             _groups.Add(group);
             GroupAdded?.Invoke(group);
             Refresh();
+            return group;
         }
 
         /// <summary>

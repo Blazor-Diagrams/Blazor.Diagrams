@@ -27,13 +27,20 @@ namespace SharedDemo.Demos.Nodes
             _diagram.RegisterModelComponent<SvgNodeModel, SvgNodeWidget>();
             _diagram.RegisterModelComponent<SvgGroupModel, DefaultGroupWidget>();
 
-            var node1 = NewNode(80, 80);
-            var node2 = NewNode(280, 150);
-            _diagram.Nodes.Add(node1);
-            _diagram.Nodes.Add(node2);
-            _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            var node1 = NewNode(50, 50);
+            var node2 = NewNode(250, 250);
+            var node3 = NewNode(500, 100);
+            var node4 = NewNode(700, 350);
+            _diagram.Nodes.Add(new[] { node1, node2, node3, node4 });
 
-            _diagram.AddGroup(new SvgGroupModel(new[] { node1, node2 }));
+            _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+            _diagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
+            _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
+
+            var group1 = _diagram.AddGroup(new SvgGroupModel(new[] { node1, node2 }));
+            var group2 = _diagram.AddGroup(new SvgGroupModel(new[] { group1, node3 }));
+
+            _diagram.Links.Add(new LinkModel(group2, node4));
         }
 
         private NodeModel NewNode(double x, double y, bool svg = true)

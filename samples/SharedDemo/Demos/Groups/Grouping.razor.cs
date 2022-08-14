@@ -16,7 +16,6 @@ namespace SharedDemo.Demos
             diagram.Options.Groups.Enabled = true;
             diagram.Options.LinksLayerOrder = 2;
             diagram.Options.NodesLayerOrder = 1;
-            diagram.Options.Groups.Enabled = true;
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);
             var node3 = NewNode(500, 100);

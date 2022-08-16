@@ -26,6 +26,7 @@ var s = {
         }
     }),
     observe: (element, ref, id) => {
+        if (!element) return;
         s.ro.observe(element);
         s.tracked[id] = {
             ref: ref
@@ -39,6 +40,7 @@ var s = {
         }
     },
     unobserve: (element, id) => {
+        if (!element) return;
         s.ro.unobserve(element);
         delete s.tracked[id];
         delete s.canvases[id];

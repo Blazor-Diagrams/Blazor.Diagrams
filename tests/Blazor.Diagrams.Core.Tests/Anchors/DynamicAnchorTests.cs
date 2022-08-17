@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Anchors.Dynamic;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using FluentAssertions;
@@ -16,20 +17,20 @@ namespace Blazor.Diagrams.Core.Tests.Anchors
             {
                 Size = null
             };
-            var positions = new[]
+            var providers = new[]
             {
-                new DynamicAnchorPosition(0.0, 0.0),
-                new DynamicAnchorPosition(0.5, 0.0),
-                new DynamicAnchorPosition(1.0, 0.0),
-                new DynamicAnchorPosition(0.0, 0.5),
-                new DynamicAnchorPosition(0.5, 0.5),
-                new DynamicAnchorPosition(1.0, 0.5),
-                new DynamicAnchorPosition(0.0, 1.0),
-                new DynamicAnchorPosition(0.5, 1.0),
-                new DynamicAnchorPosition(1.0, 1.0)
+                new BoundsBasedPositionProvider(0.0, 0.0),
+                new BoundsBasedPositionProvider(0.5, 0.0),
+                new BoundsBasedPositionProvider(1.0, 0.0),
+                new BoundsBasedPositionProvider(0.0, 0.5),
+                new BoundsBasedPositionProvider(0.5, 0.5),
+                new BoundsBasedPositionProvider(1.0, 0.5),
+                new BoundsBasedPositionProvider(0.0, 1.0),
+                new BoundsBasedPositionProvider(0.5, 1.0),
+                new BoundsBasedPositionProvider(1.0, 1.0)
             };
-            var anchor1 = new DynamicAnchor(node, positions);
-            var anchor2 = new DynamicAnchor(node, positions);
+            var anchor1 = new DynamicAnchor(node, providers);
+            var anchor2 = new DynamicAnchor(node, providers);
             var link = new LinkModel(anchor1, anchor2);
 
             // Act
@@ -53,15 +54,15 @@ namespace Blazor.Diagrams.Core.Tests.Anchors
             };
             var positions = new[]
             {
-                new DynamicAnchorPosition(0.0, 0.0), // 120,95
-                new DynamicAnchorPosition(0.5, 0.0), // 170,95
-                new DynamicAnchorPosition(1.0, 0.0), // 220,95
-                new DynamicAnchorPosition(0.0, 0.5), // 120,125
-                new DynamicAnchorPosition(0.5, 0.5), // 170,125
-                new DynamicAnchorPosition(1.0, 0.5), // 220,125
-                new DynamicAnchorPosition(0.0, 1.0), // 120,155
-                new DynamicAnchorPosition(0.5, 1.0), // 170,155
-                new DynamicAnchorPosition(1.0, 1.0) // 220,155
+                new BoundsBasedPositionProvider(0.0, 0.0), // 120,95
+                new BoundsBasedPositionProvider(0.5, 0.0), // 170,95
+                new BoundsBasedPositionProvider(1.0, 0.0), // 220,95
+                new BoundsBasedPositionProvider(0.0, 0.5), // 120,125
+                new BoundsBasedPositionProvider(0.5, 0.5), // 170,125
+                new BoundsBasedPositionProvider(1.0, 0.5), // 220,125
+                new BoundsBasedPositionProvider(0.0, 1.0), // 120,155
+                new BoundsBasedPositionProvider(0.5, 1.0), // 170,155
+                new BoundsBasedPositionProvider(1.0, 1.0) // 220,155
             };
             var anchor1 = new DynamicAnchor(node1, positions);
             var anchor2 = new DynamicAnchor(node2, positions);
@@ -90,15 +91,15 @@ namespace Blazor.Diagrams.Core.Tests.Anchors
             };
             var positions = new[]
             {
-                new DynamicAnchorPosition(0.0, 0.0), // 120,95
-                new DynamicAnchorPosition(0.5, 0.0), // 170,95
-                new DynamicAnchorPosition(1.0, 0.0, 10, -10), // 230,85
-                new DynamicAnchorPosition(0.0, 0.5), // 120,125
-                new DynamicAnchorPosition(0.5, 0.5), // 170,125
-                new DynamicAnchorPosition(1.0, 0.5), // 220,125
-                new DynamicAnchorPosition(0.0, 1.0), // 120,155
-                new DynamicAnchorPosition(0.5, 1.0), // 170,155
-                new DynamicAnchorPosition(1.0, 1.0) // 220,155
+                new BoundsBasedPositionProvider(0.0, 0.0), // 120,95
+                new BoundsBasedPositionProvider(0.5, 0.0), // 170,95
+                new BoundsBasedPositionProvider(1.0, 0.0, 10, -10), // 230,85
+                new BoundsBasedPositionProvider(0.0, 0.5), // 120,125
+                new BoundsBasedPositionProvider(0.5, 0.5), // 170,125
+                new BoundsBasedPositionProvider(1.0, 0.5), // 220,125
+                new BoundsBasedPositionProvider(0.0, 1.0), // 120,155
+                new BoundsBasedPositionProvider(0.5, 1.0), // 170,155
+                new BoundsBasedPositionProvider(1.0, 1.0) // 220,155
             };
             var anchor1 = new DynamicAnchor(node1, positions);
             var anchor2 = new DynamicAnchor(node2, positions);
@@ -127,15 +128,15 @@ namespace Blazor.Diagrams.Core.Tests.Anchors
             };
             var positions = new[]
             {
-                new DynamicAnchorPosition(0.0, 0.0), // 120,95
-                new DynamicAnchorPosition(0.5, 0.0), // 170,95
-                new DynamicAnchorPosition(1.0, 0.0), // 220,95
-                new DynamicAnchorPosition(0.0, 0.5), // 120,125
-                new DynamicAnchorPosition(0.5, 0.5), // 170,125
-                new DynamicAnchorPosition(1.0, 0.5), // 220,125
-                new DynamicAnchorPosition(0.0, 1.0), // 120,155
-                new DynamicAnchorPosition(0.5, 1.0), // 170,155
-                new DynamicAnchorPosition(1.0, 1.0) // 220,155
+                new BoundsBasedPositionProvider(0.0, 0.0), // 120,95
+                new BoundsBasedPositionProvider(0.5, 0.0), // 170,95
+                new BoundsBasedPositionProvider(1.0, 0.0), // 220,95
+                new BoundsBasedPositionProvider(0.0, 0.5), // 120,125
+                new BoundsBasedPositionProvider(0.5, 0.5), // 170,125
+                new BoundsBasedPositionProvider(1.0, 0.5), // 220,125
+                new BoundsBasedPositionProvider(0.0, 1.0), // 120,155
+                new BoundsBasedPositionProvider(0.5, 1.0), // 170,155
+                new BoundsBasedPositionProvider(1.0, 1.0) // 220,155
             };
             var anchor1 = new DynamicAnchor(node1, positions);
             var anchor2 = new DynamicAnchor(node2, positions);
@@ -167,15 +168,15 @@ namespace Blazor.Diagrams.Core.Tests.Anchors
             };
             var positions = new[]
             {
-                new DynamicAnchorPosition(0.0, 0.0), // 300, 60
-                new DynamicAnchorPosition(0.5, 0.0), // 350, 60
-                new DynamicAnchorPosition(1.0, 0.0), // 400, 60
-                new DynamicAnchorPosition(0.0, 0.5), // 300, 90
-                new DynamicAnchorPosition(0.5, 0.5), // 350, 90
-                new DynamicAnchorPosition(1.0, 0.5), // 400, 90
-                new DynamicAnchorPosition(0.0, 1.0), // 300, 120
-                new DynamicAnchorPosition(0.5, 1.0), // 350, 120
-                new DynamicAnchorPosition(1.0, 1.0) // 400, 120
+                new BoundsBasedPositionProvider(0.0, 0.0), // 300, 60
+                new BoundsBasedPositionProvider(0.5, 0.0), // 350, 60
+                new BoundsBasedPositionProvider(1.0, 0.0), // 400, 60
+                new BoundsBasedPositionProvider(0.0, 0.5), // 300, 90
+                new BoundsBasedPositionProvider(0.5, 0.5), // 350, 90
+                new BoundsBasedPositionProvider(1.0, 0.5), // 400, 90
+                new BoundsBasedPositionProvider(0.0, 1.0), // 300, 120
+                new BoundsBasedPositionProvider(0.5, 1.0), // 350, 120
+                new BoundsBasedPositionProvider(1.0, 1.0) // 400, 120
             };
             var anchor1 = new DynamicAnchor(node1, positions);
             var anchor2 = new DynamicAnchor(node2, positions);

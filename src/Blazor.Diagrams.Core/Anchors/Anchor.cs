@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
+using Blazor.Diagrams.Core.Anchors.Dynamic;
 
 namespace Blazor.Diagrams.Core.Anchors
 {

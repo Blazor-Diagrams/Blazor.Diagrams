@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Anchors.Dynamic;
 using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Layers

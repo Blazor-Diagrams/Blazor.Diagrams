@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Extensions
             return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
         }
 
-        public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element, 
+        public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element,
             DotNetObjectReference<T> reference) where T : class
         {
             try

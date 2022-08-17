@@ -14,7 +14,8 @@
                         left: @(addedCurrentViewX.ToInvariantString())px;
                         width: @(currentViewWidth.ToInvariantString())px;
                         height: @(currentViewHeight.ToInvariantString())px;
-                        border: 2px solid @FillColor;"></div>
+                        border: 2px solid @FillColor;">
+            </div>
         </div>
         <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
             @foreach (var node in Diagram.Nodes.Where(n => n.Size != null))
@@ -27,7 +28,8 @@
                 <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
                     <rect fill="@FillColor"
                           width="@width.ToInvariantString()"
-                          height="@height.ToInvariantString()"></rect>
+                          height="@height.ToInvariantString()">
+                    </rect>
                 </g>
             }
 
@@ -43,7 +45,8 @@
                           stroke-width="2"
                           fill="none"
                           width="@width.ToInvariantString()"
-                          height="@height.ToInvariantString()"></rect>
+                          height="@height.ToInvariantString()">
+                    </rect>
                 </g>
             }
         </svg>

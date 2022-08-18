@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Anchors\Dynamic" />
+  </ItemGroup>
+
 </Project>

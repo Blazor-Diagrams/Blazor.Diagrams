@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace Blazor.Diagrams.Core.Tests.Anchors.Dynamic;
+namespace Blazor.Diagrams.Core.Tests.Positions;
 
 public class ShapeAnglePositionProviderTests
 {

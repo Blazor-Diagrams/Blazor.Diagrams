@@ -4,6 +4,7 @@ using System.Linq;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Positions;
 
 namespace Blazor.Diagrams.Core.Anchors.Dynamic
 {
@@ -11,7 +12,7 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
     // Generic?
     public class DynamicAnchor : Anchor
     {
-        public DynamicAnchor(NodeModel node, IDynamicAnchorPositionProvider[] providers, Point? offset = null)
+        public DynamicAnchor(NodeModel node, IPositionProvider[] providers, Point? offset = null)
             : base(node, offset)
         {
             if (providers.Length == 0)
@@ -20,7 +21,7 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
             Providers = providers;
         }
 
-        public IDynamicAnchorPositionProvider[] Providers { get; }
+        public IPositionProvider[] Providers { get; }
 
         public override Point? GetPosition(BaseLinkModel link, Point[] route)
         {
@@ -29,7 +30,7 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
 
             var isTarget = link.Target == this;
             var pt = route.Length > 0 ? route[isTarget ? ^1 : 0] : GetOtherPosition(link, isTarget);
-            var positions = Providers.Select(e => e.GetPosition(Node, link));
+            var positions = Providers.Select(e => e.GetPosition(Node));
             return pt is null ? null : GetClosestPointTo(positions, pt);
         }
     }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : MovableModel
+    public class NodeModel : MovableModel, IHasBounds, IHasShape
     {
         private readonly List<PortModel> _ports = new List<PortModel>();
         private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>();
@@ -103,7 +103,9 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
         }
 
-        public Rectangle? GetBounds(bool includePorts = false)
+        public Rectangle? GetBounds() => GetBounds(false);
+
+        public Rectangle? GetBounds(bool includePorts)
         {
             if (Size == null)
                 return null;

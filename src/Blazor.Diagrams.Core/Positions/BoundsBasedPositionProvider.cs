@@ -1,10 +1,9 @@
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core.Anchors.Dynamic;
+namespace Blazor.Diagrams.Core.Positions;
 
-public class BoundsBasedPositionProvider : IDynamicAnchorPositionProvider
+public class BoundsBasedPositionProvider : IPositionProvider
 {
     public BoundsBasedPositionProvider(double x, double y, double offsetX = 0, double offsetY = 0)
     {
@@ -19,9 +18,12 @@ public class BoundsBasedPositionProvider : IDynamicAnchorPositionProvider
     public double OffsetX { get; }
     public double OffsetY { get; }
 
-    public Point GetPosition(NodeModel node, BaseLinkModel _)
+    public Point GetPosition(Model model)
     {
-        var bounds = node.GetBounds()!;
+        if (model is not IHasBounds ihb)
+            throw new DiagramsException("BoundsBasedPositionProvider requires an IHasBounds model");
+        
+        var bounds = ihb.GetBounds()!;
         return new Point(bounds.Left + X * bounds.Width + OffsetX, bounds.Top + Y * bounds.Height + OffsetY);
     }
 }

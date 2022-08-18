@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class PortModel : Model
+    public class PortModel : Model, IHasBounds, IHasShape
     {
         private readonly List<BaseLinkModel> _links = new(4);
 

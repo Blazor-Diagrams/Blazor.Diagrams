@@ -1,10 +1,9 @@
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core.Anchors.Dynamic;
+namespace Blazor.Diagrams.Core.Positions;
 
-public class ShapeAnglePositionProvider : IDynamicAnchorPositionProvider
+public class ShapeAnglePositionProvider : IPositionProvider
 {
     public ShapeAnglePositionProvider(double angle, double offsetX = 0, double offsetY = 0)
     {
@@ -17,9 +16,12 @@ public class ShapeAnglePositionProvider : IDynamicAnchorPositionProvider
     public double OffsetX { get; }
     public double OffsetY { get; }
     
-    public Point GetPosition(NodeModel node, BaseLinkModel link)
+    public Point GetPosition(Model model)
     {
-        var shape = node.GetShape();
+        if (model is not IHasShape ihs)
+            throw new DiagramsException("ShapeAnglePositionProvider requires an IHasShape model");
+        
+        var shape = ihs.GetShape();
         return shape.GetPointAtAngle(Angle)?.Add(OffsetX, OffsetY) ?? Point.Zero;
     }
 }

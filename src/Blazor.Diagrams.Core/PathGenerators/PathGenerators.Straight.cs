@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using System;
+using SvgPathProperties;
 
 namespace Blazor.Diagrams.Core
 {
@@ -22,10 +22,10 @@ namespace Blazor.Diagrams.Core
                 targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
             }
 
-            var paths = new string[route.Length - 1];
+            var paths = new SvgPath[route.Length - 1];
             for (var i = 0; i < route.Length - 1; i++)
             {
-                paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} L {route[i + 1].X} {route[i + 1].Y}");
+                paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddLineTo(route[i + 1].X, route[i + 1].Y);
             }
 
             return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);

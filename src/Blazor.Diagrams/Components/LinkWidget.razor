@@ -1,34 +1,26 @@
 ﻿@using SvgPathProperties;
 
 @{
-    var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
-    var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
-    var route = router(Diagram, Link);
-    var source = Link.Source.GetPosition(Link, route);
-    var target = Link.Target is null ? Link.OnGoingPosition : Link.Target.GetPosition(Link, route);
-    if (source == null || target == null)
-        return;
-
-    var result = pathGenerator(Diagram, Link, route, source, target);
-    var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
-        : (Link.Color ?? Diagram.Options.Links.DefaultColor);
-    var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();
+    var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor) : (Link.Color ?? Diagram.Options.Links.DefaultColor);
+    var result = Link.GeneratedPathResult;
+    var bounds = Link.GetBounds()?.Inflate(10, 10);
 }
 
 @for (var i = 0; i < result.Paths.Length; i++)
 {
     var index = i;
-    <path d="@result.Paths[i]"
+    var d = result.Paths[i].ToString();
+    <path d="@d"
           stroke-width="@Link.Width.ToInvariantString()"
           fill="none"
-          stroke="@color" />
+          stroke="@color"/>
 
     @if (Link.IsAttached)
     {
         <path class="selection-helper"
               stroke="@color"
               stroke-width="12"
-              d="@result.Paths[i]"
+              d="@d"
               stroke-linecap="butt"
               stroke-opacity="0"
               fill="none"
@@ -63,12 +55,27 @@
             <LinkVertexWidget @key="vertex.Id"
                               Vertex="vertex"
                               Color="@normalColor"
-                              SelectedColor="@selectedColor" />
+                              SelectedColor="@selectedColor"/>
         }
     </g>
 }
 
 @foreach (var label in Link.Labels)
 {
-    <LinkLabelRenderer @key="label.Id" Label="label" Paths="paths" />
+    <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths"/>
+}
+
+@if (bounds != null)
+{
+    <rect fill="none"
+          stroke="gray"
+          stroke-width="1"
+          stroke-dasharray="5"
+          pointer-events="none"
+          class="boundary"
+          x="@bounds.Left.ToInvariantString()"
+          y="@bounds.Top.ToInvariantString()"
+          width="@bounds.Width.ToInvariantString()"
+          height="@bounds.Height.ToInvariantString()">
+    </rect>
 }

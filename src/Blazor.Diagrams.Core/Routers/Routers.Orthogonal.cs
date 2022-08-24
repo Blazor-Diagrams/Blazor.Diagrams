@@ -5,7 +5,6 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 // Implementation taken from the JS version: https://gist.github.com/menendezpoo/4a8894c152383b9d7a870c24a04447e4
@@ -17,10 +16,10 @@ namespace Blazor.Diagrams.Core
         public static Point[] Orthogonal(DiagramBase _, BaseLinkModel link)
         {
             if (link.Source is not SinglePortAnchor spa1)
-                throw new Exception("Orthogonal router doesn't work with portless links yet");
+                throw new Exception("Orthogonal router doesn't work with port-less links yet");
 
             if (link.Target is not null && link.Target is not SinglePortAnchor)
-                throw new Exception("Orthogonal router doesn't work with portless links yet");
+                throw new Exception("Orthogonal router doesn't work with port-less links yet");
 
             var sourcePort = spa1.Port;
             var targetAnchor = (link.Target as SinglePortAnchor);

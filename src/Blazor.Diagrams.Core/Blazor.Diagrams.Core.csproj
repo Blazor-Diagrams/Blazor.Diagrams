@@ -25,4 +25,8 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="SvgPathProperties" Version="1.1.1" />
+	</ItemGroup>
+
 </Project>

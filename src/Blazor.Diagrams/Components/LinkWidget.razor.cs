@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Blazor.Diagrams.Extensions;
-using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Components
 {

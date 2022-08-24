@@ -4,6 +4,7 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using Blazor.Diagrams.Core.Anchors.Dynamic;
+using SvgPathProperties;
 
 namespace Blazor.Diagrams.Core
 {
@@ -32,7 +33,10 @@ namespace Blazor.Diagrams.Core
                 targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
             }
 
-            var path = FormattableString.Invariant($"M {route[0].X} {route[0].Y} C {route[1].X} {route[1].Y}, {route[2].X} {route[2].Y}, {route[3].X} {route[3].Y}");
+            var path = new SvgPath()
+                .AddMoveTo(route[0].X, route[0].Y)
+                .AddCubicBezierCurve(route[1].X, route[1].Y, route[2].X, route[2].Y, route[3].X, route[3].Y);
+
             return new PathGeneratorResult(new[] { path }, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
@@ -52,13 +56,13 @@ namespace Blazor.Diagrams.Core
             }
 
             BezierSpline.GetCurveControlPoints(route, out var firstControlPoints, out var secondControlPoints);
-            var paths = new string[firstControlPoints.Length];
+            var paths = new SvgPath[firstControlPoints.Length];
 
             for (var i = 0; i < firstControlPoints.Length; i++)
             {
                 var cp1 = firstControlPoints[i];
                 var cp2 = secondControlPoints[i];
-                paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} C {cp1.X} {cp1.Y}, {cp2.X} {cp2.Y}, {route[i + 1].X} {route[i + 1].Y}");
+                paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddCubicBezierCurve(cp1.X, cp1.Y, cp2.X, cp2.Y, route[i + 1].X, route[i + 1].Y);
             }
 
             // Todo: adjust marker positions based on closest control points

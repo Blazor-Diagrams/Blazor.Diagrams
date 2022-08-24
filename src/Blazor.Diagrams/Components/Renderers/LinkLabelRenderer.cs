@@ -1,22 +1,18 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Extensions;
-using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using SvgPathProperties;
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
     public class LinkLabelRenderer : ComponentBase, IDisposable
     {
-        [CascadingParameter] public Diagram Diagram { get; set; }
-        [Parameter] public LinkLabelModel Label { get; set; }
-        [Parameter] public SVGPathProperties[] Paths { get; set; }
+        [CascadingParameter] public Diagram Diagram { get; set; } = null!;
+        [Parameter] public LinkLabelModel Label { get; set; } = null!;
+        [Parameter] public SvgPath[] Paths { get; set; } = null!;
 
         public void Dispose()
         {
@@ -43,9 +39,9 @@ namespace Blazor.Diagrams.Components.Renderers
 
         private void OnLabelChanged() => InvokeAsync(StateHasChanged);
 
-        private Point FindPosition()
+        private Point? FindPosition()
         {
-            var totalLength = Paths.Sum(p => p.GetTotalLength());
+            var totalLength = Paths.Sum(p => p.Length);
 
             var length = Label.Distance switch
             {
@@ -57,7 +53,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
             foreach (var path in Paths)
             {
-                var pathLength = path.GetTotalLength();
+                var pathLength = path.Length;
                 if (length < pathLength)
                 {
                     var pt = path.GetPointAtLength(length);

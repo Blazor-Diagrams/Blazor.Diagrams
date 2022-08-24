@@ -1,8 +1,8 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Algorithms
 {
@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Algorithms
         public static void ReconnectLinksToClosestPorts(this DiagramBase diagram)
         {
             // Only refresh ports once
-            var portsToRefresh = new HashSet<PortModel>();
+            var modelsToRefresh = new HashSet<Model>();
 
             foreach (var link in diagram.Links.ToArray())
             {
@@ -45,21 +45,25 @@ namespace Blazor.Diagrams.Algorithms
                 // Reconnect
                 if (spa1.Port != minSourcePort)
                 {
-                    portsToRefresh.Add(spa1.Port);
-                    portsToRefresh.Add(minSourcePort);
+                    modelsToRefresh.Add(spa1.Port);
+                    modelsToRefresh.Add(minSourcePort);
                     link.SetSource(new SinglePortAnchor(minSourcePort));
+                    modelsToRefresh.Add(link);
                 }
 
                 if (spa2.Port != minTargetPort)
                 {
-                    portsToRefresh.Add(spa2.Port);
-                    portsToRefresh.Add(minTargetPort);
+                    modelsToRefresh.Add(spa2.Port);
+                    modelsToRefresh.Add(minTargetPort);
                     link.SetTarget(new SinglePortAnchor(minTargetPort));
+                    modelsToRefresh.Add(link);
                 }
             }
 
-            foreach (var port in portsToRefresh)
-                port.Refresh();
+            foreach (var model in modelsToRefresh)
+            {
+                model.Refresh();
+            }
         }
     }
 }

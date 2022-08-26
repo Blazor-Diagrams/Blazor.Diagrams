@@ -25,7 +25,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var link = diagram.Links.Single();
@@ -59,7 +60,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             factoryCalled.Should().BeTrue();
@@ -89,10 +91,12 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             var link = diagram.Links.Single();
             link.Changed += () => linkRefreshed = true;
-            diagram.OnMouseMove(null, new MouseEventArgs(150, 150, 0, 0, false, false, false));
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var source = link.Source as SinglePortAnchor;
@@ -118,10 +122,12 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(100, 100, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             var link = diagram.Links.Single();
             link.Changed += () => linkRefreshed = true;
-            diagram.OnMouseMove(null, new MouseEventArgs(160, 160, 0, 0, false, false, false));
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(160, 160, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var source = link.Source as SinglePortAnchor;
@@ -157,8 +163,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             port2.Changed += () => port2Refreshed = true;
 
             // Act
-            diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(140, 100, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(140, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var link = diagram.Links.Single();
@@ -193,8 +201,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(105, 105, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(105, 105, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var link = diagram.Links.Single();
@@ -228,9 +238,14 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             port2.Changed += () => port2Refreshes++;
 
             // Act
-            diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(140, 100, 0, 0, false, false, false)); // Move towards the other port
-            diagram.OnMouseMove(null, new MouseEventArgs(100, 100, 0, 0, false, false, false)); // Move back to unsnap
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(140, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty,
+                    true)); // Move towards the other port
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty,
+                    true)); // Move back to unsnap
 
             // Assert
             var link = diagram.Links.Single();
@@ -254,8 +269,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(null,
+                new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             diagram.Links.Should().BeEmpty();
@@ -276,8 +293,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnMouseDown(port, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseUp(port, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port,
+                new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(port,
+                new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             diagram.Links.Should().BeEmpty();
@@ -308,8 +327,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             port2.Changed += () => port2Refreshes++;
 
             // Act
-            diagram.OnMouseDown(port1, new MouseEventArgs(100, 100, 0, 0, false, false, false));
-            diagram.OnMouseUp(port2, new MouseEventArgs(105, 105, 0, 0, false, false, false));
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(port2,
+                new PointerEventArgs(105, 105, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             var link = diagram.Links.Single();

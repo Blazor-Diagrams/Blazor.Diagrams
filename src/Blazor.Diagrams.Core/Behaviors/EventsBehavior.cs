@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
-using System;
 using System.Diagnostics;
 
 namespace Blazor.Diagrams.Core.Behaviors
@@ -16,30 +15,30 @@ namespace Blazor.Diagrams.Core.Behaviors
         {
             _mouseClickSw = new Stopwatch();
 
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
-            Diagram.MouseClick += OnMouseClick;
+            Diagram.PointerDown += OnPointerDown;
+            Diagram.PointerMove += OnPointerMove;
+            Diagram.PointerUp += OnPointerUp;
+            Diagram.PointerClick += OnPointerClick;
         }
 
-        private void OnMouseClick(Model? model, MouseEventArgs e)
+        private void OnPointerClick(Model? model, PointerEventArgs e)
         {
             if (_mouseClickSw.IsRunning && _mouseClickSw.ElapsedMilliseconds <= 500)
             {
-                Diagram.OnMouseDoubleClick(model, e);
+                Diagram.TriggerPointerDoubleClick(model, e);
             }
 
             _mouseClickSw.Restart();
         }
 
-        private void OnMouseDown(Model? model, MouseEventArgs e)
+        private void OnPointerDown(Model? model, PointerEventArgs e)
         {
             _captureMouseMove = true;
             _mouseMovedCount = 0;
             _model = model;
         }
 
-        private void OnMouseMove(Model? model, MouseEventArgs e)
+        private void OnPointerMove(Model? model, PointerEventArgs e)
         {
             if (!_captureMouseMove)
                 return;
@@ -47,7 +46,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             _mouseMovedCount++;
         }
 
-        private void OnMouseUp(Model? model, MouseEventArgs e)
+        private void OnPointerUp(Model? model, PointerEventArgs e)
         {
             if (!_captureMouseMove) return; // Only set by OnMouseDown
             _captureMouseMove = false;
@@ -55,17 +54,17 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             if (_model == model)
             {
-                Diagram.OnMouseClick(model, e);
+                Diagram.TriggerPointerClick(model, e);
                 _model = null;
             }
         }
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
-            Diagram.MouseClick -= OnMouseClick;
+            Diagram.PointerDown -= OnPointerDown;
+            Diagram.PointerMove -= OnPointerMove;
+            Diagram.PointerUp -= OnPointerUp;
+            Diagram.PointerClick -= OnPointerClick;
             _model = null;
         }
     }

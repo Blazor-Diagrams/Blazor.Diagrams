@@ -61,15 +61,10 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.OpenElement(0, _isParentSvg ? "g" : "div");
             builder.AddAttribute(1, "class", "port" + " " + (Port.Alignment.ToString().ToLower()) + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " + (Class));
             builder.AddAttribute(2, "data-port-id", Port.Id);
-            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
-            builder.AddAttribute(7, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(8, "ontouchstart", true);
-            builder.AddAttribute(9, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(10, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(11, "ontouchend", true);
+            builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+            builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
+            builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+            builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
             builder.AddElementReferenceCapture(12, (__value) => { _element = __value; });
             builder.AddContent(13, ChildContent);
             builder.CloseElement();
@@ -86,14 +81,13 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Port, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Port, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Port, e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Port, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e)
-            => Diagram.OnTouchEnd(FindPortOn(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY), e.ToCore());
+        private void OnPointerUp(PointerEventArgs e)
+        {
+            var model = e.PointerType == "mouse" ? Port : FindPortOn(e.ClientX, e.ClientY);
+            Diagram.TriggerPointerUp(model, e.ToCore());
+        }
 
         private PortModel? FindPortOn(double clientX, double clientY)
         {

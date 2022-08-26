@@ -14,27 +14,16 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public DragMovablesBehavior(DiagramBase diagram) : base(diagram)
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
-            Diagram.TouchStart += OnTouchStart;
-            Diagram.TouchMove += OnTouchMove;
-            Diagram.TouchEnd += OnTouchEnd;
+            Diagram.PointerDown += OnPointerDown;
+            Diagram.PointerMove += OnPointerMove;
+            Diagram.PointerUp += OnPointerUp;
         }
 
-        private void OnTouchStart(Model model, TouchEventArgs e)
-            => Start(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+        private void OnPointerDown(Model? model, PointerEventArgs e) => Start(model, e.ClientX, e.ClientY);
 
-        private void OnTouchMove(Model model, TouchEventArgs e)
-            => Move(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
+        private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
 
-        private void OnTouchEnd(Model model, TouchEventArgs e) => End();
-
-        private void OnMouseDown(Model model, MouseEventArgs e) => Start(model, e.ClientX, e.ClientY);
-
-        private void OnMouseMove(Model model, MouseEventArgs e) => Move(e.ClientX, e.ClientY);
-
-        private void OnMouseUp(Model model, MouseEventArgs e) => End();
+        private void OnPointerUp(Model? model, PointerEventArgs e) => End();
 
         private void Start(Model model, double clientX, double clientY)
         {
@@ -62,7 +51,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             foreach (var sm in Diagram.GetSelectedModels())
             {
-                if (!(sm is MovableModel node) || node.Locked)
+                if (sm is not MovableModel node || node.Locked)
                     continue;
 
                 var initialPosition = _initialPositions[i];
@@ -90,17 +79,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             // 20 * floor((100 + 10) / 20) = 20 * 5 = 100
             // 20 * floor((105 + 10) / 20) = 20 * 5 = 100
             // 20 * floor((110 + 10) / 20) = 20 * 6 = 120
-            return gridSize * Math.Floor((n + gridSize / 2) / gridSize);
+            return gridSize * Math.Floor((n + gridSize / 2.0) / gridSize);
         }
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
-            Diagram.TouchStart -= OnTouchStart;
-            Diagram.TouchMove -= OnTouchMove;
-            Diagram.TouchEnd -= OnTouchEnd;
+            Diagram.PointerDown -= OnPointerDown;
+            Diagram.PointerMove -= OnPointerMove;
+            Diagram.PointerUp -= OnPointerUp;
         }
     }
 }

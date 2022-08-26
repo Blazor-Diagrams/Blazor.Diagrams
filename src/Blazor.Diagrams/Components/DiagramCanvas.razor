@@ -1,17 +1,13 @@
 ﻿<div class="diagram-canvas @Class"
      tabindex="-1"
      @ref="elementReference"
-     @onmousedown="OnMouseDown"
-     @onmousemove="OnMouseMove"
-     @onmousemove:preventDefault
-     @onmouseup="OnMouseUp"
+     @onpointerdown="OnPointerDown"
+     @onpointermove="OnPointerMove"
+     @onpointerup="OnPointerUp"
      @onkeydown="OnKeyDown"
      @onwheel="OnWheel"
-     @onwheel:stopPropagation
-     @ontouchstart="OnTouchStart"
-     @ontouchmove="OnTouchMove"
-     @ontouchend="OnTouchEnd"
-     @ontouchend:preventDefault>
+     @onpointermove:preventDefault
+     @onwheel:stopPropagation>
 
     @* Links *@
     <svg class="diagram-svg-layer" style="@GetLayerStyle(Diagram.Options.LinksLayerOrder)">

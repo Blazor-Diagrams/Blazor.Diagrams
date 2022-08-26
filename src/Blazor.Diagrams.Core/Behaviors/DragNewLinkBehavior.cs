@@ -1,5 +1,4 @@
-﻿using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System.Linq;
@@ -9,29 +8,16 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DragNewLinkBehavior : Behavior
     {
-        private double _initialX;
-        private double _initialY;
         private BaseLinkModel? _ongoingLink;
 
         public DragNewLinkBehavior(DiagramBase diagram) : base(diagram)
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
-            Diagram.TouchStart += OnTouchStart;
-            Diagram.TouchMove += OnTouchMove;
-            Diagram.TouchEnd += OnTouchEnd;
+            Diagram.PointerDown += OnPointerDown;
+            Diagram.PointerMove += OnPointerMove;
+            Diagram.PointerUp += OnPointerUp;
         }
 
-        private void OnTouchStart(Model? model, TouchEventArgs e)
-            => Start(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
-
-        private void OnTouchMove(Model? model, TouchEventArgs e)
-            => Move(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
-
-        private void OnTouchEnd(Model? model, TouchEventArgs e) => End(model);
-
-        private void OnMouseDown(Model? model, MouseEventArgs e)
+        private void OnPointerDown(Model? model, MouseEventArgs e)
         {
             if (e.Button != (int)MouseEventButton.Left)
                 return;
@@ -39,9 +25,9 @@ namespace Blazor.Diagrams.Core.Behaviors
             Start(model, e.ClientX, e.ClientY);
         }
 
-        private void OnMouseMove(Model? model, MouseEventArgs e) => Move(model, e.ClientX, e.ClientY);
+        private void OnPointerMove(Model? model, MouseEventArgs e) => Move(model, e.ClientX, e.ClientY);
 
-        private void OnMouseUp(Model? model, MouseEventArgs e) => End(model);
+        private void OnPointerUp(Model? model, MouseEventArgs e) => End(model);
 
         private void Start(Model? model, double clientX, double clientY)
         {
@@ -56,8 +42,6 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
             }
 
-            _initialX = clientX;
-            _initialY = clientY;
             Diagram.Links.Add(_ongoingLink);
         }
 
@@ -123,12 +107,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
-            Diagram.TouchStart -= OnTouchStart;
-            Diagram.TouchMove -= OnTouchMove;
-            Diagram.TouchEnd -= OnTouchEnd;
+            Diagram.PointerDown -= OnPointerDown;
+            Diagram.PointerMove -= OnPointerMove;
+            Diagram.PointerUp -= OnPointerUp;
         }
     }
 }

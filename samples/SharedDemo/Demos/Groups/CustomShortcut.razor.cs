@@ -18,9 +18,11 @@ namespace SharedDemo.Demos.Groups
             LayoutData.DataChanged();
 
             _diagram.Options.Groups.Enabled = true;
+            _diagram.Options.LinksLayerOrder = 2;
+            _diagram.Options.NodesLayerOrder = 1;
             var ksb = _diagram.GetBehavior<KeyboardShortcutsBehavior>();
-            ksb.RemoveShortcut("G", true, false, true);
-            ksb.SetShortcut("K", true, true, false, KeyboardShortcutsDefaults.Grouping);
+            ksb.RemoveShortcut("g", true, false, true);
+            ksb.SetShortcut("k", true, true, false, KeyboardShortcutsDefaults.Grouping);
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);

@@ -13,22 +13,13 @@ namespace Blazor.Diagrams.Components
         [Parameter]
         public LinkModel Link { get; set; } = null!;
 
-        private void OnMouseDown(MouseEventArgs e, int index)
+        private void OnPointerDown(PointerEventArgs e, int index)
         {
             if (!Link.Segmentable)
                 return;
 
             var vertex = CreateVertex(e.ClientX, e.ClientY, index);
-            Diagram.OnMouseDown(vertex, e.ToCore());
-        }
-
-        private void OnTouchStart(TouchEventArgs e, int index)
-        {
-            if (!Link.Segmentable)
-                return;
-
-            var vertex = CreateVertex(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY, index);
-            Diagram.OnTouchStart(vertex, e.ToCore());
+            Diagram.TriggerPointerDown(vertex, e.ToCore());
         }
 
         private LinkVertexModel CreateVertex(double clientX, double clientY, int index)

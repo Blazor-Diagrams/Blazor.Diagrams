@@ -16,6 +16,9 @@ namespace SharedDemo.Demos.Groups
             LayoutData.Title = "Dynamic Groups";
             LayoutData.Info = "You can create and modify groups dynamically!";
             LayoutData.DataChanged();
+            
+            _diagram.Options.LinksLayerOrder = 2;
+            _diagram.Options.NodesLayerOrder = 1;
 
             var node1 = NewNode(50, 150);
             var node2 = NewNode(250, 350);

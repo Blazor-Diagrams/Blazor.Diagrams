@@ -40,22 +40,7 @@ namespace Blazor.Diagrams.Core.Models.Base
 
         public override void Refresh()
         {
-            if (Diagram != null)
-            {
-                var router = Router ?? Diagram.Options.Links.DefaultRouter;
-                var pathGenerator = PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
-                var route = router(Diagram, this);
-                var source = Source.GetPosition(this, route);
-                var target = Target is null ? OnGoingPosition : Target.GetPosition(this, route);
-                if (source != null && target != null)
-                {
-                    GeneratedPathResult = pathGenerator(Diagram, this, route, source, target);
-                    base.Refresh();
-                    return;
-                }
-            }
-
-            GeneratedPathResult = PathGeneratorResult.Empty;
+            GeneratePath();
             base.Refresh();
         }
 
@@ -101,6 +86,25 @@ namespace Blazor.Diagrams.Core.Models.Base
             }
 
             return new Rectangle(minX, minY, maxX, maxY);
+        }
+
+        private void GeneratePath()
+        {
+            if (Diagram != null)
+            {
+                var router = Router ?? Diagram.Options.Links.DefaultRouter;
+                var pathGenerator = PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
+                var route = router(Diagram, this);
+                var source = Source.GetPosition(this, route);
+                var target = Target is null ? OnGoingPosition : Target.GetPosition(this, route);
+                if (source != null && target != null)
+                {
+                    GeneratedPathResult = pathGenerator(Diagram, this, route, source, target);
+                    return;
+                }
+            }
+
+            GeneratedPathResult = PathGeneratorResult.Empty;
         }
     }
 }

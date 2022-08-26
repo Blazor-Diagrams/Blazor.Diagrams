@@ -44,37 +44,25 @@ namespace SharedDemo.Demos
 
             diagram.Links.Removed += (l) => events.Add($"Links.Removed, LinkId={l.Id}");
 
-            diagram.MouseDown += (m, e) =>
+            diagram.PointerDown += (m, e) =>
             {
                 events.Add($"MouseDown, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
 
-            diagram.MouseUp += (m, e) =>
+            diagram.PointerUp += (m, e) =>
             {
                 events.Add($"MouseUp, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
 
-            diagram.TouchStart += (m, e) =>
-            {
-                events.Add($"TouchStart, Type={m?.GetType().Name}, ModelId={m?.Id}");
-                StateHasChanged();
-            };
-
-            diagram.TouchEnd += (m, e) =>
-            {
-                events.Add($"TouchEnd, Type={m?.GetType().Name}, ModelId={m?.Id}");
-                StateHasChanged();
-            };
-
-            diagram.MouseClick += (m, e) =>
+            diagram.PointerClick += (m, e) =>
             {
                 events.Add($"MouseClick, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();
             };
 
-            diagram.MouseDoubleClick += (m, e) =>
+            diagram.PointerDoubleClick += (m, e) =>
             {
                 events.Add($"MouseDoubleClick, Type={m?.GetType().Name}, ModelId={m?.Id}");
                 StateHasChanged();

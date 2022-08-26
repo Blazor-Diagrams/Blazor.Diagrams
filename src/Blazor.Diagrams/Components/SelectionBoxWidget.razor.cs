@@ -21,15 +21,15 @@ namespace Blazor.Diagrams.Components
 
         protected override void OnInitialized()
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
+            Diagram.PointerDown += OnPointerDown;
+            Diagram.PointerMove += OnPointerMove;
+            Diagram.PointerUp += OnPointerUp;
         }
 
         private string GenerateStyle()
             => FormattableString.Invariant($"position: absolute; background: {Background}; top: {_selectionBoxTopLeft.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize.Width}px; height: {_selectionBoxSize.Height}px;");
 
-        private void OnMouseDown(Model model, MouseEventArgs e)
+        private void OnPointerDown(Model model, MouseEventArgs e)
         {
             if (model != null || !e.ShiftKey)
                 return;
@@ -37,7 +37,7 @@ namespace Blazor.Diagrams.Components
             _initialClientPoint = new Point(e.ClientX, e.ClientY);
         }
 
-        private void OnMouseMove(Model model, MouseEventArgs e)
+        private void OnPointerMove(Model model, MouseEventArgs e)
         {
             if (_initialClientPoint == null)
                 return;
@@ -75,7 +75,7 @@ namespace Blazor.Diagrams.Components
             _selectionBoxSize = new Size(eX - sX, eY - sY);
         }
 
-        private void OnMouseUp(Model model, MouseEventArgs e)
+        private void OnPointerUp(Model model, MouseEventArgs e)
         {
             _initialClientPoint = null;
             _selectionBoxTopLeft = null;
@@ -85,9 +85,9 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
+            Diagram.PointerDown -= OnPointerDown;
+            Diagram.PointerMove -= OnPointerMove;
+            Diagram.PointerUp -= OnPointerUp;
         }
     }
 }

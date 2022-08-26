@@ -55,30 +55,21 @@ namespace Blazor.Diagrams.Components
 
         protected override bool ShouldRender()
         {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
-
-            return false;
+            if (!_shouldRender) return false;
+            
+            _shouldRender = false;
+            return true;
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(null, e.ToCore());
 
-        private void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e.ToCore());
+        private void OnPointerMove(PointerEventArgs e) => Diagram.TriggerPointerMove(null, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(null, e.ToCore());
 
         private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e.ToCore());
 
         private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e.ToCore());
-
-        private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e.ToCore());
 
         private void OnDiagramChanged()
         {

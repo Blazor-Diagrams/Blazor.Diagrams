@@ -81,13 +81,10 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override bool ShouldRender()
         {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
-
-            return false;
+            if (!_shouldRender) return false;
+            
+            _shouldRender = false;
+            return true;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -114,18 +111,13 @@ namespace Blazor.Diagrams.Components.Renderers
                 builder.AddAttribute(3, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
             }
 
-            builder.AddAttribute(4, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(5, "onmousedown", true);
-            builder.AddAttribute(6, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(7, "onmouseup", true);
-            builder.AddAttribute(8, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(9, "ontouchstart", true);
-            builder.AddAttribute(10, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(11, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(12, "ontouchend", true);
-            builder.AddElementReferenceCapture(13, value => _element = value);
-            builder.OpenComponent(14, componentType);
-            builder.AddAttribute(15, "Node", Node);
+            builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+            builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
+            builder.AddAttribute(6, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+            builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
+            builder.AddElementReferenceCapture(8, value => _element = value);
+            builder.OpenComponent(9, componentType);
+            builder.AddAttribute(10, "Node", Node);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -172,12 +164,8 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Node, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Node, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Node, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Node, e.ToCore());
     }
 }

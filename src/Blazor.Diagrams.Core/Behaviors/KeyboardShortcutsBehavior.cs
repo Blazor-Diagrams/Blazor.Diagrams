@@ -14,7 +14,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         {
             _shortcuts = new Dictionary<string, Func<DiagramBase, ValueTask>>();
             SetShortcut("Delete", false, false, false, KeyboardShortcutsDefaults.DeleteSelection);
-            SetShortcut("G", true, false, true, KeyboardShortcutsDefaults.Grouping);
+            SetShortcut("g", true, false, true, KeyboardShortcutsDefaults.Grouping);
 
             Diagram.KeyDown += OnDiagramKeyDown;
         }

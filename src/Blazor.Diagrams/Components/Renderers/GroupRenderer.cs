@@ -98,37 +98,28 @@ namespace Blazor.Diagrams.Components.Renderers
                 builder.AddAttribute(3, "style", GenerateStyle(Group.Position.Y, Group.Position.X, Group.Size!.Width, Group.Size.Height));
             }
 
-            builder.AddAttribute(4, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(5, "onmousedown", true);
-            builder.AddAttribute(6, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(7, "onmouseup", true);
-            builder.AddAttribute(8, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(9, "ontouchstart", true);
-            builder.AddAttribute(10, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(11, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(12, "ontouchend", true);
+            builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+            builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
+            builder.AddAttribute(6, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+            builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
 
             if (_isSvg)
             {
-                builder.OpenElement(13, "rect");
-                builder.AddAttribute(14, "width", Group.Size!.Width);
-                builder.AddAttribute(15, "height", Group.Size.Height);
-                builder.AddAttribute(16, "fill", "none");
+                builder.OpenElement(8, "rect");
+                builder.AddAttribute(9, "width", Group.Size!.Width);
+                builder.AddAttribute(10, "height", Group.Size.Height);
+                builder.AddAttribute(11, "fill", "none");
                 builder.CloseElement();
             }
 
-            builder.OpenComponent(17, componentType);
-            builder.AddAttribute(18, "Group", Group);
+            builder.OpenComponent(12, componentType);
+            builder.AddAttribute(13, "Group", Group);
             builder.CloseComponent();
             builder.CloseElement();
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Group, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Group, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Group, e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Group, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Group, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Group, e.ToCore());
     }
 }

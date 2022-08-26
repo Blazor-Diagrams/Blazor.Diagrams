@@ -20,16 +20,15 @@ namespace Blazor.Diagrams.Core
         private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly List<GroupModel> _groups;
 
-        public event Action<Model?, MouseEventArgs>? MouseDown;
-        public event Action<Model?, MouseEventArgs>? MouseMove;
-        public event Action<Model?, MouseEventArgs>? MouseUp;
+        public event Action<Model?, PointerEventArgs>? PointerDown;
+        public event Action<Model?, PointerEventArgs>? PointerMove;
+        public event Action<Model?, PointerEventArgs>? PointerUp;
+        public event Action<Model?, PointerEventArgs>? PointerEnter;
+        public event Action<Model?, PointerEventArgs>? PointerLeave;
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
-        public event Action<Model?, MouseEventArgs>? MouseClick;
-        public event Action<Model?, MouseEventArgs>? MouseDoubleClick;
-        public event Action<Model?, TouchEventArgs>? TouchStart;
-        public event Action<Model?, TouchEventArgs>? TouchMove;
-        public event Action<Model?, TouchEventArgs>? TouchEnd;
+        public event Action<Model?, PointerEventArgs>? PointerClick;
+        public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
         public event Action<SelectableModel>? SelectionChanged;
         public event Action<GroupModel>? GroupAdded;
@@ -350,25 +349,23 @@ namespace Blazor.Diagrams.Core
 
         #region Events
 
-        internal void OnMouseDown(Model? model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
+        internal void TriggerPointerDown(Model? model, PointerEventArgs e) => PointerDown?.Invoke(model, e);
 
-        internal void OnMouseMove(Model? model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
+        internal void TriggerPointerMove(Model? model, PointerEventArgs e) => PointerMove?.Invoke(model, e);
 
-        internal void OnMouseUp(Model? model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
+        internal void TriggerPointerUp(Model? model, PointerEventArgs e) => PointerUp?.Invoke(model, e);
+        
+        internal void TriggerPointerEnter(Model? model, PointerEventArgs e) => PointerEnter?.Invoke(model, e);
+        
+        internal void TriggerPointerLeave(Model? model, PointerEventArgs e) => PointerLeave?.Invoke(model, e);
 
         internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
         internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
 
-        internal void OnMouseClick(Model? model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
+        internal void TriggerPointerClick(Model? model, PointerEventArgs e) => PointerClick?.Invoke(model, e);
 
-        internal void OnMouseDoubleClick(Model? model, MouseEventArgs e) => MouseDoubleClick?.Invoke(model, e);
-
-        internal void OnTouchStart(Model? model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
-
-        internal void OnTouchMove(Model? model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
-
-        internal void OnTouchEnd(Model? model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
+        internal void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
 
         #endregion
     }

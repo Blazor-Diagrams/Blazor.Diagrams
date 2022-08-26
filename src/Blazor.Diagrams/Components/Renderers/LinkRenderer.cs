@@ -39,17 +39,12 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.OpenElement(0, "g");
             builder.AddAttribute(1, "class", "link");
             builder.AddAttribute(2, "data-link-id", Link.Id);
-            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
-            builder.AddAttribute(7, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(8, "ontouchstart", true);
-            builder.AddAttribute(9, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(10, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(11, "ontouchend", true);
-            builder.OpenComponent(12, componentType);
-            builder.AddAttribute(13, "Link", Link);
+            builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+            builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
+            builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+            builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
+            builder.OpenComponent(7, componentType);
+            builder.AddAttribute(8, "Link", Link);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -62,12 +57,8 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Link, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Link, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Link, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Link, e.ToCore());
     }
 }

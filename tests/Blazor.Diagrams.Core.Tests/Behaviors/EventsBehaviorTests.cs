@@ -17,9 +17,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseDown(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerDown(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeFalse();
@@ -33,9 +33,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseDown(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerDown(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeTrue();
@@ -49,10 +49,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseDown(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseMove(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerDown(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerMove(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerUp(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeFalse();
@@ -66,9 +66,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseDoubleClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseClick(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
-            diagram.OnMouseClick(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerDoubleClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerClick(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerPointerClick(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeTrue();
@@ -82,10 +82,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseDoubleClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseClick(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerDoubleClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerClick(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             await Task.Delay(520);
-            diagram.OnMouseClick(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.TriggerPointerClick(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeFalse();
@@ -99,8 +99,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var eventTriggered = false;
 
             // Act
-            diagram.MouseClick += (m, e) => eventTriggered = true;
-            diagram.OnMouseUp(null, new MouseEventArgs(0, 0, 0, 0, false, false, false));
+            diagram.PointerClick += (m, e) => eventTriggered = true;
+            diagram.TriggerPointerUp(null, new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             eventTriggered.Should().BeFalse();

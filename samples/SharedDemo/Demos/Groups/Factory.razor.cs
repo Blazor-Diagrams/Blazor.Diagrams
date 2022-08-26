@@ -18,6 +18,8 @@ namespace SharedDemo.Demos.Groups
             LayoutData.DataChanged();
 
             diagram.Options.Groups.Enabled = true;
+            diagram.Options.LinksLayerOrder = 2;
+            diagram.Options.NodesLayerOrder = 1;
             diagram.Options.Groups.Factory = (diagram, children) =>
             {
                 var group = new GroupModel(children, 25);

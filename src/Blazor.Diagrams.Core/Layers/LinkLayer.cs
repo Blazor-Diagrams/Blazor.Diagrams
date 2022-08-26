@@ -13,6 +13,7 @@ namespace Blazor.Diagrams.Core.Layers
             link.Diagram = Diagram;
             HandleAnchor(link, link.Source, true);
             if (link.Target != null) HandleAnchor(link, link.Target, true);
+            link.Refresh();
 
             link.Source.Node.Group?.Refresh();
             link.Target?.Node.Group?.Refresh();
@@ -26,6 +27,7 @@ namespace Blazor.Diagrams.Core.Layers
             link.Diagram = null;
             HandleAnchor(link, link.Source, false);
             if (link.Target != null) HandleAnchor(link, link.Target, false);
+            link.Refresh();
 
             link.Source.Node.Group?.Refresh();
             link.Target?.Node.Group?.Refresh();
@@ -61,7 +63,7 @@ namespace Blazor.Diagrams.Core.Layers
 
                 spa.Port.Refresh();
             }
-            else if (anchor is ShapeIntersectionAnchor || anchor is DynamicAnchor)
+            else if (anchor is ShapeIntersectionAnchor or DynamicAnchor)
             {
                 if (add)
                 {

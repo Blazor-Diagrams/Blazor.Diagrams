@@ -12,23 +12,12 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public PanBehavior(DiagramBase diagram) : base(diagram)
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
-            Diagram.TouchStart += OnTouchStart;
-            Diagram.TouchMove += OnTouchmove;
-            Diagram.TouchEnd += OnTouchEnd;
+            Diagram.PointerDown += OnPointerDown;
+            Diagram.PointerMove += OnPointerMove;
+            Diagram.PointerUp += OnPointerUp;
         }
 
-        private void OnTouchStart(Model model, TouchEventArgs e)
-            => Start(model, e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY, e.ShiftKey);
-
-        private void OnTouchmove(Model model, TouchEventArgs e)
-            => Move(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY);
-
-        private void OnTouchEnd(Model model, TouchEventArgs e) => End();
-
-        private void OnMouseDown(Model model, MouseEventArgs e)
+        private void OnPointerDown(Model? model, PointerEventArgs e)
         {
             if (e.Button != (int)MouseEventButton.Left)
                 return;
@@ -36,11 +25,11 @@ namespace Blazor.Diagrams.Core.Behaviors
             Start(model, e.ClientX, e.ClientY, e.ShiftKey);
         }
 
-        private void OnMouseMove(Model model, MouseEventArgs e) => Move(e.ClientX, e.ClientY);
+        private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
 
-        private void OnMouseUp(Model model, MouseEventArgs e) => End();
+        private void OnPointerUp(Model? model, PointerEventArgs e) => End();
 
-        private void Start(Model model, double clientX, double clientY, bool shiftKey)
+        private void Start(Model? model, double clientX, double clientY, bool shiftKey)
         {
             if (!Diagram.Options.AllowPanning || model != null || shiftKey)
                 return;
@@ -70,12 +59,9 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
-            Diagram.TouchStart -= OnTouchStart;
-            Diagram.TouchMove -= OnTouchmove;
-            Diagram.TouchEnd -= OnTouchEnd;
+            Diagram.PointerDown -= OnPointerDown;
+            Diagram.PointerMove -= OnPointerMove;
+            Diagram.PointerUp -= OnPointerUp;
         }
     }
 }

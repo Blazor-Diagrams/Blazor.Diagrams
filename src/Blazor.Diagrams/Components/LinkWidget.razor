@@ -1,6 +1,4 @@
-﻿@using SvgPathProperties;
-
-@{
+﻿@{
     var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor) : (Link.Color ?? Diagram.Options.Links.DefaultColor);
     var result = Link.GeneratedPathResult;
     var bounds = Link.GetBounds()?.Inflate(10, 10);
@@ -24,10 +22,8 @@
               stroke-linecap="butt"
               stroke-opacity="0"
               fill="none"
-              @onmousedown="e => OnMouseDown(e, index)"
-              @onmousedown:stopPropagation="@Link.Segmentable"
-              @ontouchstart="e => OnTouchStart(e, index)"
-              @ontouchstart:stopPropagation="@Link.Segmentable"/>
+              @onpointerdown="e => OnPointerDown(e, index)"
+              @onpointerdown:stopPropagation="@Link.Segmentable" />
     }
 }
 

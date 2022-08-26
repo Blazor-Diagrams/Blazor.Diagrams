@@ -11,12 +11,12 @@ namespace Blazor.Diagrams.Components
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter] public Diagram Diagram { get; set; }
-        [Parameter] public LinkVertexModel Vertex { get; set; }
-        [Parameter] public string Color { get; set; }
-        [Parameter] public string SelectedColor { get; set; }
+        [CascadingParameter] public Diagram Diagram { get; set; } = null!;
+        [Parameter] public LinkVertexModel Vertex { get; set; } = null!;
+        [Parameter] public string? Color { get; set; }
+        [Parameter] public string? SelectedColor { get; set; }
 
-        private string ColorToUse => Vertex.Selected ? SelectedColor : Color;
+        private string? ColorToUse => Vertex.Selected ? SelectedColor : Color;
 
         public void Dispose()
         {
@@ -30,13 +30,10 @@ namespace Blazor.Diagrams.Components
 
         protected override bool ShouldRender()
         {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
-
-            return false;
+            if (!_shouldRender) return false;
+            
+            _shouldRender = false;
+            return true;
         }
 
         private void OnVertexChanged()
@@ -45,13 +42,9 @@ namespace Blazor.Diagrams.Components
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Vertex, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Vertex, e.ToCore());
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Vertex, e.ToCore());
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Vertex, e.ToCore());
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Vertex, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Vertex, e.ToCore());
 
         private void OnDoubleClick(MouseEventArgs e)
         {

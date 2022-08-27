@@ -7,7 +7,7 @@ namespace SharedDemo.Demos.Nodes
 {
     public partial class PortlessLinks
     {
-        private Diagram _diagram = new Diagram();
+        private BlazorDiagram _blazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -23,22 +23,22 @@ namespace SharedDemo.Demos.Nodes
 
         private void InitializeDiagram()
         {
-            _diagram.RegisterModelComponent<RoundedNode, RoundedNodeWidget>();
+            _blazorDiagram.RegisterModelComponent<RoundedNode, RoundedNodeWidget>();
 
             var node1 = new NodeModel(new Point(80, 80));
             var node2 = new RoundedNode(new Point(280, 150));
             var node3 = new NodeModel(new Point(400, 300));
             node3.AddPort(PortAlignment.Left);
-            _diagram.Nodes.Add(node1);
-            _diagram.Nodes.Add(node2);
-            _diagram.Nodes.Add(node3);
-            _diagram.Links.Add(new LinkModel(node1, node2)
+            _blazorDiagram.Nodes.Add(node1);
+            _blazorDiagram.Nodes.Add(node2);
+            _blazorDiagram.Nodes.Add(node3);
+            _blazorDiagram.Links.Add(new LinkModel(node1, node2)
             {
                 SourceMarker = LinkMarker.Arrow,
                 TargetMarker = LinkMarker.Arrow,
                 Segmentable = true
             });
-            _diagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node2), new SinglePortAnchor(node3.GetPort(PortAlignment.Left)))
+            _blazorDiagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node2), new SinglePortAnchor(node3.GetPort(PortAlignment.Left)))
             {
                 SourceMarker = LinkMarker.Arrow,
                 TargetMarker = LinkMarker.Arrow,

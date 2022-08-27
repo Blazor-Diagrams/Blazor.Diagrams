@@ -3,20 +3,28 @@ using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using Blazor.Diagrams.Options;
 
 namespace Blazor.Diagrams
 {
-    public class Diagram : DiagramBase
+    public class BlazorDiagram : Diagram
     {
         private readonly Dictionary<Type, Type> _componentByModelMapping;
 
-        public Diagram(DiagramOptions? options = null) : base(options)
+        public BlazorDiagram(BlazorDiagramOptions? options = null)
         {
             _componentByModelMapping = new Dictionary<Type, Type>();
+
+            Options = options ?? new BlazorDiagramOptions();
         }
 
-        public void RegisterModelComponent<M, C>(bool replace = false) where M : Model where C : ComponentBase
-            => RegisterModelComponent(typeof(M), typeof(C), replace);
+        public override BlazorDiagramOptions Options { get; }
+
+        public void RegisterModelComponent<TModel, TComponent>(bool replace = false)
+            where TModel : Model where TComponent : ComponentBase
+        {
+            RegisterModelComponent(typeof(TModel), typeof(TComponent), replace);
+        }
 
         public void RegisterModelComponent(Type modelType, Type componentType, bool replace = false)
         {
@@ -45,8 +53,8 @@ namespace Blazor.Diagrams
             return null;
         }
 
-        public Type? GetComponentForModel<M>(bool checkSubclasses = true) where M : Model
-            => GetComponentForModel(typeof(M), checkSubclasses);
+        public Type? GetComponentForModel<TModel>(bool checkSubclasses = true) where TModel : Model
+            => GetComponentForModel(typeof(TModel), checkSubclasses);
 
         public Type? GetComponentForModel(Model model, bool checkSubclasses = true)
             => GetComponentForModel(model.GetType(), checkSubclasses);

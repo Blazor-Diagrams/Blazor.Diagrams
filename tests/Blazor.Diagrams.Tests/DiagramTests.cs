@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Tests
         public void GetComponentForModel_ShouldReturnComponentType_WhenModelTypeWasRegistered()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new BlazorDiagram();
             diagram.RegisterModelComponent<NodeModel, NodeWidget>();
 
             // Act
@@ -27,7 +27,7 @@ namespace Blazor.Diagrams.Tests
         public void GetComponentForModel_ShouldReturnNull_WhenModelTypeWasNotRegistered()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new BlazorDiagram();
 
             // Act
             var componentType = diagram.GetComponentForModel<NodeModel>();
@@ -40,7 +40,7 @@ namespace Blazor.Diagrams.Tests
         public void GetComponentForModel_ShouldReturnComponentType_WhenInheritedModelTypeWasRegistered()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new BlazorDiagram();
             diagram.RegisterModelComponent<Model, NodeWidget>();
 
             // Act
@@ -54,7 +54,7 @@ namespace Blazor.Diagrams.Tests
         public void GetComponentForModel_ShouldReturnSpecificComponentType_WhenInheritedAndSpecificModelTypeWasRegistered()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new BlazorDiagram();
             diagram.RegisterModelComponent<CustomModel, CustomWidget>();
             diagram.RegisterModelComponent<Model, NodeWidget>();
 
@@ -69,7 +69,7 @@ namespace Blazor.Diagrams.Tests
         public void GetComponentForModel_ShouldReturnNull_WhenCheckSubclassesIsFalse()
         {
             // Arrange
-            var diagram = new Diagram();
+            var diagram = new BlazorDiagram();
             diagram.RegisterModelComponent<Model, NodeWidget>();
 
             // Act

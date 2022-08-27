@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Core.Behaviors
     {
         private BaseLinkModel? _ongoingLink;
 
-        public DragNewLinkBehavior(DiagramBase diagram) : base(diagram)
+        public DragNewLinkBehavior(Diagram diagram) : base(diagram)
         {
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;

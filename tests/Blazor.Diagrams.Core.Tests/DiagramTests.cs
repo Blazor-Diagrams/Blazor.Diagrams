@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests
         public void GetScreenPoint_ShouldReturnCorrectPoint()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
 
             // Act
             diagram.SetZoom(1.234);
@@ -29,7 +29,7 @@ namespace Blazor.Diagrams.Core.Tests
         public void ZoomToFit_ShouldUseSelectedNodesIfAny()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
             diagram.Nodes.Add(new NodeModel(new Point(50, 50))
             {
@@ -50,7 +50,7 @@ namespace Blazor.Diagrams.Core.Tests
         public void ZoomToFit_ShouldUseNodesWhenNoneSelected()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
             diagram.Nodes.Add(new NodeModel(new Point(50, 50))
             {
@@ -70,7 +70,7 @@ namespace Blazor.Diagrams.Core.Tests
         public void ZoomToFit_ShouldTriggerAppropriateEvents()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(1080, 768)));
             diagram.Nodes.Add(new NodeModel(new Point(50, 50))
             {
@@ -98,7 +98,7 @@ namespace Blazor.Diagrams.Core.Tests
         [InlineData(0.1)]
         public void Zoom_ShoulClampToMinimumValue(double zoomValue)
         {
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetZoom(zoomValue);
             Assert.Equal(diagram.Zoom, diagram.Options.Zoom.Minimum);
         }
@@ -109,7 +109,7 @@ namespace Blazor.Diagrams.Core.Tests
         [InlineData(-0.00001)]
         public void Zoom_ThrowExceptionWhenLessThan0(double zoomValue)
         {
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             Assert.Throws<ArgumentException>(() => diagram.SetZoom(zoomValue));
         }
 
@@ -119,7 +119,7 @@ namespace Blazor.Diagrams.Core.Tests
         [InlineData(-0.00001)]
         public void ZoomOptions_ThrowExceptionWhenLessThan0(double zoomValue)
         {
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             Assert.Throws<ArgumentException>(() => diagram.Options.Zoom.Minimum = zoomValue);
         }
     }

@@ -20,13 +20,13 @@ or it will not be rendered.
 100vh = 100% viewport height
 -->
 <div style="width:100vw; height: 100vh">
-  <CascadingValue Value="_diagram">
+  <CascadingValue Value="BlazorDiagram">
     <DiagramCanvas></DiagramCanvas>
   </CascadingValue>
 </div>
 
 @code {
-  private Diagram _diagram { get; set; }
+  private BlazorDiagram BlazorDiagram { get; set; }
 
   protected override void OnInitialized()
   {
@@ -44,11 +44,11 @@ or it will not be rendered.
         Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
       }
     };
-    _diagram = new Diagram(options);
+    BlazorDiagram = new BlazorDiagram(options);
 
   // connect node/link to renderer
-    _diagram.RegisterModelComponent<DiagramNode, DiagramNodeWidget>();
-    _diagram.RegisterModelComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
+    BlazorDiagram.RegisterModelComponent<DiagramNode, DiagramNodeWidget>();
+    BlazorDiagram.RegisterModelComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
 
     Setup();
   }
@@ -58,11 +58,11 @@ or it will not be rendered.
     var node1 = new DiagramNode("Node 0", new Point(50, 50));
     var node2 = new DiagramNode("Node 1", new Point(300, 300));
     var node3 = new DiagramNode("Node 2", new Point(300, 50));
-    _diagram.Nodes.Add(new[] { node1, node2, node3 });
+    BlazorDiagram.Nodes.Add(new[] { node1, node2, node3 });
 
   // use portless links so connection points move around when we move node
     var link = new DiagramLink($"{node1.Name}-->{node2.Name}", node1, node2);
-    _diagram.Links.Add(link);
+    BlazorDiagram.Links.Add(link);
   }
 
 }

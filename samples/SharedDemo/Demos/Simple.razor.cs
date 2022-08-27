@@ -8,7 +8,7 @@ namespace SharedDemo
 {
     public class SimpleComponent : ComponentBase
     {
-        protected readonly Diagram diagram = new Diagram();
+        protected readonly BlazorDiagram BlazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -17,14 +17,14 @@ namespace SharedDemo
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
             var node3 = NewNode(300, 50);
-            diagram.Nodes.Add(new[] { node1, node2, node3 });
+            BlazorDiagram.Nodes.Add(new[] { node1, node2, node3 });
 
-            diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
+            BlazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
             {
                 SourceMarker = LinkMarker.Arrow,
                 TargetMarker = LinkMarker.Arrow
             });
-            diagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Right))
+            BlazorDiagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Right))
             {
                 Router = Routers.Orthogonal,
                 PathGenerator = PathGenerators.Straight,
@@ -33,12 +33,12 @@ namespace SharedDemo
             });
         }
 
-        protected void ToggleZoom() => diagram.Options.Zoom.Enabled = !diagram.Options.Zoom.Enabled;
+        protected void ToggleZoom() => BlazorDiagram.Options.Zoom.Enabled = !BlazorDiagram.Options.Zoom.Enabled;
 
-        protected void TogglePanning() => diagram.Options.AllowPanning = !diagram.Options.AllowPanning;
+        protected void TogglePanning() => BlazorDiagram.Options.AllowPanning = !BlazorDiagram.Options.AllowPanning;
 
         protected void ToggleVirtualization()
-            => diagram.Options.EnableVirtualization = !diagram.Options.EnableVirtualization;
+            => BlazorDiagram.Options.EnableVirtualization = !BlazorDiagram.Options.EnableVirtualization;
 
         private NodeModel NewNode(double x, double y)
         {

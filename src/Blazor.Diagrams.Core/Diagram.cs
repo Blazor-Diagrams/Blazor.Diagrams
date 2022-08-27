@@ -9,13 +9,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Blazor.Diagrams.Core.Options;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Tests")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Core.Tests")]
+
 namespace Blazor.Diagrams.Core
 {
-    public class DiagramBase : Model
+    public abstract class Diagram
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly List<GroupModel> _groups;
@@ -38,13 +40,13 @@ namespace Blazor.Diagrams.Core
         public event Action? PanChanged;
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
+        public event Action? Changed;
 
-        public DiagramBase(DiagramOptions? options = null)
+        protected Diagram()
         {
             _behaviors = new Dictionary<Type, Behavior>();
             _groups = new List<GroupModel>();
 
-            Options = options ?? new DiagramOptions();
             Nodes = new NodeLayer(this);
             Links = new LinkLayer(this);
 
@@ -57,21 +59,21 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new KeyboardShortcutsBehavior(this));
         }
 
+        public abstract DiagramOptions Options { get; }
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; private set; }
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
-        public DiagramOptions Options { get; }
         public bool SuspendRefresh { get; set; }
 
-        public override void Refresh()
+        public void Refresh()
         {
             if (SuspendRefresh)
                 return;
 
-            base.Refresh();
+            Changed?.Invoke();
         }
 
         public void Batch(Action action)
@@ -115,11 +117,13 @@ namespace Blazor.Diagrams.Core
                 if (child is GroupModel g)
                 {
                     if (!Groups.Contains(g))
-                        throw new Exception("One of the children isn't in the diagram (Groups). Make sure to add all the nodes before creating the group.");
+                        throw new Exception(
+                            "One of the children isn't in the diagram (Groups). Make sure to add all the nodes before creating the group.");
                 }
                 else if (child is NodeModel n)
                     if (!Nodes.Contains(n))
-                        throw new Exception("One of the children isn't in the diagram (Nodes). Make sure to add all the nodes before creating the group.");
+                        throw new Exception(
+                            "One of the children isn't in the diagram (Nodes). Make sure to add all the nodes before creating the group.");
             }
 
             _groups.Add(group);
@@ -326,7 +330,8 @@ namespace Blazor.Diagrams.Core
         public Point GetRelativeMousePoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point((clientX - Container.Left - Pan.X) / Zoom, (clientY - Container.Top - Pan.Y) / Zoom);
         }
@@ -334,7 +339,8 @@ namespace Blazor.Diagrams.Core
         public Point GetRelativePoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point(clientX - Container.Left, clientY - Container.Top);
         }
@@ -342,30 +348,31 @@ namespace Blazor.Diagrams.Core
         public Point GetScreenPoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
         }
 
         #region Events
 
-        internal void TriggerPointerDown(Model? model, PointerEventArgs e) => PointerDown?.Invoke(model, e);
+        public void TriggerPointerDown(Model? model, PointerEventArgs e) => PointerDown?.Invoke(model, e);
 
-        internal void TriggerPointerMove(Model? model, PointerEventArgs e) => PointerMove?.Invoke(model, e);
+        public void TriggerPointerMove(Model? model, PointerEventArgs e) => PointerMove?.Invoke(model, e);
 
-        internal void TriggerPointerUp(Model? model, PointerEventArgs e) => PointerUp?.Invoke(model, e);
-        
-        internal void TriggerPointerEnter(Model? model, PointerEventArgs e) => PointerEnter?.Invoke(model, e);
-        
-        internal void TriggerPointerLeave(Model? model, PointerEventArgs e) => PointerLeave?.Invoke(model, e);
+        public void TriggerPointerUp(Model? model, PointerEventArgs e) => PointerUp?.Invoke(model, e);
 
-        internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
+        public void TriggerPointerEnter(Model? model, PointerEventArgs e) => PointerEnter?.Invoke(model, e);
 
-        internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+        public void TriggerPointerLeave(Model? model, PointerEventArgs e) => PointerLeave?.Invoke(model, e);
 
-        internal void TriggerPointerClick(Model? model, PointerEventArgs e) => PointerClick?.Invoke(model, e);
+        public void TriggerKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
-        internal void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
+        public void TriggerWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+
+        public void TriggerPointerClick(Model? model, PointerEventArgs e) => PointerClick?.Invoke(model, e);
+
+        public void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
 
         #endregion
     }

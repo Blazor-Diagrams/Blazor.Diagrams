@@ -8,7 +8,7 @@ namespace Blazor.Diagrams.Components
     public partial class LinkWidget
     {
         [CascadingParameter]
-        public Diagram Diagram { get; set; } = null!;
+        public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
         [Parameter]
         public LinkModel Link { get; set; } = null!;
@@ -19,12 +19,12 @@ namespace Blazor.Diagrams.Components
                 return;
 
             var vertex = CreateVertex(e.ClientX, e.ClientY, index);
-            Diagram.TriggerPointerDown(vertex, e.ToCore());
+            BlazorDiagram.TriggerPointerDown(vertex, e.ToCore());
         }
 
         private LinkVertexModel CreateVertex(double clientX, double clientY, int index)
         {
-            var rPt = Diagram.GetRelativeMousePoint(clientX, clientY);
+            var rPt = BlazorDiagram.GetRelativeMousePoint(clientX, clientY);
             var vertex = new LinkVertexModel(Link, rPt);
             Link.Vertices.Insert(index, vertex);
             return vertex;

@@ -6,7 +6,7 @@ namespace SharedDemo.Demos.Links
 {
     public partial class SnappingDemo
     {
-        private Diagram _diagram = new Diagram();
+        private BlazorDiagram _blazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -21,8 +21,8 @@ namespace SharedDemo.Demos.Links
 
         private void InitializeDiagram()
         {
-            _diagram.Options.Links.EnableSnapping = true;
-            _diagram.Nodes.Add(new[] { NewNode(50, 80), NewNode(200, 350), NewNode(400, 100) });
+            _blazorDiagram.Options.Links.EnableSnapping = true;
+            _blazorDiagram.Nodes.Add(new[] { NewNode(50, 80), NewNode(200, 350), NewNode(400, 100) });
         }
 
         private NodeModel NewNode(double x, double y)

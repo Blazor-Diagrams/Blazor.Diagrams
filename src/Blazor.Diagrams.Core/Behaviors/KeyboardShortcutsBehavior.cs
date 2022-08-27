@@ -8,18 +8,18 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class KeyboardShortcutsBehavior : Behavior
     {
-        private readonly Dictionary<string, Func<DiagramBase, ValueTask>> _shortcuts;
+        private readonly Dictionary<string, Func<Diagram, ValueTask>> _shortcuts;
 
-        public KeyboardShortcutsBehavior(DiagramBase diagram) : base(diagram)
+        public KeyboardShortcutsBehavior(Diagram diagram) : base(diagram)
         {
-            _shortcuts = new Dictionary<string, Func<DiagramBase, ValueTask>>();
+            _shortcuts = new Dictionary<string, Func<Diagram, ValueTask>>();
             SetShortcut("Delete", false, false, false, KeyboardShortcutsDefaults.DeleteSelection);
             SetShortcut("g", true, false, true, KeyboardShortcutsDefaults.Grouping);
 
             Diagram.KeyDown += OnDiagramKeyDown;
         }
 
-        public void SetShortcut(string key, bool ctrl, bool shift, bool alt, Func<DiagramBase, ValueTask> action)
+        public void SetShortcut(string key, bool ctrl, bool shift, bool alt, Func<Diagram, ValueTask> action)
         {
             var k = KeysUtils.GetStringRepresentation(ctrl, shift, alt, key);
             _shortcuts[k] = action;

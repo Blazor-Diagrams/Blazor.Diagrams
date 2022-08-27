@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _shouldRender = true;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        public BlazorDiagram BlazorDiagram { get; set; }
 
         [Parameter]
         public BaseLinkModel Link { get; set; }
@@ -34,7 +34,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = Diagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
+            var componentType = BlazorDiagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
 
             builder.OpenElement(0, "g");
             builder.AddAttribute(1, "class", "link");
@@ -57,8 +57,8 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Link, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Link, e.ToCore());
 
-        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Link, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Link, e.ToCore());
     }
 }

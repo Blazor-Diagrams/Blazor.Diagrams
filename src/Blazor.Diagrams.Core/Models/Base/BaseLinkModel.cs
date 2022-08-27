@@ -25,7 +25,7 @@ namespace Blazor.Diagrams.Core.Models.Base
 
         public Anchor Source { get; private set; }
         public Anchor? Target { get; private set; }
-        public DiagramBase? Diagram { get; internal set; }
+        public Diagram? Diagram { get; internal set; }
         public PathGeneratorResult GeneratedPathResult { get; private set; } = PathGeneratorResult.Empty;
         public SvgPath[] Paths => GeneratedPathResult.Paths;
         public bool IsAttached => Target != null;

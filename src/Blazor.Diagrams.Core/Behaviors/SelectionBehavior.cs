@@ -5,7 +5,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class SelectionBehavior : Behavior
     {
-        public SelectionBehavior(DiagramBase diagram) : base(diagram)
+        public SelectionBehavior(Diagram diagram) : base(diagram)
         {
             Diagram.PointerDown += OnPointerDown;
         }

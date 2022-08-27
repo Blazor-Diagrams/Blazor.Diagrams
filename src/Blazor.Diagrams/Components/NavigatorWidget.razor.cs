@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Components
 {
     public partial class NavigatorWidget : IDisposable
     {
-        [CascadingParameter] public Diagram Diagram { get; set; }
+        [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; }
         [Parameter] public double Width { get; set; }
         [Parameter] public double Height { get; set; }
         [Parameter] public string FillColor { get; set; } = "#40babd";
@@ -23,19 +23,19 @@ namespace Blazor.Diagrams.Components
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            if (Diagram != null)
+            if (BlazorDiagram != null)
             {
-                foreach (var node in Diagram.Nodes)
+                foreach (var node in BlazorDiagram.Nodes)
                     node.Changed += Refresh;
 
-                foreach (var group in Diagram.Groups)
+                foreach (var group in BlazorDiagram.Groups)
                     group.Changed += Refresh;
 
-                Diagram.Changed += Diagram_Changed;
-                Diagram.Nodes.Added += Diagram_NodesAdded;
-                Diagram.Nodes.Removed += Diagram_NodesRemoved;
-                Diagram.GroupAdded += Diagram_GroupAdded;
-                Diagram.GroupRemoved += Diagram_GroupRemoved;
+                BlazorDiagram.Changed += Diagram_Changed;
+                BlazorDiagram.Nodes.Added += Diagram_NodesAdded;
+                BlazorDiagram.Nodes.Removed += Diagram_NodesRemoved;
+                BlazorDiagram.GroupAdded += Diagram_GroupAdded;
+                BlazorDiagram.GroupRemoved += Diagram_GroupRemoved;
             }
 
         }
@@ -58,20 +58,20 @@ namespace Blazor.Diagrams.Components
 
         private void Refresh()
         {
-            if (Diagram != null)
+            if (BlazorDiagram != null)
             {
-                var nodes = Diagram.Nodes
-              .Union(Diagram.Groups)
+                var nodes = BlazorDiagram.Nodes
+              .Union(BlazorDiagram.Groups)
               .Where(n => n.Size?.Equals(Size.Zero) == false).ToList();
 
                 if (nodes.Count == 0)
                     return;
 
                 var bounds = nodes.GetBounds();
-                var nodesMinX = bounds.Left * Diagram.Zoom;
-                var nodesMaxX = bounds.Right * Diagram.Zoom;
-                var nodesMinY = bounds.Top * Diagram.Zoom;
-                var nodesMaxY = bounds.Bottom * Diagram.Zoom;
+                var nodesMinX = bounds.Left * BlazorDiagram.Zoom;
+                var nodesMaxX = bounds.Right * BlazorDiagram.Zoom;
+                var nodesMinY = bounds.Top * BlazorDiagram.Zoom;
+                var nodesMaxY = bounds.Bottom * BlazorDiagram.Zoom;
 
                 (double fullSizeWidth, double fullSizeHeight) = GetFullSize(nodesMaxX, nodesMaxY);
                 AdjustFullSizeWithNodesRect(nodesMinX, nodesMinY, ref fullSizeWidth, ref fullSizeHeight);
@@ -90,12 +90,12 @@ namespace Blazor.Diagrams.Components
             // Width
             if (nodesMinX < 0)
             {
-                var temp = nodesMinX + Diagram.Pan.X;
-                if (Diagram.Pan.X > 0 && temp < 0)
+                var temp = nodesMinX + BlazorDiagram.Pan.X;
+                if (BlazorDiagram.Pan.X > 0 && temp < 0)
                 {
                     fullSizeWidth += Math.Abs(temp);
                 }
-                else if (Diagram.Pan.X <= 0)
+                else if (BlazorDiagram.Pan.X <= 0)
                 {
                     fullSizeWidth += Math.Abs(nodesMinX);
                 }
@@ -104,12 +104,12 @@ namespace Blazor.Diagrams.Components
             // Height
             if (nodesMinY < 0)
             {
-                var temp = nodesMinY + Diagram.Pan.Y;
-                if (Diagram.Pan.Y > 0 && temp < 0)
+                var temp = nodesMinY + BlazorDiagram.Pan.Y;
+                if (BlazorDiagram.Pan.Y > 0 && temp < 0)
                 {
                     fullSizeHeight += Math.Abs(temp);
                 }
-                else if (Diagram.Pan.Y <= 0)
+                else if (BlazorDiagram.Pan.Y <= 0)
                 {
                     fullSizeHeight += Math.Abs(nodesMinY);
                 }
@@ -118,24 +118,24 @@ namespace Blazor.Diagrams.Components
 
         private (double width, double height) GetFullSize(double nodesMaxX, double nodesMaxY)
         {
-            var nodesLayerWidth = Math.Max(Diagram.Container.Width * Diagram.Zoom, nodesMaxX);
-            var nodesLayerHeight = Math.Max(Diagram.Container.Height * Diagram.Zoom, nodesMaxY);
+            var nodesLayerWidth = Math.Max(BlazorDiagram.Container.Width * BlazorDiagram.Zoom, nodesMaxX);
+            var nodesLayerHeight = Math.Max(BlazorDiagram.Container.Height * BlazorDiagram.Zoom, nodesMaxY);
             double fullWidth;
             double fullHeight;
 
-            if (Diagram.Zoom == 1)
+            if (BlazorDiagram.Zoom == 1)
             {
-                fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
-                fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
+                fullWidth = BlazorDiagram.Container.Width + Math.Abs(BlazorDiagram.Pan.X);
+                fullHeight = BlazorDiagram.Container.Height + Math.Abs(BlazorDiagram.Pan.Y);
             }
-            else if (Diagram.Zoom > 1)
+            else if (BlazorDiagram.Zoom > 1)
             {
                 // Width
-                if (Diagram.Pan.X < 0)
+                if (BlazorDiagram.Pan.X < 0)
                 {
-                    if (nodesLayerWidth + Diagram.Pan.X < Diagram.Container.Width)
+                    if (nodesLayerWidth + BlazorDiagram.Pan.X < BlazorDiagram.Container.Width)
                     {
-                        fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
+                        fullWidth = BlazorDiagram.Container.Width + Math.Abs(BlazorDiagram.Pan.X);
                     }
                     else
                     {
@@ -144,15 +144,15 @@ namespace Blazor.Diagrams.Components
                 }
                 else
                 {
-                    fullWidth = nodesLayerWidth + Diagram.Pan.X;
+                    fullWidth = nodesLayerWidth + BlazorDiagram.Pan.X;
                 }
 
                 // Height
-                if (Diagram.Pan.Y < 0)
+                if (BlazorDiagram.Pan.Y < 0)
                 {
-                    if (nodesLayerHeight + Diagram.Pan.Y < Diagram.Container.Height)
+                    if (nodesLayerHeight + BlazorDiagram.Pan.Y < BlazorDiagram.Container.Height)
                     {
-                        fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
+                        fullHeight = BlazorDiagram.Container.Height + Math.Abs(BlazorDiagram.Pan.Y);
                     }
                     else
                     {
@@ -161,29 +161,29 @@ namespace Blazor.Diagrams.Components
                 }
                 else
                 {
-                    fullHeight = nodesLayerHeight + Diagram.Pan.Y;
+                    fullHeight = nodesLayerHeight + BlazorDiagram.Pan.Y;
                 }
             }
             else
             {
                 // Width
-                if (Diagram.Pan.X > 0)
+                if (BlazorDiagram.Pan.X > 0)
                 {
-                    fullWidth = Math.Max(nodesLayerWidth + Diagram.Pan.X, Diagram.Container.Width);
+                    fullWidth = Math.Max(nodesLayerWidth + BlazorDiagram.Pan.X, BlazorDiagram.Container.Width);
                 }
                 else
                 {
-                    fullWidth = Diagram.Container.Width + Math.Abs(Diagram.Pan.X);
+                    fullWidth = BlazorDiagram.Container.Width + Math.Abs(BlazorDiagram.Pan.X);
                 }
 
                 // Height
-                if (Diagram.Pan.Y > 0)
+                if (BlazorDiagram.Pan.Y > 0)
                 {
-                    fullHeight = Math.Max(nodesLayerHeight + Diagram.Pan.Y, Diagram.Container.Height);
+                    fullHeight = Math.Max(nodesLayerHeight + BlazorDiagram.Pan.Y, BlazorDiagram.Container.Height);
                 }
                 else
                 {
-                    fullHeight = Diagram.Container.Height + Math.Abs(Diagram.Pan.Y);
+                    fullHeight = BlazorDiagram.Container.Height + Math.Abs(BlazorDiagram.Pan.Y);
                 }
             }
 
@@ -192,15 +192,15 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            if (Diagram != null)
+            if (BlazorDiagram != null)
             {
-                Diagram.Changed -= Diagram_Changed;
-                Diagram.Nodes.Added -= Diagram_NodesAdded;
-                Diagram.Nodes.Removed -= Diagram_NodesRemoved;
-                foreach (var node in Diagram.Nodes)
+                BlazorDiagram.Changed -= Diagram_Changed;
+                BlazorDiagram.Nodes.Added -= Diagram_NodesAdded;
+                BlazorDiagram.Nodes.Removed -= Diagram_NodesRemoved;
+                foreach (var node in BlazorDiagram.Nodes)
                     node.Changed -= Refresh;
 
-                foreach (var group in Diagram.Groups)
+                foreach (var group in BlazorDiagram.Groups)
                     group.Changed -= Refresh;
             }
         }

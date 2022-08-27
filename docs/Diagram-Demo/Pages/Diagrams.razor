@@ -25,7 +25,7 @@ or it will not be rendered.
 </div>
 
 @code {
-  private DiagramBase Diagram { get; set; }
+  private Diagram Diagram { get; set; }
 
   protected override void OnInitialized()
   {
@@ -43,7 +43,7 @@ or it will not be rendered.
         Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
       }
     };
-    Diagram = new DiagramBase(options);
+    Diagram = new Diagram(options);
     
     Setup();
   }

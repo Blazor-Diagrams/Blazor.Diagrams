@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Core
 {
     public static partial class Routers
     {
-        public static Point[] Orthogonal(DiagramBase _, BaseLinkModel link)
+        public static Point[] Orthogonal(Diagram _, BaseLinkModel link)
         {
             if (link.Source is not SinglePortAnchor spa1)
                 throw new Exception("Orthogonal router doesn't work with port-less links yet");

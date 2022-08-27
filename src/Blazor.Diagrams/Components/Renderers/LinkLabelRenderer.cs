@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Components.Renderers
 {
     public class LinkLabelRenderer : ComponentBase, IDisposable
     {
-        [CascadingParameter] public Diagram Diagram { get; set; } = null!;
+        [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
         [Parameter] public LinkLabelModel Label { get; set; } = null!;
         [Parameter] public SvgPath[] Paths { get; set; } = null!;
 
@@ -26,7 +26,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var component = Diagram.GetComponentForModel(Label) ?? typeof(DefaultLinkLabelWidget);
+            var component = BlazorDiagram.GetComponentForModel(Label) ?? typeof(DefaultLinkLabelWidget);
             var position = FindPosition();
             if (position == null)
                 return;

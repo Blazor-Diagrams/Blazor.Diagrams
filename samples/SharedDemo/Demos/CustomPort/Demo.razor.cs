@@ -6,7 +6,7 @@ namespace SharedDemo.Demos.CustomPort
 {
     partial class Demo
     {
-        private readonly Diagram _diagram = new Diagram();
+        private readonly BlazorDiagram _blazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -17,12 +17,12 @@ namespace SharedDemo.Demos.CustomPort
                 "In this example, you can only attach links from/to ports with the same color.";
             LayoutData.DataChanged();
 
-            _diagram.RegisterModelComponent<NodeModel, ColoredNodeWidget>(replace: true);
+            _blazorDiagram.RegisterModelComponent<NodeModel, ColoredNodeWidget>(replace: true);
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            _diagram.Nodes.Add(new[] { node1, node2, NewNode(500, 50) });
-            _diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top)));
+            _blazorDiagram.Nodes.Add(new[] { node1, node2, NewNode(500, 50) });
+            _blazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Top), node2.GetPort(PortAlignment.Top)));
         }
 
         private NodeModel NewNode(double x, double y)

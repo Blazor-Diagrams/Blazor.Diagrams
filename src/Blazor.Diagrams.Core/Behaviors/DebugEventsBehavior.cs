@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DebugEventsBehavior : Behavior
     {
-        public DebugEventsBehavior(DiagramBase diagram) : base(diagram)
+        public DebugEventsBehavior(Diagram diagram) : base(diagram)
         {
             Diagram.Changed += Diagram_Changed;
             Diagram.ContainerChanged += Diagram_ContainerChanged;

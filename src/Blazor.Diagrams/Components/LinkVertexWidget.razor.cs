@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Components
     {
         private bool _shouldRender = true;
 
-        [CascadingParameter] public Diagram Diagram { get; set; } = null!;
+        [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
         [Parameter] public LinkVertexModel Vertex { get; set; } = null!;
         [Parameter] public string? Color { get; set; }
         [Parameter] public string? SelectedColor { get; set; }
@@ -42,9 +42,9 @@ namespace Blazor.Diagrams.Components
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Vertex, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Vertex, e.ToCore());
 
-        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Vertex, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Vertex, e.ToCore());
 
         private void OnDoubleClick(MouseEventArgs e)
         {

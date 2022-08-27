@@ -23,7 +23,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _isSvg;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; } = null!;
+        public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
         [Parameter]
         public NodeModel Node { get; set; } = null!;
@@ -33,9 +33,9 @@ namespace Blazor.Diagrams.Components.Renderers
 
         public void Dispose()
         {
-            Diagram.PanChanged -= CheckVisibility;
-            Diagram.ZoomChanged -= CheckVisibility;
-            Diagram.ContainerChanged -= CheckVisibility;
+            BlazorDiagram.PanChanged -= CheckVisibility;
+            BlazorDiagram.ZoomChanged -= CheckVisibility;
+            BlazorDiagram.ContainerChanged -= CheckVisibility;
             Node.Changed -= ReRender;
 
             if (_element.Id != null)
@@ -51,7 +51,7 @@ namespace Blazor.Diagrams.Components.Renderers
             if (Size.Zero.Equals(size))
                 return;
 
-            size = new Size(size.Width / Diagram.Zoom, size.Height / Diagram.Zoom);
+            size = new Size(size.Width / BlazorDiagram.Zoom, size.Height / BlazorDiagram.Zoom);
             if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) && Node.Size.Height.AlmostEqualTo(size.Height))
                 return;
 
@@ -66,9 +66,9 @@ namespace Blazor.Diagrams.Components.Renderers
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            Diagram.PanChanged += CheckVisibility;
-            Diagram.ZoomChanged += CheckVisibility;
-            Diagram.ContainerChanged += CheckVisibility;
+            BlazorDiagram.PanChanged += CheckVisibility;
+            BlazorDiagram.ZoomChanged += CheckVisibility;
+            BlazorDiagram.ContainerChanged += CheckVisibility;
             Node.Changed += ReRender;
         }
 
@@ -92,7 +92,7 @@ namespace Blazor.Diagrams.Components.Renderers
             if (!_isVisible)
                 return;
 
-            var componentType = Diagram.GetComponentForModel(Node) ?? (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
+            var componentType = BlazorDiagram.GetComponentForModel(Node) ?? (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
             var classes = new StringBuilder("node")
                 .AppendIf(" locked", Node.Locked)
                 .AppendIf(" selected", Node.Selected)
@@ -138,19 +138,19 @@ namespace Blazor.Diagrams.Components.Renderers
         private void CheckVisibility()
         {
             // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
-            if (!Diagram.Options.EnableVirtualization && _isVisible)
+            if (!BlazorDiagram.Options.EnableVirtualization && _isVisible)
                 return;
 
             if (Node.Size == null)
                 return;
 
-            var left = Node.Position.X * Diagram.Zoom + Diagram.Pan.X;
-            var top = Node.Position.Y * Diagram.Zoom + Diagram.Pan.Y;
-            var right = left + Node.Size.Width * Diagram.Zoom;
-            var bottom = top + Node.Size.Height * Diagram.Zoom;
+            var left = Node.Position.X * BlazorDiagram.Zoom + BlazorDiagram.Pan.X;
+            var top = Node.Position.Y * BlazorDiagram.Zoom + BlazorDiagram.Pan.Y;
+            var right = left + Node.Size.Width * BlazorDiagram.Zoom;
+            var bottom = top + Node.Size.Height * BlazorDiagram.Zoom;
 
-            var isVisible = right > 0 && left < Diagram.Container.Width && bottom > 0 &&
-                top < Diagram.Container.Height;
+            var isVisible = right > 0 && left < BlazorDiagram.Container.Width && bottom > 0 &&
+                top < BlazorDiagram.Container.Height;
 
             if (_isVisible != isVisible)
             {
@@ -166,20 +166,20 @@ namespace Blazor.Diagrams.Components.Renderers
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Node, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Node, e.ToCore());
 
-        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Node, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Node, e.ToCore());
 
         private void OnMouseEnter(MouseEventArgs e)
         {
             Console.WriteLine("On mouse enter");
-            Diagram.TriggerPointerLeave(Node, e.ToCore());
+            BlazorDiagram.TriggerPointerLeave(Node, e.ToCore());
         }
 
         private void OnMouseLeave(MouseEventArgs e)
         {
             Console.WriteLine("On mouse leave");
-            Diagram.TriggerPointerEnter(Node, e.ToCore());
+            BlazorDiagram.TriggerPointerEnter(Node, e.ToCore());
         }
     }
 }

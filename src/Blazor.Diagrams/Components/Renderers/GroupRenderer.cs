@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _isSvg;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; } = null!;
+        public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
         [Parameter]
         public GroupModel Group { get; set; } = null!;
@@ -79,7 +79,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var componentType = Diagram.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
+            var componentType = BlazorDiagram.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
             var classes = new StringBuilder("group")
                 .AppendIf(" locked", Group.Locked)
                 .AppendIf(" selected", Group.Selected)
@@ -118,8 +118,8 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.CloseElement();
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Group, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Group, e.ToCore());
 
-        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(Group, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Group, e.ToCore());
     }
 }

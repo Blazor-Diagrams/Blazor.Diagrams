@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public static class KeyboardShortcutsDefaults
     {
-        public static async ValueTask DeleteSelection(DiagramBase diagram)
+        public static async ValueTask DeleteSelection(Diagram diagram)
         {
             var wasSuspended = diagram.SuspendRefresh;
             if (!wasSuspended) diagram.SuspendRefresh = true;
@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             }
         }
 
-        public static ValueTask Grouping(DiagramBase diagram)
+        public static ValueTask Grouping(Diagram diagram)
         {
             if (!diagram.Options.Groups.Enabled)
                 return ValueTask.CompletedTask;

@@ -4,11 +4,11 @@ using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core
 {
-    public delegate Point[] Router(DiagramBase diagram, BaseLinkModel link);
+    public delegate Point[] Router(Diagram diagram, BaseLinkModel link);
 
-    public delegate PathGeneratorResult PathGenerator(DiagramBase diagram, BaseLinkModel link, Point[] route, Point source, Point target);
+    public delegate PathGeneratorResult PathGenerator(Diagram diagram, BaseLinkModel link, Point[] route, Point source, Point target);
 
-    public delegate BaseLinkModel LinkFactory(DiagramBase diagram, PortModel sourcePort);
+    public delegate BaseLinkModel LinkFactory(Diagram diagram, PortModel sourcePort);
 
-    public delegate GroupModel GroupFactory(DiagramBase diagram, NodeModel[] children);
+    public delegate GroupModel GroupFactory(Diagram diagram, NodeModel[] children);
 }

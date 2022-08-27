@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private double _lastClientX;
         private double _lastClientY;
 
-        public PanBehavior(DiagramBase diagram) : base(diagram)
+        public PanBehavior(Diagram diagram) : base(diagram)
         {
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;

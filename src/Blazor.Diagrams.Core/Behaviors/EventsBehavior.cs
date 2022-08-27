@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private bool _captureMouseMove;
         private int _mouseMovedCount;
 
-        public EventsBehavior(DiagramBase diagram) : base(diagram)
+        public EventsBehavior(Diagram diagram) : base(diagram)
         {
             _mouseClickSw = new Stopwatch();
 

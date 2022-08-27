@@ -11,7 +11,7 @@ namespace Blazor.Diagrams.Components
     public partial class DiagramCanvas : IDisposable
     {
         [CascadingParameter]
-        public Diagram Diagram { get; set; } = null!;
+        public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
         [Parameter]
         public RenderFragment? Widgets { get; set; }
@@ -28,7 +28,7 @@ namespace Blazor.Diagrams.Components
 
         private string GetLayerStyle(int order)
         {
-            return FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom}); z-index: {order};");
+            return FormattableString.Invariant($"transform: translate({BlazorDiagram.Pan.X}px, {BlazorDiagram.Pan.Y}px) scale({BlazorDiagram.Zoom}); z-index: {order};");
         }
 
         protected override void OnInitialized()
@@ -36,7 +36,7 @@ namespace Blazor.Diagrams.Components
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
-            Diagram.Changed += OnDiagramChanged;
+            BlazorDiagram.Changed += OnDiagramChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -45,13 +45,13 @@ namespace Blazor.Diagrams.Components
 
             if (firstRender)
             {
-                Diagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
+                BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
                 await JSRuntime.ObserveResizes(elementReference, _reference!);
             }
         }
 
         [JSInvokable]
-        public void OnResize(Rectangle rect) => Diagram.SetContainer(rect);
+        public void OnResize(Rectangle rect) => BlazorDiagram.SetContainer(rect);
 
         protected override bool ShouldRender()
         {
@@ -61,15 +61,15 @@ namespace Blazor.Diagrams.Components
             return true;
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(null, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(null, e.ToCore());
 
-        private void OnPointerMove(PointerEventArgs e) => Diagram.TriggerPointerMove(null, e.ToCore());
+        private void OnPointerMove(PointerEventArgs e) => BlazorDiagram.TriggerPointerMove(null, e.ToCore());
 
-        private void OnPointerUp(PointerEventArgs e) => Diagram.TriggerPointerUp(null, e.ToCore());
+        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(null, e.ToCore());
 
-        private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e.ToCore());
+        private void OnKeyDown(KeyboardEventArgs e) => BlazorDiagram.TriggerKeyDown(e.ToCore());
 
-        private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e.ToCore());
+        private void OnWheel(WheelEventArgs e) => BlazorDiagram.TriggerWheel(e.ToCore());
 
         private void OnDiagramChanged()
         {
@@ -79,7 +79,7 @@ namespace Blazor.Diagrams.Components
 
         public void Dispose()
         {
-            Diagram.Changed -= OnDiagramChanged;
+            BlazorDiagram.Changed -= OnDiagramChanged;
 
             if (_reference == null)
                 return;

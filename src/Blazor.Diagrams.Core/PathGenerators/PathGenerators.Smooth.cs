@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core
     {
         private const double _margin = 125;
 
-        public static PathGeneratorResult Smooth(DiagramBase _, BaseLinkModel link, Point[] route, Point source, Point target)
+        public static PathGeneratorResult Smooth(Diagram _, BaseLinkModel link, Point[] route, Point source, Point target)
         {
             route = ConcatRouteAndSourceAndTarget(route, source, target);
 

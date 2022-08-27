@@ -21,7 +21,7 @@ namespace Blazor.Diagrams.Components.Renderers
         private bool _isParentSvg;
 
         [CascadingParameter]
-        public Diagram Diagram { get; set; } = null!;
+        public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = null!;
@@ -81,25 +81,25 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private void OnPointerDown(PointerEventArgs e) => Diagram.TriggerPointerDown(Port, e.ToCore());
+        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Port, e.ToCore());
 
         private void OnPointerUp(PointerEventArgs e)
         {
             var model = e.PointerType == "mouse" ? Port : FindPortOn(e.ClientX, e.ClientY);
-            Diagram.TriggerPointerUp(model, e.ToCore());
+            BlazorDiagram.TriggerPointerUp(model, e.ToCore());
         }
 
         private PortModel? FindPortOn(double clientX, double clientY)
         {
-            var allPorts = Diagram.Nodes.SelectMany(n => n.Ports)
-                .Union(Diagram.Groups.SelectMany(g => g.Ports));
+            var allPorts = BlazorDiagram.Nodes.SelectMany(n => n.Ports)
+                .Union(BlazorDiagram.Groups.SelectMany(g => g.Ports));
 
             foreach (var port in allPorts)
             {
                 if (!port.Initialized)
                     continue;
 
-                var relativePt = Diagram.GetRelativeMousePoint(clientX, clientY);
+                var relativePt = BlazorDiagram.GetRelativeMousePoint(clientX, clientY);
                 if (port.GetBounds().ContainsPoint(relativePt))
                     return port;
             }
@@ -110,13 +110,13 @@ namespace Blazor.Diagrams.Components.Renderers
         private async Task UpdateDimensions()
         {
             _updatingDimensions = true;
-            var zoom = Diagram.Zoom;
-            var pan = Diagram.Pan;
+            var zoom = BlazorDiagram.Zoom;
+            var pan = BlazorDiagram.Pan;
             var rect = await JSRuntime.GetBoundingClientRect(_element);
 
             Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
-            Port.Position = new Point((rect.Left - Diagram.Container.Left - pan.X) / zoom,
-                (rect.Top - Diagram.Container.Top - pan.Y) / zoom);
+            Port.Position = new Point((rect.Left - BlazorDiagram.Container.Left - pan.X) / zoom,
+                (rect.Top - BlazorDiagram.Container.Top - pan.Y) / zoom);
 
             Port.Initialized = true;
             _updatingDimensions = false;

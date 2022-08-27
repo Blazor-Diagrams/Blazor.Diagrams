@@ -10,18 +10,18 @@
      @onwheel:stopPropagation>
 
     @* Links *@
-    <svg class="diagram-svg-layer" style="@GetLayerStyle(Diagram.Options.LinksLayerOrder)">
-        @foreach (var node in Diagram.Nodes.OfType<SvgNodeModel>().Where(n => n.Group == null))
+    <svg class="diagram-svg-layer" style="@GetLayerStyle(BlazorDiagram.Options.LinksLayerOrder)">
+        @foreach (var node in BlazorDiagram.Nodes.OfType<SvgNodeModel>().Where(n => n.Group == null))
         {
             <NodeRenderer @key="node" Node="node" />
         }
 
-        @foreach (var group in Diagram.Groups.OfType<SvgGroupModel>().Where(n => n.Group == null))
+        @foreach (var group in BlazorDiagram.Groups.OfType<SvgGroupModel>().Where(n => n.Group == null))
         {
             <GroupRenderer @key="group" Group="group" />
         }
 
-        @foreach (var link in Diagram.Links)
+        @foreach (var link in BlazorDiagram.Links)
         {
             <LinkRenderer @key="link" Link="link" />
         }
@@ -29,14 +29,14 @@
     </svg>
 
     @* Nodes *@
-    <div class="diagram-html-layer" style="@GetLayerStyle(Diagram.Options.NodesLayerOrder)">
-        @foreach (var group in Diagram.Groups.Where(n => n is not SvgGroupModel))
+    <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
+        @foreach (var group in BlazorDiagram.Groups.Where(n => n is not SvgGroupModel))
         {
             if (group.Group != null) continue;
             <GroupRenderer @key="group" Group="group" />
         }
 
-        @foreach (var node in Diagram.Nodes.Where(n => n is not SvgNodeModel && n.Group == null))
+        @foreach (var node in BlazorDiagram.Nodes.Where(n => n is not SvgNodeModel && n.Group == null))
         {
             <NodeRenderer @key="node" Node="node" />
         }

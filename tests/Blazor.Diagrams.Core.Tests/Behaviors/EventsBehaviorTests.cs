@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotTriggerMouseClick_WhenItsRemoved()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.UnregisterBehavior<EventsBehavior>();
             var eventTriggered = false;
 
@@ -29,7 +29,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldTriggerMouseClick_WhenMouseDownThenUpWithoutMove()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var eventTriggered = false;
 
             // Act
@@ -45,7 +45,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotTriggerMouseClick_WhenMouseMoves()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var eventTriggered = false;
 
             // Act
@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldTriggerMouseDoubleClick_WhenTwoMouseClicksHappenWithinTime()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var eventTriggered = false;
 
             // Act
@@ -78,7 +78,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public async Task Behavior_ShouldNotTriggerMouseDoubleClick_WhenTimeExceeds500()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var eventTriggered = false;
 
             // Act
@@ -95,7 +95,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldTriggerMouseClick_OnlyWhenMouseDownWasAlsoTriggered_Issue204()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var eventTriggered = false;
 
             // Act

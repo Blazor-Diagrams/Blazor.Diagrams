@@ -14,7 +14,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldCreateLinkWithSinglePortAnchorSource_WhenMouseDownOnPort()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
@@ -43,7 +43,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldCreateLinkUsingFactory_WhenMouseDownOnPort()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var factoryCalled = false;
             diagram.Options.Links.Factory = (d, sp) =>
@@ -79,7 +79,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldUpdateOngoingPosition_WhenMouseMoveIsTriggered()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var linkRefreshed = false;
@@ -109,7 +109,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldUpdateOngoingPosition_WhenMouseMoveIsTriggeredAndZoomIsChanged()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.SetZoom(1.5);
             var node = new NodeModel(position: new Point(100, 50));
@@ -140,7 +140,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldSnapToClosestPortAndRefreshPort_WhenSnappingIsEnabledAndPortIsInRadius()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 60;
@@ -180,7 +180,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldNotSnapToPort_WhenSnappingIsEnabledAndPortIsNotInRadius()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 50;
@@ -215,7 +215,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldUnSnapAndRefreshPort_WhenSnappingIsEnabledAndPortIsNotInRadiusAnymore()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             diagram.Options.Links.EnableSnapping = true;
             diagram.Options.Links.SnappingRadius = 56;
@@ -258,7 +258,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldRemoveLink_WhenMouseUpOnCanvas()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
@@ -282,7 +282,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldRemoveLink_WhenMouseUpOnSamePort()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
@@ -306,7 +306,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldSetTarget_WhenMouseUp()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node1 = new NodeModel(position: new Point(100, 50));
             var node2 = new NodeModel(position: new Point(160, 50));

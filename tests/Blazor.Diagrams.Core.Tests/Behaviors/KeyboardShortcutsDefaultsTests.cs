@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public async Task DeleteSelection_ShouldNotDeleteModel_WhenItsLocked()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.Nodes.Add(new NodeModel
             {
                 Selected = true,
@@ -32,7 +32,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.Options.Constraints.ShouldDeleteGroup = _ =>
             {
                 funcCalled = true;
@@ -56,7 +56,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.Options.Constraints.ShouldDeleteNode = _ =>
             {
                 funcCalled = true;
@@ -80,7 +80,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var funcCalled = false;
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.Options.Constraints.ShouldDeleteLink = _ =>
             {
                 funcCalled = true;
@@ -108,7 +108,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public async Task DeleteSelection_ShouldResultInSingleRefresh()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             diagram.Nodes.Add(new NodeModel[]
             {
                 new NodeModel { Selected = true },

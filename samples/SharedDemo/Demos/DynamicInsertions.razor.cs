@@ -11,17 +11,17 @@ namespace SharedDemo.Demos
     public class DynamicInsertionsComponent : ComponentBase
     {
         private static readonly Random _random = new Random();
-        protected readonly Diagram diagram = new Diagram();
+        protected readonly BlazorDiagram BlazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            diagram.Options.Groups.Enabled = true;
-            diagram.Nodes.Add(new NodeModel(new Point(300, 50)));
-            diagram.Nodes.Add(new NodeModel(new Point(300, 400)));
+            BlazorDiagram.Options.Groups.Enabled = true;
+            BlazorDiagram.Nodes.Add(new NodeModel(new Point(300, 50)));
+            BlazorDiagram.Nodes.Add(new NodeModel(new Point(300, 400)));
 
-            diagram.Options.Links.Factory = (d, sp) =>
+            BlazorDiagram.Options.Links.Factory = (d, sp) =>
             {
                 var link = new LinkModel(new SinglePortAnchor(sp)
                 {
@@ -36,20 +36,20 @@ namespace SharedDemo.Demos
 
         protected void AddNode()
         {
-            var x = _random.Next(0, (int)diagram.Container.Width - 120);
-            var y = _random.Next(0, (int)diagram.Container.Height - 100);
-            diagram.Nodes.Add(new NodeModel(new Point(x, y)));
+            var x = _random.Next(0, (int)BlazorDiagram.Container.Width - 120);
+            var y = _random.Next(0, (int)BlazorDiagram.Container.Height - 100);
+            BlazorDiagram.Nodes.Add(new NodeModel(new Point(x, y)));
         }
 
         protected void RemoveNode()
         {
-            var i = _random.Next(0, diagram.Nodes.Count);
-            diagram.Nodes.Remove(diagram.Nodes[i]);
+            var i = _random.Next(0, BlazorDiagram.Nodes.Count);
+            BlazorDiagram.Nodes.Remove(BlazorDiagram.Nodes[i]);
         }
 
         protected void AddPort()
         {
-            var node = diagram.Nodes.FirstOrDefault(n => n.Selected);
+            var node = BlazorDiagram.Nodes.FirstOrDefault(n => n.Selected);
             if (node == null)
                 return;
 
@@ -66,7 +66,7 @@ namespace SharedDemo.Demos
 
         protected void RemovePort()
         {
-            var node = diagram.Nodes.FirstOrDefault(n => n.Selected);
+            var node = BlazorDiagram.Nodes.FirstOrDefault(n => n.Selected);
             if (node == null)
                 return;
 
@@ -76,14 +76,14 @@ namespace SharedDemo.Demos
             var i = _random.Next(0, node.Ports.Count);
             var port = node.Ports[i];
 
-            diagram.Links.Remove(port.Links.ToArray());
+            BlazorDiagram.Links.Remove(port.Links.ToArray());
             node.RemovePort(port);
             node.Refresh();
         }
 
         protected void AddLink()
         {
-            var selectedNodes = diagram.Nodes.Where(n => n.Selected).ToArray();
+            var selectedNodes = BlazorDiagram.Nodes.Where(n => n.Selected).ToArray();
             if (selectedNodes.Length != 2)
                 return;
 
@@ -95,7 +95,7 @@ namespace SharedDemo.Demos
 
             var sourcePort = node1.Ports[_random.Next(0, node1.Ports.Count)];
             var targetPort = node2.Ports[_random.Next(0, node2.Ports.Count)];
-            diagram.Links.Add(new LinkModel(sourcePort, targetPort));
+            BlazorDiagram.Links.Add(new LinkModel(sourcePort, targetPort));
         }
     }
 }

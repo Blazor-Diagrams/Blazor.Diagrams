@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldExecuteAction_WhenCombinationIsPressed(string key, bool ctrl, bool shift, bool alt)
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var ksb = diagram.GetBehavior<KeyboardShortcutsBehavior>()!;
             var executed = false;
 
@@ -30,7 +30,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs(key, key, 0, ctrl, shift, alt));
+            diagram.TriggerKeyDown(new KeyboardEventArgs(key, key, 0, ctrl, shift, alt));
 
             // Assert
             executed.Should().BeTrue();
@@ -40,7 +40,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_ShouldDoNothing_WhenRemoved()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var ksb = diagram.GetBehavior<KeyboardShortcutsBehavior>()!;
             diagram.UnregisterBehavior<KeyboardShortcutsBehavior>();
             var executed = false;
@@ -52,7 +52,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("A", "A", 0, false, false, false));
+            diagram.TriggerKeyDown(new KeyboardEventArgs("A", "A", 0, false, false, false));
 
             // Assert
             executed.Should().BeFalse();
@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void SetShortcut_ShouldOverride()
         {
             // Arrange
-            var diagram = new DiagramBase();
+            var diagram = new TestDiagram();
             var ksb = diagram.GetBehavior<KeyboardShortcutsBehavior>()!;
             var executed1 = false;
             var executed2 = false;
@@ -80,7 +80,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             });
 
             // Act
-            diagram.OnKeyDown(new KeyboardEventArgs("A", "A", 0, false, false, false));
+            diagram.TriggerKeyDown(new KeyboardEventArgs("A", "A", 0, false, false, false));
 
             // Assert
             executed1.Should().BeFalse();

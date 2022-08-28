@@ -4,6 +4,7 @@ using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Components
 {
@@ -36,7 +37,7 @@ namespace Blazor.Diagrams.Components
             return true;
         }
 
-        private void OnVertexChanged()
+        private void OnVertexChanged(Model _)
         {
             _shouldRender = true;
             InvokeAsync(StateHasChanged);

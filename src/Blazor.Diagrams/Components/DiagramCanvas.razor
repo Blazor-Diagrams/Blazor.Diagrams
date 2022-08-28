@@ -25,7 +25,8 @@
         {
             <LinkRenderer @key="link" Link="link" />
         }
-
+        
+        <UserActionsLayerRenderer Svg="@true"></UserActionsLayerRenderer>
     </svg>
 
     @* Nodes *@
@@ -40,6 +41,8 @@
         {
             <NodeRenderer @key="node" Node="node" />
         }
+        
+        <UserActionsLayerRenderer Svg="@false"></UserActionsLayerRenderer>
     </div>
 
     @Widgets

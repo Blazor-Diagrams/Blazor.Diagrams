@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Text;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
@@ -66,7 +67,7 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private void OnGroupChanged()
+        private void OnGroupChanged(Model _)
         {
             _shouldRender = true;
             InvokeAsync(StateHasChanged);

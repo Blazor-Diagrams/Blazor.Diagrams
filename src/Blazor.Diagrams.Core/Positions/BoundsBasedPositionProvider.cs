@@ -18,12 +18,15 @@ public class BoundsBasedPositionProvider : IPositionProvider
     public double OffsetX { get; }
     public double OffsetY { get; }
 
-    public Point GetPosition(Model model)
+    public Point? GetPosition(Model model)
     {
         if (model is not IHasBounds ihb)
             throw new DiagramsException("BoundsBasedPositionProvider requires an IHasBounds model");
         
-        var bounds = ihb.GetBounds()!;
+        var bounds = ihb.GetBounds();
+        if (bounds == null)
+            return null;
+        
         return new Point(bounds.Left + X * bounds.Width + OffsetX, bounds.Top + Y * bounds.Height + OffsetY);
     }
 }

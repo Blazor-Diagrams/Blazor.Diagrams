@@ -11,11 +11,11 @@ namespace Blazor.Diagrams.Core.Models.Base
             Id = id;
         }
 
-        public event Action? Changed;
+        public event Action<Model>? Changed;
 
         public string Id { get; }
         public bool Locked { get; set; }
 
-        public virtual void Refresh() => Changed?.Invoke();
+        public virtual void Refresh() => Changed?.Invoke(this);
     }
 }

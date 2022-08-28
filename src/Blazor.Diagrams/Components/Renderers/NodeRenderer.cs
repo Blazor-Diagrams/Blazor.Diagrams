@@ -10,6 +10,8 @@ using Microsoft.JSInterop;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
@@ -36,7 +38,7 @@ namespace Blazor.Diagrams.Components.Renderers
             BlazorDiagram.PanChanged -= CheckVisibility;
             BlazorDiagram.ZoomChanged -= CheckVisibility;
             BlazorDiagram.ContainerChanged -= CheckVisibility;
-            Node.Changed -= ReRender;
+            Node.Changed -= OnNodeChanged;
 
             if (_element.Id != null)
                 _ = JsRuntime.UnobserveResizes(_element);
@@ -69,7 +71,7 @@ namespace Blazor.Diagrams.Components.Renderers
             BlazorDiagram.PanChanged += CheckVisibility;
             BlazorDiagram.ZoomChanged += CheckVisibility;
             BlazorDiagram.ContainerChanged += CheckVisibility;
-            Node.Changed += ReRender;
+            Node.Changed += OnNodeChanged;
         }
 
         protected override void OnParametersSet()
@@ -81,7 +83,8 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override bool ShouldRender()
         {
-            if (!_shouldRender) return false;
+            if (!_shouldRender)
+                return false;
             
             _shouldRender = false;
             return true;
@@ -121,6 +124,7 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.OpenComponent(11, componentType);
             builder.AddAttribute(12, "Node", Node);
             builder.CloseComponent();
+
             builder.CloseElement();
         }
 
@@ -160,6 +164,8 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
+        private void OnNodeChanged(Model _) => ReRender();
+        
         private void ReRender()
         {
             _shouldRender = true;
@@ -170,16 +176,8 @@ namespace Blazor.Diagrams.Components.Renderers
 
         private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Node, e.ToCore());
 
-        private void OnMouseEnter(MouseEventArgs e)
-        {
-            Console.WriteLine("On mouse enter");
-            BlazorDiagram.TriggerPointerLeave(Node, e.ToCore());
-        }
+        private void OnMouseEnter(MouseEventArgs e) => BlazorDiagram.TriggerPointerEnter(Node, e.ToCore());
 
-        private void OnMouseLeave(MouseEventArgs e)
-        {
-            Console.WriteLine("On mouse leave");
-            BlazorDiagram.TriggerPointerEnter(Node, e.ToCore());
-        }
+        private void OnMouseLeave(MouseEventArgs e) => BlazorDiagram.TriggerPointerLeave(Node, e.ToCore());
     }
 }

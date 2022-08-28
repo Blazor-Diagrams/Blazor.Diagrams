@@ -5,5 +5,5 @@ namespace Blazor.Diagrams.Core.Positions;
 
 public interface IPositionProvider
 {
-    public Point GetPosition(Model model);
+    public Point? GetPosition(Model model);
 }

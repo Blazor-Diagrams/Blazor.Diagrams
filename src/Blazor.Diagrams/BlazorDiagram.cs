@@ -3,6 +3,8 @@ using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using Blazor.Diagrams.Components.UserActions;
+using Blazor.Diagrams.Core.UserActions.Default;
 using Blazor.Diagrams.Options;
 
 namespace Blazor.Diagrams
@@ -13,7 +15,10 @@ namespace Blazor.Diagrams
 
         public BlazorDiagram(BlazorDiagramOptions? options = null)
         {
-            _componentByModelMapping = new Dictionary<Type, Type>();
+            _componentByModelMapping = new Dictionary<Type, Type>
+            {
+                [typeof(RemoveUserAction)] = typeof(RemoveUserActionWidget)
+            };
 
             Options = options ?? new BlazorDiagramOptions();
         }

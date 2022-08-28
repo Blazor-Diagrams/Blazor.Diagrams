@@ -5,6 +5,7 @@ using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Components
 {
@@ -40,7 +41,7 @@ namespace Blazor.Diagrams.Components
 
         }
 
-        private void Diagram_Changed() => Refresh();
+        private void Diagram_Changed() => Refresh(null);
 
         private void Diagram_NodesAdded(NodeModel node)
         {
@@ -56,7 +57,7 @@ namespace Blazor.Diagrams.Components
 
         private void Diagram_GroupRemoved(GroupModel group) => group.Changed -= Refresh;
 
-        private void Refresh()
+        private void Refresh(Model? _)
         {
             if (BlazorDiagram != null)
             {

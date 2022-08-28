@@ -16,12 +16,12 @@ public class ShapeAnglePositionProvider : IPositionProvider
     public double OffsetX { get; }
     public double OffsetY { get; }
     
-    public Point GetPosition(Model model)
+    public Point? GetPosition(Model model)
     {
         if (model is not IHasShape ihs)
             throw new DiagramsException("ShapeAnglePositionProvider requires an IHasShape model");
         
         var shape = ihs.GetShape();
-        return shape.GetPointAtAngle(Angle)?.Add(OffsetX, OffsetY) ?? Point.Zero;
+        return shape.GetPointAtAngle(Angle)?.Add(OffsetX, OffsetY);
     }
 }

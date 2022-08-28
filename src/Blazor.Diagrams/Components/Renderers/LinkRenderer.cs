@@ -51,7 +51,7 @@ namespace Blazor.Diagrams.Components.Renderers
 
         protected override void OnAfterRender(bool firstRender) => _shouldRender = false;
 
-        private void OnLinkChanged()
+        private void OnLinkChanged(Model _)
         {
             _shouldRender = true;
             InvokeAsync(StateHasChanged);

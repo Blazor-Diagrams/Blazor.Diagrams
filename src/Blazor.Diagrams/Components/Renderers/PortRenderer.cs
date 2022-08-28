@@ -8,6 +8,7 @@ using Blazor.Diagrams.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Microsoft.AspNetCore.Components.Rendering;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Models;
 
 namespace Blazor.Diagrams.Components.Renderers
@@ -132,7 +133,7 @@ namespace Blazor.Diagrams.Components.Renderers
             }
         }
 
-        private async void OnPortChanged()
+        private async void OnPortChanged(Model _)
         {
             // If an update is ongoing and the port is refreshed again,
             // it's highly likely the port needs to be refreshed (e.g. link added)

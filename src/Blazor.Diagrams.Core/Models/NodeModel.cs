@@ -8,8 +8,8 @@ namespace Blazor.Diagrams.Core.Models
 {
     public class NodeModel : MovableModel, IHasBounds, IHasShape
     {
-        private readonly List<PortModel> _ports = new List<PortModel>();
-        private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>();
+        private readonly List<PortModel> _ports = new();
+        private readonly List<BaseLinkModel> _links = new();
         private Size? _size;
 
         public event Action<NodeModel>? SizeChanged;

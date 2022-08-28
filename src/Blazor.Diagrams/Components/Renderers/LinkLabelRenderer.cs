@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using SvgPathProperties;
 using System;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Components.Renderers
 {
@@ -37,7 +38,7 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.CloseComponent();
         }
 
-        private void OnLabelChanged() => InvokeAsync(StateHasChanged);
+        private void OnLabelChanged(Model _) => InvokeAsync(StateHasChanged);
 
         private Point? FindPosition()
         {

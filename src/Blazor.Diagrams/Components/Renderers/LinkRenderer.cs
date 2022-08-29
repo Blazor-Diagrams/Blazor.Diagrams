@@ -43,8 +43,10 @@ namespace Blazor.Diagrams.Components.Renderers
             builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
             builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
             builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
-            builder.OpenComponent(7, componentType);
-            builder.AddAttribute(8, "Link", Link);
+            builder.AddAttribute(7, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
+            builder.AddAttribute(8, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
+            builder.OpenComponent(9, componentType);
+            builder.AddAttribute(10, "Link", Link);
             builder.CloseComponent();
             builder.CloseElement();
         }
@@ -60,5 +62,9 @@ namespace Blazor.Diagrams.Components.Renderers
         private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Link, e.ToCore());
 
         private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Link, e.ToCore());
+
+        private void OnMouseEnter(MouseEventArgs e) => BlazorDiagram.TriggerPointerEnter(Link, e.ToCore());
+
+        private void OnMouseLeave(MouseEventArgs e) => BlazorDiagram.TriggerPointerLeave(Link, e.ToCore());
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
@@ -6,12 +7,16 @@ namespace Blazor.Diagrams.Core.Positions;
 
 public class LinkPathPositionProvider : IPositionProvider
 {
-    public LinkPathPositionProvider(double distance)
+    public LinkPathPositionProvider(double distance, double offsetX = 0, double offsetY = 0)
     {
         Distance = distance;
+        OffsetX = offsetX;
+        OffsetY = offsetY;
     }
 
     public double Distance { get; }
+    public double OffsetX { get; }
+    public double OffsetY { get; }
 
     public Point? GetPosition(Model model)
     {
@@ -36,7 +41,7 @@ public class LinkPathPositionProvider : IPositionProvider
             if (length < pathLength)
             {
                 var pt = path.GetPointAtLength(length);
-                return new Point(pt.X, pt.Y);
+                return new Point(pt.X + OffsetX, pt.Y + OffsetY);
             }
 
             length -= pathLength;

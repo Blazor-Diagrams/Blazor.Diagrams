@@ -1,7 +1,6 @@
 ﻿@{
     var color = Link.Selected ? (Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor) : (Link.Color ?? BlazorDiagram.Options.Links.DefaultColor);
     var result = Link.GeneratedPathResult;
-    var bounds = Link.GetBounds()?.Inflate(10, 10);
 }
 
 @for (var i = 0; i < result.Paths.Length; i++)
@@ -59,19 +58,4 @@
 @foreach (var label in Link.Labels)
 {
     <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths"/>
-}
-
-@if (bounds != null)
-{
-    <rect fill="none"
-          stroke="gray"
-          stroke-width="1"
-          stroke-dasharray="5"
-          pointer-events="none"
-          class="boundary"
-          x="@bounds.Left.ToInvariantString()"
-          y="@bounds.Top.ToInvariantString()"
-          width="@bounds.Width.ToInvariantString()"
-          height="@bounds.Height.ToInvariantString()">
-    </rect>
 }

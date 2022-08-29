@@ -3,16 +3,16 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Positions;
 
-namespace Blazor.Diagrams.Core.UserActions.Default;
+namespace Blazor.Diagrams.Core.Controls.Default;
 
-public class RemoveUserAction : UserAction
+public class RemoveControl : ExecutableControl
 {
-    public RemoveUserAction(double x, double y, double offsetX = 0, double offsetY = 0)
+    public RemoveControl(double x, double y, double offsetX = 0, double offsetY = 0)
         : base(new BoundsBasedPositionProvider(x, y, offsetX, offsetY))
     {
     }
 
-    public RemoveUserAction(IPositionProvider positionProvider) : base(positionProvider)
+    public RemoveControl(IPositionProvider positionProvider) : base(positionProvider)
     {
     }
 
@@ -22,7 +22,7 @@ public class RemoveUserAction : UserAction
         {
             diagram.Nodes.Remove(node);
         }
-        
+
         return ValueTask.CompletedTask;
     }
 }

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Blazor.Diagrams.Core.Options;
-using Blazor.Diagrams.Core.UserActions;
+using Blazor.Diagrams.Core.Controls;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Tests")]
@@ -50,7 +50,7 @@ namespace Blazor.Diagrams.Core
 
             Nodes = new NodeLayer(this);
             Links = new LinkLayer(this);
-            UserActions = new UserActionsLayer();
+            Controls = new ControlsLayer();
 
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
@@ -59,13 +59,13 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new ZoomBehavior(this));
             RegisterBehavior(new EventsBehavior(this));
             RegisterBehavior(new KeyboardShortcutsBehavior(this));
-            RegisterBehavior(new UserActionsBehavior(this));
+            RegisterBehavior(new ControlsBehavior(this));
         }
 
         public abstract DiagramOptions Options { get; }
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
-        public UserActionsLayer UserActions { get; }
+        public ControlsLayer Controls { get; }
         public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; private set; }
         public Point Pan { get; private set; } = Point.Zero;

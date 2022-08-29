@@ -1,6 +1,3 @@
-@using Blazor.Diagrams.Core.UserActions
-@using Blazor.Diagrams.Core.Models.Base
-
 @if (Model is SvgNodeModel)
 {
     <circle r="10" fill="red"></circle>
@@ -17,7 +14,7 @@ else
 @code
 {
     [Parameter]
-    public UserAction Action { get; set; } = null!;
+    public Control Control { get; set; } = null!;
 
     [Parameter]
     public Model Model { get; set; } = null!;

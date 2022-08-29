@@ -88,11 +88,11 @@
     pointer-events: none;
 }
 
-div.user-action {
+div.control {
     position: absolute;
 }
 
-.user-action {
+.executable.control {
     pointer-events: all;
     cursor: pointer;
 }

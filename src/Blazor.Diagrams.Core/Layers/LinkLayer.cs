@@ -35,7 +35,7 @@ namespace Blazor.Diagrams.Core.Layers
             link.SourceChanged -= OnLinkSourceChanged;
             link.TargetChanged -= OnLinkTargetChanged;
             
-            Diagram.UserActions.RemoveFor(link);
+            Diagram.Controls.RemoveFor(link);
         }
 
         private void OnLinkSourceChanged(BaseLinkModel link, Anchor old, Anchor @new)

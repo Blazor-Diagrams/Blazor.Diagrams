@@ -18,7 +18,7 @@ namespace Blazor.Diagrams.Core.Layers
             Diagram.Links.Remove(node.PortLinks.ToList());
             Diagram.Links.Remove(node.Links.ToList());
             node.Group?.RemoveChild(node);
-            Diagram.UserActions.RemoveFor(node);
+            Diagram.Controls.RemoveFor(node);
         }
     }
 }

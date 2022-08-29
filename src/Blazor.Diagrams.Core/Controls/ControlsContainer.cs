@@ -3,22 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core.UserActions;
+namespace Blazor.Diagrams.Core.Controls;
 
-public class UserActionsContainer : IReadOnlyList<UserAction>
+public class ControlsContainer : IReadOnlyList<Control>
 {
-    private readonly List<UserAction> _actions = new(4);
+    private readonly List<Control> _actions = new(4);
 
     public event Action<Model>? Changed;
 
-    public UserActionsContainer(Model model, UserActionsType type = UserActionsType.OnSelection)
+    public ControlsContainer(Model model, ControlsType type = ControlsType.OnSelection)
     {
         Model = model;
         Type = type;
     }
 
     public Model Model { get; }
-    public UserActionsType Type { get; set; }
+    public ControlsType Type { get; set; }
     public bool Visible { get; private set; }
 
     public void Show()
@@ -39,13 +39,13 @@ public class UserActionsContainer : IReadOnlyList<UserAction>
         Changed?.Invoke(Model);
     }
 
-    public void Add(UserAction action)
+    public void Add(Control action)
     {
         _actions.Add(action);
         Changed?.Invoke(Model);
     }
 
-    public void Remove(UserAction action)
+    public void Remove(Control action)
     {
         if (_actions.Remove(action))
         {
@@ -54,7 +54,7 @@ public class UserActionsContainer : IReadOnlyList<UserAction>
     }
 
     public int Count => _actions.Count;
-    public UserAction this[int index] => _actions[index];
-    public IEnumerator<UserAction> GetEnumerator() => _actions.GetEnumerator();
+    public Control this[int index] => _actions[index];
+    public IEnumerator<Control> GetEnumerator() => _actions.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => _actions.GetEnumerator();
 }

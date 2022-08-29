@@ -1,11 +1,11 @@
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core.UserActions;
+namespace Blazor.Diagrams.Core.Controls;
 
-public class UserActionsBehavior : Behavior
+public class ControlsBehavior : Behavior
 {
-    public UserActionsBehavior(Diagram diagram) : base(diagram)
+    public ControlsBehavior(Diagram diagram) : base(diagram)
     {
         Diagram.PointerEnter += OnPointerEnter;
         Diagram.PointerLeave += OnPointerLeave;
@@ -14,17 +14,17 @@ public class UserActionsBehavior : Behavior
 
     private void OnSelectionChanged(SelectableModel model)
     {
-        var userActions = Diagram.UserActions.GetFor(model);
-        if (userActions is not { Type: UserActionsType.OnSelection })
+        var controls = Diagram.Controls.GetFor(model);
+        if (controls is not { Type: ControlsType.OnSelection })
             return;
 
         if (model.Selected)
         {
-            userActions.Show();
+            controls.Show();
         }
         else
         {
-            userActions.Hide();
+            controls.Hide();
         }
     }
 
@@ -33,11 +33,11 @@ public class UserActionsBehavior : Behavior
         if (model == null)
             return;
         
-        var userActions = Diagram.UserActions.GetFor(model);
-        if (userActions is not { Type: UserActionsType.OnHover })
+        var controls = Diagram.Controls.GetFor(model);
+        if (controls is not { Type: ControlsType.OnHover })
             return;
         
-        userActions.Show();
+        controls.Show();
     }
 
     private void OnPointerLeave(Model? model, PointerEventArgs e)
@@ -45,11 +45,11 @@ public class UserActionsBehavior : Behavior
         if (model == null)
             return;
         
-        var userActions = Diagram.UserActions.GetFor(model);
-        if (userActions is not { Type: UserActionsType.OnHover })
+        var controls = Diagram.Controls.GetFor(model);
+        if (controls is not { Type: ControlsType.OnHover })
             return;
         
-        userActions.Hide();
+        controls.Hide();
     }
 
     public override void Dispose()

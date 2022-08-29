@@ -94,7 +94,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.TriggerPointerDown(port,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             var link = diagram.Links.Single();
-            link.Changed += () => linkRefreshed = true;
+            link.Changed += _ => linkRefreshed = true;
             diagram.TriggerPointerMove(null,
                 new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
@@ -125,7 +125,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.TriggerPointerDown(port,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             var link = diagram.Links.Single();
-            link.Changed += () => linkRefreshed = true;
+            link.Changed += _ => linkRefreshed = true;
             diagram.TriggerPointerMove(null,
                 new PointerEventArgs(160, 160, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
@@ -160,7 +160,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 Size = new Size(10, 20)
             });
             var port2Refreshed = false;
-            port2.Changed += () => port2Refreshed = true;
+            port2.Changed += _ => port2Refreshed = true;
 
             // Act
             diagram.TriggerPointerDown(port1,
@@ -235,7 +235,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 Size = new Size(10, 20)
             });
             var port2Refreshes = 0;
-            port2.Changed += () => port2Refreshes++;
+            port2.Changed += _ => port2Refreshes++;
 
             // Act
             diagram.TriggerPointerDown(port1,
@@ -324,7 +324,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 Size = new Size(10, 20)
             });
             var port2Refreshes = 0;
-            port2.Changed += () => port2Refreshes++;
+            port2.Changed += _ => port2Refreshes++;
 
             // Act
             diagram.TriggerPointerDown(port1,

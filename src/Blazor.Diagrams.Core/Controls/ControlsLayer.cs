@@ -2,34 +2,34 @@ using System;
 using System.Collections.Generic;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core.UserActions;
+namespace Blazor.Diagrams.Core.Controls;
 
-public class UserActionsLayer
+public class ControlsLayer
 {
-    private readonly Dictionary<Model, UserActionsContainer> _containers;
+    private readonly Dictionary<Model, ControlsContainer> _containers;
 
     public event Action<Model>? Changed;
 
-    public UserActionsLayer()
+    public ControlsLayer()
     {
-        _containers = new Dictionary<Model, UserActionsContainer>();
+        _containers = new Dictionary<Model, ControlsContainer>();
     }
 
     public IReadOnlyCollection<Model> Models => _containers.Keys;
 
-    public UserActionsContainer AddFor(Model model, UserActionsType type = UserActionsType.OnSelection)
+    public ControlsContainer AddFor(Model model, ControlsType type = ControlsType.OnSelection)
     {
         if (_containers.ContainsKey(model))
             return _containers[model];
         
-        var container = new UserActionsContainer(model, type);
+        var container = new ControlsContainer(model, type);
         container.Changed += OnChanged;
         model.Changed += OnChanged;
         _containers.Add(model, container);
         return container;
     }
 
-    public UserActionsContainer? GetFor(Model model)
+    public ControlsContainer? GetFor(Model model)
     {
         return _containers.TryGetValue(model, out var container) ? container : null;
     }

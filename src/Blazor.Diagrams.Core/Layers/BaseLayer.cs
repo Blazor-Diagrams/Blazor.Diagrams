@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Core
             Diagram = diagram;
         }
 
-        public virtual void Add(T item)
+        public virtual T Add(T item)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
@@ -26,6 +26,7 @@ namespace Blazor.Diagrams.Core
             OnItemAdded(item);
             Added?.Invoke(item);
             Diagram.Refresh();
+            return item;
         }
 
         public virtual void Add(IEnumerable<T> items)

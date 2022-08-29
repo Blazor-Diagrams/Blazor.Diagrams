@@ -7,9 +7,10 @@ namespace Blazor.Diagrams.Core.Controls;
 
 public class ControlsContainer : IReadOnlyList<Control>
 {
-    private readonly List<Control> _actions = new(4);
+    private readonly List<Control> _controls = new(4);
 
-    public event Action<Model>? Changed;
+    public event Action<Model>? VisibilityChanged;
+    public event Action<Model>? ControlsChanged;
 
     public ControlsContainer(Model model, ControlsType type = ControlsType.OnSelection)
     {
@@ -27,7 +28,7 @@ public class ControlsContainer : IReadOnlyList<Control>
             return;
         
         Visible = true;
-        Changed?.Invoke(Model);
+        VisibilityChanged?.Invoke(Model);
     }
 
     public void Hide()
@@ -36,28 +37,28 @@ public class ControlsContainer : IReadOnlyList<Control>
             return;
         
         Visible = false;
-        Changed?.Invoke(Model);
+        VisibilityChanged?.Invoke(Model);
     }
 
-    public ControlsContainer Add(Control action)
+    public ControlsContainer Add(Control control)
     {
-        _actions.Add(action);
-        Changed?.Invoke(Model);
+        _controls.Add(control);
+        ControlsChanged?.Invoke(Model);
         return this;
     }
 
-    public ControlsContainer Remove(Control action)
+    public ControlsContainer Remove(Control control)
     {
-        if (_actions.Remove(action))
+        if (_controls.Remove(control))
         {
-            Changed?.Invoke(Model);
+            ControlsChanged?.Invoke(Model);
         }
 
         return this;
     }
 
-    public int Count => _actions.Count;
-    public Control this[int index] => _actions[index];
-    public IEnumerator<Control> GetEnumerator() => _actions.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => _actions.GetEnumerator();
+    public int Count => _controls.Count;
+    public Control this[int index] => _controls[index];
+    public IEnumerator<Control> GetEnumerator() => _controls.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => _controls.GetEnumerator();
 }

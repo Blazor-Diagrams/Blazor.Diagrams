@@ -23,8 +23,9 @@ public class ControlsLayer
             return _containers[model];
         
         var container = new ControlsContainer(model, type);
-        container.Changed += OnChanged;
-        model.Changed += OnChanged;
+        container.VisibilityChanged += OnVisibilityChanged;
+        container.ControlsChanged += RefreshIfVisible;
+        model.Changed += RefreshIfVisible;
         _containers.Add(model, container);
         return container;
     }
@@ -39,12 +40,23 @@ public class ControlsLayer
         if (!_containers.TryGetValue(model, out var container))
             return false;
         
-        container.Changed -= OnChanged;
-        model.Changed -= OnChanged;
+        container.VisibilityChanged -= OnVisibilityChanged;
+        container.ControlsChanged -= RefreshIfVisible;
+        model.Changed -= RefreshIfVisible;
         _containers.Remove(model);
         ChangeCaused?.Invoke(model);
         return true;
     }
 
-    private void OnChanged(Model cause) => ChangeCaused?.Invoke(cause);
+    public bool AreVisibleFor(Model model) => GetFor(model)?.Visible ?? false;
+
+    private void RefreshIfVisible(Model cause)
+    {
+        if (!AreVisibleFor(cause))
+            return;
+        
+        ChangeCaused?.Invoke(cause);
+    }
+
+    private void OnVisibilityChanged(Model cause) => ChangeCaused?.Invoke(cause);
 }

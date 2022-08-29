@@ -20,7 +20,7 @@ public partial class ControlsLayerRenderer : IDisposable
 
     protected override void OnInitialized()
     {
-        BlazorDiagram.Controls.Changed += OnControlsChanged;
+        BlazorDiagram.Controls.ChangeCaused += OnControlsChangeCaused;
     }
 
     protected override bool ShouldRender()
@@ -32,7 +32,7 @@ public partial class ControlsLayerRenderer : IDisposable
         return true;
     }
 
-    private void OnControlsChanged(Model cause)
+    private void OnControlsChangeCaused(Model cause)
     {
         if (Svg != cause.IsSvg())
             return;
@@ -89,6 +89,6 @@ public partial class ControlsLayerRenderer : IDisposable
 
     public void Dispose()
     {
-        BlazorDiagram.Controls.Changed -= OnControlsChanged;
+        BlazorDiagram.Controls.ChangeCaused -= OnControlsChangeCaused;
     }
 }

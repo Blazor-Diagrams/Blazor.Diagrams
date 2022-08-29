@@ -8,7 +8,7 @@ public class ControlsLayer
 {
     private readonly Dictionary<Model, ControlsContainer> _containers;
 
-    public event Action<Model>? Changed;
+    public event Action<Model>? ChangeCaused;
 
     public ControlsLayer()
     {
@@ -42,9 +42,9 @@ public class ControlsLayer
         container.Changed -= OnChanged;
         model.Changed -= OnChanged;
         _containers.Remove(model);
-        Changed?.Invoke(model);
+        ChangeCaused?.Invoke(model);
         return true;
     }
 
-    private void OnChanged(Model cause) => Changed?.Invoke(cause);
+    private void OnChanged(Model cause) => ChangeCaused?.Invoke(cause);
 }

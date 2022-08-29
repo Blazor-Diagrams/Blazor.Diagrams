@@ -39,18 +39,21 @@ public class ControlsContainer : IReadOnlyList<Control>
         Changed?.Invoke(Model);
     }
 
-    public void Add(Control action)
+    public ControlsContainer Add(Control action)
     {
         _actions.Add(action);
         Changed?.Invoke(Model);
+        return this;
     }
 
-    public void Remove(Control action)
+    public ControlsContainer Remove(Control action)
     {
         if (_actions.Remove(action))
         {
             Changed?.Invoke(Model);
         }
+
+        return this;
     }
 
     public int Count => _actions.Count;

@@ -17,7 +17,7 @@
             }
         </g>
     }
-    else
+    else if (!Svg && !model.IsSvg())
     {
         <div class="controls" data-model-type="@model.GetType().Name" data-model-id="@model.Id">
             @foreach (var control in controls)

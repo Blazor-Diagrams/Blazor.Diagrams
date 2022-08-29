@@ -27,6 +27,7 @@ namespace Blazor.Diagrams.Components
             var rPt = BlazorDiagram.GetRelativeMousePoint(clientX, clientY);
             var vertex = new LinkVertexModel(Link, rPt);
             Link.Vertices.Insert(index, vertex);
+            Link.Refresh();
             return vertex;
         }
     }

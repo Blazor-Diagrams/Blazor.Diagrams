@@ -1,24 +1,24 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
-using Blazor.Diagrams.Core.Anchors.Dynamic;
 
 namespace Blazor.Diagrams.Core.Anchors
 {
     public abstract class Anchor
     {
-        public Anchor(NodeModel node, Point? offset = null)
+        public Anchor(ILinkable model, Point? offset = null)
         {
-            Node = node;
+            Model = model;
             Offset = offset ?? Point.Zero;
         }
 
-        public NodeModel Node { get; }
+        public ILinkable Model { get; }
         public Point Offset { get; }
 
         public abstract Point? GetPosition(BaseLinkModel link, Point[] route);
+
+        public abstract Point? GetPlainPosition();
 
         public Point? GetPosition(BaseLinkModel link) => GetPosition(link, Array.Empty<Point>());
 
@@ -28,13 +28,7 @@ namespace Blazor.Diagrams.Core.Anchors
                 return link.OnGoingPosition;
 
             var anchor = isTarget ? link.Source : link.Target!;
-            return anchor switch
-            {
-                SinglePortAnchor spa => spa.Port.MiddlePosition,
-                ShapeIntersectionAnchor sia => sia.Node.GetBounds()?.Center ?? null,
-                DynamicAnchor da => da.Node.GetBounds()?.Center ?? null,
-                _ => throw new DiagramsException($"Unhandled Anchor type {anchor.GetType().Name} when trying to find intersection")
-            };
+            return anchor.GetPlainPosition();
         }
 
         protected static Point? GetClosestPointTo(IEnumerable<Point?> points, Point point)

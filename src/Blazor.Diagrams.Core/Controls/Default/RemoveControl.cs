@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Positions;
@@ -16,11 +17,16 @@ public class RemoveControl : ExecutableControl
     {
     }
 
-    public override ValueTask Execute(Diagram diagram, Model model)
+    public override ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs _)
     {
-        if (model is NodeModel node)
+        switch (model)
         {
-            diagram.Nodes.Remove(node);
+            case NodeModel node:
+                diagram.Nodes.Remove(node);
+                break;
+            case BaseLinkModel link:
+                diagram.Links.Remove(link);
+                break;
         }
 
         return ValueTask.CompletedTask;

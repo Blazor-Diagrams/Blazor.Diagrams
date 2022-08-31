@@ -6,15 +6,16 @@ namespace Blazor.Diagrams.Core.Anchors
 {
     public class ShapeIntersectionAnchor : Anchor
     {
-        public ShapeIntersectionAnchor(NodeModel node, Point? offset = null) : base(node, offset) { }
+        public ShapeIntersectionAnchor(NodeModel model, Point? offset = null) : base(model, offset) { }
 
         public override Point? GetPosition(BaseLinkModel link, Point[] route)
         {
-            if (Node.Size == null)
+            var node = (Model as NodeModel)!;
+            if (node.Size == null)
                 return null;
 
             var isTarget = link.Target == this;
-            var nodeCenter = Node.GetBounds()!.Center;
+            var nodeCenter = node.GetBounds()!.Center;
             Point? pt;
             if (route.Length > 0)
             {
@@ -28,8 +29,10 @@ namespace Blazor.Diagrams.Core.Anchors
             if (pt is null) return null;
 
             var line = new Line(pt, nodeCenter);
-            var intersections = Node.GetShape().GetIntersectionsWithLine(line);
-            return GetClosestPointTo(intersections, pt);
+            var intersections = node.GetShape().GetIntersectionsWithLine(line);
+            return GetClosestPointTo(intersections, pt); // Todo: use Offset
         }
+
+        public override Point? GetPlainPosition() => (Model as NodeModel)!.GetBounds()?.Center ?? null;
     }
 }

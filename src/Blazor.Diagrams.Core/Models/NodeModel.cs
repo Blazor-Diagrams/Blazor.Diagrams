@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : MovableModel, IHasBounds, IHasShape
+    public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     {
         private readonly List<PortModel> _ports = new();
         private readonly List<BaseLinkModel> _links = new();
@@ -15,9 +15,13 @@ namespace Blazor.Diagrams.Core.Models
         public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
-        public NodeModel(Point? position = null) : base(position) { }
+        public NodeModel(Point? position = null) : base(position)
+        {
+        }
 
-        public NodeModel(string id, Point? position = null) : base(id, position) { }
+        public NodeModel(string id, Point? position = null) : base(id, position)
+        {
+        }
 
         public Size? Size
         {
@@ -31,6 +35,7 @@ namespace Blazor.Diagrams.Core.Models
                 SizeChanged?.Invoke(this);
             }
         }
+
         public GroupModel? Group { get; internal set; }
         public string? Title { get; set; }
 
@@ -120,10 +125,12 @@ namespace Blazor.Diagrams.Core.Models
 
             var left = leftPort == null ? Position.X : Math.Min(Position.X, leftPort.Position.X);
             var top = topPort == null ? Position.Y : Math.Min(Position.Y, topPort.Position.Y);
-            var right = rightPort == null ? Position.X + Size!.Width :
-                Math.Max(rightPort.Position.X + rightPort.Size.Width, Position.X + Size!.Width);
-            var bottom = bottomPort == null ? Position.Y + Size!.Height :
-                Math.Max(bottomPort.Position.Y + bottomPort.Size.Height, Position.Y + Size!.Height);
+            var right = rightPort == null
+                ? Position.X + Size!.Width
+                : Math.Max(rightPort.Position.X + rightPort.Size.Width, Position.X + Size!.Width);
+            var bottom = bottomPort == null
+                ? Position.Y + Size!.Height
+                : Math.Max(bottomPort.Position.Y + bottomPort.Size.Height, Position.Y + Size!.Height);
 
             return new Rectangle(left, top, right, bottom);
         }
@@ -140,8 +147,10 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        internal void AddLink(BaseLinkModel link) => _links.Add(link);
+        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel;
 
-        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
+        void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
+
+        void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

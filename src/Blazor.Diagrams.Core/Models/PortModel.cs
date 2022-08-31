@@ -1,10 +1,11 @@
-﻿using Blazor.Diagrams.Core.Geometry;
+﻿using System;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class PortModel : Model, IHasBounds, IHasShape
+    public class PortModel : Model, IHasBounds, IHasShape, ILinkable
     {
         private readonly List<BaseLinkModel> _links = new(4);
 
@@ -47,15 +48,18 @@ namespace Blazor.Diagrams.Core.Models
 
         public T GetParent<T>() where T : NodeModel => (T)Parent;
 
-        public virtual bool CanAttachTo(PortModel port)
-            => port != this && !port.Locked && Parent != port.Parent; // Todo: remove in order to support same node links
-
         public Rectangle GetBounds() => new(Position, Size);
 
         public virtual IShape GetShape() => Shapes.Circle(this);
 
-        internal void AddLink(BaseLinkModel link) => _links.Add(link);
+        public virtual bool CanAttachTo(ILinkable other)
+        {
+            // Todo: remove in order to support same node links
+            return other is PortModel port && port != this && !port.Locked && Parent != port.Parent; 
+        }
 
-        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
+        void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
+
+        void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -12,8 +11,7 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
     // Generic?
     public class DynamicAnchor : Anchor
     {
-        public DynamicAnchor(NodeModel node, IPositionProvider[] providers, Point? offset = null)
-            : base(node, offset)
+        public DynamicAnchor(NodeModel model, IPositionProvider[] providers, Point? offset = null) : base(model, offset)
         {
             if (providers.Length == 0)
                 throw new InvalidOperationException("No providers provided");
@@ -25,13 +23,16 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
 
         public override Point? GetPosition(BaseLinkModel link, Point[] route)
         {
-            if (Node.Size == null)
+            var node = (Model as NodeModel)!;
+            if (node.Size == null)
                 return null;
 
             var isTarget = link.Target == this;
             var pt = route.Length > 0 ? route[isTarget ? ^1 : 0] : GetOtherPosition(link, isTarget);
-            var positions = Providers.Select(e => e.GetPosition(Node));
+            var positions = Providers.Select(e => e.GetPosition(node));
             return pt is null ? null : GetClosestPointTo(positions, pt);
         }
+
+        public override Point? GetPlainPosition() => (Model as NodeModel)!.GetBounds()?.Center ?? null;
     }
 }

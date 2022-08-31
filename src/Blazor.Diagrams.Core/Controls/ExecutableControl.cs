@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Positions;
@@ -16,5 +17,5 @@ public abstract class ExecutableControl : Control
 
     public override Point? GetPosition(Model model) => PositionProvider.GetPosition(model);
 
-    public abstract ValueTask Execute(Diagram diagram, Model model);
+    public abstract ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs e);
 }

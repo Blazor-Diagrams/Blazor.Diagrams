@@ -83,7 +83,7 @@ public partial class ControlsLayerRenderer : IDisposable
     {
         if (e.Button == 0 || e.Buttons == 1)
         {
-            await control.Execute(BlazorDiagram, model);
+            await control.OnPointerDown(BlazorDiagram, model, e.ToCore());
         }
     }
 

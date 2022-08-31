@@ -37,7 +37,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             oldSp.Should().NotBeNull();
             newSp.Should().BeSameAs(sp);
             linkInstance.Should().BeSameAs(link);
-            link.Source.Node.Should().BeSameAs(parent);
+            link.Source.Model.Should().BeSameAs(parent);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             oldTp.Should().BeNull();
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
-            link.Target!.Node.Should().BeSameAs(parent);
+            link.Target!.Model.Should().BeSameAs(parent);
         }
     }
 }

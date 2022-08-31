@@ -7,8 +7,8 @@ public class DiagramOptions
     public bool AllowPanning { get; set; } = true;
     public bool EnableVirtualization { get; set; } = true; // Todo: behavior
     
-    public DiagramZoomOptions Zoom { get; set; } = new();
-    public DiagramLinkOptions Links { get; set; } = new();
-    public DiagramGroupOptions Groups { get; set; } = new();
-    public DiagramConstraintsOptions Constraints { get; set; } = new();
+    public virtual DiagramZoomOptions Zoom { get; } = new();
+    public virtual DiagramLinkOptions Links { get; } = new();
+    public virtual DiagramGroupOptions Groups { get; } = new();
+    public virtual DiagramConstraintsOptions Constraints { get; } = new();
 }

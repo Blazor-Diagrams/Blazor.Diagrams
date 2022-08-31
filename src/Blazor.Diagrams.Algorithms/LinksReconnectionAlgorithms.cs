@@ -21,8 +21,8 @@ namespace Blazor.Diagrams.Algorithms
                 if (link.Source is not SinglePortAnchor spa1 || link.Target is not SinglePortAnchor spa2)
                     continue;
 
-                var sourcePorts = spa1.Node.Ports;
-                var targetPorts = spa2.Node.Ports;
+                var sourcePorts = spa1.Port.Parent.Ports;
+                var targetPorts = spa2.Port.Parent.Ports;
 
                 // Find the ports with minimal distance
                 var minDistance = double.MaxValue;

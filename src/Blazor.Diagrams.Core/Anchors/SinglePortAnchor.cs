@@ -6,11 +6,11 @@ namespace Blazor.Diagrams.Core.Anchors
 {
     public class SinglePortAnchor : Anchor
     {
-        public SinglePortAnchor(PortModel port, Point? offset = null) : base(port.Parent, offset)
+        public SinglePortAnchor(PortModel port, Point? offset = null) : base(port, offset)
         {
             Port = port;
         }
-
+        
         public PortModel Port { get; }
         public bool MiddleIfNoMarker { get; set; } = false;
         public bool UseShapeAndAlignment { get; set; } = true;
@@ -22,8 +22,7 @@ namespace Blazor.Diagrams.Core.Anchors
 
             if (MiddleIfNoMarker && ((link.Source == this && link.SourceMarker is null) || (link.Target == this && link.TargetMarker is null)))
                 return Port.MiddlePosition;
-
-
+            
             var pt = Port.Position;
             if (UseShapeAndAlignment)
             {
@@ -40,20 +39,20 @@ namespace Blazor.Diagrams.Core.Anchors
                     _ => null,
                 };
             }
-            else
+
+            return Port.Alignment switch
             {
-                return Port.Alignment switch
-                {
-                    PortAlignment.Top => new Point(pt.X + Port.Size.Width / 2, pt.Y),
-                    PortAlignment.TopRight => new Point(pt.X + Port.Size.Width, pt.Y),
-                    PortAlignment.Right => new Point(pt.X + Port.Size.Width, pt.Y + Port.Size.Height / 2),
-                    PortAlignment.BottomRight => new Point(pt.X + Port.Size.Width, pt.Y + Port.Size.Height),
-                    PortAlignment.Bottom => new Point(pt.X + Port.Size.Width / 2, pt.Y + Port.Size.Height),
-                    PortAlignment.BottomLeft => new Point(pt.X, pt.Y + Port.Size.Height),
-                    PortAlignment.Left => new Point(pt.X, pt.Y + Port.Size.Height / 2),
-                    _ => pt,
-                };
-            }
+                PortAlignment.Top => new Point(pt.X + Port.Size.Width / 2, pt.Y),
+                PortAlignment.TopRight => new Point(pt.X + Port.Size.Width, pt.Y),
+                PortAlignment.Right => new Point(pt.X + Port.Size.Width, pt.Y + Port.Size.Height / 2),
+                PortAlignment.BottomRight => new Point(pt.X + Port.Size.Width, pt.Y + Port.Size.Height),
+                PortAlignment.Bottom => new Point(pt.X + Port.Size.Width / 2, pt.Y + Port.Size.Height),
+                PortAlignment.BottomLeft => new Point(pt.X, pt.Y + Port.Size.Height),
+                PortAlignment.Left => new Point(pt.X, pt.Y + Port.Size.Height / 2),
+                _ => pt,
+            };
         }
+
+        public override Point? GetPlainPosition() => (Model as PortModel)!.MiddlePosition;
     }
 }

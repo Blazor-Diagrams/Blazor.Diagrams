@@ -18,7 +18,8 @@ namespace Blazor.Diagrams
             _componentByModelMapping = new Dictionary<Type, Type>
             {
                 [typeof(RemoveControl)] = typeof(RemoveControlWidget),
-                [typeof(BoundaryControl)] = typeof(BoundaryControlWidget)
+                [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
+                [typeof(DragNewLinkControl)] = typeof(DragNewLinkControlWidget),
             };
 
             Options = options ?? new BlazorDiagramOptions();

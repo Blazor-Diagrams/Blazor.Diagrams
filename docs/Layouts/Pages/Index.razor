@@ -7,7 +7,10 @@
 
 <!-- required to resolve DiagramCanvas component -->
 @using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Core.Options
 @using GraphShape.Algorithms.Layout
+@using Blazor.Diagrams
+@using Blazor.Diagrams.Options
 
 <h1>Hello, World of Layouts!</h1>
 
@@ -44,19 +47,15 @@ or it will not be rendered.
   {
     base.OnInitialized();
 
-    var options = new DiagramOptions
+    var options = new BlazorDiagramOptions
     {
-      AllowMultiSelection = true, // Whether to allow multi selection using CTRL
-      Links = new DiagramLinkOptions
+      AllowMultiSelection = true,
+      Zoom =
       {
-      },
-      Zoom = new DiagramZoomOptions
-      {
-        Minimum = 0.5, // Minimum zoom value
-        Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
-      }
+        Minimum = 0.5
+      } // Whether to allow multi selection using CTRL
     };
-    _diagram = new Diagram(options);
+    _diagram = new BlazorDiagram(options);
 
     Setup();
   }

@@ -7,6 +7,8 @@
 
 <!-- required to resolve DiagramCanvas component -->
 @using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Core.Options
+@using Blazor.Diagrams.Options
 @using CustomNodesLinks.Models
 @using CustomNodesLinks.Widgets
 
@@ -32,13 +34,13 @@ or it will not be rendered.
   {
     base.OnInitialized();
 
-    var options = new DiagramOptions
+    var options = new BlazorDiagramOptions
     {
       AllowMultiSelection = true, // Whether to allow multi selection using CTRL
-      Links = new DiagramLinkOptions
+      Links =
       {
       },
-      Zoom = new DiagramZoomOptions
+      Zoom =
       {
         Minimum = 0.5, // Minimum zoom value
         Inverse = false, // Whether to inverse the direction of the zoom when using the wheel

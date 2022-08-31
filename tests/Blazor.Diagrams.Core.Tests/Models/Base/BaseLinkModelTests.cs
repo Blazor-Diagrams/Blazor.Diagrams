@@ -14,7 +14,8 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             // Arrange
             var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
             var parent = new NodeModel();
-            var sp = new SinglePortAnchor(new PortModel(parent));
+            var port = new PortModel(parent);
+            var sp = new SinglePortAnchor(port);
             var eventsTriggered = 0;
             Anchor? oldSp = null;
             Anchor? newSp = null;
@@ -37,7 +38,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             oldSp.Should().NotBeNull();
             newSp.Should().BeSameAs(sp);
             linkInstance.Should().BeSameAs(link);
-            link.Source.Model.Should().BeSameAs(parent);
+            link.Source.Model.Should().BeSameAs(port);
         }
 
         [Fact]
@@ -46,7 +47,8 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             // Arrange
             var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
             var parent = new NodeModel();
-            var tp = new SinglePortAnchor(new PortModel(parent));
+            var port = new PortModel(parent);
+            var tp = new SinglePortAnchor(port);
             var eventsTriggered = 0;
             Anchor? oldTp = null;
             Anchor? newTp = null;
@@ -69,7 +71,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             oldTp.Should().BeNull();
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
-            link.Target!.Model.Should().BeSameAs(parent);
+            link.Target!.Model.Should().BeSameAs(port);
         }
     }
 }

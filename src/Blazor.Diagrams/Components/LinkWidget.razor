@@ -1,5 +1,5 @@
 ﻿@{
-    var color = Link.Selected ? (Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor) : (Link.Color ?? BlazorDiagram.Options.Links.DefaultColor);
+    var color = Link.Selected ? Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor : Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
     var result = Link.GeneratedPathResult;
 }
 
@@ -22,7 +22,7 @@
               stroke-opacity="0"
               fill="none"
               @onpointerdown="e => OnPointerDown(e, index)"
-              @onpointerdown:stopPropagation="@Link.Segmentable" />
+              @onpointerdown:stopPropagation="@Link.Segmentable"/>
     }
 }
 

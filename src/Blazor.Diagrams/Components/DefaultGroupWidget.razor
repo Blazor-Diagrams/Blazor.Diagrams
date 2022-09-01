@@ -1,9 +1,11 @@
 ﻿@code {
+
     [Parameter]
     public GroupModel Group { get; set; } = null!;
+
 }
 
-<GroupNodes Group="Group" />
+<GroupNodes Group="Group"/>
 
 @foreach (var port in Group.Ports)
 {

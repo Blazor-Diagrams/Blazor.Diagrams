@@ -1,97 +1,91 @@
-﻿using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models.Base;
+﻿using System;
 using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components;
-using System;
 
-namespace Blazor.Diagrams.Components.Widgets
+namespace Blazor.Diagrams.Components.Widgets;
+
+public partial class SelectionBoxWidget : IDisposable
 {
-    public partial class SelectionBoxWidget : IDisposable
+    private Point? _initialClientPoint;
+    private Size? _selectionBoxSize; // Todo: remove unneeded instantiations
+    private Point? _selectionBoxTopLeft; // Todo: remove unneeded instantiations
+
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
+
+    [Parameter] public string Background { get; set; } = "rgb(110 159 212 / 25%);";
+
+    public void Dispose()
     {
-        private Point? _initialClientPoint;
-        private Point? _selectionBoxTopLeft; // Todo: remove unneeded instantiations
-        private Size? _selectionBoxSize; // Todo: remove unneeded instantiations
+        BlazorDiagram.PointerDown -= OnPointerDown;
+        BlazorDiagram.PointerMove -= OnPointerMove;
+        BlazorDiagram.PointerUp -= OnPointerUp;
+    }
 
-        [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
+    protected override void OnInitialized()
+    {
+        BlazorDiagram.PointerDown += OnPointerDown;
+        BlazorDiagram.PointerMove += OnPointerMove;
+        BlazorDiagram.PointerUp += OnPointerUp;
+    }
 
-        [Parameter] public string Background { get; set; } = "rgb(110 159 212 / 25%);";
+    private string GenerateStyle()
+    {
+        return FormattableString.Invariant(
+            $"position: absolute; background: {Background}; top: {_selectionBoxTopLeft!.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize!.Width}px; height: {_selectionBoxSize.Height}px;");
+    }
 
-        protected override void OnInitialized()
+    private void OnPointerDown(Model? model, MouseEventArgs e)
+    {
+        if (model != null || !e.ShiftKey)
+            return;
+
+        _initialClientPoint = new Point(e.ClientX, e.ClientY);
+    }
+
+    private void OnPointerMove(Model? model, MouseEventArgs e)
+    {
+        if (_initialClientPoint == null)
+            return;
+
+        SetSelectionBoxInformation(e);
+
+        var start = BlazorDiagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
+        var end = BlazorDiagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
+        var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
+        var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+        var bounds = new Rectangle(sX, sY, eX, eY);
+
+        foreach (var node in BlazorDiagram.Nodes)
         {
-            BlazorDiagram.PointerDown += OnPointerDown;
-            BlazorDiagram.PointerMove += OnPointerMove;
-            BlazorDiagram.PointerUp += OnPointerUp;
+            var nodeBounds = node.GetBounds();
+            if (nodeBounds == null)
+                continue;
+
+            if (bounds.Overlap(nodeBounds))
+                BlazorDiagram.SelectModel(node, false);
+            else if (node.Selected) BlazorDiagram.UnselectModel(node);
         }
 
-        private string GenerateStyle()
-        {
-            return FormattableString.Invariant(
-                $"position: absolute; background: {Background}; top: {_selectionBoxTopLeft!.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize!.Width}px; height: {_selectionBoxSize.Height}px;");
-        }
+        InvokeAsync(StateHasChanged);
+    }
 
-        private void OnPointerDown(Model? model, MouseEventArgs e)
-        {
-            if (model != null || !e.ShiftKey)
-                return;
+    private void SetSelectionBoxInformation(MouseEventArgs e)
+    {
+        var start = BlazorDiagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
+        var end = BlazorDiagram.GetRelativePoint(e.ClientX, e.ClientY);
+        var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
+        var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+        _selectionBoxTopLeft = new Point(sX, sY);
+        _selectionBoxSize = new Size(eX - sX, eY - sY);
+    }
 
-            _initialClientPoint = new Point(e.ClientX, e.ClientY);
-        }
-
-        private void OnPointerMove(Model? model, MouseEventArgs e)
-        {
-            if (_initialClientPoint == null)
-                return;
-
-            SetSelectionBoxInformation(e);
-
-            var start = BlazorDiagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
-            var end = BlazorDiagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
-            var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-            var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-            var bounds = new Rectangle(sX, sY, eX, eY);
-
-            foreach (var node in BlazorDiagram.Nodes)
-            {
-                var nodeBounds = node.GetBounds();
-                if (nodeBounds == null)
-                    continue;
-                
-                if (bounds.Overlap(nodeBounds))
-                {
-                    BlazorDiagram.SelectModel(node, false);
-                }
-                else if (node.Selected)
-                {
-                    BlazorDiagram.UnselectModel(node);
-                }
-            }
-
-            InvokeAsync(StateHasChanged);
-        }
-
-        private void SetSelectionBoxInformation(MouseEventArgs e)
-        {
-            var start = BlazorDiagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
-            var end = BlazorDiagram.GetRelativePoint(e.ClientX, e.ClientY);
-            (var sX, var sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-            (var eX, var eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-            _selectionBoxTopLeft = new Point(sX, sY);
-            _selectionBoxSize = new Size(eX - sX, eY - sY);
-        }
-
-        private void OnPointerUp(Model? model, MouseEventArgs e)
-        {
-            _initialClientPoint = null;
-            _selectionBoxTopLeft = null;
-            _selectionBoxSize = null;
-            InvokeAsync(StateHasChanged);
-        }
-
-        public void Dispose()
-        {
-            BlazorDiagram.PointerDown -= OnPointerDown;
-            BlazorDiagram.PointerMove -= OnPointerMove;
-            BlazorDiagram.PointerUp -= OnPointerUp;
-        }
+    private void OnPointerUp(Model? model, MouseEventArgs e)
+    {
+        _initialClientPoint = null;
+        _selectionBoxTopLeft = null;
+        _selectionBoxSize = null;
+        InvokeAsync(StateHasChanged);
     }
 }

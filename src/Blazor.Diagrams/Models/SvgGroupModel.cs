@@ -1,10 +1,11 @@
-﻿using Blazor.Diagrams.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Blazor.Diagrams.Core.Models;
 
-namespace Blazor.Diagrams.Models
+namespace Blazor.Diagrams.Models;
+
+public class SvgGroupModel : GroupModel
 {
-    public class SvgGroupModel : GroupModel
+    public SvgGroupModel(IEnumerable<NodeModel> children, byte padding = 30) : base(children, padding)
     {
-        public SvgGroupModel(IEnumerable<NodeModel> children, byte padding = 30) : base(children, padding) { }
     }
 }

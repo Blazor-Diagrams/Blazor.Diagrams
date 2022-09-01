@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Controls;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Controls;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,6 +17,11 @@ public partial class ControlsLayerRenderer : IDisposable
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
     [Parameter] public bool Svg { get; set; }
+
+    public void Dispose()
+    {
+        BlazorDiagram.Controls.ChangeCaused -= OnControlsChangeCaused;
+    }
 
     protected override void OnInitialized()
     {
@@ -54,15 +59,11 @@ public partial class ControlsLayerRenderer : IDisposable
             builder.AddAttribute(1, "class",
                 $"{(control is ExecutableControl ? "executable " : "")}control {control.GetType().Name}");
             if (svg)
-            {
                 builder.AddAttribute(2, "transform",
                     $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");
-            }
             else
-            {
                 builder.AddAttribute(2, "style",
                     $"top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px");
-            }
 
             if (control is ExecutableControl ec)
             {
@@ -81,14 +82,6 @@ public partial class ControlsLayerRenderer : IDisposable
 
     private async Task OnPointerDown(PointerEventArgs e, Model model, ExecutableControl control)
     {
-        if (e.Button == 0 || e.Buttons == 1)
-        {
-            await control.OnPointerDown(BlazorDiagram, model, e.ToCore());
-        }
-    }
-
-    public void Dispose()
-    {
-        BlazorDiagram.Controls.ChangeCaused -= OnControlsChangeCaused;
+        if (e.Button == 0 || e.Buttons == 1) await control.OnPointerDown(BlazorDiagram, model, e.ToCore());
     }
 }

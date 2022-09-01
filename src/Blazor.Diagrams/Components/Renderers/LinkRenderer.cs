@@ -1,70 +1,84 @@
-﻿using Blazor.Diagrams.Core;
+﻿using System;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using System;
 
-namespace Blazor.Diagrams.Components.Renderers
+namespace Blazor.Diagrams.Components.Renderers;
+
+public class LinkRenderer : ComponentBase, IDisposable
 {
-    public class LinkRenderer : ComponentBase, IDisposable
+    private bool _shouldRender = true;
+
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; }
+
+    [Parameter] public BaseLinkModel Link { get; set; }
+
+    public void Dispose()
     {
-        private bool _shouldRender = true;
+        Link.Changed -= OnLinkChanged;
+    }
 
-        [CascadingParameter]
-        public BlazorDiagram BlazorDiagram { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-        [Parameter]
-        public BaseLinkModel Link { get; set; }
+        Link.Changed += OnLinkChanged;
+    }
 
-        public void Dispose()
-        {
-            Link.Changed -= OnLinkChanged;
-        }
+    protected override bool ShouldRender()
+    {
+        return _shouldRender;
+    }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        var componentType = BlazorDiagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
 
-            Link.Changed += OnLinkChanged;
-        }
+        builder.OpenElement(0, "g");
+        builder.AddAttribute(1, "class", "link");
+        builder.AddAttribute(2, "data-link-id", Link.Id);
+        builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+        builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
+        builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+        builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
+        builder.AddAttribute(7, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
+        builder.AddAttribute(8, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
+        builder.OpenComponent(9, componentType);
+        builder.AddAttribute(10, "Link", Link);
+        builder.CloseComponent();
+        builder.CloseElement();
+    }
 
-        protected override bool ShouldRender() => _shouldRender;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _shouldRender = false;
+    }
 
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            var componentType = BlazorDiagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
+    private void OnLinkChanged(Model _)
+    {
+        _shouldRender = true;
+        InvokeAsync(StateHasChanged);
+    }
 
-            builder.OpenElement(0, "g");
-            builder.AddAttribute(1, "class", "link");
-            builder.AddAttribute(2, "data-link-id", Link.Id);
-            builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
-            builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
-            builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
-            builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
-            builder.AddAttribute(7, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
-            builder.AddAttribute(8, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
-            builder.OpenComponent(9, componentType);
-            builder.AddAttribute(10, "Link", Link);
-            builder.CloseComponent();
-            builder.CloseElement();
-        }
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerDown(Link, e.ToCore());
+    }
 
-        protected override void OnAfterRender(bool firstRender) => _shouldRender = false;
+    private void OnPointerUp(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerUp(Link, e.ToCore());
+    }
 
-        private void OnLinkChanged(Model _)
-        {
-            _shouldRender = true;
-            InvokeAsync(StateHasChanged);
-        }
+    private void OnMouseEnter(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerEnter(Link, e.ToCore());
+    }
 
-        private void OnPointerDown(PointerEventArgs e) => BlazorDiagram.TriggerPointerDown(Link, e.ToCore());
-
-        private void OnPointerUp(PointerEventArgs e) => BlazorDiagram.TriggerPointerUp(Link, e.ToCore());
-
-        private void OnMouseEnter(MouseEventArgs e) => BlazorDiagram.TriggerPointerEnter(Link, e.ToCore());
-
-        private void OnMouseLeave(MouseEventArgs e) => BlazorDiagram.TriggerPointerLeave(Link, e.ToCore());
+    private void OnMouseLeave(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerLeave(Link, e.ToCore());
     }
 }

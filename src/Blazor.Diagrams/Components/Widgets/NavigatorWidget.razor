@@ -20,8 +20,8 @@
         <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
             @foreach (var node in BlazorDiagram.Nodes.Where(n => n.Size != null))
             {
-                var left = ((node.Position.X * BlazorDiagram.Zoom) + addedNodeX) * XFactor;
-                var top = ((node.Position.Y * BlazorDiagram.Zoom) + addedNodeY) * YFactor;
+                var left = (node.Position.X * BlazorDiagram.Zoom + addedNodeX) * XFactor;
+                var top = (node.Position.Y * BlazorDiagram.Zoom + addedNodeY) * YFactor;
                 var width = node.Size.Width * BlazorDiagram.Zoom * XFactor;
                 var height = node.Size.Height * BlazorDiagram.Zoom * YFactor;
 

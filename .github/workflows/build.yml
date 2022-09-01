@@ -39,7 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet-sonarscanner begin /k:"Blazor-Diagrams_Blazor.Diagrams" /o:"blazor-diagrams" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**\TestResults\*\*.xml" /d:sonar.exclusions=Blazor.Diagrams\src\Blazor.Diagrams\wwwroot
+          dotnet-sonarscanner begin /k:"Blazor-Diagrams_Blazor.Diagrams" /o:"blazor-diagrams" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**\TestResults\*\*.xml" /d:sonar.exclusions="**/wwwroot/**
           dotnet build
           dotnet test --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"

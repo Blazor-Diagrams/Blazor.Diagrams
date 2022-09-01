@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<Authors>zHaytam</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<AssemblyVersion>2.1.6</AssemblyVersion>

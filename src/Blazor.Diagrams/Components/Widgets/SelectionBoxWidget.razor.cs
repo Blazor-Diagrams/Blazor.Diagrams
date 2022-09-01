@@ -1,23 +1,20 @@
-﻿using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using Microsoft.AspNetCore.Components;
 using System;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components.Widgets
 {
     public partial class SelectionBoxWidget : IDisposable
     {
-        private Point _initialClientPoint;
-        private Point _selectionBoxTopLeft;
-        private Size _selectionBoxSize;
+        private Point? _initialClientPoint;
+        private Point? _selectionBoxTopLeft; // Todo: remove unneeded instantiations
+        private Size? _selectionBoxSize; // Todo: remove unneeded instantiations
 
-        [CascadingParameter]
-        public BlazorDiagram BlazorDiagram { get; set; }
+        [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
-        [Parameter]
-        public string Background { get; set; } = "rgb(110 159 212 / 25%);";
+        [Parameter] public string Background { get; set; } = "rgb(110 159 212 / 25%);";
 
         protected override void OnInitialized()
         {
@@ -27,9 +24,12 @@ namespace Blazor.Diagrams.Components
         }
 
         private string GenerateStyle()
-            => FormattableString.Invariant($"position: absolute; background: {Background}; top: {_selectionBoxTopLeft.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize.Width}px; height: {_selectionBoxSize.Height}px;");
+        {
+            return FormattableString.Invariant(
+                $"position: absolute; background: {Background}; top: {_selectionBoxTopLeft!.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize!.Width}px; height: {_selectionBoxSize.Height}px;");
+        }
 
-        private void OnPointerDown(Model model, MouseEventArgs e)
+        private void OnPointerDown(Model? model, MouseEventArgs e)
         {
             if (model != null || !e.ShiftKey)
                 return;
@@ -37,7 +37,7 @@ namespace Blazor.Diagrams.Components
             _initialClientPoint = new Point(e.ClientX, e.ClientY);
         }
 
-        private void OnPointerMove(Model model, MouseEventArgs e)
+        private void OnPointerMove(Model? model, MouseEventArgs e)
         {
             if (_initialClientPoint == null)
                 return;
@@ -46,13 +46,17 @@ namespace Blazor.Diagrams.Components
 
             var start = BlazorDiagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
             var end = BlazorDiagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
-            (var sX, var sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-            (var eX, var eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+            var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
+            var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
             var bounds = new Rectangle(sX, sY, eX, eY);
-            
+
             foreach (var node in BlazorDiagram.Nodes)
             {
-                if (bounds.Overlap(node.GetBounds()))
+                var nodeBounds = node.GetBounds();
+                if (nodeBounds == null)
+                    continue;
+                
+                if (bounds.Overlap(nodeBounds))
                 {
                     BlazorDiagram.SelectModel(node, false);
                 }
@@ -67,7 +71,7 @@ namespace Blazor.Diagrams.Components
 
         private void SetSelectionBoxInformation(MouseEventArgs e)
         {
-            var start = BlazorDiagram.GetRelativePoint(_initialClientPoint.X, _initialClientPoint.Y);
+            var start = BlazorDiagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
             var end = BlazorDiagram.GetRelativePoint(e.ClientX, e.ClientY);
             (var sX, var sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             (var eX, var eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
@@ -75,7 +79,7 @@ namespace Blazor.Diagrams.Components
             _selectionBoxSize = new Size(eX - sX, eY - sY);
         }
 
-        private void OnPointerUp(Model model, MouseEventArgs e)
+        private void OnPointerUp(Model? model, MouseEventArgs e)
         {
             _initialClientPoint = null;
             _selectionBoxTopLeft = null;

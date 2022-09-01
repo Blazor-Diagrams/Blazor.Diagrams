@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components.Widgets
 {
     public partial class NavigatorWidget : IDisposable
     {

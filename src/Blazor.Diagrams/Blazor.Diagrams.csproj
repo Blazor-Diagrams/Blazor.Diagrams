@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<Authors>zHaytam</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<AssemblyVersion>2.1.6</AssemblyVersion>
@@ -17,8 +18,7 @@
 		<Product>Z.Blazor.Diagrams</Product>
 		<PackageIcon>ZBD.png</PackageIcon>
 	</PropertyGroup>
-
-
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />

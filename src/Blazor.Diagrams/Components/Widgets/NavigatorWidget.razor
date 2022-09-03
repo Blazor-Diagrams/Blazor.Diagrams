@@ -1,54 +1,40 @@
-﻿@if (BlazorDiagram?.Container != null)
-{
-    var addedNodeX = Math.Max(0, BlazorDiagram.Pan.X) + NodePositionAdjustment.X;
-    var addedNodeY = Math.Max(0, BlazorDiagram.Pan.Y) + NodePositionAdjustment.Y;
-    var addedCurrentViewX = (Math.Abs(Math.Min(0, BlazorDiagram.Pan.X)) + NodePositionAdjustment.X) * XFactor;
-    var addedCurrentViewY = (Math.Abs(Math.Min(0, BlazorDiagram.Pan.Y)) + NodePositionAdjustment.Y) * YFactor;
-    var currentViewWidth = BlazorDiagram.Container.Width * XFactor;
-    var currentViewHeight = BlazorDiagram.Container.Height * YFactor;
+﻿<svg class="navigator @Class"
+     style="@Style"
+     width="@Width.ToInvariantString()"
+     height="@Height.ToInvariantString()"
+     viewBox="@(FormattableString.Invariant($"{_x} {_y} {_width} {_height}"))">
 
-    <div class="diagram-navigator@(DefaultStyle ? " default" : "")">
-        <div style="position: relative;">
-            <div class="current-view"
-                 style="top: @(addedCurrentViewY.ToInvariantString())px;
-                        left: @(addedCurrentViewX.ToInvariantString())px;
-                        width: @(currentViewWidth.ToInvariantString())px;
-                        height: @(currentViewHeight.ToInvariantString())px;
-                        border: 2px solid @FillColor;">
-            </div>
-        </div>
-        <svg width="@(Width.ToInvariantString())px" height="@(Height.ToInvariantString())px">
-            @foreach (var node in BlazorDiagram.Nodes.Where(n => n.Size != null))
-            {
-                var left = (node.Position.X * BlazorDiagram.Zoom + addedNodeX) * XFactor;
-                var top = (node.Position.Y * BlazorDiagram.Zoom + addedNodeY) * YFactor;
-                var width = node.Size.Width * BlazorDiagram.Zoom * XFactor;
-                var height = node.Size.Height * BlazorDiagram.Zoom * YFactor;
+    @foreach (var group in BlazorDiagram.Groups)
+    {
+        if (group.Size == null)
+            continue;
 
-                <g @key="node.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
-                    <rect fill="@FillColor"
-                          width="@width.ToInvariantString()"
-                          height="@height.ToInvariantString()">
-                    </rect>
-                </g>
-            }
+        <rect @key="group"
+              class="navigator-group"
+              x="@group.Position.X.ToInvariantString()"
+              y="@group.Position.Y.ToInvariantString()"
+              width="@group.Size.Width.ToInvariantString()"
+              height="@group.Size.Height.ToInvariantString()"
+              fill="@GroupColor">
+        </rect>
+    }
 
-            @foreach (var group in BlazorDiagram.Groups.Where(g => !Size.Zero.Equals(g.Size)))
-            {
-                var left = (Math.Max(0, group.Position.X * BlazorDiagram.Zoom) + addedNodeX) * XFactor;
-                var top = (Math.Max(0, group.Position.Y * BlazorDiagram.Zoom) + addedNodeY) * YFactor;
-                var width = group.Size.Width * BlazorDiagram.Zoom * XFactor;
-                var height = group.Size.Height * BlazorDiagram.Zoom * YFactor;
+    @foreach (var node in BlazorDiagram.Nodes)
+    {
+        if (node.Size == null)
+            continue;
 
-                <g @key="group.Id" transform="translate(@left.ToInvariantString(), @top.ToInvariantString())">
-                    <rect stroke="@FillColor"
-                          stroke-width="2"
-                          fill="none"
-                          width="@width.ToInvariantString()"
-                          height="@height.ToInvariantString()">
-                    </rect>
-                </g>
-            }
-        </svg>
-    </div>
-}
+        @GetNodeRenderFragment(node)
+    }
+
+    <rect class="navigator-current-view"
+          x="@(_vX.ToInvariantString())"
+          y="@(_vY.ToInvariantString())"
+          width="@_vWidth.ToInvariantString()"
+          height="@_vHeight.ToInvariantString()"
+          fill="none"
+          stroke="@ViewStrokeColor"
+          stroke-width="@ViewStrokeWidth">
+    </rect>
+
+</svg>

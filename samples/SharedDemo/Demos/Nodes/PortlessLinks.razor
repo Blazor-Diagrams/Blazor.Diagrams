@@ -3,5 +3,12 @@
 @inject LayoutData LayoutData
 
 <CascadingValue Value="_blazorDiagram">
-    <DiagramCanvas></DiagramCanvas>
+    <DiagramCanvas>
+        <Widgets>
+            <NavigatorWidget Width="200"
+                             Height="150"
+                             Style="position: absolute; bottom: 15px; right: 15px; border: 1px solid black;">
+            </NavigatorWidget>
+        </Widgets>
+    </DiagramCanvas>
 </CascadingValue>

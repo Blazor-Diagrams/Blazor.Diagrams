@@ -2,6 +2,7 @@
 using Blazor.Diagrams.Components;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Models;
 
 namespace SharedDemo.Demos.Nodes
@@ -32,6 +33,10 @@ namespace SharedDemo.Demos.Nodes
             var node3 = NewNode(500, 100);
             var node4 = NewNode(700, 350);
             _blazorDiagram.Nodes.Add(new[] { node1, node2, node3, node4 });
+            
+            var controls1 = _blazorDiagram.Controls.AddFor(node4);
+            controls1.Add(new RemoveControl(1, 0));
+            controls1.Add(new BoundaryControl());
 
             _blazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
             _blazorDiagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
@@ -40,7 +45,10 @@ namespace SharedDemo.Demos.Nodes
             var group1 = _blazorDiagram.AddGroup(new SvgGroupModel(new[] { node1, node2 }));
             var group2 = _blazorDiagram.AddGroup(new SvgGroupModel(new[] { group1, node3 }));
 
-            _blazorDiagram.Links.Add(new LinkModel(group2, node4));
+            var link = _blazorDiagram.Links.Add(new LinkModel(group2, node4));
+            var controls2 = _blazorDiagram.Controls.AddFor(link);
+            controls2.Add(new RemoveControl(1, 0));
+            controls2.Add(new BoundaryControl());
         }
 
         private NodeModel NewNode(double x, double y, bool svg = true)

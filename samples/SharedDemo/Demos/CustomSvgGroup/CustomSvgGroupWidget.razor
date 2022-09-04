@@ -1,0 +1,20 @@
+﻿@{
+    var rectX = Group.Size.Width / 2 - 50;
+    var textX = rectX + 50;
+    var textY = -60 + 25.0;
+}
+
+<rect x="@rectX.ToInvariantString()" y="-60" width="100" height="50" fill="yellow"></rect>
+<text x="@textX.ToInvariantString()" y="@textY.ToInvariantString()">@Group.Title</text>
+
+<GroupNodes Group="Group" />
+
+@foreach (var port in Group.Ports)
+{
+    <PortRenderer @key="port" Port="port" Class="group-port"></PortRenderer>
+}
+
+
+@code {
+    [Parameter] public CustomSvgGroupModel Group { get; set; }
+}

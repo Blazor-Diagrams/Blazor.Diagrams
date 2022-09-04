@@ -1,13 +1,13 @@
-﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core;
-using Microsoft.AspNetCore.Components;
+﻿using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace SharedDemo.Demos
 {
     public class ZoomToFitComponent : ComponentBase
     {
-        protected readonly Diagram diagram = new Diagram();
+        protected readonly BlazorDiagram BlazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -23,8 +23,8 @@ namespace SharedDemo.Demos
                     var sourcePort = node1.AddPort(PortAlignment.Right);
                     var targetPort = node2.AddPort(PortAlignment.Left);
 
-                    diagram.Nodes.Add(new[] { node1, node2 });
-                    diagram.Links.Add(new LinkModel(sourcePort, targetPort));
+                    BlazorDiagram.Nodes.Add(new[] { node1, node2 });
+                    BlazorDiagram.Links.Add(new LinkModel(sourcePort, targetPort));
                 }
             }
         }

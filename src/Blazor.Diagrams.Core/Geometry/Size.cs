@@ -1,10 +1,8 @@
 ﻿namespace Blazor.Diagrams.Core.Geometry
 {
-    public class Size
+    public record Size
     {
-        public static Size Zero { get; } = new Size(0, 0);
-
-        public Size() { }
+        public static Size Zero { get; } = new(0, 0);
 
         public Size(double width, double height)
         {
@@ -12,13 +10,7 @@
             Height = height;
         }
 
-        public double Width { get; set; }
-        public double Height { get; set; }
-
-        public Size Add(double value) => new Size(Width + value, Height + value);
-
-        public bool Equals(Size? size) => size != null && Width == size.Width && Height == size.Height;
-
-        public override string ToString() => $"Size(width={Width}, height={Height})";
+        public double Width { get; init; }
+        public double Height { get; init; }
     }
 }

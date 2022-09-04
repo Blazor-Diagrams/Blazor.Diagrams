@@ -1,42 +1,48 @@
 ﻿<div class="diagram-canvas @Class"
      tabindex="-1"
      @ref="elementReference"
-     @onmousedown="OnMouseDown"
-     @onmousemove="OnMouseMove"
-     @onmousemove:preventDefault
-     @onmouseup="OnMouseUp"
+     @onpointerdown="OnPointerDown"
+     @onpointermove="OnPointerMove"
+     @onpointerup="OnPointerUp"
      @onkeydown="OnKeyDown"
      @onwheel="OnWheel"
-     @onwheel:stopPropagation
-     @ontouchstart="OnTouchStart"
-     @ontouchmove="OnTouchMove"
-     @ontouchend="OnTouchEnd"
-     @ontouchend:preventDefault>
+     @onpointermove:preventDefault
+     @onwheel:stopPropagation>
 
     @* Links *@
-    <svg class="diagram-svg-layer" style="@LayerStyle">
-        @foreach (var link in Diagram.Links)
+    <svg class="diagram-svg-layer" style="@GetLayerStyle(BlazorDiagram.Options.LinksLayerOrder)">
+        @foreach (var node in BlazorDiagram.Nodes.OfType<SvgNodeModel>().Where(n => n.Group == null))
         {
-            <LinkRenderer @key="link" Link="link" />
+            <NodeRenderer @key="node" Node="node"/>
         }
 
-        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.SVG))
+        @foreach (var group in BlazorDiagram.Groups.OfType<SvgGroupModel>().Where(n => n.Group == null))
         {
-            <NodeRenderer @key="node" Node="node" />
+            <GroupRenderer @key="group" Group="group"/>
         }
+
+        @foreach (var link in BlazorDiagram.Links)
+        {
+            <LinkRenderer @key="link" Link="link"/>
+        }
+
+        <ControlsLayerRenderer Svg="@true"></ControlsLayerRenderer>
     </svg>
 
     @* Nodes *@
-    <div class="diagram-html-layer" style="@LayerStyle">
-        @foreach (var group in Diagram.Groups)
+    <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
+        @foreach (var group in BlazorDiagram.Groups.Where(n => n is not SvgGroupModel))
         {
-            <GroupRenderer @key="group" Group="group" />
+            if (group.Group != null) continue;
+            <GroupRenderer @key="group" Group="group"/>
         }
 
-        @foreach (var node in Diagram.Nodes.Where(n => n.Layer == RenderLayer.HTML && n.Group == null))
+        @foreach (var node in BlazorDiagram.Nodes.Where(n => n is not SvgNodeModel && n.Group == null))
         {
-            <NodeRenderer @key="node" Node="node" />
+            <NodeRenderer @key="node" Node="node"/>
         }
+
+        <ControlsLayerRenderer Svg="@false"></ControlsLayerRenderer>
     </div>
 
     @Widgets

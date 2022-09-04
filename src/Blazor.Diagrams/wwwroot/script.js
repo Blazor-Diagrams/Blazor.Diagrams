@@ -52,4 +52,4 @@ window.addEventListener('scroll', () => {
         canvas.ref.invokeMethodAsync('OnResize', canvas.lastBounds);
     }
 });
-s.mo.observe(document.body, { childList: true, subtree: true });
+s.mo.observe(document.body, {childList: true, subtree: true});

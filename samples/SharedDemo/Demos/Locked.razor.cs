@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
@@ -7,7 +7,7 @@ namespace SharedDemo
 {
     public class LockedComponent : ComponentBase
     {
-        protected readonly Diagram diagram = new Diagram();
+        protected readonly BlazorDiagram BlazorDiagram = new BlazorDiagram();
 
         protected override void OnInitialized()
         {
@@ -15,13 +15,13 @@ namespace SharedDemo
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);
-            diagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
+            BlazorDiagram.Nodes.Add(new[] { node1, node2, NewNode(300, 50) });
 
             var link = new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
             {
                 Locked = true
             };
-            diagram.Links.Add(link);
+            BlazorDiagram.Links.Add(link);
         }
 
         private NodeModel NewNode(double x, double y)

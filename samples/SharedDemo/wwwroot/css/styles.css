@@ -1616,20 +1616,29 @@ body {
     background: #40babd !important;
 }
 
-.group.custom {
+div.group:not(.default) {
     outline: 2px solid black;
     background-color: #6fbb6e;
 }
 
-    .group.custom > span.title {
-        padding: 20px;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #eee;
-        border: 2px solid black;
-        border-radius: 50%;
-        background-color: #6fbb6e;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+div.group:not(.default) > span.title {
+    padding: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #eee;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: #6fbb6e;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+g.group:not(.default) rect {
+    outline: 2px solid black;
+}
+
+g.group:not(.default) text {
+    text-anchor: middle;
+    dominant-baseline: middle;
+}

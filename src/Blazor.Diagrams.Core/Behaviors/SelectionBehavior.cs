@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -7,37 +7,36 @@ namespace Blazor.Diagrams.Core.Behaviors
     {
         public SelectionBehavior(Diagram diagram) : base(diagram)
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.TouchStart += OnTouchStart;
+            Diagram.PointerDown += OnPointerDown;
         }
 
-        private void OnTouchStart(Model model, TouchEventArgs e) => Process(model, e.CtrlKey);
+        private void OnPointerDown(Model? model, PointerEventArgs e) => Process(model, e.CtrlKey);
 
-        private void OnMouseDown(Model model, MouseEventArgs e) => Process(model, e.CtrlKey);
-
-        private void Process(Model model, bool ctrlKey)
+        private void Process(Model? model, bool ctrlKey)
         {
-            if (model == null)
+            switch (model)
             {
-                Diagram.UnselectAll();
-            }
-            else if (model is SelectableModel sm)
-            {
-                if (ctrlKey && sm.Selected)
-                {
+                case null:
+                    Diagram.UnselectAll();
+                    break;
+                case SelectableModel sm when ctrlKey && sm.Selected:
                     Diagram.UnselectModel(sm);
-                }
-                else if (!sm.Selected)
+                    break;
+                case SelectableModel sm:
                 {
-                    Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
+                    if (!sm.Selected)
+                    {
+                        Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
+                    }
+
+                    break;
                 }
             }
         }
 
         public override void Dispose()
         {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.TouchStart -= OnTouchStart;
+            Diagram.PointerDown -= OnPointerDown;
         }
     }
 }

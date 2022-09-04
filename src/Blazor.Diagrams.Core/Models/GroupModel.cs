@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models.Base;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +20,6 @@ namespace Blazor.Diagrams.Core.Models
 
         public IReadOnlyList<NodeModel> Children => _children;
         public byte Padding { get; }
-        public IEnumerable<BaseLinkModel> HandledLinks => _children.SelectMany(c => c.AllLinks).Distinct();
 
         public void AddChild(NodeModel child)
         {
@@ -89,7 +87,7 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var child in children)
             {
                 _children.Add(child);
-                child.Group = this;
+                child.Group = this; 
                 child.SizeChanged += OnNodeChanged;
                 child.Moving += OnNodeChanged;
             }
@@ -114,8 +112,8 @@ namespace Blazor.Diagrams.Core.Models
                 return false;
 
             var bounds = Children.GetBounds();
-            Size = new Size(bounds.Width + Padding * 2, bounds.Height + Padding * 2);
             Position = new Point(bounds.Left - Padding, bounds.Top - Padding);
+            Size = new Size(bounds.Width + Padding * 2, bounds.Height + Padding * 2);
             return true;
         }
     }

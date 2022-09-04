@@ -1,8 +1,8 @@
-﻿using Blazor.Diagrams.Algorithms.Extensions;
-using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Anchors;
 using System.Collections.Generic;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Algorithms
 {
@@ -11,20 +11,23 @@ namespace Blazor.Diagrams.Algorithms
         public static void ReconnectLinksToClosestPorts(this Diagram diagram)
         {
             // Only refresh ports once
-            var portsToRefresh = new HashSet<PortModel>();
+            var modelsToRefresh = new HashSet<Model>();
 
             foreach (var link in diagram.Links.ToArray())
             {
-                if (link.TargetPort == null)
+                if (link.Target == null)
                     continue;
 
-                var sourcePorts = link.SourcePort.Parent.Ports;
-                var targetPorts = link.TargetPort.Parent.Ports;
+                if (link.Source is not SinglePortAnchor spa1 || link.Target is not SinglePortAnchor spa2)
+                    continue;
+
+                var sourcePorts = spa1.Port.Parent.Ports;
+                var targetPorts = spa2.Port.Parent.Ports;
 
                 // Find the ports with minimal distance
                 var minDistance = double.MaxValue;
-                var minSourcePort = link.SourcePort;
-                var minTargetPort = link.TargetPort;
+                var minSourcePort = spa1.Port;
+                var minTargetPort = spa2.Port;
                 foreach (var sourcePort in sourcePorts)
                 {
                     foreach (var targetPort in targetPorts)
@@ -40,23 +43,27 @@ namespace Blazor.Diagrams.Algorithms
                 }
 
                 // Reconnect
-                if (link.SourcePort != minSourcePort)
+                if (spa1.Port != minSourcePort)
                 {
-                    portsToRefresh.Add(link.SourcePort);
-                    portsToRefresh.Add(minSourcePort);
-                    link.SetSourcePort(minSourcePort);
+                    modelsToRefresh.Add(spa1.Port);
+                    modelsToRefresh.Add(minSourcePort);
+                    link.SetSource(new SinglePortAnchor(minSourcePort));
+                    modelsToRefresh.Add(link);
                 }
 
-                if (link.TargetPort != minTargetPort)
+                if (spa2.Port != minTargetPort)
                 {
-                    portsToRefresh.Add(link.TargetPort);
-                    portsToRefresh.Add(minTargetPort);
-                    link.SetTargetPort(minTargetPort);
+                    modelsToRefresh.Add(spa2.Port);
+                    modelsToRefresh.Add(minTargetPort);
+                    link.SetTarget(new SinglePortAnchor(minTargetPort));
+                    modelsToRefresh.Add(link);
                 }
             }
 
-            foreach (var port in portsToRefresh)
-                port.Refresh();
+            foreach (var model in modelsToRefresh)
+            {
+                model.Refresh();
+            }
         }
     }
 }

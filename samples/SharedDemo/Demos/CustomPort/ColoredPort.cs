@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 
 namespace SharedDemo.Demos.CustomPort
 {
@@ -11,14 +12,17 @@ namespace SharedDemo.Demos.CustomPort
 
         public bool IsRed { get; set; }
 
-        public override bool CanAttachTo(PortModel port)
+        public override bool CanAttachTo(ILinkable other)
         {
-            // Checks for same-node/port attachements
+            if (other is not PortModel port)
+                return false;
+            
+            // Checks for same-node/port attachments
             if (!base.CanAttachTo(port))
                 return false;
 
             // Only able to attach to the same port type
-            if (!(port is ColoredPort cp))
+            if (port is not ColoredPort cp)
                 return false;
 
             return IsRed == cp.IsRed;

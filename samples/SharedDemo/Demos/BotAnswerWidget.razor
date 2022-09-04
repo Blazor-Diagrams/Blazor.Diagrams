@@ -15,7 +15,7 @@
 
     @foreach (var port in Node.Ports)
     {
-        <PortRenderer Port="port"></PortRenderer>
+        <PortRenderer @key="port" Port="port"></PortRenderer>
     }
 </div>
 

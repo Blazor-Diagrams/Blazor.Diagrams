@@ -1,178 +1,193 @@
-﻿using Blazor.Diagrams.Core;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Extensions;
+using Blazor.Diagrams.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using System;
-using System.Threading.Tasks;
 
-namespace Blazor.Diagrams.Components.Renderers
+namespace Blazor.Diagrams.Components.Renderers;
+
+public class NodeRenderer : ComponentBase, IDisposable
 {
-    public class NodeRenderer : ComponentBase, IDisposable
+    private bool _becameVisible;
+    private ElementReference _element;
+    private bool _isSvg;
+    private bool _isVisible = true;
+    private DotNetObjectReference<NodeRenderer>? _reference;
+    private bool _shouldRender;
+
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
+
+    [Parameter] public NodeModel Node { get; set; } = null!;
+
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
+
+    public void Dispose()
     {
-        private bool _shouldRender;
-        private bool _isVisible = true;
-        private bool _becameVisible;
-        private ElementReference _element;
-        private DotNetObjectReference<NodeRenderer> _reference;
+        BlazorDiagram.PanChanged -= CheckVisibility;
+        BlazorDiagram.ZoomChanged -= CheckVisibility;
+        BlazorDiagram.ContainerChanged -= CheckVisibility;
+        Node.Changed -= OnNodeChanged;
 
-        [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        if (_element.Id != null)
+            _ = JsRuntime.UnobserveResizes(_element);
 
-        [Parameter]
-        public NodeModel Node { get; set; }
+        _reference?.Dispose();
+    }
 
-        [Inject]
-        private IJSRuntime JsRuntime { get; set; }
+    [JSInvokable]
+    public void OnResize(Size size)
+    {
+        // When the node becomes invisible (a.k.a unrendered), the size is zero
+        if (Size.Zero.Equals(size))
+            return;
 
-        public void Dispose()
-        {
-            Diagram.PanChanged -= CheckVisibility;
-            Diagram.ZoomChanged -= CheckVisibility;
-            Diagram.ContainerChanged -= CheckVisibility;
-            Node.Changed -= ReRender;
+        size = new Size(size.Width / BlazorDiagram.Zoom, size.Height / BlazorDiagram.Zoom);
+        if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) &&
+            Node.Size.Height.AlmostEqualTo(size.Height))
+            return;
 
-            if (_element.Id != null)
-                _ = JsRuntime.UnobserveResizes(_element);
+        Node.Size = size;
+        Node.Refresh();
+        Node.RefreshLinks();
+        Node.ReinitializePorts();
+    }
 
-            _reference?.Dispose();
-        }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-        [JSInvokable]
-        public void OnResize(Size size)
-        {
-            // When the node becomes invisible (a.k.a unrendered), the size is zero
-            if (Size.Zero.Equals(size))
-                return;
+        _reference = DotNetObjectReference.Create(this);
+        BlazorDiagram.PanChanged += CheckVisibility;
+        BlazorDiagram.ZoomChanged += CheckVisibility;
+        BlazorDiagram.ContainerChanged += CheckVisibility;
+        Node.Changed += OnNodeChanged;
+    }
 
-            size = new Size(size.Width / Diagram.Zoom, size.Height / Diagram.Zoom);
-            if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) && Node.Size.Height.AlmostEqualTo(size.Height))
-                return;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
 
-            Node.Size = size;
-            Node.Refresh();
-            Node.RefreshLinks();
-            Node.ReinitializePorts();
-        }
+        _isSvg = Node is SvgNodeModel;
+    }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            _reference = DotNetObjectReference.Create(this);
-            Diagram.PanChanged += CheckVisibility;
-            Diagram.ZoomChanged += CheckVisibility;
-            Diagram.ContainerChanged += CheckVisibility;
-            Node.Changed += ReRender;
-        }
-
-        protected override bool ShouldRender()
-        {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
-
+    protected override bool ShouldRender()
+    {
+        if (!_shouldRender)
             return false;
-        }
 
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        _shouldRender = false;
+        return true;
+    }
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        if (!_isVisible)
+            return;
+
+        var componentType = BlazorDiagram.GetComponentForModel(Node) ??
+                            (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
+        var classes = new StringBuilder("node")
+            .AppendIf(" locked", Node.Locked)
+            .AppendIf(" selected", Node.Selected)
+            .AppendIf(" grouped", Node.Group != null);
+
+        builder.OpenElement(0, _isSvg ? "g" : "div");
+        builder.AddAttribute(1, "class", classes.ToString());
+        builder.AddAttribute(2, "data-node-id", Node.Id);
+
+        if (_isSvg)
+            builder.AddAttribute(3, "transform",
+                $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+        else
+            builder.AddAttribute(3, "style",
+                $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+
+        builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+        builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
+        builder.AddAttribute(6, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+        builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
+        builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
+        builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
+        builder.AddElementReferenceCapture(10, value => _element = value);
+        builder.OpenComponent(11, componentType);
+        builder.AddAttribute(12, "Node", Node);
+        builder.CloseComponent();
+
+        builder.CloseElement();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender || _becameVisible)
         {
-            if (!_isVisible)
-                return;
-
-            var componentType = Diagram.GetComponentForModel(Node) ??
-                Diagram.Options.DefaultNodeComponent ??
-                (Node.Layer == RenderLayer.HTML ? typeof(NodeWidget) : typeof(SvgNodeWidget));
-
-            builder.OpenElement(0, Node.Layer == RenderLayer.HTML ? "div" : "g");
-            builder.AddAttribute(1, "class", $"node{(Node.Locked ? " locked" : string.Empty)}");
-            builder.AddAttribute(2, "data-node-id", Node.Id);
-
-            if (Node.Layer == RenderLayer.HTML)
-            {
-                builder.AddAttribute(3, "style", $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
-            }
-            else
-            {
-                builder.AddAttribute(3, "transform", $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
-            }
-
-            builder.AddAttribute(4, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(5, "onmousedown", true);
-            builder.AddAttribute(6, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(7, "onmouseup", true);
-            builder.AddAttribute(8, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(9, "ontouchstart", true);
-            builder.AddAttribute(10, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(11, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(12, "ontouchend", true);
-            builder.AddElementReferenceCapture(13, value => _element = value);
-            builder.OpenComponent(14, componentType);
-            builder.AddAttribute(15, "Node", Node);
-            builder.CloseComponent();
-            builder.CloseElement();
+            _becameVisible = false;
+            await JsRuntime.ObserveResizes(_element, _reference);
         }
+    }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+    private void CheckVisibility()
+    {
+        // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
+        if (!BlazorDiagram.Options.EnableVirtualization && _isVisible)
+            return;
+
+        if (Node.Size == null)
+            return;
+
+        var left = Node.Position.X * BlazorDiagram.Zoom + BlazorDiagram.Pan.X;
+        var top = Node.Position.Y * BlazorDiagram.Zoom + BlazorDiagram.Pan.Y;
+        var right = left + Node.Size.Width * BlazorDiagram.Zoom;
+        var bottom = top + Node.Size.Height * BlazorDiagram.Zoom;
+
+        var isVisible = right > 0 && left < BlazorDiagram.Container.Width && bottom > 0 &&
+                        top < BlazorDiagram.Container.Height;
+
+        if (_isVisible != isVisible)
         {
-            await base.OnAfterRenderAsync(firstRender);
-
-            if (firstRender || _becameVisible)
-            {
-                _becameVisible = false;
-                await JsRuntime.ObserveResizes(_element, _reference);
-            }
+            _isVisible = isVisible;
+            _becameVisible = isVisible;
+            ReRender();
         }
+    }
 
-        private async void CheckVisibility()
-        {
-            // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
-            if (!Diagram.Options.EnableVirtualization && _isVisible)
-                return;
+    private void OnNodeChanged(Model _)
+    {
+        ReRender();
+    }
 
-            if (Node.Size == null)
-                return;
+    private void ReRender()
+    {
+        _shouldRender = true;
+        InvokeAsync(StateHasChanged);
+    }
 
-            var left = Node.Position.X * Diagram.Zoom + Diagram.Pan.X;
-            var top = Node.Position.Y * Diagram.Zoom + Diagram.Pan.Y;
-            var right = left + Node.Size.Width * Diagram.Zoom;
-            var bottom = top + Node.Size.Height * Diagram.Zoom;
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerDown(Node, e.ToCore());
+    }
 
-            var isVisible = right > 0 && left < Diagram.Container.Width && bottom > 0 &&
-                top < Diagram.Container.Height;
+    private void OnPointerUp(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerUp(Node, e.ToCore());
+    }
 
-            if (_isVisible != isVisible)
-            {
-                _isVisible = isVisible;
-                _becameVisible = isVisible;
+    private void OnMouseEnter(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerEnter(Node, e.ToCore());
+    }
 
-                if (!_isVisible)
-                {
-                    await JsRuntime.UnobserveResizes(_element);
-                }
-
-                ReRender();
-            }
-        }
-
-        private void ReRender()
-        {
-            _shouldRender = true;
-            InvokeAsync(StateHasChanged);
-        }
-
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Node, e);
-
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Node, e);
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Node, e);
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Node, e);
+    private void OnMouseLeave(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerLeave(Node, e.ToCore());
     }
 }

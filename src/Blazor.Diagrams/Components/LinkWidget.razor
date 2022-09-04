@@ -1,40 +1,28 @@
-﻿@using SvgPathProperties;
-
-@{
-    var router = Link.Router ?? Diagram.Options.Links.DefaultRouter;
-    var pathGenerator = Link.PathGenerator ?? Diagram.Options.Links.DefaultPathGenerator;
-    var route = router(Diagram, Link);
-    (var source, var target) = FindConnectionPoints(route);
-    if (source == null || target == null)
-        return;
-
-    var result = pathGenerator(Diagram, Link, route, source, target);
-    var color = Link.Selected ? (Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor)
-        : (Link.Color ?? Diagram.Options.Links.DefaultColor);
-    var paths = Link.Labels.Count > 0 ? result.Paths.Select(p => new SVGPathProperties(p)).ToArray() : Array.Empty<SVGPathProperties>();
+﻿@{
+    var color = Link.Selected ? Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor : Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
+    var result = Link.GeneratedPathResult;
 }
 
 @for (var i = 0; i < result.Paths.Length; i++)
 {
     var index = i;
-    <path d="@result.Paths[i]"
+    var d = result.Paths[i].ToString();
+    <path d="@d"
           stroke-width="@Link.Width.ToInvariantString()"
           fill="none"
-          stroke="@color" />
+          stroke="@color"/>
 
     @if (Link.IsAttached)
     {
         <path class="selection-helper"
               stroke="@color"
               stroke-width="12"
-              d="@result.Paths[i]"
-              stroke-linecap="round"
+              d="@d"
+              stroke-linecap="butt"
               stroke-opacity="0"
               fill="none"
-              @onmousedown="e => OnMouseDown(e, index)"
-              @onmousedown:stopPropagation="@Link.Segmentable"
-              @ontouchstart="e => OnTouchStart(e, index)"
-              @ontouchstart:stopPropagation="@Link.Segmentable"/>
+              @onpointerdown="e => OnPointerDown(e, index)"
+              @onpointerdown:stopPropagation="@Link.Segmentable"/>
     }
 }
 
@@ -54,20 +42,20 @@
 
 @if (Link.Vertices.Count > 0)
 {
-    var selectedColor = Link.SelectedColor ?? Diagram.Options.Links.DefaultSelectedColor;
-    var normalColor = Link.Color ?? Diagram.Options.Links.DefaultColor;
+    var selectedColor = Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor;
+    var normalColor = Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
     <g>
         @foreach (var vertex in Link.Vertices)
         {
             <LinkVertexWidget @key="vertex.Id"
                               Vertex="vertex"
                               Color="@normalColor"
-                              SelectedColor="@selectedColor" />
+                              SelectedColor="@selectedColor"/>
         }
     </g>
 }
 
 @foreach (var label in Link.Labels)
 {
-    <LinkLabelRenderer @key="label.Id" Label="label" Paths="paths" />
+    <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths"/>
 }

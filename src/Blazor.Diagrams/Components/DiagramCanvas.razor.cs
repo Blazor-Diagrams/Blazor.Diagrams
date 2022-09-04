@@ -1,101 +1,108 @@
-﻿using Blazor.Diagrams.Core;
+﻿using System;
+using System.Threading.Tasks;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using System;
-using System.Threading.Tasks;
 
-namespace Blazor.Diagrams.Components
+namespace Blazor.Diagrams.Components;
+
+public partial class DiagramCanvas : IDisposable
 {
-    public partial class DiagramCanvas : IDisposable
+    private DotNetObjectReference<DiagramCanvas>? _reference;
+    private bool _shouldRender;
+
+    protected ElementReference elementReference;
+
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
+
+    [Parameter] public RenderFragment? Widgets { get; set; }
+
+    [Parameter] public string? Class { get; set; }
+
+    [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+
+    public void Dispose()
     {
-        [CascadingParameter]
-        public Diagram Diagram { get; set; }
+        BlazorDiagram.Changed -= OnDiagramChanged;
 
-        [Parameter]
-        public RenderFragment Widgets { get; set; }
+        if (_reference == null)
+            return;
 
-        [Parameter]
-        public string Class { get; set; }
+        if (elementReference.Id != null)
+            _ = JSRuntime.UnobserveResizes(elementReference);
 
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        _reference.Dispose();
+    }
 
-        protected ElementReference elementReference;
-        private DotNetObjectReference<DiagramCanvas> _reference;
-        private bool _shouldRender;
+    private string GetLayerStyle(int order)
+    {
+        return FormattableString.Invariant(
+            $"transform: translate({BlazorDiagram.Pan.X}px, {BlazorDiagram.Pan.Y}px) scale({BlazorDiagram.Zoom}); z-index: {order};");
+    }
 
-        private string LayerStyle
-            => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-        protected override void OnInitialized()
+        _reference = DotNetObjectReference.Create(this);
+        BlazorDiagram.Changed += OnDiagramChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
         {
-            base.OnInitialized();
-
-            _reference = DotNetObjectReference.Create(this);
-            Diagram.Changed += OnDiagramChanged;
+            BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
+            await JSRuntime.ObserveResizes(elementReference, _reference!);
         }
+    }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
+    [JSInvokable]
+    public void OnResize(Rectangle rect)
+    {
+        BlazorDiagram.SetContainer(rect);
+    }
 
-            if (firstRender)
-            {
-                Diagram.Container = await JSRuntime.GetBoundingClientRect(elementReference);
-                await JSRuntime.ObserveResizes(elementReference, _reference);
-            }
-        }
+    protected override bool ShouldRender()
+    {
+        if (!_shouldRender) return false;
 
-        [JSInvokable]
-        public void OnResize(Rectangle rect) => Diagram.SetContainer(rect);
+        _shouldRender = false;
+        return true;
+    }
 
-        protected override bool ShouldRender()
-        {
-            if (_shouldRender)
-            {
-                _shouldRender = false;
-                return true;
-            }
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerDown(null, e.ToCore());
+    }
 
-            return false;
-        }
+    private void OnPointerMove(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerMove(null, e.ToCore());
+    }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(null, e);
+    private void OnPointerUp(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerUp(null, e.ToCore());
+    }
 
-        private void OnMouseMove(MouseEventArgs e) => Diagram.OnMouseMove(null, e);
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        BlazorDiagram.TriggerKeyDown(e.ToCore());
+    }
 
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(null, e);
+    private void OnWheel(WheelEventArgs e)
+    {
+        BlazorDiagram.TriggerWheel(e.ToCore());
+    }
 
-        private void OnKeyDown(KeyboardEventArgs e) => Diagram.OnKeyDown(e);
-
-        private void OnWheel(WheelEventArgs e) => Diagram.OnWheel(e);
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(null, e);
-
-        private void OnTouchMove(TouchEventArgs e) => Diagram.OnTouchMove(null, e);
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(null, e);
-
-        private void OnDiagramChanged()
-        {
-            _shouldRender = true;
-            InvokeAsync(StateHasChanged);
-        }
-
-        public void Dispose()
-        {
-            Diagram.Changed -= OnDiagramChanged;
-
-            if (_reference == null)
-                return;
-
-            if (elementReference.Id != null)
-                _ = JSRuntime.UnobserveResizes(elementReference);
-
-            _reference.Dispose();
-        }
+    private void OnDiagramChanged()
+    {
+        _shouldRender = true;
+        InvokeAsync(StateHasChanged);
     }
 }

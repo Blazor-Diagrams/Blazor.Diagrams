@@ -94,7 +94,7 @@ namespace Blazor.Diagrams.Tests.Components
             int linkRefreshes = 0;
             var vertex = new LinkVertexModel(link, new Point(10.5, 20));
             link.Vertices.Add(vertex);
-            link.Changed += () => linkRefreshes++;
+            link.Changed += _ => linkRefreshes++;
 
             // Act
             var cut = ctx.RenderComponent<LinkVertexWidget>(parameters => parameters

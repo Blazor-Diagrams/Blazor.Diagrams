@@ -1,7 +1,10 @@
-﻿using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
+using Blazor.Diagrams.Core.Anchors.Dynamic;
+using SvgPathProperties;
 
 namespace Blazor.Diagrams.Core
 {
@@ -30,7 +33,10 @@ namespace Blazor.Diagrams.Core
                 targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
             }
 
-            var path = FormattableString.Invariant($"M {route[0].X} {route[0].Y} C {route[1].X} {route[1].Y}, {route[2].X} {route[2].Y}, {route[3].X} {route[3].Y}");
+            var path = new SvgPath()
+                .AddMoveTo(route[0].X, route[0].Y)
+                .AddCubicBezierCurve(route[1].X, route[1].Y, route[2].X, route[2].Y, route[3].X, route[3].Y);
+
             return new PathGeneratorResult(new[] { path }, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
@@ -50,13 +56,13 @@ namespace Blazor.Diagrams.Core
             }
 
             BezierSpline.GetCurveControlPoints(route, out var firstControlPoints, out var secondControlPoints);
-            var paths = new string[firstControlPoints.Length];
+            var paths = new SvgPath[firstControlPoints.Length];
 
             for (var i = 0; i < firstControlPoints.Length; i++)
             {
                 var cp1 = firstControlPoints[i];
                 var cp2 = secondControlPoints[i];
-                paths[i] = FormattableString.Invariant($"M {route[i].X} {route[i].Y} C {cp1.X} {cp1.Y}, {cp2.X} {cp2.Y}, {route[i + 1].X} {route[i + 1].Y}");
+                paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddCubicBezierCurve(cp1.X, cp1.Y, cp2.X, cp2.Y, route[i + 1].X, route[i + 1].Y);
             }
 
             // Todo: adjust marker positions based on closest control points
@@ -65,26 +71,36 @@ namespace Blazor.Diagrams.Core
 
         private static Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)
         {
-            if (link.IsPortless)
+            var cX = (route[0].X + route[1].X) / 2;
+            var cY = (route[0].Y + route[1].Y) / 2;
+            var curvePointA = GetCurvePoint(route, link.Source, route[0].X, route[0].Y, cX, cY, first: true);
+            var curvePointB = GetCurvePoint(route, link.Target, route[1].X, route[1].Y, cX, cY, first: false);
+            return new[] { route[0], curvePointA, curvePointB, route[1] };
+        }
+
+        private static Point GetCurvePoint(Point[] route, Anchor? anchor, double pX, double pY, double cX, double cY, bool first)
+        {
+            if (anchor is null)
+                return new Point(cX, cY);
+
+            if (anchor is SinglePortAnchor spa)
+            {
+                return GetCurvePoint(pX, pY, cX, cY, spa.Port.Alignment);
+            }
+            else if (anchor is ShapeIntersectionAnchor or DynamicAnchor)
             {
                 if (Math.Abs(route[0].X - route[1].X) >= Math.Abs(route[0].Y - route[1].Y))
                 {
-                    var cX = (route[0].X + route[1].X) / 2;
-                    return new[] { route[0], new Point(cX, route[0].Y), new Point(cX, route[1].Y), route[1] };
+                    return first ? new Point(cX, route[0].Y) : new Point(cX, route[1].Y);
                 }
                 else
                 {
-                    var cY = (route[0].Y + route[1].Y) / 2;
-                    return new[] { route[0], new Point(route[0].X, cY), new Point(route[1].X, cY), route[1] };
+                    return first ? new Point(route[0].X, cY) : new Point(route[1].X, cY);
                 }
             }
             else
             {
-                var cX = (route[0].X + route[1].X) / 2;
-                var cY = (route[0].Y + route[1].Y) / 2;
-                var curvePointA = GetCurvePoint(route[0].X, route[0].Y, cX, cY, link.SourcePort?.Alignment);
-                var curvePointB = GetCurvePoint(route[1].X, route[1].Y, cX, cY, link.TargetPort?.Alignment);
-                return new[] { route[0], curvePointA, curvePointB, route[1] };
+                throw new DiagramsException($"Unhandled Anchor type {anchor.GetType().Name} when trying to find curve point");
             }
         }
 

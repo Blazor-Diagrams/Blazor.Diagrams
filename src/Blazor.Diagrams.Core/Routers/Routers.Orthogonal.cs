@@ -1,10 +1,10 @@
-﻿using Blazor.Diagrams.Core.Extensions;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 // Implementation taken from the JS version: https://gist.github.com/menendezpoo/4a8894c152383b9d7a870c24a04447e4
@@ -15,25 +15,33 @@ namespace Blazor.Diagrams.Core
     {
         public static Point[] Orthogonal(Diagram _, BaseLinkModel link)
         {
-            if (link.IsPortless)
-                throw new Exception("Orthogonal router doesn't work with portless links yet");
+            if (link.Source is not SinglePortAnchor spa1)
+                throw new Exception("Orthogonal router doesn't work with port-less links yet");
 
-            if (link.TargetPort == null || link.SourcePort!.Parent.Size == null || link.TargetPort.Parent.Size == null)
+            if (link.Target is not null && link.Target is not SinglePortAnchor)
+                throw new Exception("Orthogonal router doesn't work with port-less links yet");
+
+            var sourcePort = spa1.Port;
+            var targetAnchor = (link.Target as SinglePortAnchor);
+
+            if (targetAnchor == null || sourcePort.Parent.Size == null || targetAnchor.Port.Parent.Size == null)
                 return Normal(_, link);
+
+            var targetPort = targetAnchor.Port;
 
             var shapeMargin = 10;
             var globalBoundsMargin = 50;
             var spots = new List<Point>();
             var verticals = new List<double>();
             var horizontals = new List<double>();
-            var sideA = link.SourcePort.Alignment;
+            var sideA = sourcePort.Alignment;
             var sideAVertical = IsVerticalSide(sideA);
-            var sideB = link.TargetPort.Alignment;
+            var sideB = targetPort.Alignment;
             var sideBVertical = IsVerticalSide(sideB);
-            var originA = GetPortPositionBasedOnAlignment(link.SourcePort);
-            var originB = GetPortPositionBasedOnAlignment(link.TargetPort);
-            var shapeA = link.SourcePort.Parent.GetBounds(includePorts: true)!;
-            var shapeB = link.TargetPort.Parent.GetBounds(includePorts: true)!;
+            var originA = GetPortPositionBasedOnAlignment(sourcePort);
+            var originB = GetPortPositionBasedOnAlignment(targetPort);
+            var shapeA = sourcePort.Parent.GetBounds(includePorts: true)!;
+            var shapeB = targetPort.Parent.GetBounds(includePorts: true)!;
             var inflatedA = shapeA.Inflate(shapeMargin, shapeMargin);
             var inflatedB = shapeB.Inflate(shapeMargin, shapeMargin);
 

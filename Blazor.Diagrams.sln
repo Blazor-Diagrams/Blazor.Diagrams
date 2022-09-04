@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Algorithms"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{260DF53D-FF2B-4D1D-ACA7-431F6B62EE38}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		CHANGELOG.md = CHANGELOG.md
+		.github\workflows\main.yml = .github\workflows\main.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -37,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomNodesLinks", "docs\Cu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Layouts", "docs\Layouts\Layouts.csproj", "{78C85C89-B464-4083-8829-78BA52BB4780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Diagrams.Tests", "tests\Blazor.Diagrams.Tests\Blazor.Diagrams.Tests.csproj", "{ED3B0D8F-F29A-4C66-A167-C36824A76902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Tests", "tests\Blazor.Diagrams.Tests\Blazor.Diagrams.Tests.csproj", "{ED3B0D8F-F29A-4C66-A167-C36824A76902}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

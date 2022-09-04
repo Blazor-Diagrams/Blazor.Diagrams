@@ -1,16 +1,24 @@
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Diagrams (3.0.0) - 2022-X-X
+## Diagrams (3.0.0-preview.1) - 2022-09-04
+
+.NET 6!
+
+A lot of things changed in this version, a lot of breaking changes were introduced but I believe it was necessary.   
+Many changes were required to make everything clearer, customizable and cleaner (code wise).  
+I'm aiming to completely decouple the Core library from the UI, because I'm thinking of giving MAUI Diagrams a try very soon!
 
 ### Added
 
-- `Diagram` class (inherits `DiagramBase`) to the blazor package to replace the old Core one
+- `BlazorDiagram` class (inherits `Diagram`) to the blazor package to replace the old Core one
+- `BlazorDiagramOptions` that inherit from the other diagram options to add Blazor (UI) specific options
 - `Blazor.Diagrams.Models.SvgNodeModel` class to represent a node that needs to be rendered in the SVG layer
-- `GetBehavior<T>` method to `DiagramBase` in order to retrieve a registered behavior
+- `GetBehavior<T>` method to `Diagram` in order to retrieve a registered behavior
 - `KeyboardShortcutsBehavior` class which handles keyboard shortcuts/actions:
 	- `SetShortcut`: sets an action (`Func<Diagrambase, ValueTask>`) to be executed whenever the specified combination is pressed
 	- `RemoveShortcut`: removes a defined action (if it exists)
@@ -20,23 +28,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- Instead of links requiring the source and target to be either both nodes or both ports, there is now only one `Source` and `Target` of type `Anchor`
 	- This lets the link not worry about the details of from/to where its going, as long as the anchor provides it with its position when asked for
 	- Current implementations:
-		- `SinglePortAnchor`: Specifies that the connection point is a specific port (replaces a link)
-		- `ShapeIntersectionAnchor`: Specifies that the connection point is the intersection of the line with the node's shape
-
-- Lot of unit tests
+		- `SinglePortAnchor`: Specifies that the connection point is a specific port (supports shape & alignment)
+		- `ShapeIntersectionAnchor`: Specifies that the connection point is the intersection of a line with the node's shape
+		- `DynamicAnchor`: Specifies that the connection point is one of the given positions (closest)
+- Virtual `IShape GetShape()` method on nodes (default `Rectangle`) and ports (default `Circle`) 
+- `Options.LinksLayerOrder` to indicate the order of the links layer (svg for blazor)
+- `Options.NodesLayerOrder` to indicate the order of the nodes layer (html for blazor)
+- Support for SVG groups that also represent children as a hierarchy (`SvgGroupModel`)
+- Node renderer will now append, in addition to `node locked`, the classes `selected grouped`
+- `IHasBounds` and `IHasShape` interfaces to both nodes and ports 
+- `IPositionProvider` to encapsulate how certain positions are calculated given a model
+  - They are used for dynamic anchors and controls for now
+  - `BoundsBasedPositionProvider` returns the position based on the bounds of the model (e.g. (0.5, 0.5) would be the center)
+  - `ShapeAnglePositionProvider` returns the position as the point at the angle of the shape
+  - `LinkPathPositionProvider` returns the position based on the link's path (`getPointAtLength`)
+- Links have a reference to `Diagram` now
+- `PointerEnter` and `PointerLeave` events for nodes and links for now 
+- `GeneratedPathResult` and `Paths` to `BaseLinkModel` to always have access to the actual paths
+- `Controls` feature (beta):
+  - They are things that can show up on top of nodes/links and can even be clicked to be executed
+  - Their UI is also picked up from the registered components 
+  - `Control` designates a control that has a position and will be rendered if visible
+  - `ExecutableControl` designates a control that has a position and will be executed when pressed (PointerDown event)
+  - Default controls for now are:
+    - `BoundaryControl` shows the model's boundary
+    - `RemoveControl` shows a button that when clicked, removes the model from the diagram
+    - `DragNewLink` shows a button that when clicked, starts a new link dragging from that node
+- `GridWidget` a background grid that moves with the diagram instead of being fixed like in the Snap to grid example 
+- More unit tests
 	
 ### Changed
 
 - Core package changes:
 	- Web dependency was removed from the Core package
-	- `Diagram` in the Core package was renamed to `DiagramBase`
-	- These changes were done to decouple the core from the rendering, in the future we might have a MAUI renderer
+      - `Diagram` is now abstract
+      - These changes were done to decouple the core from the rendering, in the future we might have a MAUI renderer
 - `Diagram.GetComponentForModel` now accepts a `checkSubclasses` argument (default `true`)
 - Constraints now must return a `ValueTask<bool>` instead of a simple `bool`
+- Renamed `AllLinks` to `PortLinks` for more clarity on which links, since `Links` contains the others
+- Dragging links from ports will now follow the mouse at the same pace minus 5 pixels so that it doesn't go on top of the link it self or other ports
+- How groups are rendered
+	- `GroupRenderer` will take care of rendering the group with the appropriate style and classes
+	- Only `GroupNodes` is required, `GroupLinks` was deleted because all links are shown in the svg layer (with appropriate order)
+- `Diagram.AddGroup` will now return the added group
+- All `Mouse` events have been converted to `Pointer` events
+- `PathGenerator` now return `SvgPath` instead of just strings 
+- `NavigatorWidget` was rewritten to be faster, lighter, WORKING and customizable
+  - It now can also take the shape of the nodes into account (rect and ellipse for now) 
 
 ### Fixed
 
 - Virtualization throwing a JSException (#155)
+- Ports not rendering correctly because of the missing `@key` (#220)
+- Link not refreshing when a new vertex is created, which was showing out of link 
 
 ### Removed
 
@@ -46,6 +90,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GroupingBehavior` since there is a new keyboard shortcuts system
 - `BaseLinkModelExtensions` since it was Obselete
 - Unnecessary port refreshes when dragging a link ends or when link snapping
+- `ShapeDefiner` delegate and constructor arguments on nodes since delegates can't be serialized
+- `TouchX` events
 
 ## Diagrams (2.1.6) - 2021-10-31
 

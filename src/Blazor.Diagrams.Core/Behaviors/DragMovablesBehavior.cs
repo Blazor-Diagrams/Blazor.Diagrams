@@ -2,69 +2,71 @@
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DragMovablesBehavior : Behavior
     {
-        private Point[]? _initialPositions;
+        private readonly Dictionary<MovableModel, Point> _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
 
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
+            _initialPositions = new Dictionary<MovableModel, Point>();
+            
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;
             Diagram.PointerUp += OnPointerUp;
         }
 
-        private void OnPointerDown(Model? model, PointerEventArgs e) => Start(model, e.ClientX, e.ClientY);
-
-        private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
-
-        private void OnPointerUp(Model? model, PointerEventArgs e) => End();
-
-        private void Start(Model model, double clientX, double clientY)
+        private void OnPointerDown(Model? model, PointerEventArgs e)
         {
-            if (!(model is MovableModel))
+            if (model is not MovableModel)
                 return;
 
-            // Don't like this linq
-            _initialPositions = Diagram.GetSelectedModels()
-                .Where(m => m is MovableModel)
-                .Select(m => (m as MovableModel)!.Position)
-                .ToArray();
-
-            _lastClientX = clientX;
-            _lastClientY = clientY;
-        }
-
-        private void Move(double clientX, double clientY)
-        {
-            if (_initialPositions == null || _lastClientX == null || _lastClientY == null)
-                return;
-
-            var deltaX = (clientX - _lastClientX.Value) / Diagram.Zoom;
-            var deltaY = (clientY - _lastClientY.Value) / Diagram.Zoom;
-            var i = 0;
-
+            _initialPositions.Clear();
             foreach (var sm in Diagram.GetSelectedModels())
             {
-                if (sm is not MovableModel node || node.Locked)
+                if (sm is not MovableModel movable || movable.Locked)
                     continue;
+                
+                _initialPositions.Add(movable, movable.Position);
+            }
 
-                var initialPosition = _initialPositions[i];
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+        }
+
+        private void OnPointerMove(Model? model, PointerEventArgs e)
+        {
+            if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
+                return;
+
+            var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
+            var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
+
+            foreach (var (movable, initialPosition) in _initialPositions)
+            {
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
-                node.SetPosition(ndx, ndy);
-                i++;
+                movable.SetPosition(ndx, ndy);
             }
         }
 
-        private void End()
+        private void OnPointerUp(Model? model, PointerEventArgs e)
         {
-            _initialPositions = null;
+            if (_initialPositions.Count == 0)
+                return;
+
+            foreach (var (movable, _) in _initialPositions)
+            {
+                movable.TriggerMoved();
+            }
+            
+            _initialPositions.Clear();
             _lastClientX = null;
             _lastClientY = null;
         }
@@ -84,6 +86,8 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         public override void Dispose()
         {
+            _initialPositions.Clear();
+            
             Diagram.PointerDown -= OnPointerDown;
             Diagram.PointerMove -= OnPointerMove;
             Diagram.PointerUp -= OnPointerUp;

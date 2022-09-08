@@ -12,22 +12,45 @@ namespace Blazor.Diagrams.Core.Behaviors
             var wasSuspended = diagram.SuspendRefresh;
             if (!wasSuspended) diagram.SuspendRefresh = true;
 
-            foreach (var sm in diagram.GetSelectedModels().ToArray())
+            //Group Delete
+            var smGroup = diagram.GetSelectedModels().Where(d => d is GroupModel && !d.Locked).Select(x => x as GroupModel).ToArray();
+            if (smGroup != null)
             {
-                if (sm.Locked)
-                    continue;
+                var result = await diagram.Options.Constraints.ShouldDeleteGroup(smGroup);
+                if (result)
+                {
+                    foreach (var group in smGroup)
+                    {
+                        diagram.RemoveGroup(group);
+                    }
+                }
+            }
 
-                if (sm is GroupModel group && (await diagram.Options.Constraints.ShouldDeleteGroup(group)))
+            //Node Delete
+            var smNodes = diagram.GetSelectedModels().Where(d => d is NodeModel && !d.Locked).Select(x => x as NodeModel).ToArray();
+            if (smNodes != null)
+            {
+                var result = await diagram.Options.Constraints.ShouldDeleteNode(smNodes);
+                if (result)
                 {
-                    diagram.RemoveGroup(group);
+                    foreach (var node in smNodes)
+                    {
+                        diagram.Nodes.Remove(node);
+                    }
                 }
-                else if (sm is NodeModel node && (await diagram.Options.Constraints.ShouldDeleteNode(node)))
+            }
+
+            //Node Links
+            var smLinks = diagram.GetSelectedModels().Where(d => d is BaseLinkModel && !d.Locked).Select(x => x as BaseLinkModel).ToArray();
+            if (smLinks != null)
+            {
+                var result = await diagram.Options.Constraints.ShouldDeleteLink(smLinks);
+                if (result)
                 {
-                    diagram.Nodes.Remove(node);
-                }
-                else if (sm is BaseLinkModel link && (await diagram.Options.Constraints.ShouldDeleteLink(link)))
-                {
-                    diagram.Links.Remove(link);
+                    foreach (var link in smLinks)
+                    {
+                        diagram.Links.Remove(link);
+                    }
                 }
             }
 

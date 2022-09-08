@@ -33,13 +33,20 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Arrange
             var funcCalled = false;
             var diagram = new TestDiagram();
+            int iFuncCalled = 0;
             diagram.Options.Constraints.ShouldDeleteGroup = _ =>
             {
+                iFuncCalled++;
                 funcCalled = true;
-                return ValueTask.FromResult(false);
+                return ValueTask.FromResult(true);
             };
             diagram.AddGroup(new GroupModel(Array.Empty<NodeModel>())
             {
+                Selected = true
+            });
+            diagram.AddGroup(new GroupModel(Array.Empty<NodeModel>())
+            {
+                Locked = true,
                 Selected = true
             });
 
@@ -49,6 +56,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Assert
             funcCalled.Should().BeTrue();
             diagram.Groups.Count.Should().Be(1);
+            iFuncCalled.Should().Be(1);
         }
 
         [Fact]
@@ -57,14 +65,21 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Arrange
             var funcCalled = false;
             var diagram = new TestDiagram();
+            int iFuncCalled = 0;
             diagram.Options.Constraints.ShouldDeleteNode = _ =>
             {
+                iFuncCalled++;
                 funcCalled = true;
-                return ValueTask.FromResult(false);
+                return ValueTask.FromResult(true);
             };
             diagram.Nodes.Add(new NodeModel
             {
                 Selected = true
+            });
+            diagram.Nodes.Add(new NodeModel
+            {
+                Selected = true,
+                Locked=true
             });
 
             // Act
@@ -73,6 +88,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Assert
             funcCalled.Should().BeTrue();
             diagram.Nodes.Count.Should().Be(1);
+            iFuncCalled.Should().Be(1);
         }
 
         [Fact]
@@ -81,19 +97,27 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Arrange
             var funcCalled = false;
             var diagram = new TestDiagram();
+            int iFuncCalled = 0;
             diagram.Options.Constraints.ShouldDeleteLink = _ =>
             {
+                iFuncCalled++;
                 funcCalled = true;
-                return ValueTask.FromResult(false);
+                return ValueTask.FromResult(true);
             };
             diagram.Nodes.Add(new NodeModel[]
             {
+                new NodeModel(),
                 new NodeModel(),
                 new NodeModel()
             });
             diagram.Links.Add(new LinkModel(diagram.Nodes[0], diagram.Nodes[1])
             {
                 Selected = true
+            });
+            diagram.Links.Add(new LinkModel(diagram.Nodes[1], diagram.Nodes[2])
+            {
+                Selected = true,
+                Locked = true
             });
 
             // Act
@@ -102,6 +126,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Assert
             funcCalled.Should().BeTrue();
             diagram.Links.Count.Should().Be(1);
+            iFuncCalled.Should().Be(1);
         }
 
         [Fact]

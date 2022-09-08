@@ -12,6 +12,7 @@ namespace Blazor.Diagrams;
 public class BlazorDiagram : Diagram
 {
     private readonly Dictionary<Type, Type> _componentsMapping;
+    private readonly Dictionary<Type, RenderFragment> _fragmentsMapping;
 
     public BlazorDiagram(BlazorDiagramOptions? options = null)
     {
@@ -21,6 +22,8 @@ public class BlazorDiagram : Diagram
             [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
             [typeof(DragNewLinkControl)] = typeof(DragNewLinkControlWidget)
         };
+
+        _fragmentsMapping = new Dictionary<Type, RenderFragment>();
 
         Options = options ?? new BlazorDiagramOptions();
     }

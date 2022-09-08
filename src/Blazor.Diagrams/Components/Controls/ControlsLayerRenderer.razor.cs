@@ -48,7 +48,7 @@ public partial class ControlsLayerRenderer : IDisposable
 
     private RenderFragment RenderControl(Model model, Control control, Point position, bool svg)
     {
-        var componentType = BlazorDiagram.GetComponentForModel(control.GetType());
+        var componentType = BlazorDiagram.GetComponent(control.GetType());
         if (componentType == null)
             throw new BlazorDiagramsException(
                 $"A component couldn't be found for the user action {control.GetType().Name}");

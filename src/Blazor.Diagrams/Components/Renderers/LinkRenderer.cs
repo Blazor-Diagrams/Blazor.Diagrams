@@ -34,7 +34,7 @@ public class LinkRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var componentType = BlazorDiagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
+        var componentType = BlazorDiagram.GetComponent(Link) ?? typeof(LinkWidget);
 
         builder.OpenElement(0, "g");
         builder.AddAttribute(1, "class", "link");

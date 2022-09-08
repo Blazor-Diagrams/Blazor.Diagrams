@@ -24,9 +24,9 @@ namespace SharedDemo.Demos.Nodes
 
         private void InitializeDiagram()
         {
-            _blazorDiagram.RegisterModelComponent<NodeModel, NodeWidget>();
-            _blazorDiagram.RegisterModelComponent<SvgNodeModel, SvgNodeWidget>();
-            _blazorDiagram.RegisterModelComponent<SvgGroupModel, DefaultGroupWidget>();
+            _blazorDiagram.RegisterComponent<NodeModel, NodeWidget>();
+            _blazorDiagram.RegisterComponent<SvgNodeModel, SvgNodeWidget>();
+            _blazorDiagram.RegisterComponent<SvgGroupModel, DefaultGroupWidget>();
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(250, 250);

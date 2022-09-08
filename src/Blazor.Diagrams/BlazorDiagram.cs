@@ -11,11 +11,11 @@ namespace Blazor.Diagrams;
 
 public class BlazorDiagram : Diagram
 {
-    private readonly Dictionary<Type, Type> _componentByModelMapping;
+    private readonly Dictionary<Type, Type> _componentsMapping;
 
     public BlazorDiagram(BlazorDiagramOptions? options = null)
     {
-        _componentByModelMapping = new Dictionary<Type, Type>
+        _componentsMapping = new Dictionary<Type, Type>
         {
             [typeof(RemoveControl)] = typeof(RemoveControlWidget),
             [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
@@ -27,39 +27,38 @@ public class BlazorDiagram : Diagram
 
     public override BlazorDiagramOptions Options { get; }
 
-    public void RegisterModelComponent<TModel, TComponent>(bool replace = false)
-        where TModel : Model where TComponent : ComponentBase
+    public void RegisterComponent<TModel, TComponent>(bool replace = false)
     {
-        RegisterModelComponent(typeof(TModel), typeof(TComponent), replace);
+        RegisterComponent(typeof(TModel), typeof(TComponent), replace);
     }
 
-    public void RegisterModelComponent(Type modelType, Type componentType, bool replace = false)
+    public void RegisterComponent(Type modelType, Type componentType, bool replace = false)
     {
-        if (!replace && _componentByModelMapping.ContainsKey(modelType))
+        if (!replace && _componentsMapping.ContainsKey(modelType))
             throw new Exception($"Component already registered for model '{modelType.Name}'.");
 
-        _componentByModelMapping[modelType] = componentType;
+        _componentsMapping[modelType] = componentType;
     }
 
-    public Type? GetComponentForModel(Type modelType, bool checkSubclasses = true)
+    public Type? GetComponent(Type modelType, bool checkSubclasses = true)
     {
-        if (_componentByModelMapping.ContainsKey(modelType)) return _componentByModelMapping[modelType];
+        if (_componentsMapping.ContainsKey(modelType)) return _componentsMapping[modelType];
 
         if (checkSubclasses)
-            foreach (var rmt in _componentByModelMapping.Keys)
+            foreach (var rmt in _componentsMapping.Keys)
                 if (modelType.IsSubclassOf(rmt))
-                    return _componentByModelMapping[rmt];
+                    return _componentsMapping[rmt];
 
         return null;
     }
 
-    public Type? GetComponentForModel<TModel>(bool checkSubclasses = true) where TModel : Model
+    public Type? GetComponent<TModel>(bool checkSubclasses = true)
     {
-        return GetComponentForModel(typeof(TModel), checkSubclasses);
+        return GetComponent(typeof(TModel), checkSubclasses);
     }
 
-    public Type? GetComponentForModel(Model model, bool checkSubclasses = true)
+    public Type? GetComponent(Model model, bool checkSubclasses = true)
     {
-        return GetComponentForModel(model.GetType(), checkSubclasses);
+        return GetComponent(model.GetType(), checkSubclasses);
     }
 }

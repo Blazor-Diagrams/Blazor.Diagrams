@@ -27,7 +27,7 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var component = BlazorDiagram.GetComponentForModel(Label) ?? typeof(DefaultLinkLabelWidget);
+        var component = BlazorDiagram.GetComponent(Label) ?? typeof(DefaultLinkLabelWidget);
         var position = FindPosition();
         if (position == null)
             return;

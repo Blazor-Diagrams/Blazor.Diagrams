@@ -78,7 +78,7 @@ public class GroupRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var componentType = BlazorDiagram.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
+        var componentType = BlazorDiagram.GetComponent(Group) ?? typeof(DefaultGroupWidget);
         var classes = new StringBuilder("group")
             .AppendIf(" locked", Group.Locked)
             .AppendIf(" selected", Group.Selected)

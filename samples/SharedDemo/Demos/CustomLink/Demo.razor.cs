@@ -16,7 +16,7 @@ namespace SharedDemo.Demos.CustomLink
             LayoutData.Info = "Creating your own custom links is very easy!";
             LayoutData.DataChanged();
 
-            _blazorDiagram.RegisterModelComponent<ThickLink, ThickLinkWidget>();
+            _blazorDiagram.RegisterComponent<ThickLink, ThickLinkWidget>();
             // Also usable: _diagram.Options.Links.DefaultLinkComponent = typeof(ThickLink);
 
             var node1 = NewNode(50, 50);

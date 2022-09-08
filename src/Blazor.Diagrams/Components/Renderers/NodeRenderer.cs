@@ -92,7 +92,7 @@ public class NodeRenderer : ComponentBase, IDisposable
         if (!_isVisible)
             return;
 
-        var componentType = BlazorDiagram.GetComponentForModel(Node) ??
+        var componentType = BlazorDiagram.GetComponent(Node) ??
                             (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
         var classes = new StringBuilder("node")
             .AppendIf(" locked", Node.Locked)

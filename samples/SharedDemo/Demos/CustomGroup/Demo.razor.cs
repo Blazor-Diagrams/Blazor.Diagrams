@@ -18,7 +18,7 @@ namespace SharedDemo.Demos.CustomGroup
 
             _blazorDiagram.Options.LinksLayerOrder = 2;
             _blazorDiagram.Options.NodesLayerOrder = 1;
-            _blazorDiagram.RegisterModelComponent<CustomGroupModel, CustomGroupWidget>();
+            _blazorDiagram.RegisterComponent<CustomGroupModel, CustomGroupWidget>();
 
             var node1 = NewNode(50, 50);
             var node2 = NewNode(300, 300);

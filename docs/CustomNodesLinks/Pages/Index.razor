@@ -49,8 +49,8 @@ or it will not be rendered.
     BlazorDiagram = new BlazorDiagram(options);
 
   // connect node/link to renderer
-    BlazorDiagram.RegisterModelComponent<DiagramNode, DiagramNodeWidget>();
-    BlazorDiagram.RegisterModelComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
+    BlazorDiagram.RegisterComponent<DiagramNode, DiagramNodeWidget>();
+    BlazorDiagram.RegisterComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
 
     Setup();
   }

@@ -4,6 +4,8 @@ namespace Blazor.Diagrams.Core.Models.Base
 {
     public abstract class Model
     {
+        private bool _visible = true;
+        
         public Model() : this(Guid.NewGuid().ToString()) { }
 
         public Model(string id)
@@ -12,9 +14,22 @@ namespace Blazor.Diagrams.Core.Models.Base
         }
 
         public event Action<Model>? Changed;
+        public event Action<Model>? VisibilityChanged;
 
         public string Id { get; }
         public bool Locked { get; set; }
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible == value)
+                    return;
+
+                _visible = value;
+                VisibilityChanged?.Invoke(this);
+            }
+        }
 
         public virtual void Refresh() => Changed?.Invoke(this);
     }

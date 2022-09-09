@@ -34,6 +34,7 @@ public class PortRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Port.Changed -= OnPortChanged;
+        Port.VisibilityChanged -= OnPortChanged;
     }
 
     protected override void OnInitialized()
@@ -41,6 +42,7 @@ public class PortRenderer : ComponentBase, IDisposable
         base.OnInitialized();
 
         Port.Changed += OnPortChanged;
+        Port.VisibilityChanged += OnPortChanged;
     }
 
     protected override void OnParametersSet()
@@ -52,11 +54,18 @@ public class PortRenderer : ComponentBase, IDisposable
 
     protected override bool ShouldRender()
     {
-        return _shouldRender;
+        if (!_shouldRender)
+            return false;
+
+        _shouldRender = false;
+        return true;
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!Port.Visible)
+            return;
+        
         builder.OpenElement(0, _isParentSvg ? "g" : "div");
         builder.AddAttribute(1, "class",
             "port" + " " + Port.Alignment.ToString().ToLower() + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " +
@@ -66,17 +75,17 @@ public class PortRenderer : ComponentBase, IDisposable
         builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
         builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
         builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
-        builder.AddElementReferenceCapture(12, __value => { _element = __value; });
-        builder.AddContent(13, ChildContent);
+        builder.AddElementReferenceCapture(7, __value => { _element = __value; });
+        builder.AddContent(8, ChildContent);
         builder.CloseElement();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-        _shouldRender = false;
-
-        if (!Port.Initialized) await UpdateDimensions();
+        if (!Port.Initialized)
+        {
+            await UpdateDimensions();
+        }
     }
 
     private void OnPointerDown(PointerEventArgs e)

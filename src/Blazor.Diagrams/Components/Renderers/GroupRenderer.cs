@@ -24,11 +24,13 @@ public class GroupRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Group.Changed -= OnGroupChanged;
+        Group.VisibilityChanged -= OnGroupChanged;
     }
 
     protected override void OnInitialized()
     {
         Group.Changed += OnGroupChanged;
+        Group.VisibilityChanged += OnGroupChanged;
     }
 
     protected override void OnParametersSet()
@@ -78,6 +80,9 @@ public class GroupRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!Group.Visible)
+            return;
+        
         var componentType = BlazorDiagram.GetComponent(Group) ?? typeof(DefaultGroupWidget);
         var classes = new StringBuilder("group")
             .AppendIf(" locked", Group.Locked)

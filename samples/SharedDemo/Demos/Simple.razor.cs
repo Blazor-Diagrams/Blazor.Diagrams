@@ -38,7 +38,7 @@ namespace SharedDemo
         protected void TogglePanning() => BlazorDiagram.Options.AllowPanning = !BlazorDiagram.Options.AllowPanning;
 
         protected void ToggleVirtualization()
-            => BlazorDiagram.Options.EnableVirtualization = !BlazorDiagram.Options.EnableVirtualization;
+            => BlazorDiagram.Options.Virtualization.Enabled = !BlazorDiagram.Options.Virtualization.Enabled;
 
         private NodeModel NewNode(double x, double y)
         {

@@ -9,7 +9,6 @@
      @onpointermove:preventDefault
      @onwheel:stopPropagation>
 
-    @* Links *@
     <svg class="diagram-svg-layer" style="@GetLayerStyle(BlazorDiagram.Options.LinksLayerOrder)">
         @foreach (var node in BlazorDiagram.Nodes.OfType<SvgNodeModel>().Where(n => n.Group == null))
         {
@@ -29,11 +28,12 @@
         <ControlsLayerRenderer Svg="@true"></ControlsLayerRenderer>
     </svg>
 
-    @* Nodes *@
     <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
         @foreach (var group in BlazorDiagram.Groups.Where(n => n is not SvgGroupModel))
         {
-            if (group.Group != null) continue;
+            if (group.Group != null)
+                continue;
+            
             <GroupRenderer @key="group" Group="group"/>
         }
 

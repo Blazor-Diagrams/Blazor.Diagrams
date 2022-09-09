@@ -18,6 +18,7 @@ public class LinkRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Link.Changed -= OnLinkChanged;
+        Link.VisibilityChanged -= OnLinkChanged;
     }
 
     protected override void OnInitialized()
@@ -25,15 +26,23 @@ public class LinkRenderer : ComponentBase, IDisposable
         base.OnInitialized();
 
         Link.Changed += OnLinkChanged;
+        Link.VisibilityChanged += OnLinkChanged;
     }
 
     protected override bool ShouldRender()
     {
-        return _shouldRender;
+        if (!_shouldRender)
+            return false;
+
+        _shouldRender = false;
+        return true;
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!Link.Visible)
+            return;
+        
         var componentType = BlazorDiagram.GetComponent(Link) ?? typeof(LinkWidget);
 
         builder.OpenElement(0, "g");
@@ -49,11 +58,6 @@ public class LinkRenderer : ComponentBase, IDisposable
         builder.AddAttribute(10, "Link", Link);
         builder.CloseComponent();
         builder.CloseElement();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        _shouldRender = false;
     }
 
     private void OnLinkChanged(Model _)

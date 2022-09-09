@@ -60,6 +60,7 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new EventsBehavior(this));
             RegisterBehavior(new KeyboardShortcutsBehavior(this));
             RegisterBehavior(new ControlsBehavior(this));
+            RegisterBehavior(new VirtualizationBehavior(this));
         }
 
         public abstract DiagramOptions Options { get; }

@@ -69,7 +69,7 @@ namespace Blazor.Diagrams.Core.Models.Base
         public Rectangle? GetBounds()
         {
             if (Paths.Length == 0)
-                return Rectangle.Zero;
+                return null;
 
             var minX = double.PositiveInfinity;
             var minY = double.PositiveInfinity;

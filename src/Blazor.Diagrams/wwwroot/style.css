@@ -83,7 +83,7 @@
     pointer-events: none;
 }
 
-.link foreignObject {
+.link foreignObject.link-label {
     overflow: visible;
     pointer-events: none;
 }

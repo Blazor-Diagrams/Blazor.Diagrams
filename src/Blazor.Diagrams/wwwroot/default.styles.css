@@ -109,7 +109,7 @@ g.group.default.selected > rect {
     outline: 2px solid green;
 }
 
-.link .link-label {
+.link div.link-label {
     display: inline-block;
     color: #fff;
     background-color: rgb(110, 159, 212);

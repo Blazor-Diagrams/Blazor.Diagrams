@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
@@ -18,24 +19,36 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Label.Changed -= OnLabelChanged;
+        Label.VisibilityChanged -= OnLabelChanged;
     }
 
     protected override void OnInitialized()
     {
         Label.Changed += OnLabelChanged;
+        Label.VisibilityChanged += OnLabelChanged;
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var component = BlazorDiagram.GetComponent(Label) ?? typeof(DefaultLinkLabelWidget);
+        if (!Label.Visible)
+            return;
+        
         var position = FindPosition();
         if (position == null)
             return;
+        
+        var componentType = BlazorDiagram.GetComponent(Label) ?? typeof(DefaultLinkLabelWidget);
 
-        builder.OpenComponent(0, component);
-        builder.AddAttribute(1, "Label", Label);
-        builder.AddAttribute(2, "Position", position);
+        builder.OpenElement(0, "foreignObject");
+        builder.AddAttribute(1, "class", "link-label");
+        builder.AddAttribute(2, "x", (position.X + (Label.Offset?.X ?? 0)).ToInvariantString());
+        builder.AddAttribute(3, "y", (position.Y + (Label.Offset?.Y ?? 0)).ToInvariantString());
+        
+        builder.OpenComponent(4, componentType);
+        builder.AddAttribute(5, "Label", Label);
         builder.CloseComponent();
+        
+        builder.CloseElement();
     }
 
     private void OnLabelChanged(Model _)
@@ -49,9 +62,9 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
 
         var length = Label.Distance switch
         {
-            var d when d >= 0 && d <= 1 => Label.Distance.Value * totalLength,
-            var d when d > 1 => Label.Distance.Value,
-            var d when d < 0 => totalLength + Label.Distance.Value,
+            <= 1 and >= 0 => Label.Distance.Value * totalLength,
+            > 1 => Label.Distance.Value,
+            < 0 => totalLength + Label.Distance.Value,
             _ => totalLength * (Label.Parent.Labels.IndexOf(Label) + 1) / (Label.Parent.Labels.Count + 1)
         };
 

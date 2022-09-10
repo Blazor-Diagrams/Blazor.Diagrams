@@ -12,6 +12,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private readonly Dictionary<MovableModel, Point> _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
+        private bool _moved;
 
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
@@ -38,6 +39,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             _lastClientX = e.ClientX;
             _lastClientY = e.ClientY;
+            _moved = false;
         }
 
         private void OnPointerMove(Model? model, PointerEventArgs e)
@@ -45,6 +47,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
                 return;
 
+            _moved = true;
             var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
             var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
@@ -61,9 +64,12 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (_initialPositions.Count == 0)
                 return;
 
-            foreach (var (movable, _) in _initialPositions)
+            if (_moved)
             {
-                movable.TriggerMoved();
+                foreach (var (movable, _) in _initialPositions)
+                {
+                    movable.TriggerMoved();
+                }
             }
             
             _initialPositions.Clear();

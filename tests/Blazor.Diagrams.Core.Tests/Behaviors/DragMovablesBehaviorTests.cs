@@ -50,4 +50,24 @@ public class DragMovablesBehaviorTests
         // Assert
         movedTrigger.Should().BeTrue();
     }
+
+    [Fact]
+    public void Behavior_ShouldNotTriggerMoved_WhenMovableDidntMove()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        var node = diagram.Nodes.Add(new NodeModel(Point.Zero));
+        var movedTrigger = false;
+        node.Moved += m => movedTrigger = true;
+        diagram.SelectModel(node, false);
+
+        // Act
+        diagram.TriggerPointerDown(node,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerPointerUp(null,
+            new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        movedTrigger.Should().BeFalse();
+    }
 }

@@ -5,14 +5,12 @@ using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Options;
-using Microsoft.AspNetCore.Components;
 
 namespace Blazor.Diagrams;
 
 public class BlazorDiagram : Diagram
 {
     private readonly Dictionary<Type, Type> _componentsMapping;
-    private readonly Dictionary<Type, RenderFragment> _fragmentsMapping;
 
     public BlazorDiagram(BlazorDiagramOptions? options = null)
     {
@@ -22,8 +20,6 @@ public class BlazorDiagram : Diagram
             [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
             [typeof(DragNewLinkControl)] = typeof(DragNewLinkControlWidget)
         };
-
-        _fragmentsMapping = new Dictionary<Type, RenderFragment>();
 
         Options = options ?? new BlazorDiagramOptions();
     }
@@ -45,12 +41,17 @@ public class BlazorDiagram : Diagram
 
     public Type? GetComponent(Type modelType, bool checkSubclasses = true)
     {
-        if (_componentsMapping.ContainsKey(modelType)) return _componentsMapping[modelType];
+        if (_componentsMapping.ContainsKey(modelType))
+            return _componentsMapping[modelType];
 
-        if (checkSubclasses)
-            foreach (var rmt in _componentsMapping.Keys)
-                if (modelType.IsSubclassOf(rmt))
-                    return _componentsMapping[rmt];
+        if (!checkSubclasses)
+            return null;
+        
+        foreach (var rmt in _componentsMapping.Keys)
+        {
+            if (modelType.IsSubclassOf(rmt))
+                return _componentsMapping[rmt];
+        }
 
         return null;
     }

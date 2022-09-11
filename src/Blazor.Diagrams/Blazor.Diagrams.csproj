@@ -6,10 +6,10 @@
         <Authors>zHaytam</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <AssemblyVersion>3.0.0</AssemblyVersion>
-        <FileVersion>3.0.0-beta.1</FileVersion>
+        <FileVersion>3.0.0</FileVersion>
         <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
         <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-        <Version>3.0.0-beta.1</Version>
+        <Version>3.0.0-beta.2</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
         <PackageId>Z.Blazor.Diagrams</PackageId>

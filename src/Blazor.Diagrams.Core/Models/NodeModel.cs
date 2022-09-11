@@ -75,6 +75,7 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var link in Links)
             {
                 link.Refresh();
+                link.RefreshLinks();
             }
         }
 
@@ -147,7 +148,7 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel;
+        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
 
         void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
 

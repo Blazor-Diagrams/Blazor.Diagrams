@@ -6,8 +6,10 @@ using SvgPathProperties;
 
 namespace Blazor.Diagrams.Core.Models.Base
 {
-    public abstract class BaseLinkModel : SelectableModel, IHasBounds
+    public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     {
+        private readonly List<BaseLinkModel> _links = new();
+        
         public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
         public event Action<BaseLinkModel, Anchor?, Anchor?>? TargetChanged;
 
@@ -37,11 +39,20 @@ namespace Blazor.Diagrams.Core.Models.Base
         public bool Segmentable { get; set; } = false;
         public List<LinkVertexModel> Vertices { get; } = new();
         public List<LinkLabelModel> Labels { get; } = new();
+        public IReadOnlyList<BaseLinkModel> Links => _links;
 
         public override void Refresh()
         {
             GeneratePath();
             base.Refresh();
+        }
+
+        public void RefreshLinks()
+        {
+            foreach (var link in Links)
+            {
+                link.Refresh();
+            }
         }
 
         public void SetSource(Anchor anchor)
@@ -88,6 +99,8 @@ namespace Blazor.Diagrams.Core.Models.Base
             return new Rectangle(minX, minY, maxX, maxY);
         }
 
+        public bool CanAttachTo(ILinkable other) => true;
+
         private void GeneratePath()
         {
             if (Diagram != null)
@@ -106,5 +119,9 @@ namespace Blazor.Diagrams.Core.Models.Base
 
             GeneratedPathResult = PathGeneratorResult.Empty;
         }
+
+        void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
+
+        void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

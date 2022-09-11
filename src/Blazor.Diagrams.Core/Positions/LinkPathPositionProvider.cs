@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;

@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0-preview.2) - 2022-09-14
+
+### Added
+
+- `Moved` event to Movables
+- `Visible` property and `VisbilityChanged` event to models
+- `Options.Virtualization` (of type `[Diagram]VirtualizationOptions`) for virtualization options
+- `PointerEnter/Leave` events for groups as well 
+- **Experimental Link to Link** (using `LinkAnchor`) 
+
+### Changed
+
+- Rename `RegisterModelComponent` to `RegisterComponent`
+- Rename `GetComponentForModel` to `GetComponent`
+- Virtualization is now handled by a behavior instead of NodeRender
+  - This means that it works for almost all models (nodes, groups and links)
+- Render link labels without foreignObject in widget nor MarkupString (Thank you .NET 6)
+- Custom link labels only need to contain relevant content, they don't need to handle positioning anymore 
+
+### Removed
+
+- `EnableVirtualization` option (see added alternative)
+
 ## Diagrams (3.0.0-preview.1) - 2022-09-04
 
 .NET 6!

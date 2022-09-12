@@ -12,39 +12,46 @@ namespace Blazor.Diagrams.Core.Behaviors
             var wasSuspended = diagram.SuspendRefresh;
             if (!wasSuspended) diagram.SuspendRefresh = true;
 
-            //Group Delete
-            var smGroup = diagram.GetSelectedModels().Where(d => d is GroupModel && !d.Locked).Select(x => x as GroupModel).ToArray();
-            if (smGroup != null)
+            bool deleteNodeFunc = false, deleteLinkFunc = false, deleteGroupFunc = false;
+            bool isShouldDeleteNode = true, isShouldDeleteLink = true, isShouldDeleteGroup = true;
+
+            foreach (var sm in diagram.GetSelectedModels().ToArray())
             {
-                var result = await diagram.Options.Constraints.ShouldDeleteGroup(smGroup);
-                if (result)
+                if (sm.Locked)
+                    continue;
+
+                if (sm is GroupModel group && isShouldDeleteGroup)
                 {
-                    foreach (var group in smGroup)
+                    if (!deleteGroupFunc)
                     {
-                        diagram.RemoveGroup(group);
+                        isShouldDeleteGroup = await diagram.Options.Constraints.ShouldDeleteGroup(group);
+                        deleteGroupFunc = true;
+                        if (!isShouldDeleteGroup)
+                            continue;
                     }
+                    diagram.RemoveGroup(group);
                 }
-            }
-
-            //Node Delete
-            var smNodes = diagram.GetSelectedModels().Where(d => d is NodeModel && !d.Locked).Select(x => x as NodeModel).ToArray();
-            if (smNodes != null)
-            {
-                var result = await diagram.Options.Constraints.ShouldDeleteNode(smNodes);
-                if (result)
+                else if (sm is NodeModel node && isShouldDeleteNode)
                 {
-                    diagram.Nodes.Remove(smNodes);
+                    if (!deleteNodeFunc)
+                    {
+                        isShouldDeleteNode = await diagram.Options.Constraints.ShouldDeleteNode(node);
+                        deleteNodeFunc = true;
+                        if (!isShouldDeleteNode)
+                            continue;
+                    }
+                    diagram.Nodes.Remove(node);
                 }
-            }
-
-            //Node Links
-            var smLinks = diagram.GetSelectedModels().Where(d => d is BaseLinkModel && !d.Locked).Select(x => x as BaseLinkModel).ToArray();
-            if (smLinks != null)
-            {
-                var result = await diagram.Options.Constraints.ShouldDeleteLink(smLinks);
-                if (result)
+                else if (sm is BaseLinkModel link && isShouldDeleteLink)
                 {
-                    diagram.Links.Remove(smLinks);
+                    if (!deleteLinkFunc)
+                    {
+                        isShouldDeleteLink = await diagram.Options.Constraints.ShouldDeleteLink(link);
+                        deleteLinkFunc = true;
+                        if (!isShouldDeleteLink)
+                            continue;
+                    }
+                    diagram.Links.Remove(link);
                 }
             }
 

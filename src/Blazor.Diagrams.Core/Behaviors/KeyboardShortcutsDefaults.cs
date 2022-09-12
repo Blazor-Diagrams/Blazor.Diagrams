@@ -33,10 +33,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 var result = await diagram.Options.Constraints.ShouldDeleteNode(smNodes);
                 if (result)
                 {
-                    foreach (var node in smNodes)
-                    {
-                        diagram.Nodes.Remove(node);
-                    }
+                    diagram.Nodes.Remove(smNodes);
                 }
             }
 
@@ -47,10 +44,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 var result = await diagram.Options.Constraints.ShouldDeleteLink(smLinks);
                 if (result)
                 {
-                    foreach (var link in smLinks)
-                    {
-                        diagram.Links.Remove(link);
-                    }
+                    diagram.Links.Remove(smLinks);
                 }
             }
 

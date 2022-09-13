@@ -340,5 +340,30 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             target!.Port.Should().BeSameAs(port2);
             port2Refreshes.Should().Be(1);
         }
+
+        [Fact]
+        public void Behavior_ShouldNotCreateOngoingLink_WhenFactoryReturnsNull()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.Options.Links.Factory = (d, sp) => null;
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+
+            var node1 = new NodeModel(position: new Point(100, 50));
+            diagram.Nodes.Add(node1);
+            var port1 = node1.AddPort(new PortModel(node1)
+            {
+                Initialized = true,
+                Position = new Point(110, 60),
+                Size = new Size(10, 20)
+            });
+
+            // Act
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            // Assert
+            diagram.Links.Should().HaveCount(0);
+        }
     }
 }

@@ -36,16 +36,16 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             if (model is PortModel port)
             {
-                if (port.Locked) return;
-                _ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
-                _ongoingLink.OnGoingPosition = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Substract(5);
-            }
-            else
-            {
-                return;
-            }
+                if (port.Locked)
+                    return;
 
-            Diagram.Links.Add(_ongoingLink);
+                _ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
+                if (_ongoingLink == null)
+                    return;
+
+                _ongoingLink.OnGoingPosition = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Substract(5);
+                Diagram.Links.Add(_ongoingLink);
+            }
         }
 
         private void OnPointerMove(Model? model, MouseEventArgs e)

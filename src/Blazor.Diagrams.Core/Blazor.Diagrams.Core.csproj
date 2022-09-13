@@ -16,12 +16,17 @@
 		<Product>Z.Blazor.Diagrams.Core</Product>
 		<PackageIcon>ZBD.png</PackageIcon>
 		<PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\..\ZBD.png">
 			<Pack>True</Pack>
-			<PackagePath></PackagePath>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 

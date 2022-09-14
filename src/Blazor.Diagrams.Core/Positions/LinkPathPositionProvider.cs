@@ -37,7 +37,7 @@ public class LinkPathPositionProvider : IPositionProvider
         foreach (var path in link.Paths)
         {
             var pathLength = path.Length;
-            if (length < pathLength)
+            if (length <= pathLength)
             {
                 var pt = path.GetPointAtLength(length);
                 return new Point(pt.X + OffsetX, pt.Y + OffsetY);

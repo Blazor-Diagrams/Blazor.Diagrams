@@ -8,22 +8,19 @@
     var index = i;
     var d = result.Paths[i].ToString();
     <path d="@d"
-          stroke-width="@Link.Width.ToInvariantString()"
-          fill="none"
-          stroke="@color"/>
+      stroke-width="@Link.Width.ToInvariantString()"
+      fill="none"
+      stroke="@color" />
 
-    @if (Link.IsAttached)
-    {
-        <path class="selection-helper"
-              stroke="@color"
-              stroke-width="12"
-              d="@d"
-              stroke-linecap="butt"
-              stroke-opacity="0"
-              fill="none"
-              @onpointerdown="e => OnPointerDown(e, index)"
-              @onpointerdown:stopPropagation="@Link.Segmentable"/>
-    }
+    <path class="selection-helper"
+      stroke="@color"
+      stroke-width="12"
+      d="@d"
+      stroke-linecap="butt"
+      stroke-opacity="0"
+      fill="none"
+      @onpointerdown="e => OnPointerDown(e, index)"
+      @onpointerdown:stopPropagation="@Link.Segmentable" />
 }
 
 @if (Link.SourceMarker != null && result.SourceMarkerAngle != null && result.SourceMarkerPosition != null)
@@ -48,14 +45,14 @@
         @foreach (var vertex in Link.Vertices)
         {
             <LinkVertexWidget @key="vertex.Id"
-                              Vertex="vertex"
-                              Color="@normalColor"
-                              SelectedColor="@selectedColor"/>
+                      Vertex="vertex"
+                      Color="@normalColor"
+                      SelectedColor="@selectedColor" />
         }
     </g>
 }
 
 @foreach (var label in Link.Labels)
 {
-    <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths"/>
+    <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths" />
 }

@@ -22,9 +22,17 @@ namespace Blazor.Diagrams.Core.Behaviors
         {
             if (_ongoingLink != null)
                 return;
-            
+
             //_ongoingLink = Diagram.Options.Links.Factory(Diagram, port);
-            _ongoingLink = new LinkModel(source);
+            StartFrom(new LinkModel(source), clientX, clientY);
+        }
+
+        public void StartFrom(BaseLinkModel link, double clientX, double clientY)
+        {
+            if (_ongoingLink != null)
+                return;
+
+            _ongoingLink = link;
             _ongoingLink.OnGoingPosition = Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5);
             Diagram.Links.Add(_ongoingLink);
         }
@@ -85,9 +93,8 @@ namespace Blazor.Diagrams.Core.Behaviors
                 _ongoingLink.SetTarget(targetAnchor);
                 _ongoingLink.Refresh();
             }
-            else
+            else if (Diagram.Options.Links.RequireTarget)
             {
-                // Todo: support un-attached links
                 Diagram.Links.Remove(_ongoingLink);
             }
 

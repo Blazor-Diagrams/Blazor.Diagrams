@@ -101,6 +101,8 @@ namespace Blazor.Diagrams.Core.Models.Base
 
         public bool CanAttachTo(ILinkable other) => true;
 
+        public Point? GetTargetPosition() => Target?.GetPosition(this) ?? OnGoingPosition;
+
         private void GeneratePath()
         {
             if (Diagram != null)

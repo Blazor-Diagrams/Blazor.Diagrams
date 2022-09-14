@@ -11,6 +11,7 @@ public class DiagramLinkOptions
     public Router DefaultRouter { get; set; } = Routers.Normal;
     public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
     public bool EnableSnapping { get; set; } = false;
+    public bool RequireTarget { get; set; } = false;
 
     public double SnappingRadius
     {

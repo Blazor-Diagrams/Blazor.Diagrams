@@ -10,7 +10,7 @@ namespace SharedDemo
     {
         protected readonly BlazorDiagram BlazorDiagram = new(new BlazorDiagramOptions
         {
-            GridSize = 50
+            GridSize = 75
         });
 
         protected override void OnInitialized()

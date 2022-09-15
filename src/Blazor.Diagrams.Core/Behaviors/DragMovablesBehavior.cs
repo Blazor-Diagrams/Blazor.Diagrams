@@ -3,21 +3,20 @@ using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Blazor.Diagrams.Core.Models;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DragMovablesBehavior : Behavior
     {
-        private readonly Dictionary<MovableModel, Point> _initialPositions;
+        private readonly Dictionary<NodeModel, Point> _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
         private bool _moved;
 
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
-            _initialPositions = new Dictionary<MovableModel, Point>();
-            
+            _initialPositions = new Dictionary<NodeModel, Point>();
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;
             Diagram.PointerUp += OnPointerUp;
@@ -25,16 +24,21 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void OnPointerDown(Model? model, PointerEventArgs e)
         {
-            if (model is not MovableModel)
+            if (model is not NodeModel)
                 return;
 
             _initialPositions.Clear();
             foreach (var sm in Diagram.GetSelectedModels())
             {
-                if (sm is not MovableModel movable || movable.Locked)
+                if (sm is not NodeModel movable || movable.Locked)
                     continue;
-                
-                _initialPositions.Add(movable, movable.Position);
+                var position = movable.Position;
+                if (Diagram.Options.GridSnapToCenter)
+                {
+                    position = new Point(movable.Position.X + movable.Size.Width / 2,
+                        movable.Position.Y + movable.Size.Height / 2);
+                }
+                _initialPositions.Add(movable, position);
             }
 
             _lastClientX = e.ClientX;
@@ -51,11 +55,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
             var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
-            foreach (var (movable, initialPosition) in _initialPositions)
+            foreach (var (node, initialPosition) in _initialPositions)
             {
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
-                movable.SetPosition(ndx, ndy);
+                if (Diagram.Options.GridSnapToCenter)
+                    node.SetPosition(ndx - node.Size.Width / 2, ndy - node.Size.Height / 2);
+                else
+                    node.SetPosition(ndx, ndy);
             }
         }
 

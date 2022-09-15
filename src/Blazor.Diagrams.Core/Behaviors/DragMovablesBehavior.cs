@@ -9,14 +9,14 @@ namespace Blazor.Diagrams.Core.Behaviors
 {
     public class DragMovablesBehavior : Behavior
     {
-        private readonly Dictionary<NodeModel, Point> _initialPositions;
+        private readonly Dictionary<MovableModel, Point> _initialPositions;
         private double? _lastClientX;
         private double? _lastClientY;
         private bool _moved;
 
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
-            _initialPositions = new Dictionary<NodeModel, Point>();
+            _initialPositions = new Dictionary<MovableModel, Point>();
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;
             Diagram.PointerUp += OnPointerUp;
@@ -30,13 +30,13 @@ namespace Blazor.Diagrams.Core.Behaviors
             _initialPositions.Clear();
             foreach (var sm in Diagram.GetSelectedModels())
             {
-                if (sm is not NodeModel movable || movable.Locked)
+                if (sm is not MovableModel movable || movable.Locked)
                     continue;
                 var position = movable.Position;
-                if (Diagram.Options.GridSnapToCenter)
+                if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
                 {
-                    position = new Point(movable.Position.X + movable.Size.Width / 2,
-                        movable.Position.Y + movable.Size.Height / 2);
+                    position = new Point(movable.Position.X + (node.Size?.Width ?? 0) / 2,
+                        movable.Position.Y + (node.Size?.Height ?? 0) / 2);
                 }
                 _initialPositions.Add(movable, position);
             }
@@ -55,14 +55,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
             var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
-            foreach (var (node, initialPosition) in _initialPositions)
+            foreach (var (movable, initialPosition) in _initialPositions)
             {
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
-                if (Diagram.Options.GridSnapToCenter)
-                    node.SetPosition(ndx - node.Size.Width / 2, ndy - node.Size.Height / 2);
+                if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
+                    node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
                 else
-                    node.SetPosition(ndx, ndy);
+                    movable.SetPosition(ndx, ndy);
             }
         }
 

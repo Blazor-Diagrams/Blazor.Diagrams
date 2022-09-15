@@ -47,14 +47,17 @@ namespace Blazor.Diagrams.Core.Layers
         {
             if (add)
             {
-                anchor.Model.AddLink(link);
+                anchor.Model?.AddLink(link);
             }
             else
             {
-                anchor.Model.RemoveLink(link);
+                anchor.Model?.RemoveLink(link);
             }
 
-            anchor.Model.Refresh();
+            if (anchor.Model is Model model)
+            {
+                model.Refresh();
+            }
         }
     }
 }

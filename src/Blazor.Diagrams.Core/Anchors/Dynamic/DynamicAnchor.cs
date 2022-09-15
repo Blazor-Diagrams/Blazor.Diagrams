@@ -11,28 +11,29 @@ namespace Blazor.Diagrams.Core.Anchors.Dynamic
     // Generic?
     public class DynamicAnchor : Anchor
     {
-        public DynamicAnchor(NodeModel model, IPositionProvider[] providers, Point? offset = null) : base(model, offset)
+        public DynamicAnchor(NodeModel model, IPositionProvider[] providers) : base(model)
         {
             if (providers.Length == 0)
                 throw new InvalidOperationException("No providers provided");
 
+            Node = model;
             Providers = providers;
         }
 
+        public NodeModel Node { get; }
         public IPositionProvider[] Providers { get; }
 
         public override Point? GetPosition(BaseLinkModel link, Point[] route)
         {
-            var node = (Model as NodeModel)!;
-            if (node.Size == null)
+            if (Node.Size == null)
                 return null;
 
             var isTarget = link.Target == this;
             var pt = route.Length > 0 ? route[isTarget ? ^1 : 0] : GetOtherPosition(link, isTarget);
-            var positions = Providers.Select(e => e.GetPosition(node));
+            var positions = Providers.Select(e => e.GetPosition(Node));
             return pt is null ? null : GetClosestPointTo(positions, pt);
         }
 
-        public override Point? GetPlainPosition() => (Model as NodeModel)!.GetBounds()?.Center ?? null;
+        public override Point? GetPlainPosition() => Node.GetBounds()?.Center ?? null;
     }
 }

@@ -6,7 +6,7 @@ namespace Blazor.Diagrams.Core.Anchors
 {
     public class ShapeIntersectionAnchor : Anchor
     {
-        public ShapeIntersectionAnchor(NodeModel model, Point? offset = null) : base(model, offset)
+        public ShapeIntersectionAnchor(NodeModel model) : base(model)
         {
             Node = model;
         }

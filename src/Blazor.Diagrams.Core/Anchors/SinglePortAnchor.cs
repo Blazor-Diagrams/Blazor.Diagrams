@@ -6,7 +6,7 @@ namespace Blazor.Diagrams.Core.Anchors
 {
     public class SinglePortAnchor : Anchor
     {
-        public SinglePortAnchor(PortModel port, Point? offset = null) : base(port, offset)
+        public SinglePortAnchor(PortModel port) : base(port)
         {
             Port = port;
         }
@@ -53,6 +53,6 @@ namespace Blazor.Diagrams.Core.Anchors
             };
         }
 
-        public override Point? GetPlainPosition() => (Model as PortModel)!.MiddlePosition;
+        public override Point? GetPlainPosition() => Port.MiddlePosition;
     }
 }

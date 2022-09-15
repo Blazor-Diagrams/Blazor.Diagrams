@@ -3,6 +3,7 @@ namespace Blazor.Diagrams.Core.Options;
 public class DiagramOptions
 {
     public int? GridSize { get; set; }
+    public bool GridSnapToCenter { get; set; }
     public bool AllowMultiSelection { get; set; } = true;
     public bool AllowPanning { get; set; } = true;
     

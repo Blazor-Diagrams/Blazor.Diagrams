@@ -24,7 +24,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void OnPointerDown(Model? model, PointerEventArgs e)
         {
-            if (model is not NodeModel)
+            if (model is not MovableModel)
                 return;
 
             _initialPositions.Clear();
@@ -32,6 +32,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             {
                 if (sm is not MovableModel movable || movable.Locked)
                     continue;
+
                 var position = movable.Position;
                 if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
                 {

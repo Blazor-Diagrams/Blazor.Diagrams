@@ -11,7 +11,7 @@ public class DiagramLinkOptions
     public Router DefaultRouter { get; set; } = Routers.Normal;
     public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
     public bool EnableSnapping { get; set; } = false;
-    public bool RequireTarget { get; set; } = false;
+    public bool RequireTarget { get; set; } = true;
 
     public double SnappingRadius
     {
@@ -25,8 +25,17 @@ public class DiagramLinkOptions
         }
     }
 
-    public LinkFactory Factory { get; set; } = (diagram, sourcePort) => new LinkModel(sourcePort);
-    
+    public LinkFactory Factory { get; set; } = (diagram, source, targetAnchor) =>
+    {
+        Anchor sourceAnchor = source switch
+        {
+            NodeModel node => new ShapeIntersectionAnchor(node),
+            PortModel port => new SinglePortAnchor(port),
+            _ => throw new NotImplementedException()
+        };
+        return new LinkModel(sourceAnchor, targetAnchor);
+    };
+
     public AnchorFactory TargetAnchorFactory { get; set; } = (diagram, link, model) =>
     {
         return model switch

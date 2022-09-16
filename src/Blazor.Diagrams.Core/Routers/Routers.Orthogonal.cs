@@ -18,12 +18,10 @@ namespace Blazor.Diagrams.Core
             if (link.Source is not SinglePortAnchor spa1)
                 throw new Exception("Orthogonal router doesn't work with port-less links yet");
 
-            if (link.Target is not null && link.Target is not SinglePortAnchor)
+            if (link.Target is not SinglePortAnchor targetAnchor)
                 throw new Exception("Orthogonal router doesn't work with port-less links yet");
 
             var sourcePort = spa1.Port;
-            var targetAnchor = (link.Target as SinglePortAnchor);
-
             if (targetAnchor == null || sourcePort.Parent.Size == null || targetAnchor.Port.Parent.Size == null)
                 return Normal(_, link);
 

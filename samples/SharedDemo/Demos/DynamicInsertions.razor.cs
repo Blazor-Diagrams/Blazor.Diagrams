@@ -21,12 +21,12 @@ namespace SharedDemo.Demos
             BlazorDiagram.Nodes.Add(new NodeModel(new Point(300, 50)));
             BlazorDiagram.Nodes.Add(new NodeModel(new Point(300, 400)));
 
-            BlazorDiagram.Options.Links.Factory = (d, sp) =>
+            BlazorDiagram.Options.Links.Factory = (d, s, ta) =>
             {
-                var link = new LinkModel(new SinglePortAnchor(sp)
+                var link = new LinkModel(new SinglePortAnchor(s as PortModel)
                 {
                     UseShapeAndAlignment = false
-                })
+                }, ta)
                 {
                     SourceMarker = LinkMarker.Arrow
                 };

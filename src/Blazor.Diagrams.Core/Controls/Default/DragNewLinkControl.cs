@@ -34,8 +34,7 @@ public class DragNewLinkControl : ExecutableControl
         if (behavior == null)
             throw new DiagramsException($"DragNewLinkBehavior was not found");
 
-        // Todo: use factory from options
-        behavior.StartFrom(new ShapeIntersectionAnchor(node), e.ClientX, e.ClientY);
+        behavior.StartFrom(node, e.ClientX, e.ClientY);
         return ValueTask.CompletedTask;
     }
 }

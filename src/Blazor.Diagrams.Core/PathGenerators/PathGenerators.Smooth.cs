@@ -78,9 +78,9 @@ namespace Blazor.Diagrams.Core
             return new[] { route[0], curvePointA, curvePointB, route[1] };
         }
 
-        private static Point GetCurvePoint(Point[] route, Anchor? anchor, double pX, double pY, double cX, double cY, bool first)
+        private static Point GetCurvePoint(Point[] route, Anchor anchor, double pX, double pY, double cX, double cY, bool first)
         {
-            if (anchor is null)
+            if (anchor is PositionAnchor)
                 return new Point(cX, cY);
 
             if (anchor is SinglePortAnchor spa)

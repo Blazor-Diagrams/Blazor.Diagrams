@@ -3,6 +3,7 @@
 @using Blazor.Diagrams.Core
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Core.Models.Base
 @using QG = QuikGraph
 
 <!-- required to resolve DiagramCanvas component -->
@@ -22,105 +23,105 @@ or it will not be rendered.
 100vh = 100% viewport height
 -->
 <div style="width:100vw; height: 70vh">
-  <CascadingValue Value="_diagram">
-    <DiagramCanvas></DiagramCanvas>
-  </CascadingValue>
+    <CascadingValue Value="_diagram">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
 </div>
 
 <div>
-  <MatSelect Label="Layout chart" @bind-Value="@_layout" Style="width: 125px">
-    @foreach (var algo in new GraphShape.Algorithms.Layout.StandardLayoutAlgorithmFactory<string, QG.IEdge<string>, QG.IBidirectionalGraph<string, QG.IEdge<string>>>().AlgorithmTypes)
-    {
-      <MatOption TValue="string" Value="@algo">@algo</MatOption>
-    }
-  </MatSelect>
+    <MatSelect Label="Layout chart" @bind-Value="@_layout" Style="width: 125px">
+        @foreach (var algo in new GraphShape.Algorithms.Layout.StandardLayoutAlgorithmFactory<string, QG.IEdge<string>, QG.IBidirectionalGraph<string, QG.IEdge<string>>>().AlgorithmTypes)
+        {
+            <MatOption TValue="string" Value="@algo">@algo</MatOption>
+        }
+    </MatSelect>
 
-  <MatButton Icon="grid_on" @onclick="@(_ => OnLayout(_layout))" Raised="true">Go!</MatButton>
+    <MatButton Icon="grid_on" @onclick="@(_ => OnLayout(_layout))" Raised="true">Go!</MatButton>
 </div>
 
 @code {
-  private Diagram _diagram { get; set; }
+    private Diagram _diagram { get; set; }
 
-  private string _layout;
+    private string _layout;
 
-  protected override void OnInitialized()
-  {
-    base.OnInitialized();
-
-    var options = new BlazorDiagramOptions
+    protected override void OnInitialized()
     {
-      AllowMultiSelection = true,
-      Zoom =
+        base.OnInitialized();
+
+        var options = new BlazorDiagramOptions
+            {
+                AllowMultiSelection = true,
+                Zoom =
       {
         Minimum = 0.5
       } // Whether to allow multi selection using CTRL
-    };
-    _diagram = new BlazorDiagram(options);
+            };
+        _diagram = new BlazorDiagram(options);
 
-    Setup();
-  }
-
-  private void Setup()
-  {
-    var node1 = NewNode(50, 50);
-    var node2 = NewNode(300, 300);
-    var node3 = NewNode(300, 50);
-    _diagram.Nodes.Add(new[] { node1, node2, node3 });
-
-    // use portless nodes so connection points can move around after layout
-    _diagram.Links.Add(new LinkModel(node1, node2));
-  }
-
-  private static NodeModel NewNode(double x, double y)
-  {
-    var node = new NodeModel(Guid.NewGuid().ToString(), new Point(x, y));
-    return node;
-  }
-
-  private void OnLayout(string layout)
-  {
-    if (string.IsNullOrWhiteSpace(layout))
-    {
-      return;
+        Setup();
     }
 
-    // convert Z.Blazor.Diagram to QuikGraph
-    var graph = new QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>();
-    var nodes = _diagram.Nodes.OfType<NodeModel>().ToList();
-    var edges = _diagram.Links.OfType<LinkModel>()
-      .Select(lm =>
-      {
-        var source = nodes.Single(dn => dn.Id == lm.Source.Model.Id);
-        var target = nodes.Single(dn => dn.Id == lm?.Target?.Model?.Id);
-        return new QG.Edge<NodeModel>(source, target);
-      })
-      .ToList();
-    graph.AddVertexRange(nodes);
-    graph.AddEdgeRange(edges);
-
-    // run GraphShape algorithm
-    var positions = nodes.ToDictionary(nm => nm, dn => new GraphShape.Point(dn.Position.X, dn.Position.Y));
-    var sizes = nodes.ToDictionary(nm => nm, dn => new GraphShape.Size(dn.Size?.Width ?? 100, dn.Size?.Height ?? 100));
-    var layoutCtx = new LayoutContext<NodeModel, QG.Edge<NodeModel>, QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>>(graph, positions, sizes, LayoutMode.Simple);
-    var algoFact = new StandardLayoutAlgorithmFactory<NodeModel, QG.Edge<NodeModel>, QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>>();
-    var algo = algoFact.CreateAlgorithm(layout, layoutCtx, null);
-
-    algo.Compute();
-
-    // update NodeModel positions
-    try
+    private void Setup()
     {
-      _diagram.SuspendRefresh = true;
-      foreach (var vertPos in algo.VerticesPositions)
-      {
-        // NOTE;  have to use SetPosition which takes care of updating everything
-        vertPos.Key.SetPosition(vertPos.Value.X, vertPos.Value.Y);
-      }
+        var node1 = NewNode(50, 50);
+        var node2 = NewNode(300, 300);
+        var node3 = NewNode(300, 50);
+        _diagram.Nodes.Add(new[] { node1, node2, node3 });
+
+        // use portless nodes so connection points can move around after layout
+        _diagram.Links.Add(new LinkModel(node1, node2));
     }
-    finally
+
+    private static NodeModel NewNode(double x, double y)
     {
-      _diagram.SuspendRefresh = false;
+        var node = new NodeModel(Guid.NewGuid().ToString(), new Point(x, y));
+        return node;
     }
-  }
+
+    private void OnLayout(string layout)
+    {
+        if (string.IsNullOrWhiteSpace(layout))
+        {
+            return;
+        }
+
+        // convert Z.Blazor.Diagram to QuikGraph
+        var graph = new QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>();
+        var nodes = _diagram.Nodes.OfType<NodeModel>().ToList();
+        var edges = _diagram.Links.OfType<LinkModel>()
+          .Select(lm =>
+          {
+              var source = nodes.Single(dn => dn.Id == (lm.Source.Model as Model).Id);
+              var target = nodes.Single(dn => dn.Id == (lm.Target.Model as Model)?.Id);
+              return new QG.Edge<NodeModel>(source, target);
+          })
+          .ToList();
+        graph.AddVertexRange(nodes);
+        graph.AddEdgeRange(edges);
+
+        // run GraphShape algorithm
+        var positions = nodes.ToDictionary(nm => nm, dn => new GraphShape.Point(dn.Position.X, dn.Position.Y));
+        var sizes = nodes.ToDictionary(nm => nm, dn => new GraphShape.Size(dn.Size?.Width ?? 100, dn.Size?.Height ?? 100));
+        var layoutCtx = new LayoutContext<NodeModel, QG.Edge<NodeModel>, QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>>(graph, positions, sizes, LayoutMode.Simple);
+        var algoFact = new StandardLayoutAlgorithmFactory<NodeModel, QG.Edge<NodeModel>, QG.BidirectionalGraph<NodeModel, QG.Edge<NodeModel>>>();
+        var algo = algoFact.CreateAlgorithm(layout, layoutCtx, null);
+
+        algo.Compute();
+
+        // update NodeModel positions
+        try
+        {
+            _diagram.SuspendRefresh = true;
+            foreach (var vertPos in algo.VerticesPositions)
+            {
+                // NOTE;  have to use SetPosition which takes care of updating everything
+                vertPos.Key.SetPosition(vertPos.Value.X, vertPos.Value.Y);
+            }
+        }
+        finally
+        {
+            _diagram.SuspendRefresh = false;
+        }
+    }
 
 }

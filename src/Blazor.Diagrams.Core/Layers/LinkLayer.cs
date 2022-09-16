@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models.Base;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Layers
 {
@@ -29,6 +30,7 @@ namespace Blazor.Diagrams.Core.Layers
             link.TargetChanged -= OnLinkTargetChanged;
             
             Diagram.Controls.RemoveFor(link);
+            Remove(link.Links.ToList());
         }
 
         private static void OnLinkSourceChanged(BaseLinkModel link, Anchor old, Anchor @new)

@@ -31,6 +31,18 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.Links.Add(_ongoingLink);
         }
 
+        public void StartFrom(BaseLinkModel link, double clientX, double clientY)
+        {
+            if (_ongoingLink != null)
+                return;
+
+            _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5));
+            _ongoingLink = link;
+            _ongoingLink.SetTarget(_targetPositionAnchor);
+            _ongoingLink.Refresh();
+            _ongoingLink.RefreshLinks();
+        }
+
         private void OnPointerDown(Model? model, MouseEventArgs e)
         {
             if (e.Button != (int)MouseEventButton.Left)
@@ -71,6 +83,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             }
 
             _ongoingLink.Refresh();
+            _ongoingLink.RefreshLinks();
         }
 
         private void OnPointerUp(Model? model, MouseEventArgs e)
@@ -89,6 +102,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 var targetAnchor = Diagram.Options.Links.TargetAnchorFactory(Diagram, _ongoingLink, linkable);
                 _ongoingLink.SetTarget(targetAnchor);
                 _ongoingLink.Refresh();
+                _ongoingLink.RefreshLinks();
             }
             else if (Diagram.Options.Links.RequireTarget)
             {

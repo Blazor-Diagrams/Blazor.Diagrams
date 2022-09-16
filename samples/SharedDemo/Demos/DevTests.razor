@@ -38,14 +38,14 @@
 
         var link1 = new LinkModel(new DynamicAnchor(node1, providers1), new DynamicAnchor(node2, providers2))
         {
-            PathGenerator = PathGenerators.Straight,
+            PathGenerator = PathGenerators.Smooth,
             SourceMarker = LinkMarker.Arrow,
             TargetMarker = LinkMarker.Arrow
         };
 
         _blazorDiagram.Nodes.Add(new[] { node1, node2, node3 });
         _blazorDiagram.Links.Add(link1);
-        _blazorDiagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node3), new LinkAnchor(link1, 0.5))
+        var link2 = _blazorDiagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node3), new LinkAnchor(link1, 0.5))
         {
             PathGenerator = PathGenerators.Straight,
             SourceMarker = LinkMarker.Arrow,
@@ -64,7 +64,26 @@
 
         _blazorDiagram.Controls.AddFor(link1)
             .Add(new RemoveControl(new LinkPathPositionProvider(0.1)))
+            .Add(new ArrowHeadControl(true, LinkMarker.NewArrow(30, 30)))
+            .Add(new ArrowHeadControl(false, LinkMarker.NewArrow(30, 30)))
             .Add(new BoundaryControl());
+
+        _blazorDiagram.Controls.AddFor(link2)
+            .Add(new RemoveControl(new LinkPathPositionProvider(0.8)))
+            .Add(new ArrowHeadControl(true))
+            .Add(new ArrowHeadControl(false))
+            .Add(new BoundaryControl());
+
+        _blazorDiagram.Options.Links.RequireTarget = false;
+
+        _blazorDiagram.Links.Added += OnLinkAdded;
+    }
+
+    private void OnLinkAdded(Blazor.Diagrams.Core.Models.Base.BaseLinkModel link)
+    {
+        _blazorDiagram.Controls.AddFor(link)
+            .Add(new ArrowHeadControl(true))
+            .Add(new ArrowHeadControl(false));
     }
 
     private static NodeModel NewNode(double x, double y)

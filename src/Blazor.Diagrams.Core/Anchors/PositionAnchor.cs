@@ -3,7 +3,7 @@ using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Anchors
 {
-    public class PositionAnchor : Anchor
+    public sealed class PositionAnchor : Anchor
     {
         private Point _position;
 

@@ -4,7 +4,7 @@ using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Anchors
 {
-    public class SinglePortAnchor : Anchor
+    public sealed class SinglePortAnchor : Anchor
     {
         public SinglePortAnchor(PortModel port) : base(port)
         {

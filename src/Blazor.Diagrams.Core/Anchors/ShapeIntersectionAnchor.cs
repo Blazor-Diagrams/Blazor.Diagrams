@@ -4,7 +4,7 @@ using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Anchors
 {
-    public class ShapeIntersectionAnchor : Anchor
+    public sealed class ShapeIntersectionAnchor : Anchor
     {
         public ShapeIntersectionAnchor(NodeModel model) : base(model)
         {

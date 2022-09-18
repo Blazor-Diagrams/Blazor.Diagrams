@@ -3,7 +3,6 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
-using Blazor.Diagrams.Core.Anchors.Dynamic;
 using SvgPathProperties;
 
 namespace Blazor.Diagrams.Core

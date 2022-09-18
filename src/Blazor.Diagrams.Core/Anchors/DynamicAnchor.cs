@@ -5,11 +5,9 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Positions;
 
-namespace Blazor.Diagrams.Core.Anchors.Dynamic
+namespace Blazor.Diagrams.Core.Anchors
 {
-    // Figure out a better name
-    // Generic?
-    public class DynamicAnchor : Anchor
+    public sealed class DynamicAnchor : Anchor
     {
         public DynamicAnchor(NodeModel model, IPositionProvider[] providers) : base(model)
         {

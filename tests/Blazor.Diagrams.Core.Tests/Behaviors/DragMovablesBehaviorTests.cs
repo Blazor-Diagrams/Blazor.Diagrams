@@ -32,9 +32,9 @@ public class DragMovablesBehaviorTests
 
     [Theory]
     [InlineData(false, 0, 0, 45, 45)]
-    [InlineData(true, 0, 0, 50, 50)]
+    [InlineData(true, 0, 0, 35, 35)]
     [InlineData(false, 3, 3, 45, 45)]
-    [InlineData(true, 3, 3, 35, 35)]
+    [InlineData(true, 3, 3, 50, 50)]
     public void Behavior_SnapToGrid_ShouldCallSetPosition(bool gridSnapToCenter, double initialX, double initialY, double deltaX, double deltaY)
     {
         // Arrange

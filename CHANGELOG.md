@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0-beta.3) - 2022-09-18
+
+### Added
+
+- Support for `LinkFactory` to return null in order to not create an ongoing link
+- Support for free links (no source/target required)
+- `PositionAnchor` which reprensents a simple plain position (mutable)
+- `ArrowHeadControl` to control a link's Source/Target on the fly
+- `attached` css class to attached links
+
+### Changed
+
+- Replace `OngoingPosition` with the new `PositionAnchor`
+	- `BaseLinkModel.Target` will never be null anymore. An ongoing link will have a position anchor as the target
+- `Links.Factory` signature now takes the diagram, source (model) and the target anchor
+- Move `DynamicAnchor` back to `Anchors` namespace and seal all `Anchor` classes
+
+### Fixed
+
+- Links attached to links not refreshing when the others are
+- `LinkPathPositionProvider` not working with maxlength ratios
+- Deleting a link not deleting the links attached to it
+
+### Removed
+
+- `PositionProvider` argument from `ExecutableControl` for more freedom
+- `Id` and `Refresh` from `ILinkable`
+- Unused `Offset` from `Anchor` and make `Model` nullable
+
 ## Diagrams (3.0.0-beta.2) - 2022-09-11
 
 ### Added

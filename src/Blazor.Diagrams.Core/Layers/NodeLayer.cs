@@ -14,11 +14,13 @@ namespace Blazor.Diagrams.Core.Layers
 
         protected override void OnItemRemoved(NodeModel node)
         {
-            // Todo: batch
-            Diagram.Links.Remove(node.PortLinks.ToList());
-            Diagram.Links.Remove(node.Links.ToList());
-            node.Group?.RemoveChild(node);
-            Diagram.Controls.RemoveFor(node);
+            Diagram.Batch(() =>
+            {
+                Diagram.Links.Remove(node.PortLinks.ToList());
+                Diagram.Links.Remove(node.Links.ToList());
+                node.Group?.RemoveChild(node);
+                Diagram.Controls.RemoveFor(node);
+            });
         }
     }
 }

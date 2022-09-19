@@ -31,9 +31,11 @@ public class DragMovablesBehaviorTests
     }
 
     [Theory]
-    [InlineData(false, 45, 45)]
-    [InlineData(true, 35, 35)]
-    public void Behavior_SnapToGrid_ShouldCallSetPosition(bool gridSnapToCenter, double deltaX, double deltaY)
+    [InlineData(false, 0, 0, 45, 45)]
+    [InlineData(true, 0, 0, 50, 50)]
+    [InlineData(false, 3, 3, 45, 45)]
+    [InlineData(true, 3, 3, 35, 35)]
+    public void Behavior_SnapToGrid_ShouldCallSetPosition(bool gridSnapToCenter, double initialX, double initialY, double deltaX, double deltaY)
     {
         // Arrange
         var diagram = new TestDiagram(new DiagramOptions
@@ -43,11 +45,12 @@ public class DragMovablesBehaviorTests
         });
         var nodeMock = new Mock<NodeModel>(Point.Zero);
         var node = diagram.Nodes.Add(nodeMock.Object);
-        node.Size = new Size(50, 50);
-        node.Position = new Point(0, 0);
+        node.Size = new Size(20, 20);
+        node.Position = new Point(initialX, initialY);
         diagram.SelectModel(node, false);
 
         // Act
+        //Move 40px in X and Y
         diagram.TriggerPointerDown(node,
             new PointerEventArgs(20, 20, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
         diagram.TriggerPointerMove(null,

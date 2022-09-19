@@ -1,5 +1,4 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Anchors.Dynamic;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Positions;

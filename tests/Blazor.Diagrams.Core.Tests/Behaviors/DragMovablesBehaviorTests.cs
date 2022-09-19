@@ -2,6 +2,7 @@ using System.Linq;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Options;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -28,7 +29,34 @@ public class DragMovablesBehaviorTests
         // Assert
         nodeMock.Verify(n => n.SetPosition(50, 50), Times.Once);
     }
-    
+
+    [Theory]
+    [InlineData(false, 45, 45)]
+    [InlineData(true, 35, 35)]
+    public void Behavior_SnapToGrid_ShouldCallSetPosition(bool gridSnapToCenter, double deltaX, double deltaY)
+    {
+        // Arrange
+        var diagram = new TestDiagram(new DiagramOptions
+        {
+            GridSize = 15,
+            GridSnapToCenter = gridSnapToCenter
+        });
+        var nodeMock = new Mock<NodeModel>(Point.Zero);
+        var node = diagram.Nodes.Add(nodeMock.Object);
+        node.Size = new Size(50, 50);
+        node.Position = new Point(0, 0);
+        diagram.SelectModel(node, false);
+
+        // Act
+        diagram.TriggerPointerDown(node,
+            new PointerEventArgs(20, 20, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerPointerMove(null,
+            new PointerEventArgs(60, 60, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        nodeMock.Verify(n => n.SetPosition(deltaX, deltaY), Times.Once);
+    }
+
     [Fact]
     public void Behavior_ShouldTriggerMoved()
     {

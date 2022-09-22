@@ -1,12 +1,14 @@
+#nullable enable
+using System;
 using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Tests;
 
 public class TestDiagram : Diagram
 {
-    public TestDiagram()
+    public TestDiagram(DiagramOptions? options = null)
     {
-        Options = new DiagramOptions();
+        Options = options ?? new DiagramOptions();
     }
 
     public override DiagramOptions Options { get; }

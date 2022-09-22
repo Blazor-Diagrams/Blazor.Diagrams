@@ -9,17 +9,23 @@
         base.OnInitialized();
 
         LayoutData.Title = "Snap to Grid";
-        LayoutData.Info = "This diagram has a grid size of 50, moving nodes will make them automatically snap.<br />" +
+        LayoutData.Info = "This diagram has a grid size of 75, moving nodes will make them automatically snap.<br />" +
                 "The background grid isn't added by Z.Blazor.Diagrams, in order for you to use whatever you want.";
         LayoutData.DataChanged();
     }
 }
+<div style="position: absolute; z-index: 9999;">
+    <div class="custom-control custom-checkbox ml-2">
+        <input id="snapToCenterCheckbox" type="checkbox" class="custom-control-input" @bind-value="BlazorDiagram.Options.GridSnapToCenter" />
+        <label class="custom-control-label" for="snapToCenterCheckbox">Toggle Snap To Center</label>
+    </div>
+</div>
 
 <CascadingValue Value="BlazorDiagram">
     <DiagramCanvas>
         <Widgets>
-            <NavigatorWidget Width="300" Height="200" DefaultStyle="true"></NavigatorWidget>
-            <GridWidget Size="50" Mode="GridMode.Line" ZoomThreshold="0.5"></GridWidget>
+            <NavigatorWidget Width="300" Height="200" Style="position: absolute; bottom: 15px; right: 15px; border: 1px solid black;"></NavigatorWidget>
+            <GridWidget Size="75" Mode="GridMode.Line" ZoomThreshold="0.5"></GridWidget>
         </Widgets>
     </DiagramCanvas>
 </CascadingValue>

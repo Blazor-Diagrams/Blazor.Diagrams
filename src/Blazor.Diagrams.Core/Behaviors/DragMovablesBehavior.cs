@@ -3,7 +3,7 @@ using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Blazor.Diagrams.Core.Models;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -17,7 +17,6 @@ namespace Blazor.Diagrams.Core.Behaviors
         public DragMovablesBehavior(Diagram diagram) : base(diagram)
         {
             _initialPositions = new Dictionary<MovableModel, Point>();
-            
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;
             Diagram.PointerUp += OnPointerUp;
@@ -33,8 +32,14 @@ namespace Blazor.Diagrams.Core.Behaviors
             {
                 if (sm is not MovableModel movable || movable.Locked)
                     continue;
-                
-                _initialPositions.Add(movable, movable.Position);
+
+                var position = movable.Position;
+                if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
+                {
+                    position = new Point(movable.Position.X + (node.Size?.Width ?? 0) / 2,
+                        movable.Position.Y + (node.Size?.Height ?? 0) / 2);
+                }
+                _initialPositions.Add(movable, position);
             }
 
             _lastClientX = e.ClientX;
@@ -55,7 +60,10 @@ namespace Blazor.Diagrams.Core.Behaviors
             {
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
-                movable.SetPosition(ndx, ndy);
+                if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
+                    node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
+                else
+                    movable.SetPosition(ndx, ndy);
             }
         }
 

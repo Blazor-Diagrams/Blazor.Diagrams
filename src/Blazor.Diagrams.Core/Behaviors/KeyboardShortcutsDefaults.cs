@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
                 if (sm is GroupModel group && (await diagram.Options.Constraints.ShouldDeleteGroup(group)))
                 {
-                    diagram.RemoveGroup(group);
+                    diagram.Groups.Delete(group);
                 }
                 else if (sm is NodeModel node && (await diagram.Options.Constraints.ShouldDeleteNode(node)))
                 {
@@ -53,7 +53,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 // Ungroup
                 foreach (var group in nodesWithGroup.GroupBy(n => n.Group!).Select(g => g.Key))
                 {
-                    diagram.Ungroup(group);
+                    diagram.Groups.Remove(group);
                 }
             }
             else
@@ -65,7 +65,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 if (selectedNodes.Any(n => n.Group != null))
                     return ValueTask.CompletedTask;
 
-                diagram.Group(selectedNodes);
+                diagram.Groups.Group(selectedNodes);
             }
 
             return ValueTask.CompletedTask;

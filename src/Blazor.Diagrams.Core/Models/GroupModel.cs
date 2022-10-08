@@ -46,6 +46,7 @@ namespace Blazor.Diagrams.Core.Models
             if (UpdateDimensions())
             {
                 Refresh();
+                RefreshLinks();
             }
         }
 

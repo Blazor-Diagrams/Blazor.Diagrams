@@ -42,8 +42,8 @@ namespace SharedDemo.Demos.Nodes
             _blazorDiagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
             _blazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
 
-            var group1 = _blazorDiagram.AddGroup(new SvgGroupModel(new[] { node1, node2 }));
-            var group2 = _blazorDiagram.AddGroup(new SvgGroupModel(new[] { group1, node3 }));
+            var group1 = _blazorDiagram.Groups.Add(new SvgGroupModel(new[] { node1, node2 }));
+            var group2 = _blazorDiagram.Groups.Add(new SvgGroupModel(new[] { group1, node3 }));
 
             var link = _blazorDiagram.Links.Add(new LinkModel(group2, node4));
             var controls2 = _blazorDiagram.Controls.AddFor(link);

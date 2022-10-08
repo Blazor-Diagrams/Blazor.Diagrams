@@ -26,8 +26,8 @@ namespace SharedDemo.Demos
             BlazorDiagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
             BlazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left)));
 
-            var group1 = BlazorDiagram.Group(node1, node2);
-            var group2 = BlazorDiagram.Group(group1, node3);
+            var group1 = BlazorDiagram.Groups.Group(node1, node2);
+            var group2 = BlazorDiagram.Groups.Group(group1, node3);
 
             BlazorDiagram.Links.Add(new LinkModel(group2, node4));
         }

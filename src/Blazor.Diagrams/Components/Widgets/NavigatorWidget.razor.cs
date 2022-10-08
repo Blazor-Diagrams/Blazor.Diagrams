@@ -38,8 +38,8 @@ public partial class NavigatorWidget : IDisposable
         BlazorDiagram.Changed -= Refresh;
         BlazorDiagram.Nodes.Added -= OnNodeAdded;
         BlazorDiagram.Nodes.Removed -= OnNodeRemoved;
-        BlazorDiagram.GroupAdded -= OnNodeAdded;
-        BlazorDiagram.GroupRemoved -= OnNodeRemoved;
+        BlazorDiagram.Groups.Added -= OnNodeAdded;
+        BlazorDiagram.Groups.Removed -= OnNodeRemoved;
 
         foreach (var node in BlazorDiagram.Nodes)
             node.Changed -= OnNodeChanged;
@@ -53,8 +53,8 @@ public partial class NavigatorWidget : IDisposable
         BlazorDiagram.Changed += Refresh;
         BlazorDiagram.Nodes.Added += OnNodeAdded;
         BlazorDiagram.Nodes.Removed += OnNodeRemoved;
-        BlazorDiagram.GroupAdded += OnNodeAdded;
-        BlazorDiagram.GroupRemoved += OnNodeRemoved;
+        BlazorDiagram.Groups.Added += OnNodeAdded;
+        BlazorDiagram.Groups.Removed += OnNodeRemoved;
 
         foreach (var node in BlazorDiagram.Nodes)
             node.Changed += OnNodeChanged;

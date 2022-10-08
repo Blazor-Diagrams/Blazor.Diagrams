@@ -29,7 +29,7 @@ namespace SharedDemo.Demos.Groups
 
         private void AddEmptyGroup()
         {
-            _blazorDiagram.AddGroup(new GroupModel(Array.Empty<NodeModel>())
+            _blazorDiagram.Groups.Add(new GroupModel(Array.Empty<NodeModel>())
             {
                 Position = new Point(100, 100)
             });

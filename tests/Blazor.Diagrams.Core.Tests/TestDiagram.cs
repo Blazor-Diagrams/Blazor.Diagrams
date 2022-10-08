@@ -1,5 +1,3 @@
-#nullable enable
-using System;
 using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Tests;

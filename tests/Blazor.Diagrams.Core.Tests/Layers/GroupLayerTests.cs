@@ -92,5 +92,36 @@ namespace Blazor.Diagrams.Core.Tests.Layers
             group2.Children.Should().BeEmpty();
             group1.Group.Should().BeNull();
         }
+
+        [Fact]
+        public void Delete_ShouldDeleteChildGroup()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var group1 = diagram.Groups.Add(new GroupModel(Array.Empty<NodeModel>()));
+            var group2 = diagram.Groups.Add(new GroupModel(new[] { group1 }));
+
+            // Act
+            diagram.Groups.Delete(group2);
+
+            // Assert
+            diagram.Groups.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Delete_ShouldRemoveChild()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var node = diagram.Nodes.Add(new NodeModel());
+            var group = diagram.Groups.Add(new GroupModel(new[] { node }));
+
+            // Act
+            diagram.Groups.Delete(group);
+
+            // Assert
+            diagram.Groups.Should().BeEmpty();
+            diagram.Nodes.Should().BeEmpty();
+        }
     }
 }

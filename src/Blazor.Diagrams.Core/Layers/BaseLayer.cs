@@ -22,10 +22,12 @@ namespace Blazor.Diagrams.Core
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
 
-            _items.Add(item);
-            OnItemAdded(item);
-            Added?.Invoke(item);
-            Diagram.Refresh();
+            Diagram.Batch(() =>
+            {
+                _items.Add(item);
+                OnItemAdded(item);
+                Added?.Invoke(item);
+            });
             return item;
         }
 
@@ -52,9 +54,11 @@ namespace Blazor.Diagrams.Core
 
             if (_items.Remove(item))
             {
-                OnItemRemoved(item);
-                Removed?.Invoke(item);
-                Diagram.Refresh();
+                Diagram.Batch(() =>
+                {
+                    OnItemRemoved(item);
+                    Removed?.Invoke(item);
+                });
             }
         }
 

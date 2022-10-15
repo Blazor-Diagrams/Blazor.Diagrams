@@ -62,22 +62,6 @@ namespace Blazor.Diagrams.Core.Tests.Layers
         }
 
         [Fact]
-        public void Remove_ShouldUngroup()
-        {
-            // Arrange
-            var diagram = new TestDiagram();
-            var node = diagram.Nodes.Add(new NodeModel());
-            var group = diagram.Groups.Add(new GroupModel(new[] { node }));
-
-            // Act
-            diagram.Groups.Remove(group);
-
-            // Assert
-            group.Children.Should().BeEmpty();
-            node.Group.Should().BeNull();
-        }
-
-        [Fact]
         public void Remove_ShouldRemoveItselfFromParentGroup()
         {
             // Arrange
@@ -91,6 +75,22 @@ namespace Blazor.Diagrams.Core.Tests.Layers
             // Assert
             group2.Children.Should().BeEmpty();
             group1.Group.Should().BeNull();
+        }
+
+        [Fact]
+        public void Remove_ShouldUngroup()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var node = diagram.Nodes.Add(new NodeModel());
+            var group = diagram.Groups.Add(new GroupModel(new[] { node }));
+
+            // Act
+            diagram.Groups.Remove(group);
+
+            // Assert
+            group.Children.Should().BeEmpty();
+            node.Group.Should().BeNull();
         }
 
         [Fact]
@@ -122,6 +122,54 @@ namespace Blazor.Diagrams.Core.Tests.Layers
             // Assert
             diagram.Groups.Should().BeEmpty();
             diagram.Nodes.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Add_ShouldRefreshDiagramOnce()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var refreshes = 0;
+            diagram.Changed += () => refreshes++;
+
+            // Act
+            var group = diagram.Groups.Add(new GroupModel(Array.Empty<NodeModel>()));
+
+            // Assert
+            refreshes.Should().Be(1);
+        }
+
+        [Fact]
+        public void Remove_ShouldRefreshDiagramOnce()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var group = diagram.Groups.Add(new GroupModel(Array.Empty<NodeModel>()));
+            var refreshes = 0;
+            diagram.Changed += () => refreshes++;
+
+            // Act
+            diagram.Groups.Remove(group);
+
+            // Assert
+            refreshes.Should().Be(1);
+        }
+
+        [Fact]
+        public void Delete_ShouldRefreshDiagramOnce()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var node = diagram.Nodes.Add(new NodeModel());
+            var group = diagram.Groups.Add(new GroupModel(new[] { node }));
+            var refreshes = 0;
+            diagram.Changed += () => refreshes++;
+
+            // Act
+            diagram.Groups.Delete(group);
+
+            // Assert
+            refreshes.Should().Be(1);
         }
     }
 }

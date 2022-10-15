@@ -19,32 +19,32 @@ namespace Blazor.Diagrams.Core.Layers
         /// </summary>
         public void Delete(GroupModel group)
         {
-            var children = group.Children.ToArray();
-
-            Remove(group);
-
-            foreach (var child in children)
+            Diagram.Batch(() =>
             {
-                if (child is GroupModel g)
+                var children = group.Children.ToArray();
+
+                Remove(group);
+
+                foreach (var child in children)
                 {
-                    Delete(g);
+                    if (child is GroupModel g)
+                    {
+                        Delete(g);
+                    }
+                    else
+                    {
+                        Diagram.Nodes.Remove(child);
+                    }
                 }
-                else
-                {
-                    Diagram.Nodes.Remove(child);
-                }
-            }
+            });
         }
 
         protected override void OnItemRemoved(GroupModel group)
         {
-            Diagram.Batch(() =>
-            {
-                Diagram.Links.Remove(group.PortLinks.ToArray());
-                Diagram.Links.Remove(group.Links.ToArray());
-                group.Ungroup();
-                group.Group?.RemoveChild(group);
-            });
+            Diagram.Links.Remove(group.PortLinks.ToArray());
+            Diagram.Links.Remove(group.Links.ToArray());
+            group.Ungroup();
+            group.Group?.RemoveChild(group);
         }
     }
 }

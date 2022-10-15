@@ -6,9 +6,9 @@ namespace Blazor.Diagrams.Core.Models.Base
     {
         private bool _visible = true;
         
-        public Model() : this(Guid.NewGuid().ToString()) { }
+        protected Model() : this(Guid.NewGuid().ToString()) { }
 
-        public Model(string id)
+        protected Model(string id)
         {
             Id = id;
         }

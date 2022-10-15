@@ -2,7 +2,6 @@
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System;
@@ -21,6 +20,8 @@ namespace Blazor.Diagrams.Core
     public abstract class Diagram
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
+        private readonly List<SelectableModel> _orderedSelectables;
+        private bool _suspendSorting;
 
         public event Action<Model?, PointerEventArgs>? PointerDown;
         public event Action<Model?, PointerEventArgs>? PointerMove;
@@ -41,11 +42,20 @@ namespace Blazor.Diagrams.Core
         protected Diagram()
         {
             _behaviors = new Dictionary<Type, Behavior>();
+            _orderedSelectables = new List<SelectableModel>();
 
             Nodes = new NodeLayer(this);
             Links = new LinkLayer(this);
             Groups = new GroupLayer(this);
             Controls = new ControlsLayer();
+
+            Nodes.Added += OnSelectableAdded;
+            Links.Added += OnSelectableAdded;
+            Groups.Added += OnSelectableAdded;
+
+            Nodes.Removed += OnSelectableRemoved;
+            Links.Removed += OnSelectableRemoved;
+            Groups.Removed += OnSelectableRemoved;
 
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
@@ -67,6 +77,7 @@ namespace Blazor.Diagrams.Core
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public bool SuspendRefresh { get; set; }
+        public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
         public void Refresh()
         {
@@ -276,6 +287,83 @@ namespace Blazor.Diagrams.Core
 
             return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
         }
+
+        #region Ordering
+
+        public void SendToBack(SelectableModel model)
+        {
+            var minOrder = GetMinOrder();
+            if (model.Order == minOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Insert(0, model);
+
+            // Todo: can optimize this by only updating the order of items before model
+            Batch(() =>
+            {
+                _suspendSorting = true;
+                for (var i = 0; i < _orderedSelectables.Count; i++)
+                {
+                    _orderedSelectables[i].Order = i + 1;
+                }
+                _suspendSorting = false;
+            });
+        }
+
+        public void SendToFront(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            if (model.Order == maxOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Add(model);
+
+            _suspendSorting = true;
+            model.Order = maxOrder + 1;
+            _suspendSorting = false;
+            Refresh();
+        }
+
+        public int GetMinOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[0].Order : 0;
+        }
+
+        public int GetMaxOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[^1].Order : 0;
+        }
+
+        private void OnSelectableAdded(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            _orderedSelectables.Add(model);
+            model.Order = maxOrder + 1;
+            model.OrderChanged += OnModelOrderChanged;
+        }
+
+        private void OnSelectableRemoved(SelectableModel model)
+        {
+            model.OrderChanged -= OnModelOrderChanged;
+            _orderedSelectables.Remove(model);
+        }
+
+        private void OnModelOrderChanged(Model model)
+        {
+            if (_suspendSorting)
+                return;
+
+            _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
+            Refresh();
+        }
+
+        #endregion
 
         #region Events
 

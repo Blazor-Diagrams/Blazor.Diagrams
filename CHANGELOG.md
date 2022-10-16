@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0-beta.4) - 2022-10-16
+
+### Added
+
+- Initial version of Ordering!
+	- Nodes, groups and links can now be ordered using the new `Order` property or `SendToFront/Back` methods
+	- `Diagram.OrderedSelectables` returns the ordered selectables/models
+	- `DiagramCanvas` now uses this new property to render everything
+- `GridSnapToCenter` option in order to snap nodes from their center instead of their top/left position (thanks to @[Jeremy Vance](https://github.com/240026763))
+- More unit tests
+
+### Changed
+
+- `Groups` is not a list of groups anymore, but a layer instead (just like `Nodes` and `Links`)
+
+### Fixed
+
+- Deleting a group doesn't delete links attached to it
+- Deleting a group inside of a group doesn't refresh the parent group
+- Links not refreshing when a group's dimensions are updated directly (e.g. deleting a child)
+- Layers causing more refreshes than intended
+
+### Removed
+
+- All group-related methods and events from `Diagram`, please use the new layer from now on
+
 ## Diagrams (3.0.0-beta.3) - 2022-09-18
 
 ### Added

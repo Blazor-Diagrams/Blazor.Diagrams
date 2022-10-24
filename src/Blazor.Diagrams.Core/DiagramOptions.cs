@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Models.Base;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Core
 {
@@ -86,10 +87,10 @@ namespace Blazor.Diagrams.Core
     public class DiagramConstraintsOptions
     {
         [Description("Decide if a node can/should be deleted")]
-        public Func<NodeModel, bool> ShouldDeleteNode { get; set; } = _ => true;
+        public Func<NodeModel, Task<bool>> ShouldDeleteNode { get; set; } = _ => Task.FromResult(true);
         [Description("Decide if a link can/should be deleted")]
-        public Func<BaseLinkModel, bool> ShouldDeleteLink { get; set; } = _ => true;
+        public Func<BaseLinkModel, Task<bool>> ShouldDeleteLink { get; set; } = _ => Task.FromResult(true);
         [Description("Decide if a group can/should be deleted")]
-        public Func<GroupModel, bool> ShouldDeleteGroup { get; set; } = _ => true;
+        public Func<GroupModel, Task<bool>> ShouldDeleteGroup { get; set; } = _ => Task.FromResult(true);
     }
 }

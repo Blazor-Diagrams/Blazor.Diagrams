@@ -56,7 +56,7 @@ namespace Blazor.Diagrams.Core.Extensions
             var cX = (sX + tX) / 2;
             var cY = (sY + tY) / 2;
 
-            var curvePointA = GetCurvePoint(sX, sY, cX, cY, link.SourcePort.Alignment);
+            var curvePointA = GetCurvePoint(sX, sY, cX, cY, link.SourcePort?.Alignment);
             var curvePointB = GetCurvePoint(tX, tY, cX, cY, link.TargetPort?.Alignment);
             return FormattableString.Invariant($"M {sX} {sY} C {curvePointA}, {curvePointB}, {tX} {tY}");
         }
@@ -100,10 +100,10 @@ namespace Blazor.Diagrams.Core.Extensions
         }
 
         public static double GetMiddleSourceX(this BaseLinkModel link)
-            => link.SourcePort.Position.X + (link.SourcePort.Size.Width / 2);
+            => link.SourcePort!.Position.X + (link.SourcePort.Size.Width / 2);
 
         public static double GetMiddleSourceY(this BaseLinkModel link)
-            => link.SourcePort.Position.Y + (link.SourcePort.Size.Height / 2);
+            => link.SourcePort!.Position.Y + (link.SourcePort.Size.Height / 2);
 
         public static double GetMiddleTargetX(this BaseLinkModel link)
             => link.TargetPort!.Position.X + (link.TargetPort.Size.Width / 2);

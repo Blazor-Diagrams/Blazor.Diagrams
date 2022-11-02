@@ -1,25 +1,26 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
-// Implementation taken from the JS version: https://gist.github.com/menendezpoo/4a8894c152383b9d7a870c24a04447e4
-// Todo: Make it more c#, Benchmark A* vs Dijkstra, Add more options
+// Originally based from https://gist.github.com/menendezpoo/4a8894c152383b9d7a870c24a04447e4 with some tweaks (especially the use of a*)
 namespace Blazor.Diagrams.Core
 {
     public static partial class Routers
     {
         public static Point[] Orthogonal(Diagram _, BaseLinkModel link)
         {
+            if (!link.IsAttached)
+                return Routers.Normal(_, link);
+
             if (link.Source is not SinglePortAnchor spa1)
-                throw new Exception("Orthogonal router doesn't work with port-less links yet");
+                throw new DiagramsException("Orthogonal router doesn't work with port-less links yet");
 
             if (link.Target is not SinglePortAnchor targetAnchor)
-                throw new Exception("Orthogonal router doesn't work with port-less links yet");
+                throw new DiagramsException("Orthogonal router doesn't work with port-less links yet");
 
             var sourcePort = spa1.Port;
             if (targetAnchor == null || sourcePort.Parent.Size == null || targetAnchor.Port.Parent.Size == null)
@@ -29,7 +30,7 @@ namespace Blazor.Diagrams.Core
 
             var shapeMargin = 10;
             var globalBoundsMargin = 50;
-            var spots = new List<Point>();
+            var spots = new HashSet<Point>();
             var verticals = new List<double>();
             var horizontals = new List<double>();
             var sideA = sourcePort.Alignment;
@@ -80,40 +81,62 @@ namespace Blazor.Diagrams.Core
             var gridPoints = GridToSpots(grid, new[] { inflatedA, inflatedB });
 
             // Add to spots
-            spots.AddRange(gridPoints);
+            spots.UnionWith(gridPoints);
 
-            // Create graph
-            var graph = CreateGraph(spots);
+            var ys = spots.Select(p => p.Y).Distinct().ToList();
+            var xs = spots.Select(p => p.X).Distinct().ToList();
+            ys.Sort();
+            xs.Sort();
 
-            // Origin and destination by extruding antennas
-            var origin = ExtrudeCp(originA, shapeMargin, sideA);
-            var destination = ExtrudeCp(originB, shapeMargin, sideB);
+            var cc = sw.Elapsed.TotalMilliseconds;
 
-            var path = ShortestPath(graph, origin, destination);
-            if (path.Length > 0)
+            var nodes = spots.ToDictionary(p => p, p => new Node(p));
+
+            for (var i = 0; i < ys.Count; i++)
             {
-                return SimplifyPath(path);
+                for (var j = 0; j < xs.Count; j++)
+                {
+                    var b = new Point(xs[j], ys[i]);
+                    if (!nodes.ContainsKey(b))
+                        continue;
+
+                    if (j > 0)
+                    {
+                        var a = new Point(xs[j - 1], ys[i]);
+
+                        if (nodes.ContainsKey(a))
+                        {
+                            nodes[a].ConnectedTo.Add(nodes[b]);
+                            nodes[b].ConnectedTo.Add(nodes[a]);
+                        }
+                    }
+
+                    if (i > 0)
+                    {
+                        var a = new Point(xs[j], ys[i - 1]);
+
+                        if (nodes.ContainsKey(a))
+                        {
+                            nodes[a].ConnectedTo.Add(nodes[b]);
+                            nodes[b].ConnectedTo.Add(nodes[a]);
+                        }
+                    }
+                }
+            }
+
+            var nodeA = nodes[GetOriginSpot(originA, sideA, shapeMargin)];
+            var nodeB = nodes[GetOriginSpot(originB, sideB, shapeMargin)];
+            var path = new AStarPathfinder().GetPath(nodeA, nodeB);
+
+            if (path.Count > 0)
+            {
+                return path.ToArray();
             }
             else
             {
                 return Normal(_, link);
             }
         }
-
-        private static Point GetOriginSpot(Point p, PortAlignment alignment, double shapeMargin)
-        {
-            return alignment switch
-            {
-                PortAlignment.Top => p.Add(0, -shapeMargin),
-                PortAlignment.Right => p.Add(shapeMargin, 0),
-                PortAlignment.Bottom => p.Add(0, shapeMargin),
-                PortAlignment.Left => p.Add(-shapeMargin, 0),
-                _ => throw new NotImplementedException()
-            };
-        }
-
-        private static bool IsVerticalSide(PortAlignment alignment)
-            => alignment == PortAlignment.Top || alignment == PortAlignment.Bottom; // Add others
 
         private static Grid RulersToGrid(List<double> verticals, List<double> horizontals, Rectangle bounds)
         {
@@ -156,20 +179,35 @@ namespace Blazor.Diagrams.Core
             return result;
         }
 
-        private static List<Point> GridToSpots(Grid grid, Rectangle[] obstacles)
+        private static HashSet<Point> GridToSpots(Grid grid, Rectangle[] obstacles)
         {
-            bool obstacleCollision(Point p) => obstacles.Where(o => o.ContainsPoint(p)).Any();
+            bool IsInsideObstacles(Point p)
+            {
+                foreach (var obstacle in obstacles)
+                {
+                    if (obstacle.ContainsPoint(p))
+                        return true;
+                }
 
-            var gridPoints = new List<Point>();
+                return false;
+            }
+
+            void AddIfNotInsideObstacles(HashSet<Point> list, Point p)
+            {
+                if (!IsInsideObstacles(p))
+                {
+                    list.Add(p);
+                }
+            }
+
+            var gridPoints = new HashSet<Point>();
             foreach (var (row, data) in grid.Data)
             {
-
                 var firstRow = row == 0;
                 var lastRow = row == grid.Rows - 1;
 
                 foreach (var (col, r) in data)
                 {
-
                     var firstCol = col == 0;
                     var lastCol = col == grid.Columns - 1;
                     var nw = firstCol && firstRow;
@@ -179,213 +217,67 @@ namespace Blazor.Diagrams.Core
 
                     if (nw || ne || se || sw)
                     {
-                        gridPoints.Add(r.NorthWest);
-                        gridPoints.Add(r.NorthEast);
-                        gridPoints.Add(r.SouthWest);
-                        gridPoints.Add(r.SouthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthEast);
                     }
                     else if (firstRow)
                     {
-                        gridPoints.Add(r.NorthWest);
-                        gridPoints.Add(r.North);
-                        gridPoints.Add(r.NorthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.North);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthEast);
                     }
                     else if (lastRow)
                     {
-                        gridPoints.Add(r.SouthEast);
-                        gridPoints.Add(r.South);
-                        gridPoints.Add(r.SouthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.South);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthWest);
                     }
                     else if (firstCol)
                     {
-                        gridPoints.Add(r.NorthWest);
-                        gridPoints.Add(r.West);
-                        gridPoints.Add(r.SouthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.West);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthWest);
                     }
                     else if (lastCol)
                     {
-                        gridPoints.Add(r.NorthEast);
-                        gridPoints.Add(r.East);
-                        gridPoints.Add(r.SouthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.East);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthEast);
                     }
                     else
                     {
-                        gridPoints.Add(r.NorthWest);
-                        gridPoints.Add(r.North);
-                        gridPoints.Add(r.NorthEast);
-                        gridPoints.Add(r.East);
-                        gridPoints.Add(r.SouthEast);
-                        gridPoints.Add(r.South);
-                        gridPoints.Add(r.SouthWest);
-                        gridPoints.Add(r.West);
-                        gridPoints.Add(r.Center);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.North);
+                        AddIfNotInsideObstacles(gridPoints, r.NorthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.East);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthEast);
+                        AddIfNotInsideObstacles(gridPoints, r.South);
+                        AddIfNotInsideObstacles(gridPoints, r.SouthWest);
+                        AddIfNotInsideObstacles(gridPoints, r.West);
+                        AddIfNotInsideObstacles(gridPoints, r.Center);
                     }
                 }
             }
 
             // Reduce repeated points and filter out those who touch shapes
-            return ReducePoints(gridPoints).Where(p => !obstacleCollision(p)).ToList();
+            return gridPoints;
         }
 
-        private static IEnumerable<Point> ReducePoints(List<Point> points)
-        {
-            var map = new Dictionary<double, List<double>>();
-            foreach (var p in points)
-            {
-                (var x, var y) = p;
-                if (!map.ContainsKey(y)) map.Add(y, new List<double>());
-                var arr = map[y];
+        private static bool IsVerticalSide(PortAlignment alignment)
+            => alignment == PortAlignment.Top || alignment == PortAlignment.Bottom;
 
-                if (!arr.Contains(x)) arr.Add(x);
-            }
-
-            foreach (var (y, xs) in map)
-            {
-                foreach (var x in xs)
-                {
-                    yield return new Point(x, y);
-                }
-            }
-        }
-
-        private static PointGraph CreateGraph(List<Point> spots)
-        {
-            var hotXs = new List<double>();
-            var hotYs = new List<double>();
-            var graph = new PointGraph();
-
-            spots.ForEach(p =>
-            {
-                (var x, var y) = p;
-                if (!hotXs.Contains(x)) hotXs.Add(x);
-                if (!hotYs.Contains(y)) hotYs.Add(y);
-                graph.Add(p);
-            });
-
-            hotXs.Sort();
-            hotYs.Sort();
-
-            for (var i = 0; i < hotYs.Count; i++)
-            {
-                for (var j = 0; j < hotXs.Count; j++)
-                {
-                    var b = new Point(hotXs[j], hotYs[i]);
-                    if (!graph.Has(b)) continue;
-
-                    if (j > 0)
-                    {
-                        var a = new Point(hotXs[j - 1], hotYs[i]);
-
-                        if (graph.Has(a))
-                        {
-                            graph.Connect(a, b);
-                            graph.Connect(b, a);
-                        }
-                    }
-
-                    if (i > 0)
-                    {
-                        var a = new Point(hotXs[j], hotYs[i - 1]);
-
-                        if (graph.Has(a))
-                        {
-                            graph.Connect(a, b);
-                            graph.Connect(b, a);
-                        }
-                    }
-                }
-            }
-
-            return graph;
-        }
-
-        private static Point ExtrudeCp(Point p, double margin, PortAlignment alignment)
+        private static Point GetOriginSpot(Point p, PortAlignment alignment, double shapeMargin)
         {
             return alignment switch
             {
-                PortAlignment.Top => p.Add(0, -margin),
-                PortAlignment.Right => p.Add(margin, 0),
-                PortAlignment.Bottom => p.Add(0, margin),
-                PortAlignment.Left => p.Add(-margin, 0),
-                _ => throw new NotImplementedException(),
+                PortAlignment.Top => p.Add(0, -shapeMargin),
+                PortAlignment.Right => p.Add(shapeMargin, 0),
+                PortAlignment.Bottom => p.Add(0, shapeMargin),
+                PortAlignment.Left => p.Add(-shapeMargin, 0),
+                _ => throw new NotImplementedException()
             };
-        }
-
-        private static Point[] ShortestPath(PointGraph graph, Point origin, Point destination)
-        {
-            var originNode = graph.Get(origin);
-            var destinationNode = graph.Get(destination);
-
-            if (originNode == null || destinationNode == null)
-                throw new Exception("Origin node or Destination node not found");
-
-            graph.CalculateShortestPathFromSource(graph, originNode);
-            return destinationNode.ShortestPath.Select(n => n.Data).ToArray();
-        }
-
-        private static Point[] SimplifyPath(Point[] points)
-        {
-            if (points.Length <= 2)
-            {
-                return points;
-            }
-
-            var r = new List<Point>() { points[0] };
-            for (var i = 1; i < points.Length; i++)
-            {
-                var cur = points[i];
-                if (i == (points.Length - 1))
-                {
-                    r.Add(cur);
-                    break;
-                }
-
-                var prev = points[i - 1];
-                var next = points[i + 1];
-                var bend = GetBend(prev, cur, next);
-
-                if (bend != "none")
-                {
-                    r.Add(cur);
-                }
-            }
-
-            return r.ToArray();
-        }
-
-        private static string GetBend(Point a, Point b, Point c)
-        {
-            var equalX = a.X == b.X && b.X == c.X;
-            var equalY = a.Y == b.Y && b.Y == c.Y;
-            var segment1Horizontal = a.Y == b.Y;
-            var segment1Vertical = a.X == b.X;
-            var segment2Horizontal = b.Y == c.Y;
-            var segment2Vertical = b.X == c.X;
-
-            if (equalX || equalY)
-            {
-                return "none";
-            }
-
-            if (
-                !(segment1Vertical || segment1Horizontal) ||
-                !(segment2Vertical || segment2Horizontal)
-            )
-            {
-                return "unknown";
-            }
-
-            if (segment1Horizontal && segment2Vertical)
-            {
-                return c.Y > b.Y ? "s" : "n";
-
-            }
-            else if (segment1Vertical && segment2Horizontal)
-            {
-                return c.X > b.X ? "e" : "w";
-            }
-
-            throw new Exception("Nope");
         }
     }
 
@@ -412,161 +304,102 @@ namespace Blazor.Diagrams.Core
 
             Data[row].Add(column, rectangle);
         }
-
-        public Rectangle? Get(double row, double column)
-        {
-            if (!Data.ContainsKey(row))
-                return null;
-
-            if (!Data[row].ContainsKey(column))
-                return null;
-
-            return Data[row][column];
-        }
-
-        public Rectangle[] Rectangles() => Data.SelectMany(r => r.Value.Values).ToArray();
     }
 
-    class PointGraph
+    class AStarPathfinder
     {
-        public readonly Dictionary<string, Dictionary<string, PointNode>> _index = new Dictionary<string, Dictionary<string, PointNode>>();
-
-        public void Add(Point p)
+        public IReadOnlyList<Point> GetPath(Node start, Node goal)
         {
-            (var x, var y) = p;
-            var xs = x.ToInvariantString();
-            var ys = y.ToInvariantString();
+            var frontier = new PriorityQueue<Node, double>();
+            frontier.Enqueue(start, 0);
 
-            if (!_index.ContainsKey(xs))
-                _index.Add(xs, new Dictionary<string, PointNode>());
-
-            if (!_index[xs].ContainsKey(ys))
-                _index[xs].Add(ys, new PointNode(p));
-        }
-
-        private PointNode GetLowestDistanceNode(HashSet<PointNode> unsettledNodes)
-        {
-            PointNode? lowestDistanceNode = null;
-            var lowestDistance = double.MaxValue;
-            foreach (var node in unsettledNodes)
+            while (frontier.Count > 0)
             {
-                var nodeDistance = node.Distance;
-                if (nodeDistance < lowestDistance)
+                var current = frontier.Dequeue();
+
+                if (current.Equals(goal))
+                    break;
+
+                foreach (var next in current.ConnectedTo)
                 {
-                    lowestDistance = nodeDistance;
-                    lowestDistanceNode = node;
-                }
-            }
-
-            return lowestDistanceNode!;
-        }
-
-        public PointGraph CalculateShortestPathFromSource(PointGraph graph, PointNode source)
-        {
-            source.Distance = 0;
-            var settledNodes = new HashSet<PointNode>();
-            var unsettledNodes = new HashSet<PointNode>
-            {
-                source
-            };
-
-            while (unsettledNodes.Count != 0)
-            {
-                var currentNode = GetLowestDistanceNode(unsettledNodes);
-                unsettledNodes.Remove(currentNode);
-
-                foreach ((var adjacentNode, var edgeWeight) in currentNode.AdjacentNodes)
-                {
-                    if (!settledNodes.Contains(adjacentNode))
+                    var newCost = current.Cost + 1.0;
+                    if (current.Parent != null && IsChangeOfDirection(current.Parent.Position, current.Position, next.Position))
                     {
-                        CalculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
-                        unsettledNodes.Add(adjacentNode);
+                        newCost *= newCost;
+                        newCost *= newCost;
                     }
 
+                    if (next.Cost == 0 || newCost < next.Cost)
+                    {
+                        next.Cost = newCost;
+                        var priority = newCost + Heuristic(next.Position, goal.Position);
+                        frontier.Enqueue(next, priority);
+                        next.Parent = current;
+                    }
                 }
-                settledNodes.Add(currentNode);
             }
 
-            return graph;
-        }
+            var result = new List<Point>();
+            var c = goal.Parent;
 
-        private void CalculateMinimumDistance(PointNode evaluationNode, double edgeWeight, PointNode sourceNode)
-        {
-            var sourceDistance = sourceNode.Distance;
-            var comingDirection = InferPathDirection(sourceNode);
-            var goingDirection = DirectionOfNodes(sourceNode, evaluationNode);
-            var changingDirection = comingDirection != null && goingDirection != null && comingDirection != goingDirection;
-            var extraWeigh = changingDirection ? Math.Pow(edgeWeight + 1, 2) : 0;
-
-            if (sourceDistance + edgeWeight + extraWeigh < evaluationNode.Distance)
+            while (c != null && c != start)
             {
-                evaluationNode.Distance = sourceDistance + edgeWeight + extraWeigh;
-                var shortestPath = new List<PointNode>();
-                shortestPath.AddRange(sourceNode.ShortestPath);
-                shortestPath.Add(sourceNode);
-                evaluationNode.ShortestPath = shortestPath;
+                result.Insert(0, c.Position);
+                c = c.Parent;
+            }
+
+            if (c == start)
+            { 
+                return result;
+            }
+            else
+            {
+                return Array.Empty<Point>();
             }
         }
 
-        private char? DirectionOf(Point a, Point b)
+        private static bool IsChangeOfDirection(Point a, Point b, Point c)
         {
-            if (a.X == b.X) return 'h';
-            else if (a.Y == b.Y) return 'v';
-            return null;
+            if (a.X == b.X && b.X != c.X)
+                return true;
+
+            if (a.Y == b.Y && b.Y != c.Y)
+                return true;
+
+            return false;
         }
 
-        private char? DirectionOfNodes(PointNode a, PointNode b) => DirectionOf(a.Data, b.Data);
-
-        private char? InferPathDirection(PointNode node)
+        private static double Heuristic(Point a, Point b)
         {
-            if (node.ShortestPath.Count == 0)
-                return null;
-
-            return DirectionOfNodes(node.ShortestPath[node.ShortestPath.Count - 1], node);
-        }
-
-        public void Connect(Point a, Point b)
-        {
-            var nodeA = Get(a);
-            var nodeB = Get(b);
-
-            if (nodeA == null || nodeB == null)
-                return;
-
-            nodeA.AdjacentNodes.Add(nodeB, a.DistanceTo(b));
-        }
-
-        public bool Has(Point p)
-        {
-            (var x, var y) = p;
-            var xs = x.ToInvariantString();
-            var ys = y.ToInvariantString();
-            return _index.ContainsKey(xs) && _index[xs].ContainsKey(ys);
-        }
-
-        public PointNode? Get(Point p)
-        {
-            (var x, var y) = p;
-            var xs = x.ToInvariantString();
-            var ys = y.ToInvariantString();
-
-            if (_index.ContainsKey(xs) && _index[xs].ContainsKey(ys))
-                return _index[xs][ys];
-
-            return null;
+            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
         }
     }
 
-    class PointNode
+    class Node
     {
-        public PointNode(Point data)
+        public Node(Point position)
         {
-            Data = data;
+            Position = position;
+            ConnectedTo = new List<Node>();
         }
 
-        public Point Data { get; }
-        public double Distance { get; set; } = double.MaxValue;
-        public List<PointNode> ShortestPath { get; set; } = new List<PointNode>();
-        public Dictionary<PointNode, double> AdjacentNodes { get; set; } = new Dictionary<PointNode, double>();
+        public Point Position { get; }
+        public List<Node> ConnectedTo { get; }
+
+        public double Cost { get; internal set; }
+        public Node? Parent { get; internal set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Node item)
+                return false;
+
+            return Position.Equals(item.Position);
+        }
+
+        public override int GetHashCode()
+        {
+            return Position.GetHashCode();
+        }
     }
 }

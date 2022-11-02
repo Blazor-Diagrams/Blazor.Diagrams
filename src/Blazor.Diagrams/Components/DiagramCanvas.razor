@@ -28,6 +28,8 @@
         }
 
         <ControlsLayerRenderer Svg="@true"></ControlsLayerRenderer>
+
+        @AdditionalSvg
     </svg>
 
     <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
@@ -48,6 +50,8 @@
         }
 
         <ControlsLayerRenderer Svg="@false"></ControlsLayerRenderer>
+
+        @AdditionalHtml
     </div>
 
     @Widgets

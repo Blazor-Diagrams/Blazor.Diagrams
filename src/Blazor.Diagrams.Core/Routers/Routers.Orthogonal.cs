@@ -88,8 +88,6 @@ namespace Blazor.Diagrams.Core
             ys.Sort();
             xs.Sort();
 
-            var cc = sw.Elapsed.TotalMilliseconds;
-
             var nodes = spots.ToDictionary(p => p, p => new Node(p));
 
             for (var i = 0; i < ys.Count; i++)

@@ -2,11 +2,11 @@
 using Blazor.Diagrams.Core.Models.Base;
 using SvgPathProperties;
 
-namespace Blazor.Diagrams.Core
+namespace Blazor.Diagrams.Core.PathGenerators
 {
-    public static partial class PathGenerators
+    public class StraightPathGenerator : PathGenerator
     {
-        public static PathGeneratorResult Straight(Diagram _, BaseLinkModel link, Point[] route, Point source, Point target)
+        public override PathGeneratorResult GetResult(Diagram diagram, BaseLinkModel link, Point[] route, Point source, Point target)
         {
             route = ConcatRouteAndSourceAndTarget(route, source, target);
             double? sourceAngle = null;

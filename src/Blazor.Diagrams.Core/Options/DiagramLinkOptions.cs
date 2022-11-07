@@ -1,6 +1,8 @@
 using System;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 
 namespace Blazor.Diagrams.Core.Options;
 
@@ -8,8 +10,8 @@ public class DiagramLinkOptions
 {
     private double _snappingRadius = 50;
 
-    public Router DefaultRouter { get; set; } = Routers.Normal;
-    public PathGenerator DefaultPathGenerator { get; set; } = PathGenerators.Smooth;
+    public Router DefaultRouter { get; set; } = new NormalRouter();
+    public PathGenerator DefaultPathGenerator { get; set; } = new SmoothPathGenerator();
     public bool EnableSnapping { get; set; } = false;
     public bool RequireTarget { get; set; } = true;
 

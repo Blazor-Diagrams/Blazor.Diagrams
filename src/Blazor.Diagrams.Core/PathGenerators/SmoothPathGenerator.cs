@@ -2,16 +2,21 @@
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using System;
 using SvgPathProperties;
+using System;
 
-namespace Blazor.Diagrams.Core
+namespace Blazor.Diagrams.Core.PathGenerators
 {
-    public static partial class PathGenerators
+    public class SmoothPathGenerator : PathGenerator
     {
-        private const double _margin = 125;
+        private readonly double _margin;
 
-        public static PathGeneratorResult Smooth(Diagram _, BaseLinkModel link, Point[] route, Point source, Point target)
+        public SmoothPathGenerator(double margin = 125)
+        {
+            _margin = margin;
+        }
+
+        public override PathGeneratorResult GetResult(Diagram diagram, BaseLinkModel link, Point[] route, Point source, Point target)
         {
             route = ConcatRouteAndSourceAndTarget(route, source, target);
 
@@ -39,7 +44,7 @@ namespace Blazor.Diagrams.Core
             return new PathGeneratorResult(new[] { path }, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
-        private static PathGeneratorResult CurveThroughPoints(Point[] route, BaseLinkModel link)
+        private PathGeneratorResult CurveThroughPoints(Point[] route, BaseLinkModel link)
         {
             double? sourceAngle = null;
             double? targetAngle = null;
@@ -68,7 +73,7 @@ namespace Blazor.Diagrams.Core
             return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
-        private static Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)
+        private Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)
         {
             var cX = (route[0].X + route[1].X) / 2;
             var cY = (route[0].Y + route[1].Y) / 2;
@@ -77,7 +82,7 @@ namespace Blazor.Diagrams.Core
             return new[] { route[0], curvePointA, curvePointB, route[1] };
         }
 
-        private static Point GetCurvePoint(Point[] route, Anchor anchor, double pX, double pY, double cX, double cY, bool first)
+        private Point GetCurvePoint(Point[] route, Anchor anchor, double pX, double pY, double cX, double cY, bool first)
         {
             if (anchor is PositionAnchor)
                 return new Point(cX, cY);
@@ -103,7 +108,7 @@ namespace Blazor.Diagrams.Core
             }
         }
 
-        private static Point GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
+        private Point GetCurvePoint(double pX, double pY, double cX, double cY, PortAlignment? alignment)
         {
             var margin = Math.Min(_margin, Math.Pow(Math.Pow(pX - cX, 2) + Math.Pow(pY - cY, 2), .5));
             return alignment switch

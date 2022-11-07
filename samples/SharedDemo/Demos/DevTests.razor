@@ -3,6 +3,7 @@
 @using Blazor.Diagrams
 @using Blazor.Diagrams.Core.Anchors
 @using Blazor.Diagrams.Core.Controls
+@using Blazor.Diagrams.Core.PathGenerators
 @using Blazor.Diagrams.Core.Positions
 @using Blazor.Diagrams.Core.Controls.Default
 
@@ -37,7 +38,7 @@
 
         var link1 = new LinkModel(new DynamicAnchor(node1, providers1), new DynamicAnchor(node2, providers2))
         {
-            PathGenerator = PathGenerators.Smooth,
+            PathGenerator = new SmoothPathGenerator(),
             SourceMarker = LinkMarker.Arrow,
             TargetMarker = LinkMarker.Arrow
         };
@@ -46,7 +47,7 @@
         _blazorDiagram.Links.Add(link1);
         var link2 = _blazorDiagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node3), new LinkAnchor(link1, 0.5))
         {
-            PathGenerator = PathGenerators.Straight,
+            PathGenerator = new StraightPathGenerator(),
             SourceMarker = LinkMarker.Arrow,
             TargetMarker = LinkMarker.Arrow
         });

@@ -2,6 +2,8 @@
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 using Microsoft.AspNetCore.Components;
 
 namespace SharedDemo
@@ -26,8 +28,8 @@ namespace SharedDemo
             });
             BlazorDiagram.Links.Add(new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Right))
             {
-                Router = Routers.Orthogonal,
-                PathGenerator = PathGenerators.Straight,
+                Router = new OrthogonalRouter(),
+                PathGenerator = new StraightPathGenerator(),
                 SourceMarker = LinkMarker.Arrow,
                 TargetMarker = LinkMarker.Arrow
             });

@@ -1,11 +1,14 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models.Base;
 using System;
 
-namespace Blazor.Diagrams.Core
+namespace Blazor.Diagrams.Core.PathGenerators
 {
-    public static partial class PathGenerators
+    public abstract class PathGenerator
     {
-        public static double SourceMarkerAdjustement(Point[] route, double markerWidth)
+        public abstract PathGeneratorResult GetResult(Diagram diagram, BaseLinkModel link, Point[] route, Point source, Point target);
+
+        protected static double SourceMarkerAdjustement(Point[] route, double markerWidth)
         {
             var angleInRadians = Math.Atan2(route[1].Y - route[0].Y, route[1].X - route[0].X) + Math.PI;
             var xChange = markerWidth * Math.Cos(angleInRadians);
@@ -14,7 +17,7 @@ namespace Blazor.Diagrams.Core
             return angleInRadians * 180 / Math.PI;
         }
 
-        public static double TargetMarkerAdjustement(Point[] route, double markerWidth)
+        protected static double TargetMarkerAdjustement(Point[] route, double markerWidth)
         {
             var angleInRadians = Math.Atan2(route[^1].Y - route[^2].Y, route[^1].X - route[^2].X);
             var xChange = markerWidth * Math.Cos(angleInRadians);
@@ -23,7 +26,7 @@ namespace Blazor.Diagrams.Core
             return angleInRadians * 180 / Math.PI;
         }
 
-        public static Point[] ConcatRouteAndSourceAndTarget(Point[] route, Point source, Point target)
+        protected static Point[] ConcatRouteAndSourceAndTarget(Point[] route, Point source, Point target)
         {
             var result = new Point[route.Length + 2];
             result[0] = source;

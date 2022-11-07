@@ -1,20 +1,26 @@
-﻿using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using System;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Anchors;
+using System.Linq;
 
-// Originally based from https://gist.github.com/menendezpoo/4a8894c152383b9d7a870c24a04447e4 with some tweaks (especially the use of a*)
-namespace Blazor.Diagrams.Core
+namespace Blazor.Diagrams.Core.Routers
 {
-    public static partial class Routers
+    public class OrthogonalRouter : Router
     {
-        public static Point[] Orthogonal(Diagram _, BaseLinkModel link)
+        private readonly Router _fallbackRouter;
+
+        public OrthogonalRouter(Router? fallbackRouter = null)
+        {
+            _fallbackRouter = fallbackRouter ?? new NormalRouter();
+        }
+
+        public override Point[] GetRoute(Diagram diagram, BaseLinkModel link)
         {
             if (!link.IsAttached)
-                return Routers.Normal(_, link);
+                return _fallbackRouter.GetRoute(diagram, link);
 
             if (link.Source is not SinglePortAnchor spa1)
                 throw new DiagramsException("Orthogonal router doesn't work with port-less links yet");
@@ -24,7 +30,7 @@ namespace Blazor.Diagrams.Core
 
             var sourcePort = spa1.Port;
             if (targetAnchor == null || sourcePort.Parent.Size == null || targetAnchor.Port.Parent.Size == null)
-                return Normal(_, link);
+                return _fallbackRouter.GetRoute(diagram, link);
 
             var targetPort = targetAnchor.Port;
 
@@ -132,7 +138,7 @@ namespace Blazor.Diagrams.Core
             }
             else
             {
-                return Normal(_, link);
+                return _fallbackRouter.GetRoute(diagram, link);
             }
         }
 
@@ -347,7 +353,7 @@ namespace Blazor.Diagrams.Core
             }
 
             if (c == start)
-            { 
+            {
                 return result;
             }
             else

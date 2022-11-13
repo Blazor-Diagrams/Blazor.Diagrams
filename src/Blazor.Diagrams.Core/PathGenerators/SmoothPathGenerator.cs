@@ -41,7 +41,7 @@ namespace Blazor.Diagrams.Core.PathGenerators
                 .AddMoveTo(route[0].X, route[0].Y)
                 .AddCubicBezierCurve(route[1].X, route[1].Y, route[2].X, route[2].Y, route[3].X, route[3].Y);
 
-            return new PathGeneratorResult(new[] { path }, sourceAngle, route[0], targetAngle, route[^1]);
+            return new PathGeneratorResult(path, Array.Empty<SvgPath>(), sourceAngle, route[0], targetAngle, route[^1]);
         }
 
         private PathGeneratorResult CurveThroughPoints(Point[] route, BaseLinkModel link)
@@ -61,16 +61,18 @@ namespace Blazor.Diagrams.Core.PathGenerators
 
             BezierSpline.GetCurveControlPoints(route, out var firstControlPoints, out var secondControlPoints);
             var paths = new SvgPath[firstControlPoints.Length];
+            var fullPath = new SvgPath().AddMoveTo(route[0].X, route[0].Y);
 
             for (var i = 0; i < firstControlPoints.Length; i++)
             {
                 var cp1 = firstControlPoints[i];
                 var cp2 = secondControlPoints[i];
+                fullPath.AddCubicBezierCurve(cp1.X, cp1.Y, cp2.X, cp2.Y, route[i + 1].X, route[i + 1].Y);
                 paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddCubicBezierCurve(cp1.X, cp1.Y, cp2.X, cp2.Y, route[i + 1].X, route[i + 1].Y);
             }
 
             // Todo: adjust marker positions based on closest control points
-            return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
+            return new PathGeneratorResult(fullPath, paths, sourceAngle, route[0], targetAngle, route[^1]);
         }
 
         private Point[] GetRouteWithCurvePoints(BaseLinkModel link, Point[] route)

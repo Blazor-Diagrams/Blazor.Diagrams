@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
@@ -14,7 +15,7 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
 {
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
     [Parameter] public LinkLabelModel Label { get; set; } = null!;
-    [Parameter] public SvgPath[] Paths { get; set; } = null!;
+    [Parameter] public SvgPath Path { get; set; } = null!;
 
     public void Dispose()
     {
@@ -58,8 +59,7 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
 
     private Point? FindPosition()
     {
-        var totalLength = Paths.Sum(p => p.Length);
-
+        var totalLength = Path.Length;
         var length = Label.Distance switch
         {
             <= 1 and >= 0 => Label.Distance.Value * totalLength,
@@ -68,18 +68,7 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
             _ => totalLength * (Label.Parent.Labels.IndexOf(Label) + 1) / (Label.Parent.Labels.Count + 1)
         };
 
-        foreach (var path in Paths)
-        {
-            var pathLength = path.Length;
-            if (length < pathLength)
-            {
-                var pt = path.GetPointAtLength(length);
-                return new Point(pt.X, pt.Y);
-            }
-
-            length -= pathLength;
-        }
-
-        return null;
+        var pt = Path.GetPointAtLength(length);
+        return new Point(pt.X, pt.Y);
     }
 }

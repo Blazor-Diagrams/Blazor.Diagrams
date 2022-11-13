@@ -2,7 +2,6 @@
 using Blazor.Diagrams.Core.Geometry;
 using System;
 using System.Collections.Generic;
-using SvgPathProperties;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 
@@ -30,8 +29,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public Anchor Source { get; private set; }
     public Anchor Target { get; private set; }
     public Diagram? Diagram { get; internal set; }
-    public PathGeneratorResult GeneratedPathResult { get; private set; } = PathGeneratorResult.Empty;
-    public SvgPath[] Paths => GeneratedPathResult.Paths;
+    public PathGeneratorResult? PathGeneratorResult { get; private set; }
     public bool IsAttached => Source is not PositionAnchor && Target is not PositionAnchor;
     public Router? Router { get; set; }
     public PathGenerator? PathGenerator { get; set; }
@@ -80,7 +78,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
 
     public Rectangle? GetBounds()
     {
-        if (Paths.Length == 0)
+        if (PathGeneratorResult == null)
             return null;
 
         var minX = double.PositiveInfinity;
@@ -88,7 +86,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
         var maxX = double.NegativeInfinity;
         var maxY = double.NegativeInfinity;
 
-        foreach (var path in Paths)
+        foreach (var path in PathGeneratorResult.Paths)
         {
             var bbox = path.GetBBox();
             minX = Math.Min(minX, bbox.Left);
@@ -113,12 +111,12 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
             var target = Target.GetPosition(this, route);
             if (source != null && target != null)
             {
-                GeneratedPathResult = pathGenerator.GetResult(Diagram, this, route, source, target);
+                PathGeneratorResult = pathGenerator.GetResult(Diagram, this, route, source, target);
                 return;
             }
         }
 
-        GeneratedPathResult = PathGeneratorResult.Empty;
+        PathGeneratorResult = null;
     }
 
     void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);

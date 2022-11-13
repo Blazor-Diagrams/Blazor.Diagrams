@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using SvgPathProperties;
+using System;
 
 namespace Blazor.Diagrams.Core.PathGenerators
 {
@@ -22,13 +23,30 @@ namespace Blazor.Diagrams.Core.PathGenerators
                 targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
             }
 
-            var paths = new SvgPath[route.Length - 1];
-            for (var i = 0; i < route.Length - 1; i++)
+            if (link.Vertices.Count == 0)
             {
-                paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddLineTo(route[i + 1].X, route[i + 1].Y);
-            }
+                var fullPath = new SvgPath().AddMoveTo(route[0].X, route[0].Y);
 
-            return new PathGeneratorResult(paths, sourceAngle, route[0], targetAngle, route[^1]);
+                for (var i = 0; i < route.Length - 1; i++)
+                {
+                    fullPath.AddLineTo(route[i + 1].X, route[i + 1].Y);
+                }
+
+                return new PathGeneratorResult(fullPath, Array.Empty<SvgPath>(), sourceAngle, route[0], targetAngle, route[^1]);
+            }
+            else
+            {
+                var paths = new SvgPath[route.Length - 1];
+                var fullPath = new SvgPath().AddMoveTo(route[0].X, route[0].Y);
+
+                for (var i = 0; i < route.Length - 1; i++)
+                {
+                    fullPath.AddLineTo(route[i + 1].X, route[i + 1].Y);
+                    paths[i] = new SvgPath().AddMoveTo(route[i].X, route[i].Y).AddLineTo(route[i + 1].X, route[i + 1].Y);
+                }
+
+                return new PathGeneratorResult(fullPath, paths, sourceAngle, route[0], targetAngle, route[^1]);
+            }
         }
     }
 }

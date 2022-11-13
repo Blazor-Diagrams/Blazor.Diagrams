@@ -54,10 +54,6 @@
     cursor: pointer;
 }
 
-.link path.selection-helper:hover {
-    stroke-opacity: 0.05;
-}
-
 .diagram-navigator {
     z-index: 10;
 }

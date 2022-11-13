@@ -1,4 +1,3 @@
-using System.Linq;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 
@@ -22,11 +21,10 @@ public class LinkPathPositionProvider : IPositionProvider
         if (model is not BaseLinkModel link)
             throw new DiagramsException("LinkPathPositionProvider requires a link model");
         
-        if (link.Paths.Length <= 0)
+        if (link.PathGeneratorResult == null)
             return null;
             
-        var totalLength = link.Paths.Sum(p => p.Length);
-
+        var totalLength = link.PathGeneratorResult.FullPath.Length;
         var length = Distance switch
         {
             >= 0 and <= 1 => Distance * totalLength,
@@ -34,19 +32,8 @@ public class LinkPathPositionProvider : IPositionProvider
             < 0 => totalLength + Distance
         };
 
-        foreach (var path in link.Paths)
-        {
-            var pathLength = path.Length;
-            if (length <= pathLength)
-            {
-                var pt = path.GetPointAtLength(length);
-                return new Point(pt.X + OffsetX, pt.Y + OffsetY);
-            }
-
-            length -= pathLength;
-        }
-
-        return null;
+        var pt = link.PathGeneratorResult.FullPath.GetPointAtLength(length);
+        return new Point(pt.X + OffsetX, pt.Y + OffsetY);
 
     }
 }

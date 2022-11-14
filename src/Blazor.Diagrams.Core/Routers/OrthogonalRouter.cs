@@ -23,10 +23,10 @@ namespace Blazor.Diagrams.Core.Routers
                 return _fallbackRouter.GetRoute(diagram, link);
 
             if (link.Source is not SinglePortAnchor spa1)
-                throw new DiagramsException("Orthogonal router doesn't work with port-less links yet");
+                return _fallbackRouter.GetRoute(diagram, link);
 
             if (link.Target is not SinglePortAnchor targetAnchor)
-                throw new DiagramsException("Orthogonal router doesn't work with port-less links yet");
+                return _fallbackRouter.GetRoute(diagram, link);
 
             var sourcePort = spa1.Port;
             if (targetAnchor == null || sourcePort.Parent.Size == null || targetAnchor.Port.Parent.Size == null)

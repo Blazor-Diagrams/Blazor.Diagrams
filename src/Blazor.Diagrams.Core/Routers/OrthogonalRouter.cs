@@ -130,10 +130,11 @@ namespace Blazor.Diagrams.Core.Routers
 
             var nodeA = nodes[GetOriginSpot(originA, sideA, shapeMargin)];
             var nodeB = nodes[GetOriginSpot(originB, sideB, shapeMargin)];
-            var path = new AStarPathfinder().GetPath(nodeA, nodeB);
+            var path = AStarPathfinder.GetPath(nodeA, nodeB);
 
             if (path.Count > 0)
             {
+                Console.WriteLine(string.Join(", ", path));
                 return path.ToArray();
             }
             else
@@ -310,9 +311,9 @@ namespace Blazor.Diagrams.Core.Routers
         }
     }
 
-    class AStarPathfinder
+    static class AStarPathfinder
     {
-        public IReadOnlyList<Point> GetPath(Node start, Node goal)
+        public static IReadOnlyList<Point> GetPath(Node start, Node goal)
         {
             var frontier = new PriorityQueue<Node, double>();
             frontier.Enqueue(start, 0);
@@ -354,12 +355,29 @@ namespace Blazor.Diagrams.Core.Routers
 
             if (c == start)
             {
-                return result;
+                return SimplifyPath(result);
             }
             else
             {
                 return Array.Empty<Point>();
             }
+        }
+
+        private static List<Point> SimplifyPath(List<Point> path)
+        {
+            for (var i = path.Count - 2; i > 0; i--)
+            {
+                var prev = path[i + 1];
+                var curr = path[i];
+                var next = path[i - 1];
+
+                if ((prev.X == curr.X && curr.X == next.X) || (prev.Y == curr.Y && curr.Y == next.Y))
+                {
+                    path.RemoveAt(i);
+                }
+            }
+
+            return path;
         }
 
         private static bool IsChangeOfDirection(Point a, Point b, Point c)

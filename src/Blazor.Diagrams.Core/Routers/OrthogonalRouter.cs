@@ -11,9 +11,13 @@ namespace Blazor.Diagrams.Core.Routers
     public class OrthogonalRouter : Router
     {
         private readonly Router _fallbackRouter;
+        private double _shapeMargin;
+        private double _globalMargin;
 
-        public OrthogonalRouter(Router? fallbackRouter = null)
+        public OrthogonalRouter(double shapeMargin = 10d, double globalMargin = 50d, Router? fallbackRouter = null)
         {
+            _shapeMargin = shapeMargin;
+            _globalMargin = globalMargin;
             _fallbackRouter = fallbackRouter ?? new NormalRouter();
         }
 
@@ -34,8 +38,8 @@ namespace Blazor.Diagrams.Core.Routers
 
             var targetPort = targetAnchor.Port;
 
-            var shapeMargin = 10;
-            var globalBoundsMargin = 50;
+            var shapeMargin = _shapeMargin;
+            var globalBoundsMargin = _globalMargin;
             var spots = new HashSet<Point>();
             var verticals = new List<double>();
             var horizontals = new List<double>();
@@ -134,7 +138,6 @@ namespace Blazor.Diagrams.Core.Routers
 
             if (path.Count > 0)
             {
-                Console.WriteLine(string.Join(", ", path));
                 return path.ToArray();
             }
             else

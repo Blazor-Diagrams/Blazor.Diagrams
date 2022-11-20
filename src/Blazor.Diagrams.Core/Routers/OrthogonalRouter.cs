@@ -358,12 +358,33 @@ namespace Blazor.Diagrams.Core.Routers
 
             if (c == start)
             {
-                return SimplifyPath(result);
+                result = SimplifyPath(result);
+
+                // In case of paths with one bend
+                if (result.Count > 2)
+                {
+                    if (AreOnSameLine(result[^2], result[^1], goal.Position))
+                    {
+                        result.RemoveAt(result.Count - 1);
+                    }
+
+                    if (AreOnSameLine(start.Position, result[0], result[1]))
+                    {
+                        result.RemoveAt(0);
+                    }
+                }
+
+                return result;
             }
             else
             {
                 return Array.Empty<Point>();
             }
+        }
+
+        private static bool AreOnSameLine(Point prev, Point curr, Point next)
+        {
+            return (prev.X == curr.X && curr.X == next.X) || (prev.Y == curr.Y && curr.Y == next.Y);
         }
 
         private static List<Point> SimplifyPath(List<Point> path)
@@ -374,7 +395,7 @@ namespace Blazor.Diagrams.Core.Routers
                 var curr = path[i];
                 var next = path[i - 1];
 
-                if ((prev.X == curr.X && curr.X == next.X) || (prev.Y == curr.Y && curr.Y == next.Y))
+                if (AreOnSameLine(prev, curr, next))
                 {
                     path.RemoveAt(i);
                 }

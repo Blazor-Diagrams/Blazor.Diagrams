@@ -33,8 +33,6 @@ namespace Blazor.Diagrams.Core.PathGenerators
 
             var paths = link.Vertices.Count > 0 ? new SvgPath[route.Length - 1] : null;
             var fullPath = new SvgPath().AddMoveTo(route[0].X, route[0].Y);
-
-            double? firstDist = null;
             double? secondDist = null;
 
             for (var i = 0; i < route.Length - 1; i++)
@@ -45,7 +43,7 @@ namespace Blazor.Diagrams.Core.PathGenerators
                     var current = route[i];
                     var next = route[i + 1];
 
-                    firstDist = secondDist ?? (current.DistanceTo(previous) / 2);
+                    double? firstDist = secondDist ?? (current.DistanceTo(previous) / 2);
                     secondDist = current.DistanceTo(next) / 2;
 
                     var p1 = -Math.Min(_radius, firstDist.Value);

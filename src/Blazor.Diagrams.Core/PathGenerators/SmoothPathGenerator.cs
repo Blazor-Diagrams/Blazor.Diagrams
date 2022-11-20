@@ -29,12 +29,12 @@ namespace Blazor.Diagrams.Core.PathGenerators
 
             if (link.SourceMarker != null)
             {
-                sourceAngle = SourceMarkerAdjustement(route, link.SourceMarker.Width);
+                sourceAngle = AdjustRouteForSourceMarker(route, link.SourceMarker.Width);
             }
 
             if (link.TargetMarker != null)
             {
-                targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
+                targetAngle = AdjustRouteForTargetMarker(route, link.TargetMarker.Width);
             }
 
             var path = new SvgPath()
@@ -51,12 +51,12 @@ namespace Blazor.Diagrams.Core.PathGenerators
 
             if (link.SourceMarker != null)
             {
-                sourceAngle = SourceMarkerAdjustement(route, link.SourceMarker.Width);
+                sourceAngle = AdjustRouteForSourceMarker(route, link.SourceMarker.Width);
             }
 
             if (link.TargetMarker != null)
             {
-                targetAngle = TargetMarkerAdjustement(route, link.TargetMarker.Width);
+                targetAngle = AdjustRouteForTargetMarker(route, link.TargetMarker.Width);
             }
 
             BezierSpline.GetCurveControlPoints(route, out var firstControlPoints, out var secondControlPoints);

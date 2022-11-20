@@ -8,8 +8,8 @@ namespace Blazor.Diagrams.Core.PathGenerators
     {
         public abstract PathGeneratorResult GetResult(Diagram diagram, BaseLinkModel link, Point[] route, Point source, Point target);
 
-        protected static double SourceMarkerAdjustement(Point[] route, double markerWidth)
-        {
+        protected static double AdjustRouteForSourceMarker(Point[] route, double markerWidth)
+        {            
             var angleInRadians = Math.Atan2(route[1].Y - route[0].Y, route[1].X - route[0].X) + Math.PI;
             var xChange = markerWidth * Math.Cos(angleInRadians);
             var yChange = markerWidth * Math.Sin(angleInRadians);
@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Core.PathGenerators
             return angleInRadians * 180 / Math.PI;
         }
 
-        protected static double TargetMarkerAdjustement(Point[] route, double markerWidth)
+        protected static double AdjustRouteForTargetMarker(Point[] route, double markerWidth)
         {
             var angleInRadians = Math.Atan2(route[^1].Y - route[^2].Y, route[^1].X - route[^2].X);
             var xChange = markerWidth * Math.Cos(angleInRadians);

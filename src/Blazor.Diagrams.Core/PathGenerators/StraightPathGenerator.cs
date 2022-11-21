@@ -85,12 +85,5 @@ namespace Blazor.Diagrams.Core.PathGenerators
 
             return new PathGeneratorResult(fullPath, paths ?? Array.Empty<SvgPath>(), sourceAngle, route[0], targetAngle, route[^1]);
         }
-
-        private static double GetAngle(Point prev, Point curr, Point next)
-        {
-            var r = Math.Atan2(next.Y - curr.Y, next.X - curr.X) - Math.Atan2(prev.Y - curr.Y, prev.X - curr.X);
-            var ang = r * (180 / Math.PI);
-            return ang < 0 ? ang + 360 : ang;
-        }
     }
 }

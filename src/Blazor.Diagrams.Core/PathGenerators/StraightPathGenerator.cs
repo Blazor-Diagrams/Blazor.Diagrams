@@ -9,7 +9,7 @@ namespace Blazor.Diagrams.Core.PathGenerators
     {
         private readonly double _radius;
 
-        public StraightPathGenerator(double radius = 20)
+        public StraightPathGenerator(double radius = 0)
         {
             _radius = radius;
         }
@@ -34,6 +34,7 @@ namespace Blazor.Diagrams.Core.PathGenerators
             var paths = link.Vertices.Count > 0 ? new SvgPath[route.Length - 1] : null;
             var fullPath = new SvgPath().AddMoveTo(route[0].X, route[0].Y);
             double? secondDist = null;
+            var lastPt = route[0];
 
             for (var i = 0; i < route.Length - 1; i++)
             {
@@ -52,12 +53,23 @@ namespace Blazor.Diagrams.Core.PathGenerators
                     var fp = current.MoveAlongLine(previous, p1);
                     var sp = current.MoveAlongLine(next, p2);
 
-                    var sweepFlag = GetAngle(previous, current, next) == 270;
-                    fullPath.AddLineTo(fp.X, fp.Y).AddArc(_radius, _radius, 0, false, sweepFlag, sp.X, sp.Y);
+                    fullPath.AddLineTo(fp.X, fp.Y).AddQuadraticBezierCurve(current.X, current.Y, sp.X, sp.Y);
+
+                    if (paths != null)
+                    {
+                        paths[i - 1] = new SvgPath().AddMoveTo(lastPt.X, lastPt.Y).AddLineTo(fp.X, fp.Y).AddQuadraticBezierCurve(current.X, current.Y, sp.X, sp.Y);
+                    }
+
+                    lastPt = sp;
 
                     if (i == route.Length - 2)
                     {
                         fullPath.AddLineTo(route[^1].X, route[^1].Y);
+
+                        if (paths != null)
+                        {
+                            paths[i] = new SvgPath().AddMoveTo(lastPt.X, lastPt.Y).AddLineTo(route[^1].X, route[^1].Y);
+                        }
                     }
                 }
                 else if (_radius == 0 || route.Length == 2)

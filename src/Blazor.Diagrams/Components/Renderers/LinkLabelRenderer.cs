@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;

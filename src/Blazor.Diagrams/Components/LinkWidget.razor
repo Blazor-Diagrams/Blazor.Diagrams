@@ -44,15 +44,13 @@ else
 {
     var selectedColor = Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor;
     var normalColor = Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
-    <g>
-        @foreach (var vertex in Link.Vertices)
-        {
-            <LinkVertexWidget @key="vertex.Id"
-                      Vertex="vertex"
-                      Color="@normalColor"
-                      SelectedColor="@selectedColor" />
-        }
-    </g>
+    @foreach (var vertex in Link.Vertices)
+    {
+        <LinkVertexRenderer @key="vertex.Id"
+                    Vertex="vertex"
+                    Color="@normalColor"
+                    SelectedColor="@selectedColor" />
+    }
 }
 
 @foreach (var label in Link.Labels)

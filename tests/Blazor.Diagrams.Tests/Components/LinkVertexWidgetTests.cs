@@ -1,16 +1,11 @@
-﻿
-using Blazor.Diagrams.Components;
+﻿using Blazor.Diagrams.Components.Renderers;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-
+using Blazor.Diagrams.Tests.TestComponents;
 using Bunit;
-
 using FluentAssertions;
-
 using Microsoft.AspNetCore.Components.Web;
-
 using System.Threading.Tasks;
-
 using Xunit;
 
 namespace Blazor.Diagrams.Tests.Components
@@ -29,13 +24,14 @@ namespace Blazor.Diagrams.Tests.Components
             link.Vertices.Add(vertex);
 
             // Act
-            var cut = ctx.RenderComponent<LinkVertexWidget>(parameters => parameters
+            var cut = ctx.RenderComponent<LinkVertexRenderer>(parameters => parameters
                 .Add(n => n.Vertex, vertex)
                 .Add(n => n.Color, "red")
-                .Add(n => n.SelectedColor, "blue"));
+                .Add(n => n.SelectedColor, "blue")
+                .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             // Assert
-            cut.MarkupMatches("<circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"red\" cursor=\"move\" />");
+            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"red\" /></g>");
         }
 
         [Fact]
@@ -51,13 +47,14 @@ namespace Blazor.Diagrams.Tests.Components
             vertex.Selected = true;
 
             // Act
-            var cut = ctx.RenderComponent<LinkVertexWidget>(parameters => parameters
+            var cut = ctx.RenderComponent<LinkVertexRenderer>(parameters => parameters
                 .Add(n => n.Vertex, vertex)
                 .Add(n => n.Color, "red")
-                .Add(n => n.SelectedColor, "blue"));
+                .Add(n => n.SelectedColor, "blue")
+                .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             // Assert
-            cut.MarkupMatches("<circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"blue\" cursor=\"move\" />");
+            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"blue\" /></g>");
         }
 
         [Fact]
@@ -72,10 +69,11 @@ namespace Blazor.Diagrams.Tests.Components
             link.Vertices.Add(vertex);
 
             // Act
-            var cut = ctx.RenderComponent<LinkVertexWidget>(parameters => parameters
+            var cut = ctx.RenderComponent<LinkVertexRenderer>(parameters => parameters
                 .Add(n => n.Vertex, vertex)
                 .Add(n => n.Color, "red")
-                .Add(n => n.SelectedColor, "blue"));
+                .Add(n => n.SelectedColor, "blue")
+                .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             // Assert
             cut.RenderCount.Should().Be(1);
@@ -97,16 +95,41 @@ namespace Blazor.Diagrams.Tests.Components
             link.Changed += _ => linkRefreshes++;
 
             // Act
-            var cut = ctx.RenderComponent<LinkVertexWidget>(parameters => parameters
+            var cut = ctx.RenderComponent<LinkVertexRenderer>(parameters => parameters
                 .Add(n => n.Vertex, vertex)
                 .Add(n => n.Color, "red")
-                .Add(n => n.SelectedColor, "blue"));
+                .Add(n => n.SelectedColor, "blue")
+                .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             await cut.Find("circle").DoubleClickAsync(new MouseEventArgs());
 
             // Assert
             link.Vertices.Should().BeEmpty();
             linkRefreshes.Should().Be(1);
+        }
+
+        [Fact]
+        public void ShouldUseCustomComponent_WhenProvided()
+        {
+            // Arrange
+            using var ctx = new TestContext();
+            var diagram = new BlazorDiagram();
+            diagram.RegisterComponent<LinkVertexModel, CustomVertexWidget>();
+            var node1 = new NodeModel();
+            var node2 = new NodeModel();
+            var link = new LinkModel(node1, node2);
+            var vertex = new LinkVertexModel(link, new Point(10.5, 20));
+            link.Vertices.Add(vertex);
+
+            // Act
+            var cut = ctx.RenderComponent<LinkVertexRenderer>(parameters => parameters
+                .Add(n => n.Vertex, vertex)
+                .Add(n => n.Color, "red")
+                .Add(n => n.SelectedColor, "blue")
+                .Add(n => n.BlazorDiagram, diagram));
+
+            // Assert
+            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"10\" fill=\"red\" /></g>");
         }
     }
 }

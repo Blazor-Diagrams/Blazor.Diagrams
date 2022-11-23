@@ -10,17 +10,19 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<NodeModel> _children;
 
-        public GroupModel(IEnumerable<NodeModel> children, byte padding = 30)
+        public GroupModel(IEnumerable<NodeModel> children, byte padding = 30, bool autoSize = true)
         {
             _children = new List<NodeModel>();
 
             Size = Size.Zero;
             Padding = padding;
+            AutoSize = autoSize;
             Initialize(children);
         }
 
         public IReadOnlyList<NodeModel> Children => _children;
         public byte Padding { get; }
+        public bool AutoSize { get; }
 
         public void AddChild(NodeModel child)
         {

@@ -1,4 +1,3 @@
-using System.Linq;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -100,5 +99,45 @@ public class DragMovablesBehaviorTests
 
         // Assert
         movedTrigger.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Behavior_ShouldNotCallSetPosition_WhenGroupHasNoAutoSize()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        var nodeMock = new Mock<NodeModel>(Point.Zero);
+        var group = new GroupModel(new[] { nodeMock.Object }, autoSize: false);
+        var node = diagram.Nodes.Add(nodeMock.Object);
+        diagram.SelectModel(node, false);
+
+        // Act
+        diagram.TriggerPointerDown(node,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerPointerMove(null,
+            new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        nodeMock.Verify(n => n.SetPosition(50, 50), Times.Never);
+    }
+
+    [Fact]
+    public void Behavior_ShouldCallSetPosition_WhenGroupHasAutoSize()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        var nodeMock = new Mock<NodeModel>(Point.Zero);
+        var group = new GroupModel(new[] { nodeMock.Object }, autoSize: true);
+        var node = diagram.Nodes.Add(nodeMock.Object);
+        diagram.SelectModel(node, false);
+
+        // Act
+        diagram.TriggerPointerDown(node,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerPointerMove(null,
+            new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        nodeMock.Verify(n => n.SetPosition(50, 50), Times.Once);
     }
 }

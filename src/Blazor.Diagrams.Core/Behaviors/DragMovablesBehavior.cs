@@ -33,12 +33,17 @@ namespace Blazor.Diagrams.Core.Behaviors
                 if (sm is not MovableModel movable || movable.Locked)
                     continue;
 
+                // Special case: groups without auto size on
+                if (sm is NodeModel node && node.Group != null && !node.Group.AutoSize)
+                    continue;
+
                 var position = movable.Position;
-                if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
+                if (Diagram.Options.GridSnapToCenter && movable is NodeModel n)
                 {
-                    position = new Point(movable.Position.X + (node.Size?.Width ?? 0) / 2,
-                        movable.Position.Y + (node.Size?.Height ?? 0) / 2);
+                    position = new Point(movable.Position.X + (n.Size?.Width ?? 0) / 2,
+                        movable.Position.Y + (n.Size?.Height ?? 0) / 2);
                 }
+
                 _initialPositions.Add(movable, position);
             }
 
@@ -61,9 +66,13 @@ namespace Blazor.Diagrams.Core.Behaviors
                 var ndx = ApplyGridSize(deltaX + initialPosition.X);
                 var ndy = ApplyGridSize(deltaY + initialPosition.Y);
                 if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
+                {
                     node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
+                }
                 else
+                {
                     movable.SetPosition(ndx, ndy);
+                }
             }
         }
 

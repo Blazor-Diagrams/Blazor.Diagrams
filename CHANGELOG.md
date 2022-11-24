@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0-beta.5) - 2022-11-23
+
+### Added
+
+- `AdditionalSvg` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `AdditionalHtml` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `DistanceTo` overload method to `Point` that takes x and y
+- `MoveAlongLine` method to `Point`
+- `FullPath` to `PathGeneratorResult` to represent the full path without cuts
+- Fallback router to Orthogonal router
+- Margin options to `OrthogonalRouter`
+- `radius` option to `StraightPathGenerator` in order to generate rounded bends
+- Support for custom vertices
+- `AutoSize` option to groups to control whether moving children resizes the group
+
+### Changed
+
+- All routers are now classes instead of functions, they inherit from the new abstract class `Router`
+- All path generators are now classes instead of functions, they inherit from the new abstract class `PathGenerator`
+- Optimize Orthogonal router by using custom A* (x5 improvement)
+
+### Removed
+
+- `Router` delegate
+- `PathGenerator` delegate
+
 ## Diagrams (3.0.0-beta.4) - 2022-10-16
 
 ### Added

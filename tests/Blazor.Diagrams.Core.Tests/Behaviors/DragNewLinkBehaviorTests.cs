@@ -32,11 +32,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var link = diagram.Links.Single();
             var source = link.Source as SinglePortAnchor;
             source.Should().NotBeNull();
-            link.Target.Should().BeNull();
             source!.Port.Should().BeSameAs(port);
-            link.OnGoingPosition.Should().NotBeNull();
-            link.OnGoingPosition!.X.Should().Be(95);
-            link.OnGoingPosition.Y.Should().Be(95);
+            var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
+            ongoingPosition.X.Should().Be(95);
+            ongoingPosition.Y.Should().Be(95);
         }
 
         [Fact]
@@ -46,10 +45,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var factoryCalled = false;
-            diagram.Options.Links.Factory = (d, sp) =>
+            diagram.Options.Links.Factory = (d, s, ta) =>
             {
                 factoryCalled = true;
-                return new LinkModel(sp);
+                return new LinkModel(new SinglePortAnchor(s as PortModel), ta);
             };
             var node = new NodeModel(position: new Point(100, 50));
             var port = node.AddPort(new PortModel(node)
@@ -68,11 +67,10 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var link = diagram.Links.Single();
             var source = link.Source as SinglePortAnchor;
             source.Should().NotBeNull();
-            link.Target.Should().BeNull();
             source!.Port.Should().BeSameAs(port);
-            link.OnGoingPosition.Should().NotBeNull();
-            link.OnGoingPosition!.X.Should().Be(95);
-            link.OnGoingPosition.Y.Should().Be(95);
+            var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
+            ongoingPosition.X.Should().Be(95);
+            ongoingPosition.Y.Should().Be(95);
         }
 
         [Fact]
@@ -100,8 +98,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var source = link.Source as SinglePortAnchor;
-            link.OnGoingPosition!.X.Should().Be(145);
-            link.OnGoingPosition.Y.Should().Be(145);
+            var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
+            ongoingPosition.X.Should().Be(145);
+            ongoingPosition.Y.Should().Be(145);
             linkRefreshed.Should().BeTrue();
         }
 
@@ -131,8 +130,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var source = link.Source as SinglePortAnchor;
-            link.OnGoingPosition!.X.Should().BeApproximately(101.6, 0.1);
-            link.OnGoingPosition.Y.Should().BeApproximately(101.6, 0.1);
+            var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
+            ongoingPosition.X.Should().BeApproximately(101.6, 0.1);
+            ongoingPosition.Y.Should().BeApproximately(101.6, 0.1);
             linkRefreshed.Should().BeTrue();
         }
 
@@ -208,7 +208,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var link = diagram.Links.Single();
-            link.Target.Should().BeNull();
+            link.Target.Should().BeOfType<PositionAnchor>();
         }
 
         [Fact]
@@ -334,11 +334,35 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             var link = diagram.Links.Single();
-            link.OnGoingPosition.Should().BeNull();
             var target = link.Target as SinglePortAnchor;
             target.Should().NotBeNull();
             target!.Port.Should().BeSameAs(port2);
             port2Refreshes.Should().Be(1);
+        }
+
+        [Fact]
+        public void Behavior_ShouldNotCreateOngoingLink_WhenFactoryReturnsNull()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.Options.Links.Factory = (d, s, ta) => null;
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+
+            var node1 = new NodeModel(position: new Point(100, 50));
+            diagram.Nodes.Add(node1);
+            var port1 = node1.AddPort(new PortModel(node1)
+            {
+                Initialized = true,
+                Position = new Point(110, 60),
+                Size = new Size(10, 20)
+            });
+
+            // Act
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            // Assert
+            diagram.Links.Should().HaveCount(0);
         }
     }
 }

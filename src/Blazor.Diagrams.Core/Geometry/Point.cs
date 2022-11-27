@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 
 namespace Blazor.Diagrams.Core.Geometry
 {
@@ -27,6 +28,17 @@ namespace Blazor.Diagrams.Core.Geometry
         public Point Substract(double x, double y) => new(X - x, Y - y);
 
         public double DistanceTo(Point other) => Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
+        public double DistanceTo(double x, double y) => Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y - y, 2));
+
+        public Point MoveAlongLine(Point from, double dist)
+        {
+            var x = X - from.X;
+            var y = Y - from.Y;
+            var angle = Math.Atan2(y, x);
+            var xOffset = Math.Cos(angle) * dist;
+            var yOffset = Math.Sin(angle) * dist;
+            return new Point(X + xOffset, Y + yOffset);
+        }
 
         public static Point operator -(Point a, Point b) => new(a.X - b.X, a.Y - b.Y);
         public static Point operator +(Point a, Point b) => new(a.X + b.X, a.Y + b.Y);

@@ -1,7 +1,7 @@
 ﻿using Blazor.Diagrams;
-using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.PathGenerators;
 
 namespace SharedDemo.Demos.Links
 {
@@ -31,7 +31,7 @@ namespace SharedDemo.Demos.Links
 
             var link1 = new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
             {
-                PathGenerator = PathGenerators.Straight,
+                PathGenerator = new StraightPathGenerator(),
                 Segmentable = true
             };
             link1.Labels.Add(new LinkLabelModel(link1, "Content"));
@@ -40,7 +40,7 @@ namespace SharedDemo.Demos.Links
 
             var link2 = new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left))
             {
-                PathGenerator = PathGenerators.Smooth, // default
+                PathGenerator = new SmoothPathGenerator(), // default
                 Segmentable = true
             };
             link2.Labels.Add(new LinkLabelModel(link2, "Content"));

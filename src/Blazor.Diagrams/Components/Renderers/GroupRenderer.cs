@@ -24,11 +24,13 @@ public class GroupRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Group.Changed -= OnGroupChanged;
+        Group.VisibilityChanged -= OnGroupChanged;
     }
 
     protected override void OnInitialized()
     {
         Group.Changed += OnGroupChanged;
+        Group.VisibilityChanged += OnGroupChanged;
     }
 
     protected override void OnParametersSet()
@@ -78,7 +80,10 @@ public class GroupRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var componentType = BlazorDiagram.GetComponentForModel(Group) ?? typeof(DefaultGroupWidget);
+        if (!Group.Visible)
+            return;
+        
+        var componentType = BlazorDiagram.GetComponent(Group) ?? typeof(DefaultGroupWidget);
         var classes = new StringBuilder("group")
             .AppendIf(" locked", Group.Locked)
             .AppendIf(" selected", Group.Selected)
@@ -99,18 +104,20 @@ public class GroupRenderer : ComponentBase, IDisposable
         builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
         builder.AddAttribute(6, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
         builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
+        builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
+        builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
 
         if (_isSvg)
         {
-            builder.OpenElement(8, "rect");
-            builder.AddAttribute(9, "width", Group.Size!.Width);
-            builder.AddAttribute(10, "height", Group.Size.Height);
-            builder.AddAttribute(11, "fill", "none");
+            builder.OpenElement(10, "rect");
+            builder.AddAttribute(11, "width", Group.Size!.Width);
+            builder.AddAttribute(12, "height", Group.Size.Height);
+            builder.AddAttribute(13, "fill", "none");
             builder.CloseElement();
         }
 
-        builder.OpenComponent(12, componentType);
-        builder.AddAttribute(13, "Group", Group);
+        builder.OpenComponent(14, componentType);
+        builder.AddAttribute(15, "Group", Group);
         builder.CloseComponent();
         builder.CloseElement();
     }
@@ -123,5 +130,15 @@ public class GroupRenderer : ComponentBase, IDisposable
     private void OnPointerUp(PointerEventArgs e)
     {
         BlazorDiagram.TriggerPointerUp(Group, e.ToCore());
+    }
+
+    private void OnMouseEnter(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerEnter(Group, e.ToCore());
+    }
+
+    private void OnMouseLeave(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerLeave(Group, e.ToCore());
     }
 }

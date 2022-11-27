@@ -1,7 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
-using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -16,9 +15,8 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.Nodes.Removed += Nodes_Removed;
             Diagram.Links.Added += Links_Added;
             Diagram.Links.Removed += Links_Removed;
-            Diagram.GroupAdded += Diagram_GroupAdded;
-            Diagram.GroupRemoved += Diagram_GroupRemoved;
-            Diagram.GroupUngrouped += Diagram_GroupUngrouped;
+            Diagram.Groups.Added += Diagram_GroupAdded;
+            Diagram.Groups.Removed += Diagram_GroupRemoved;
             Diagram.SelectionChanged += Diagram_SelectionChanged;
             Diagram.ZoomChanged += Diagram_ZoomChanged;
         }
@@ -31,11 +29,6 @@ namespace Blazor.Diagrams.Core.Behaviors
         private void Diagram_SelectionChanged(SelectableModel obj)
         {
             Console.WriteLine($"SelectionChanged, Model={obj.GetType().Name}, Selected={obj.Selected}");
-        }
-
-        private void Diagram_GroupUngrouped(GroupModel obj)
-        {
-            Console.WriteLine($"GroupUngrouped, Id={obj.Id}");
         }
 
         private void Links_Removed(BaseLinkModel obj)
@@ -92,9 +85,8 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.Nodes.Removed -= Nodes_Removed;
             Diagram.Links.Added -= Links_Added;
             Diagram.Links.Removed -= Links_Removed;
-            Diagram.GroupAdded -= Diagram_GroupAdded;
-            Diagram.GroupRemoved -= Diagram_GroupRemoved;
-            Diagram.GroupUngrouped -= Diagram_GroupUngrouped;
+            Diagram.Groups.Added -= Diagram_GroupAdded;
+            Diagram.Groups.Removed -= Diagram_GroupRemoved;
             Diagram.SelectionChanged -= Diagram_SelectionChanged;
             Diagram.ZoomChanged -= Diagram_ZoomChanged;
         }

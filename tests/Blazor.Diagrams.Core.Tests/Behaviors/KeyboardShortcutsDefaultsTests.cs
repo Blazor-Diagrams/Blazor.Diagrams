@@ -38,7 +38,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 funcCalled = true;
                 return ValueTask.FromResult(false);
             };
-            diagram.AddGroup(new GroupModel(Array.Empty<NodeModel>())
+            diagram.Groups.Add(new GroupModel(Array.Empty<NodeModel>())
             {
                 Selected = true
             });

@@ -17,7 +17,7 @@ namespace SharedDemo.Demos
             LayoutData.Info = "A very simple drag & drop implementation using the HTML5 events.";
             LayoutData.DataChanged();
 
-            _blazorDiagram.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
+            _blazorDiagram.RegisterComponent<BotAnswerNode, BotAnswerWidget>();
         }
 
         private void OnDragStart(int key)

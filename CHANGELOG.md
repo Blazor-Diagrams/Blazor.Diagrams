@@ -5,7 +5,111 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Diagrams (3.0.0-preview.1) - 2022-09-04
+## Diagrams (3.0.0-beta.5) - 2022-11-23
+
+### Added
+
+- `AdditionalSvg` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `AdditionalHtml` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `DistanceTo` overload method to `Point` that takes x and y
+- `MoveAlongLine` method to `Point`
+- `FullPath` to `PathGeneratorResult` to represent the full path without cuts
+- Fallback router to Orthogonal router
+- Margin options to `OrthogonalRouter`
+- `radius` option to `StraightPathGenerator` in order to generate rounded bends
+- Support for custom vertices
+- `AutoSize` option to groups to control whether moving children resizes the group
+
+### Changed
+
+- All routers are now classes instead of functions, they inherit from the new abstract class `Router`
+- All path generators are now classes instead of functions, they inherit from the new abstract class `PathGenerator`
+- Optimize Orthogonal router by using custom A* (x5 improvement)
+
+### Removed
+
+- `Router` delegate
+- `PathGenerator` delegate
+
+## Diagrams (3.0.0-beta.4) - 2022-10-16
+
+### Added
+
+- Initial version of Ordering!
+	- Nodes, groups and links can now be ordered using the new `Order` property or `SendToFront/Back` methods
+	- `Diagram.OrderedSelectables` returns the ordered selectables/models
+	- `DiagramCanvas` now uses this new property to render everything
+- `GridSnapToCenter` option in order to snap nodes from their center instead of their top/left position (thanks to @[Jeremy Vance](https://github.com/240026763))
+- More unit tests
+
+### Changed
+
+- `Groups` is not a list of groups anymore, but a layer instead (just like `Nodes` and `Links`)
+
+### Fixed
+
+- Deleting a group doesn't delete links attached to it
+- Deleting a group inside of a group doesn't refresh the parent group
+- Links not refreshing when a group's dimensions are updated directly (e.g. deleting a child)
+- Layers causing more refreshes than intended
+
+### Removed
+
+- All group-related methods and events from `Diagram`, please use the new layer from now on
+
+## Diagrams (3.0.0-beta.3) - 2022-09-18
+
+### Added
+
+- Support for `LinkFactory` to return null in order to not create an ongoing link
+- Support for free links (no source/target required)
+- `PositionAnchor` which reprensents a simple plain position (mutable)
+- `ArrowHeadControl` to control a link's Source/Target on the fly
+- `attached` css class to attached links
+
+### Changed
+
+- Replace `OngoingPosition` with the new `PositionAnchor`
+	- `BaseLinkModel.Target` will never be null anymore. An ongoing link will have a position anchor as the target
+- `Links.Factory` signature now takes the diagram, source (model) and the target anchor
+- Move `DynamicAnchor` back to `Anchors` namespace and seal all `Anchor` classes
+
+### Fixed
+
+- Links attached to links not refreshing when the others are
+- `LinkPathPositionProvider` not working with maxlength ratios
+- Deleting a link not deleting the links attached to it
+
+### Removed
+
+- `PositionProvider` argument from `ExecutableControl` for more freedom
+- `Id` and `Refresh` from `ILinkable`
+- Unused `Offset` from `Anchor` and make `Model` nullable
+
+## Diagrams (3.0.0-beta.2) - 2022-09-11
+
+### Added
+
+- `Moved` event to Movables
+- `Visible` property and `VisbilityChanged` event to models
+- `Options.Virtualization` (of type `[Diagram]VirtualizationOptions`) for virtualization options
+- `PointerEnter/Leave` events for groups as well 
+- **Experimental Link to Link** (using `LinkAnchor`) 
+
+### Changed
+
+- Rename `RegisterModelComponent` to `RegisterComponent`
+- Rename `GetComponentForModel` to `GetComponent`
+- Virtualization is now handled by a behavior instead of NodeRender
+  - This means that it works for almost all models (nodes, groups and links)
+- Render link labels without foreignObject in widget nor MarkupString (Thank you .NET 6)
+- Custom link labels only need to contain relevant content, they don't need to handle positioning anymore 
+
+### Removed
+
+- `EnableVirtualization` option (see added alternative)
+
+## Diagrams (3.0.0-beta.1) - 2022-09-04
 
 .NET 6!
 

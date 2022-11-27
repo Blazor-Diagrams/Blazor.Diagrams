@@ -1,8 +1,9 @@
 ﻿@page "/demos/dynamic-anchor"
 @layout DemoLayout
 @using Blazor.Diagrams
-@using Blazor.Diagrams.Core.Anchors.Dynamic
+@using Blazor.Diagrams.Core.Anchors
 @using Blazor.Diagrams.Core.Controls
+@using Blazor.Diagrams.Core.PathGenerators
 @using Blazor.Diagrams.Core.Positions
 @using Blazor.Diagrams.Core.Controls.Default
 
@@ -17,6 +18,7 @@
     {
         var node1 = NewNode(100, 100);
         var node2 = NewNode(300, 100);
+        var node3 = NewNode(500, 250);
 
         var providers1 = new IPositionProvider[]
         {
@@ -36,27 +38,52 @@
 
         var link1 = new LinkModel(new DynamicAnchor(node1, providers1), new DynamicAnchor(node2, providers2))
         {
-            PathGenerator = PathGenerators.Straight,
+            PathGenerator = new SmoothPathGenerator(),
             SourceMarker = LinkMarker.Arrow,
             TargetMarker = LinkMarker.Arrow
         };
 
-        _blazorDiagram.Nodes.Add(new[] { node1, node2 });
+        _blazorDiagram.Nodes.Add(new[] { node1, node2, node3 });
         _blazorDiagram.Links.Add(link1);
-        
+        var link2 = _blazorDiagram.Links.Add(new LinkModel(new ShapeIntersectionAnchor(node3), new LinkAnchor(link1, 0.5))
+        {
+            PathGenerator = new StraightPathGenerator(),
+            SourceMarker = LinkMarker.Arrow,
+            TargetMarker = LinkMarker.Arrow
+        });
+
         _blazorDiagram.Controls.AddFor(node1)
             .Add(new RemoveControl(1, 0))
             .Add(new DragNewLinkControl(1, 0.5, 20))
             .Add(new BoundaryControl());
-        
+
         _blazorDiagram.Controls.AddFor(node2)
             .Add(new RemoveControl(1, 0))
             .Add(new DragNewLinkControl(1, 0.5, 20))
             .Add(new BoundaryControl());
-        
+
         _blazorDiagram.Controls.AddFor(link1)
             .Add(new RemoveControl(new LinkPathPositionProvider(0.1)))
+            .Add(new ArrowHeadControl(true, LinkMarker.NewArrow(30, 30)))
+            .Add(new ArrowHeadControl(false, LinkMarker.NewArrow(30, 30)))
             .Add(new BoundaryControl());
+
+        _blazorDiagram.Controls.AddFor(link2)
+            .Add(new RemoveControl(new LinkPathPositionProvider(0.8)))
+            .Add(new ArrowHeadControl(true))
+            .Add(new ArrowHeadControl(false))
+            .Add(new BoundaryControl());
+
+        _blazorDiagram.Options.Links.RequireTarget = false;
+
+        _blazorDiagram.Links.Added += OnLinkAdded;
+    }
+
+    private void OnLinkAdded(Blazor.Diagrams.Core.Models.Base.BaseLinkModel link)
+    {
+        _blazorDiagram.Controls.AddFor(link)
+            .Add(new ArrowHeadControl(true))
+            .Add(new ArrowHeadControl(false));
     }
 
     private static NodeModel NewNode(double x, double y)
@@ -68,4 +95,5 @@
         node.AddPort(PortAlignment.Right);
         return node;
     }
+
 }

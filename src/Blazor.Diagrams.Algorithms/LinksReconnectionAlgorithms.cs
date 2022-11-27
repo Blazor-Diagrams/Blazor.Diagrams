@@ -15,9 +15,6 @@ namespace Blazor.Diagrams.Algorithms
 
             foreach (var link in diagram.Links.ToArray())
             {
-                if (link.Target == null)
-                    continue;
-
                 if (link.Source is not SinglePortAnchor spa1 || link.Target is not SinglePortAnchor spa2)
                     continue;
 

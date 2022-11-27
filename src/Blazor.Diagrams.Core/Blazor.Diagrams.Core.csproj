@@ -8,25 +8,30 @@
 		<Authors>zHaytam</Authors>
 		<Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
 		<AssemblyVersion>3.0.0</AssemblyVersion>
-		<FileVersion>3.0.0-beta.1</FileVersion>
+		<FileVersion>3.0.0</FileVersion>
 		<RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
-		<Version>3.0.0-beta.1</Version>
+		<Version>3.0.0-beta.5</Version>
 		<PackageId>Z.Blazor.Diagrams.Core</PackageId>
 		<PackageTags>blazor diagrams diagramming svg drag</PackageTags>
 		<Product>Z.Blazor.Diagrams.Core</Product>
 		<PackageIcon>ZBD.png</PackageIcon>
 		<PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\..\ZBD.png">
 			<Pack>True</Pack>
-			<PackagePath></PackagePath>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="SvgPathProperties" Version="1.1.1" />
+	  <PackageReference Include="SvgPathProperties" Version="1.1.2" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using FluentAssertions;
@@ -45,7 +46,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
         public void SetTarget_ShouldChangePropertiesAndTriggerEvent()
         {
             // Arrange
-            var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
+            var link = new LinkModel(new SinglePortAnchor(null), new PositionAnchor(Point.Zero));
             var parent = new NodeModel();
             var port = new PortModel(parent);
             var tp = new SinglePortAnchor(port);
@@ -68,7 +69,7 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             // Assert
             eventsTriggered.Should().Be(1);
             link.Target.Should().BeSameAs(tp);
-            oldTp.Should().BeNull();
+            oldTp.Should().BeOfType<PositionAnchor>();
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
             link.Target!.Model.Should().BeSameAs(port);

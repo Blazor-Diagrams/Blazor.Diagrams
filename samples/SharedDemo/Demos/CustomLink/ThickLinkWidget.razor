@@ -7,7 +7,7 @@
     Console.WriteLine(Link.Source);
     Console.WriteLine(Link.Target);
     var sourcePosition = Link.Source.GetPosition(Link);
-    var targetPosition = Link.Target is null ? Link.OnGoingPosition : Link.Target.GetPosition(Link);
+    var targetPosition = Link.Target.GetPosition(Link);
 
     if (sourcePosition is null || targetPosition is null)
         return;

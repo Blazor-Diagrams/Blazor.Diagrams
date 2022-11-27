@@ -1,11 +1,29 @@
-﻿namespace Blazor.Diagrams.Core.Models.Base
+﻿using System;
+
+namespace Blazor.Diagrams.Core.Models.Base
 {
     public abstract class SelectableModel : Model
     {
-        public SelectableModel() { }
+        private int _order;
 
-        public SelectableModel(string id) : base(id) { }
+        public event Action<SelectableModel>? OrderChanged;
+
+        protected SelectableModel() { }
+
+        protected SelectableModel(string id) : base(id) { }
 
         public bool Selected { get; internal set; }
+        public int Order
+        {
+            get => _order;
+            set
+            {
+                if (value == Order)
+                    return;
+
+                _order = value;
+                OrderChanged?.Invoke(this);
+            }
+        }
     }
 }

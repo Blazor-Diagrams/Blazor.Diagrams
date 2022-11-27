@@ -1,16 +1,14 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using SvgPathProperties;
-using System;
 
 namespace Blazor.Diagrams.Core
 {
     public class PathGeneratorResult
     {
-        public static PathGeneratorResult Empty { get; } = new(Array.Empty<SvgPath>());
-
-        public PathGeneratorResult(SvgPath[] paths, double? sourceMarkerAngle = null, Point? sourceMarkerPosition = null,
+        public PathGeneratorResult(SvgPath fullPath, SvgPath[] paths, double? sourceMarkerAngle = null, Point? sourceMarkerPosition = null,
             double? targetMarkerAngle = null, Point? targetMarkerPosition = null)
         {
+            FullPath = fullPath;
             Paths = paths;
             SourceMarkerAngle = sourceMarkerAngle;
             SourceMarkerPosition = sourceMarkerPosition;
@@ -18,6 +16,7 @@ namespace Blazor.Diagrams.Core
             TargetMarkerPosition = targetMarkerPosition;
         }
 
+        public SvgPath FullPath { get; }
         public SvgPath[] Paths { get; }
         public double? SourceMarkerAngle { get; }
         public Point? SourceMarkerPosition { get; }

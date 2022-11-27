@@ -19,7 +19,6 @@ public class NodeRenderer : ComponentBase, IDisposable
     private bool _becameVisible;
     private ElementReference _element;
     private bool _isSvg;
-    private bool _isVisible = true;
     private DotNetObjectReference<NodeRenderer>? _reference;
     private bool _shouldRender;
 
@@ -31,10 +30,8 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     public void Dispose()
     {
-        BlazorDiagram.PanChanged -= CheckVisibility;
-        BlazorDiagram.ZoomChanged -= CheckVisibility;
-        BlazorDiagram.ContainerChanged -= CheckVisibility;
         Node.Changed -= OnNodeChanged;
+        Node.VisibilityChanged -= OnVisibilityChanged;
 
         if (_element.Id != null)
             _ = JsRuntime.UnobserveResizes(_element);
@@ -65,10 +62,8 @@ public class NodeRenderer : ComponentBase, IDisposable
         base.OnInitialized();
 
         _reference = DotNetObjectReference.Create(this);
-        BlazorDiagram.PanChanged += CheckVisibility;
-        BlazorDiagram.ZoomChanged += CheckVisibility;
-        BlazorDiagram.ContainerChanged += CheckVisibility;
         Node.Changed += OnNodeChanged;
+        Node.VisibilityChanged += OnVisibilityChanged;
     }
 
     protected override void OnParametersSet()
@@ -89,10 +84,10 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (!_isVisible)
+        if (!Node.Visible)
             return;
 
-        var componentType = BlazorDiagram.GetComponentForModel(Node) ??
+        var componentType = BlazorDiagram.GetComponent(Node) ??
                             (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
         var classes = new StringBuilder("node")
             .AppendIf(" locked", Node.Locked)
@@ -104,11 +99,15 @@ public class NodeRenderer : ComponentBase, IDisposable
         builder.AddAttribute(2, "data-node-id", Node.Id);
 
         if (_isSvg)
+        {
             builder.AddAttribute(3, "transform",
                 $"translate({Node.Position.X.ToInvariantString()} {Node.Position.Y.ToInvariantString()})");
+        }
         else
+        {
             builder.AddAttribute(3, "style",
                 $"top: {Node.Position.Y.ToInvariantString()}px; left: {Node.Position.X.ToInvariantString()}px");
+        }
 
         builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
         builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
@@ -126,8 +125,6 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-
         if (firstRender || _becameVisible)
         {
             _becameVisible = false;
@@ -135,33 +132,14 @@ public class NodeRenderer : ComponentBase, IDisposable
         }
     }
 
-    private void CheckVisibility()
-    {
-        // _isVisible must be true in case virtualization gets disabled and some nodes are hidden
-        if (!BlazorDiagram.Options.EnableVirtualization && _isVisible)
-            return;
-
-        if (Node.Size == null)
-            return;
-
-        var left = Node.Position.X * BlazorDiagram.Zoom + BlazorDiagram.Pan.X;
-        var top = Node.Position.Y * BlazorDiagram.Zoom + BlazorDiagram.Pan.Y;
-        var right = left + Node.Size.Width * BlazorDiagram.Zoom;
-        var bottom = top + Node.Size.Height * BlazorDiagram.Zoom;
-
-        var isVisible = right > 0 && left < BlazorDiagram.Container.Width && bottom > 0 &&
-                        top < BlazorDiagram.Container.Height;
-
-        if (_isVisible != isVisible)
-        {
-            _isVisible = isVisible;
-            _becameVisible = isVisible;
-            ReRender();
-        }
-    }
-
     private void OnNodeChanged(Model _)
     {
+        ReRender();
+    }
+
+    private void OnVisibilityChanged(Model _)
+    {
+        _becameVisible = Node.Visible;
         ReRender();
     }
 

@@ -75,6 +75,7 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var link in Links)
             {
                 link.Refresh();
+                link.RefreshLinks();
             }
         }
 
@@ -137,6 +138,8 @@ namespace Blazor.Diagrams.Core.Models
 
         public virtual IShape GetShape() => Shapes.Rectangle(this);
 
+        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
+
         private void UpdatePortPositions(double deltaX, double deltaY)
         {
             // Save some JS calls and update ports directly here
@@ -147,7 +150,10 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel;
+        protected void TriggerMoving()
+        {
+            Moving?.Invoke(this);
+        }
 
         void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
 

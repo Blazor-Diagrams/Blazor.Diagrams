@@ -24,7 +24,7 @@ namespace SharedDemo.Demos.Nodes
 
         private void InitializeDiagram()
         {
-            _blazorDiagram.RegisterModelComponent<RoundedNode, RoundedNodeWidget>();
+            _blazorDiagram.RegisterComponent<RoundedNode, RoundedNodeWidget>();
 
             var node1 = new NodeModel(new Point(80, 80));
             var node2 = new RoundedNode(new Point(280, 150));

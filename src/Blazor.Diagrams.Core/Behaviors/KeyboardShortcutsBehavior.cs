@@ -34,6 +34,7 @@ namespace Blazor.Diagrams.Core.Behaviors
         private async void OnDiagramKeyDown(KeyboardEventArgs e)
         {
             var k = KeysUtils.GetStringRepresentation(e.CtrlKey, e.ShiftKey, e.AltKey, e.Key);
+            Console.WriteLine(k);
             if (_shortcuts.TryGetValue(k, out var action))
             {
                 await action(Diagram);

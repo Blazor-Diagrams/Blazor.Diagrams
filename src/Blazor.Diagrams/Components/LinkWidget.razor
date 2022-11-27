@@ -1,28 +1,28 @@
 ﻿@{
     var color = Link.Selected ? Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor : Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
-    var result = Link.GeneratedPathResult;
+    var result = Link.PathGeneratorResult;
+    if (result == null)
+        return;
+
+    var d = result.FullPath.ToString();
 }
 
-@for (var i = 0; i < result.Paths.Length; i++)
-{
-    var index = i;
-    var d = result.Paths[i].ToString();
-    <path d="@d"
-          stroke-width="@Link.Width.ToInvariantString()"
-          fill="none"
-          stroke="@color"/>
+<path d="@d"
+      stroke-width="@Link.Width.ToInvariantString()"
+      fill="none"
+      stroke="@color" />
 
-    @if (Link.IsAttached)
+@if (Link.Vertices.Count == 0)
+{
+    @GetSelectionHelperPath(color, d, 0)
+}
+else
+{
+    @for (var i = 0; i < result.Paths.Length; i++)
     {
-        <path class="selection-helper"
-              stroke="@color"
-              stroke-width="12"
-              d="@d"
-              stroke-linecap="butt"
-              stroke-opacity="0"
-              fill="none"
-              @onpointerdown="e => OnPointerDown(e, index)"
-              @onpointerdown:stopPropagation="@Link.Segmentable"/>
+        d = result.Paths[i].ToString();
+        var index = i;
+        @GetSelectionHelperPath(color, d, index)
     }
 }
 
@@ -44,18 +44,16 @@
 {
     var selectedColor = Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor;
     var normalColor = Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
-    <g>
-        @foreach (var vertex in Link.Vertices)
-        {
-            <LinkVertexWidget @key="vertex.Id"
-                              Vertex="vertex"
-                              Color="@normalColor"
-                              SelectedColor="@selectedColor"/>
-        }
-    </g>
+    @foreach (var vertex in Link.Vertices)
+    {
+        <LinkVertexRenderer @key="vertex.Id"
+                    Vertex="vertex"
+                    Color="@normalColor"
+                    SelectedColor="@selectedColor" />
+    }
 }
 
 @foreach (var label in Link.Labels)
 {
-    <LinkLabelRenderer @key="label.Id" Label="@label" Paths="@result.Paths"/>
+    <LinkLabelRenderer @key="label.Id" Label="@label" Path="@result.FullPath" />
 }

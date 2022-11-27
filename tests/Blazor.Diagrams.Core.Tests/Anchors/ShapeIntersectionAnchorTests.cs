@@ -37,7 +37,7 @@ public class ShapeIntersectionAnchorTests
         // Arrange
         var node = new NodeModel(new Point(60, 60));
         var anchor = new ShapeIntersectionAnchor(node);
-        var link = new LinkModel(anchor);
+        var link = new LinkModel(anchor, new PositionAnchor(Point.Zero));
 
         // Act
         var position = anchor.GetPosition(link);
@@ -59,7 +59,7 @@ public class ShapeIntersectionAnchorTests
             Position = new Point(60, 60)
         };
         var source = new ShapeIntersectionAnchor(node);
-        var link = new LinkModel(source);
+        var link = new LinkModel(source, new PositionAnchor(Point.Zero));
         var route = new[] { new Point(170, 100), new Point(180, 110) };
 
         // Act
@@ -110,7 +110,7 @@ public class ShapeIntersectionAnchorTests
             Position = new Point(60, 60)
         };
         var source = new ShapeIntersectionAnchor(node);
-        var targetMock = new Mock<Anchor>(node, Point.Zero);
+        var targetMock = new Mock<Anchor>(node);
         var pt = new Point(-55, -55);
         targetMock.Setup(t => t.GetPlainPosition()).Returns(pt);
         var link = new LinkModel(source, targetMock.Object);
@@ -137,7 +137,7 @@ public class ShapeIntersectionAnchorTests
             Position = new Point(60, 60)
         };
         var source = new ShapeIntersectionAnchor(node);
-        var targetMock = new Mock<Anchor>(node, Point.Zero);
+        var targetMock = new Mock<Anchor>(node);
         targetMock.Setup(t => t.GetPlainPosition()).Returns((Point?)null);
         var link = new LinkModel(source, targetMock.Object);
 

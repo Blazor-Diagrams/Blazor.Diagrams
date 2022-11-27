@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models.Base;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Layers
 {
@@ -11,7 +12,7 @@ namespace Blazor.Diagrams.Core.Layers
         {
             link.Diagram = Diagram;
             HandleAnchor(link, link.Source, true);
-            if (link.Target != null) HandleAnchor(link, link.Target, true);
+            HandleAnchor(link, link.Target, true);
             link.Refresh();
 
             link.SourceChanged += OnLinkSourceChanged;
@@ -22,13 +23,14 @@ namespace Blazor.Diagrams.Core.Layers
         {
             link.Diagram = null;
             HandleAnchor(link, link.Source, false);
-            if (link.Target != null) HandleAnchor(link, link.Target, false);
+            HandleAnchor(link, link.Target, false);
             link.Refresh();
 
             link.SourceChanged -= OnLinkSourceChanged;
             link.TargetChanged -= OnLinkTargetChanged;
             
             Diagram.Controls.RemoveFor(link);
+            Remove(link.Links.ToList());
         }
 
         private static void OnLinkSourceChanged(BaseLinkModel link, Anchor old, Anchor @new)
@@ -37,24 +39,27 @@ namespace Blazor.Diagrams.Core.Layers
             HandleAnchor(link, @new, add: true);
         }
 
-        private static void OnLinkTargetChanged(BaseLinkModel link, Anchor? old, Anchor? @new)
+        private static void OnLinkTargetChanged(BaseLinkModel link, Anchor old, Anchor @new)
         {
-            if (old != null) HandleAnchor(link, old, add: false);
-            if (@new != null) HandleAnchor(link, @new, add: true);
+            HandleAnchor(link, old, add: false);
+            HandleAnchor(link, @new, add: true);
         }
 
         private static void HandleAnchor(BaseLinkModel link, Anchor anchor, bool add)
         {
             if (add)
             {
-                anchor.Model.AddLink(link);
+                anchor.Model?.AddLink(link);
             }
             else
             {
-                anchor.Model.RemoveLink(link);
+                anchor.Model?.RemoveLink(link);
             }
 
-            anchor.Model.Refresh();
+            if (anchor.Model is Model model)
+            {
+                model.Refresh();
+            }
         }
     }
 }

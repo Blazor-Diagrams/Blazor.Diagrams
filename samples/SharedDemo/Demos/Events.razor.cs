@@ -76,6 +76,7 @@ namespace SharedDemo.Demos
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Left);
             node.AddPort(PortAlignment.Right);
+            node.Moved += (m) => events.Add($"Node.Moved, NodeId={node.Id}");
             return node;
         }
     }

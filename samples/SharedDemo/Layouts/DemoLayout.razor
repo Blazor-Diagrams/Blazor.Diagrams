@@ -21,7 +21,7 @@
 
 @if (LayoutData.Info != null)
 {
-    <div class="floating alert alert-primary" role="alert">
+    <div class="floating alert alert-primary" style="z-index: 10000;" role="alert">
         <h4 class="alert-heading">@LayoutData.Title</h4>
         <p>@((MarkupString)LayoutData.Info)</p>
     </div>

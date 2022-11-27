@@ -19,6 +19,10 @@ public partial class DiagramCanvas : IDisposable
 
     [Parameter] public RenderFragment? Widgets { get; set; }
 
+    [Parameter] public RenderFragment? AdditionalSvg { get; set; }
+
+    [Parameter] public RenderFragment? AdditionalHtml { get; set; }
+
     [Parameter] public string? Class { get; set; }
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;

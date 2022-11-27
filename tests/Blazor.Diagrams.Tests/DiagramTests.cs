@@ -14,10 +14,10 @@ namespace Blazor.Diagrams.Tests
         {
             // Arrange
             var diagram = new BlazorDiagram();
-            diagram.RegisterModelComponent<NodeModel, NodeWidget>();
+            diagram.RegisterComponent<NodeModel, NodeWidget>();
 
             // Act
-            var componentType = diagram.GetComponentForModel<NodeModel>();
+            var componentType = diagram.GetComponent<NodeModel>();
 
             // Assert
             componentType.Should().Be(typeof(NodeWidget));
@@ -30,7 +30,7 @@ namespace Blazor.Diagrams.Tests
             var diagram = new BlazorDiagram();
 
             // Act
-            var componentType = diagram.GetComponentForModel<NodeModel>();
+            var componentType = diagram.GetComponent<NodeModel>();
 
             // Assert
             componentType.Should().BeNull();
@@ -41,10 +41,10 @@ namespace Blazor.Diagrams.Tests
         {
             // Arrange
             var diagram = new BlazorDiagram();
-            diagram.RegisterModelComponent<Model, NodeWidget>();
+            diagram.RegisterComponent<Model, NodeWidget>();
 
             // Act
-            var componentType = diagram.GetComponentForModel<CustomModel>();
+            var componentType = diagram.GetComponent<CustomModel>();
 
             // Assert
             componentType.Should().Be(typeof(NodeWidget));
@@ -55,11 +55,11 @@ namespace Blazor.Diagrams.Tests
         {
             // Arrange
             var diagram = new BlazorDiagram();
-            diagram.RegisterModelComponent<CustomModel, CustomWidget>();
-            diagram.RegisterModelComponent<Model, NodeWidget>();
+            diagram.RegisterComponent<CustomModel, CustomWidget>();
+            diagram.RegisterComponent<Model, NodeWidget>();
 
             // Act
-            var componentType = diagram.GetComponentForModel<CustomModel>();
+            var componentType = diagram.GetComponent<CustomModel>();
 
             // Assert
             componentType.Should().Be(typeof(CustomWidget));
@@ -70,10 +70,10 @@ namespace Blazor.Diagrams.Tests
         {
             // Arrange
             var diagram = new BlazorDiagram();
-            diagram.RegisterModelComponent<Model, NodeWidget>();
+            diagram.RegisterComponent<Model, NodeWidget>();
 
             // Act
-            var componentType = diagram.GetComponentForModel<CustomModel>(false);
+            var componentType = diagram.GetComponent<CustomModel>(false);
 
             // Assert
             componentType.Should().BeNull();

@@ -1,7 +1,8 @@
 ﻿using Blazor.Diagrams;
-using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 
 namespace SharedDemo.Demos.Links
 {
@@ -31,15 +32,15 @@ namespace SharedDemo.Demos.Links
 
             var link1 = new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
             {
-                Router = Routers.Normal,
-                PathGenerator = PathGenerators.Straight
+                Router = new NormalRouter(),
+                PathGenerator = new StraightPathGenerator()
             };
             link1.Labels.Add(new LinkLabelModel(link1, "Straight"));
 
             var link2 = new LinkModel(node2.GetPort(PortAlignment.Right), node3.GetPort(PortAlignment.Left))
             {
-                Router = Routers.Normal,
-                PathGenerator = PathGenerators.Smooth
+                Router = new NormalRouter(),
+                PathGenerator = new SmoothPathGenerator()
             };
             link2.Labels.Add(new LinkLabelModel(link2, "Smooth"));
 

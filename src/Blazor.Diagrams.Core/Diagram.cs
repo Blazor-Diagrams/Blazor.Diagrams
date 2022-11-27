@@ -2,7 +2,6 @@
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System;
@@ -21,7 +20,8 @@ namespace Blazor.Diagrams.Core
     public abstract class Diagram
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
-        private readonly List<GroupModel> _groups;
+        private readonly List<SelectableModel> _orderedSelectables;
+        private bool _suspendSorting;
 
         public event Action<Model?, PointerEventArgs>? PointerDown;
         public event Action<Model?, PointerEventArgs>? PointerMove;
@@ -34,10 +34,6 @@ namespace Blazor.Diagrams.Core
         public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
         public event Action<SelectableModel>? SelectionChanged;
-        public event Action<GroupModel>? GroupAdded;
-        public event Action<GroupModel>? GroupUngrouped;
-        public event Action<GroupModel>? GroupRemoved;
-
         public event Action? PanChanged;
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
@@ -46,11 +42,20 @@ namespace Blazor.Diagrams.Core
         protected Diagram()
         {
             _behaviors = new Dictionary<Type, Behavior>();
-            _groups = new List<GroupModel>();
+            _orderedSelectables = new List<SelectableModel>();
 
             Nodes = new NodeLayer(this);
             Links = new LinkLayer(this);
+            Groups = new GroupLayer(this);
             Controls = new ControlsLayer();
+
+            Nodes.Added += OnSelectableAdded;
+            Links.Added += OnSelectableAdded;
+            Groups.Added += OnSelectableAdded;
+
+            Nodes.Removed += OnSelectableRemoved;
+            Links.Removed += OnSelectableRemoved;
+            Groups.Removed += OnSelectableRemoved;
 
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
@@ -60,17 +65,19 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new EventsBehavior(this));
             RegisterBehavior(new KeyboardShortcutsBehavior(this));
             RegisterBehavior(new ControlsBehavior(this));
+            RegisterBehavior(new VirtualizationBehavior(this));
         }
 
         public abstract DiagramOptions Options { get; }
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
+        public GroupLayer Groups { get; }
         public ControlsLayer Controls { get; }
-        public IReadOnlyList<GroupModel> Groups => _groups;
         public Rectangle? Container { get; private set; }
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public bool SuspendRefresh { get; set; }
+        public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
         public void Refresh()
         {
@@ -95,83 +102,6 @@ namespace Blazor.Diagrams.Core
             SuspendRefresh = false;
             Refresh();
         }
-
-        #region Groups
-
-        /// <summary>
-        /// Groups 2 or more children.
-        /// </summary>
-        /// <param name="children">An array of child nodes.</param>
-        /// <returns>The created group instance.</returns>
-        public GroupModel Group(params NodeModel[] children)
-        {
-            var group = Options.Groups.Factory(this, children);
-            AddGroup(group);
-            return group;
-        }
-
-        /// <summary>
-        /// Adds the group to the diagram after validating it.
-        /// </summary>
-        /// <param name="group">A group instance.</param>
-        public GroupModel AddGroup(GroupModel group)
-        {
-            foreach (var child in group.Children)
-            {
-                if (child is GroupModel g)
-                {
-                    if (!Groups.Contains(g))
-                        throw new Exception(
-                            "One of the children isn't in the diagram (Groups). Make sure to add all the nodes before creating the group.");
-                }
-                else if (child is NodeModel n)
-                    if (!Nodes.Contains(n))
-                        throw new Exception(
-                            "One of the children isn't in the diagram (Nodes). Make sure to add all the nodes before creating the group.");
-            }
-
-            _groups.Add(group);
-            GroupAdded?.Invoke(group);
-            Refresh();
-            return group;
-        }
-
-        /// <summary>
-        /// Splits up the group by deleting the group and keeping the children.
-        /// </summary>
-        /// <param name="group">A group instance.</param>
-        public void Ungroup(GroupModel group)
-        {
-            if (!_groups.Remove(group))
-                return;
-
-            Batch(() =>
-            {
-                group.Ungroup();
-                Links.Remove(group.PortLinks.ToArray());
-                GroupUngrouped?.Invoke(group);
-            });
-        }
-
-        /// <summary>
-        /// Deletes the group and all its children from the diagram.
-        /// </summary>
-        /// <param name="group">A group instnace.</param>
-        public void RemoveGroup(GroupModel group)
-        {
-            if (!_groups.Remove(group))
-                return;
-
-            Batch(() =>
-            {
-                Nodes.Remove(group.Children.ToArray());
-                Links.Remove(group.PortLinks.ToArray());
-                group.Ungroup();
-                GroupRemoved?.Invoke(group);
-            });
-        }
-
-        #endregion
 
         #region Selection
 
@@ -357,6 +287,83 @@ namespace Blazor.Diagrams.Core
 
             return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
         }
+
+        #region Ordering
+
+        public void SendToBack(SelectableModel model)
+        {
+            var minOrder = GetMinOrder();
+            if (model.Order == minOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Insert(0, model);
+
+            // Todo: can optimize this by only updating the order of items before model
+            Batch(() =>
+            {
+                _suspendSorting = true;
+                for (var i = 0; i < _orderedSelectables.Count; i++)
+                {
+                    _orderedSelectables[i].Order = i + 1;
+                }
+                _suspendSorting = false;
+            });
+        }
+
+        public void SendToFront(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            if (model.Order == maxOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Add(model);
+
+            _suspendSorting = true;
+            model.Order = maxOrder + 1;
+            _suspendSorting = false;
+            Refresh();
+        }
+
+        public int GetMinOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[0].Order : 0;
+        }
+
+        public int GetMaxOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[^1].Order : 0;
+        }
+
+        private void OnSelectableAdded(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            _orderedSelectables.Add(model);
+            model.Order = maxOrder + 1;
+            model.OrderChanged += OnModelOrderChanged;
+        }
+
+        private void OnSelectableRemoved(SelectableModel model)
+        {
+            model.OrderChanged -= OnModelOrderChanged;
+            _orderedSelectables.Remove(model);
+        }
+
+        private void OnModelOrderChanged(Model model)
+        {
+            if (_suspendSorting)
+                return;
+
+            _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
+            Refresh();
+        }
+
+        #endregion
 
         #region Events
 

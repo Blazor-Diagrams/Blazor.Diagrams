@@ -7,14 +7,12 @@ namespace Blazor.Diagrams.Core.Anchors
 {
     public abstract class Anchor
     {
-        public Anchor(ILinkable model, Point? offset = null)
+        public Anchor(ILinkable? model = null)
         {
             Model = model;
-            Offset = offset ?? Point.Zero;
         }
 
-        public ILinkable Model { get; }
-        public Point Offset { get; }
+        public ILinkable? Model { get; }
 
         public abstract Point? GetPosition(BaseLinkModel link, Point[] route);
 
@@ -24,9 +22,6 @@ namespace Blazor.Diagrams.Core.Anchors
 
         protected static Point? GetOtherPosition(BaseLinkModel link, bool isTarget)
         {
-            if (!isTarget && link.Target == null)
-                return link.OnGoingPosition;
-
             var anchor = isTarget ? link.Source : link.Target!;
             return anchor.GetPlainPosition();
         }

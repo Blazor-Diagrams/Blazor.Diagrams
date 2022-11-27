@@ -6,43 +6,48 @@
         <Authors>zHaytam</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <AssemblyVersion>3.0.0</AssemblyVersion>
-        <FileVersion>3.0.0-beta.1</FileVersion>
+        <FileVersion>3.0.0</FileVersion>
         <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
         <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-        <Version>3.0.0-beta.1</Version>
+        <Version>3.0.0-beta.5</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
         <PackageId>Z.Blazor.Diagrams</PackageId>
         <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
         <Product>Z.Blazor.Diagrams</Product>
         <PackageIcon>ZBD.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj"/>
+        <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <None Include="..\..\ZBD.png">
             <Pack>True</Pack>
-            <PackagePath></PackagePath>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
 
     <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
         <!-- Test if Excubo.WebCompiler is installed (recommended) -->
         <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
         </Exec>
     </Target>
 
     <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-        <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high"/>
+        <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
     </Target>
 
 </Project>

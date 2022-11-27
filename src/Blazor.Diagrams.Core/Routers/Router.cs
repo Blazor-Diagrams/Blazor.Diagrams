@@ -1,11 +1,14 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Core
+namespace Blazor.Diagrams.Core.Routers
 {
-    public static partial class Routers
+    public abstract class Router
     {
-        public static Point GetPortPositionBasedOnAlignment(PortModel port)
+        public abstract Point[] GetRoute(Diagram diagram, BaseLinkModel link);
+
+        protected static Point GetPortPositionBasedOnAlignment(PortModel port)
         {
             var pt = port.Position;
             switch (port.Alignment)

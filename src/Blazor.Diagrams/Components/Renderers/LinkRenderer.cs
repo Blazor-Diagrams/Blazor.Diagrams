@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -18,6 +19,7 @@ public class LinkRenderer : ComponentBase, IDisposable
     public void Dispose()
     {
         Link.Changed -= OnLinkChanged;
+        Link.VisibilityChanged -= OnLinkChanged;
     }
 
     protected override void OnInitialized()
@@ -25,19 +27,31 @@ public class LinkRenderer : ComponentBase, IDisposable
         base.OnInitialized();
 
         Link.Changed += OnLinkChanged;
+        Link.VisibilityChanged += OnLinkChanged;
     }
 
     protected override bool ShouldRender()
     {
-        return _shouldRender;
+        if (!_shouldRender)
+            return false;
+
+        _shouldRender = false;
+        return true;
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var componentType = BlazorDiagram.GetComponentForModel(Link) ?? typeof(LinkWidget);
+        if (!Link.Visible)
+            return;
+        
+        var componentType = BlazorDiagram.GetComponent(Link) ?? typeof(LinkWidget);
+        var classes = new StringBuilder()
+            .Append("link")
+            .AppendIf(" attached", Link.IsAttached)
+            .ToString();
 
         builder.OpenElement(0, "g");
-        builder.AddAttribute(1, "class", "link");
+        builder.AddAttribute(1, "class", classes);
         builder.AddAttribute(2, "data-link-id", Link.Id);
         builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
         builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
@@ -49,11 +63,6 @@ public class LinkRenderer : ComponentBase, IDisposable
         builder.AddAttribute(10, "Link", Link);
         builder.CloseComponent();
         builder.CloseElement();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        _shouldRender = false;
     }
 
     private void OnLinkChanged(Model _)

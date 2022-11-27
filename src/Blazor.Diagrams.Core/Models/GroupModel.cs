@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,17 +10,19 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<NodeModel> _children;
 
-        public GroupModel(IEnumerable<NodeModel> children, byte padding = 30)
+        public GroupModel(IEnumerable<NodeModel> children, byte padding = 30, bool autoSize = true)
         {
             _children = new List<NodeModel>();
 
             Size = Size.Zero;
             Padding = padding;
+            AutoSize = autoSize;
             Initialize(children);
         }
 
         public IReadOnlyList<NodeModel> Children => _children;
         public byte Padding { get; }
+        public bool AutoSize { get; }
 
         public void AddChild(NodeModel child)
         {
@@ -46,11 +49,13 @@ namespace Blazor.Diagrams.Core.Models
             if (UpdateDimensions())
             {
                 Refresh();
+                RefreshLinks();
             }
         }
 
         public override void SetPosition(double x, double y)
         {
+            Console.WriteLine($"({(Group == null ? "Parent" : "Child")}) SetPosition {x:00} {y:00}");
             var deltaX = x - Position.X;
             var deltaY = y - Position.Y;
             base.SetPosition(x, y);
@@ -64,10 +69,13 @@ namespace Blazor.Diagrams.Core.Models
 
         public override void UpdatePositionSilently(double deltaX, double deltaY)
         {
+            Console.WriteLine($"({(Group == null ? "Parent" : "Child")}) UpdatePositionSilently {deltaX:00} {deltaY:00}");
             base.UpdatePositionSilently(deltaX, deltaY);
 
             foreach (var child in Children)
                 child.UpdatePositionSilently(deltaX, deltaY);
+
+            Refresh();
         }
 
         public void Ungroup()
@@ -112,7 +120,14 @@ namespace Blazor.Diagrams.Core.Models
                 return false;
 
             var bounds = Children.GetBounds();
-            Position = new Point(bounds.Left - Padding, bounds.Top - Padding);
+
+            var newPosition = new Point(bounds.Left - Padding, bounds.Top - Padding);
+            if (!Position.Equals(newPosition))
+            {
+                Position = newPosition;
+                TriggerMoving();
+            }
+
             Size = new Size(bounds.Width + Padding * 2, bounds.Height + Padding * 2);
             return true;
         }

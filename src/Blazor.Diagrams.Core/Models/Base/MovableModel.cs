@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Geometry;
+﻿using System;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Core.Models.Base
 {
@@ -6,6 +7,8 @@ namespace Blazor.Diagrams.Core.Models.Base
     // I believe it makes sense since if you click to move something then you're also selecting
     public abstract class MovableModel : SelectableModel
     {
+        public event Action<MovableModel>? Moved;
+        
         public MovableModel(Point? position = null)
         {
             Position = position ?? Point.Zero;
@@ -19,5 +22,10 @@ namespace Blazor.Diagrams.Core.Models.Base
         public Point Position { get; set; }
 
         public virtual void SetPosition(double x, double y) => Position = new Point(x, y);
+
+        /// <summary>
+        /// Only use this if you know what you're doing
+        /// </summary>
+        public void TriggerMoved() => Moved?.Invoke(this);
     }
 }

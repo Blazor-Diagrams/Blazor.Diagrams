@@ -41,7 +41,7 @@ public class SinglePortAnchorTests
             Position = new Point(100, 50)
         };
         var anchor = new SinglePortAnchor(port);
-        var link = new LinkModel(anchor);
+        var link = new LinkModel(anchor, new PositionAnchor(Point.Zero));
 
         // Act
         var position = anchor.GetPosition(link);
@@ -65,7 +65,7 @@ public class SinglePortAnchorTests
         {
             MiddleIfNoMarker = true
         };
-        var link = new LinkModel(anchor);
+        var link = new LinkModel(anchor, new PositionAnchor(Point.Zero));
 
         // Act
         var position = anchor.GetPosition(link)!;
@@ -100,7 +100,7 @@ public class SinglePortAnchorTests
             MiddleIfNoMarker = false,
             UseShapeAndAlignment = false
         };
-        var link = new LinkModel(anchor);
+        var link = new LinkModel(anchor, new PositionAnchor(Point.Zero));
 
         // Act
         var position = anchor.GetPosition(link)!;
@@ -135,7 +135,7 @@ public class SinglePortAnchorTests
             MiddleIfNoMarker = false,
             UseShapeAndAlignment = true
         };
-        var link = new LinkModel(anchor);
+        var link = new LinkModel(anchor, new PositionAnchor(Point.Zero));
 
         // Act
         var position = anchor.GetPosition(link)!;

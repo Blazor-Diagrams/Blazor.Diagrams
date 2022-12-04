@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Tests", "te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "site", "site", "{F1E6F4C0-3EC7-4CFF-834A-0CF207CCFF3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site", "site\Site\Site.csproj", "{F26307EC-C188-44BD-B3E5-960318F43C0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Site", "site\Site\Site.csproj", "{F26307EC-C188-44BD-B3E5-960318F43C0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

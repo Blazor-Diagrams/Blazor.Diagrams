@@ -3,7 +3,6 @@ using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components;
 using Site.Models.Landing;
 
 namespace Site.Components.Landing;
@@ -16,8 +15,8 @@ public partial class LandingShowcaseDiagram
     {
         _diagram.Options.Zoom.Enabled = false;
         _diagram.Options.GridSize = 20;
-        _diagram.RegisterModelComponent<AddNodeModel, AddNodeWidget>();
-        _diagram.RegisterModelComponent<NumberNodeModel, NumberNodeWidget>();
+        _diagram.RegisterComponent<AddNodeModel, AddNodeWidget>();
+        _diagram.RegisterComponent<NumberNodeModel, NumberNodeWidget>();
 
         _diagram.Nodes.Added += OnNodeAdded;
         _diagram.Nodes.Removed += OnNodeRemoved;

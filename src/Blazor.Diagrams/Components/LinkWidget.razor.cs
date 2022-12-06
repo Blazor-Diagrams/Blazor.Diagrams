@@ -22,7 +22,7 @@ public partial class LinkWidget
             builder.AddAttribute(3, "stroke-width", 12);
             builder.AddAttribute(4, "d", d);
             builder.AddAttribute(5, "stroke-linecap", "butt");
-            builder.AddAttribute(6, "stroke-opacity", _hovered ? 0.05 : 0);
+            builder.AddAttribute(6, "stroke-opacity", _hovered ? "0.05" : "0");
             builder.AddAttribute(7, "fill", "none");
             builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
             builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));

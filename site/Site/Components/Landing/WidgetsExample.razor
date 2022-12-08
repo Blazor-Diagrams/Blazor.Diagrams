@@ -1,0 +1,41 @@
+﻿<section class="bg-white border-b py-8">
+
+    <div class="container mx-auto m-8">
+        <div class="md:grid md:grid-cols-5 md:gap-4">
+            <div class="md:col-span-2 p-6">
+                <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
+                    Widgets
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    Blazor Diagrams includes a couple of widgets to speed up your development.
+                </p>
+                <ul class="text-gray-600 list-disc list-inside">
+                    <li>GridWidget (dots or lines)</li>
+                    <li>SelectionBoxWidget (shift and drag)</li>
+                    <li>NavigatorWidget</li>
+                </ul>
+            </div>
+            <div class="md:col-span-3 shadow border">
+                <div style="width: 100%; height: 450px; position: relative;">
+                    <CascadingValue Value="_diagram">
+                        <DiagramCanvas>
+                            <Widgets>
+                                <GridWidget Size="30" Mode="@(GridPoints ? GridMode.Point : GridMode.Line)" BackgroundColor="white" />
+                                <SelectionBoxWidget />
+                                <NavigatorWidget Width="200" Height="150"
+                                                 ViewStrokeColor="#40BABD"
+                                                 NodeColor="#40BABD"
+                                                 Class="border border-black bg-white absolute"
+                                                 Style="bottom: 15px; right: 15px;" />
+                            </Widgets>
+                        </DiagramCanvas>
+                    </CascadingValue>
+                    <div class="bg-white text-gray-600" style="position: absolute; bottom: 15px; left: 15px;">
+                        <input id="gridPointsCheckbox" type="checkbox" @bind-value="@GridPoints" />
+                        <label for="gridPointsCheckbox">Grid Points</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

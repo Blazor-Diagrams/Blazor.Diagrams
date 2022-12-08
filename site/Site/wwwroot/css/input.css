@@ -28,3 +28,39 @@
 .text-main {
     color: #40BABD;
 }
+
+.bg-color1 {
+    background-color: #A0B15B;
+}
+
+.bg-color2 {
+    background-color: #DC9A7A;
+}
+
+.bg-color3 {
+    background-color: #9EA5E3;
+}
+
+.outline-color1 {
+    box-shadow: 0px 0px 0px 2px #A0B15B inset;
+}
+
+.outline-color2 {
+    box-shadow: 0px 0px 0px 2px #DC9A7A inset;
+}
+
+.outline-color3 {
+    box-shadow: 0px 0px 0px 2px #9EA5E3 inset;
+}
+
+.outline-color1-darker {
+    box-shadow: 0px 0px 0px 2px #515a2b inset;
+}
+
+.outline-color2-darker {
+    box-shadow: 0px 0px 0px 2px #874423 inset;
+}
+
+.outline-color3-darker {
+    box-shadow: 0px 0px 0px 2px #2b3595 inset;
+}

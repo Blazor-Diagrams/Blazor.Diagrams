@@ -33,6 +33,10 @@ public partial class LandingShowcaseDiagram
         _diagram.Links.Add(new LinkModel(n2.Ports[0], a1.Ports[1]));
         _diagram.Links.Add(new LinkModel(a1.Ports[2], a2.Ports[0]));
         _diagram.Links.Add(new LinkModel(n3.Ports[0], a2.Ports[1]));
+
+        n1.Value = 3;
+        n2.Value = 91;
+        n3.Value = 25;
     }
 
     private void OnNodeAdded(NodeModel node)

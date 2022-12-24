@@ -27,7 +27,7 @@ namespace Site.Components.Landing.Groups
             var node4 = _diagram.Nodes.Add(new ColoredNodeModel("Node 4", false, "color1", new Point(330, 240)));
 
             var group1 = _diagram.Groups.Add(new ColoredGroupModel(new[] { node3, node4 }, "color2"));
-            var group2 = _diagram.Groups.Add(new ColoredGroupModel(new[] { group1, node1, node2 }, "color2"));
+            var group2 = _diagram.Groups.Add(new ColoredGroupModel(new[] { (NodeModel)group1, node1, node2 }, "color2"));
 
             _diagram.Links.Add(new LinkModel(node1, node2)
             {

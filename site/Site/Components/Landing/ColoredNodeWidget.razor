@@ -7,6 +7,16 @@
 
 <div class="drop-shadow-lg @borderColor flex items-center justify-center font-bold @extraClasses" style="width: @(Node.Round ? 80 : 120)px; height: @(Node.Round ? 80 : 60)px;">
     @Node.Title
+
+    @foreach (var port in Node.Ports)
+    {
+        var classes = new StringBuilder("absolute -translate-y-1/2 ")
+            .Append(extraClasses)
+            .AppendIf(" top-1/2 -right-3", port.Alignment == PortAlignment.Right)
+            .AppendIf(" top-1/2 -left-3", port.Alignment == PortAlignment.Left);
+
+        <PortRenderer Port="port" Class="@classes.ToString()" Style="width: 10px; height: 10px;" />
+    }
 </div>
 
 @code {
@@ -14,4 +24,4 @@
     [Parameter]
     public ColoredNodeModel Node { get; set; } = null!;
 
-}
+} 

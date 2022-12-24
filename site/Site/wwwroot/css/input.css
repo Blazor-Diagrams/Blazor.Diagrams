@@ -64,3 +64,18 @@
 .outline-color3-darker {
     box-shadow: 0px 0px 0px 2px #2b3595 inset;
 }
+
+.link-label > div {
+    display: inline-block;
+    color: #000000;
+    font-size: 0.875rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    background-color: white;
+}

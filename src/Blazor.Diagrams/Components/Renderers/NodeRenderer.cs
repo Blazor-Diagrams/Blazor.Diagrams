@@ -89,7 +89,7 @@ public class NodeRenderer : ComponentBase, IDisposable
 
         var componentType = BlazorDiagram.GetComponent(Node) ??
                             (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
-        var classes = new StringBuilder("node")
+        var classes = new StringBuilder("diagram-node")
             .AppendIf(" locked", Node.Locked)
             .AppendIf(" selected", Node.Selected)
             .AppendIf(" grouped", Node.Group != null);

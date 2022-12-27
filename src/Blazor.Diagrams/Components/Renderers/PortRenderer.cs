@@ -66,7 +66,7 @@ public class PortRenderer : ComponentBase, IDisposable
         builder.OpenElement(0, _isParentSvg ? "g" : "div");
         builder.AddAttribute(1, "style", Style);
         builder.AddAttribute(2, "class",
-            "port" + " " + Port.Alignment.ToString().ToLower() + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " +
+            "diagram-port" + " " + Port.Alignment.ToString().ToLower() + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " +
             Class);
         builder.AddAttribute(3, "data-port-id", Port.Id);
         builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));

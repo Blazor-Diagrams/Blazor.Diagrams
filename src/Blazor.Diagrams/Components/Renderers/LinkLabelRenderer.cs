@@ -39,7 +39,7 @@ public class LinkLabelRenderer : ComponentBase, IDisposable
         var componentType = BlazorDiagram.GetComponent(Label) ?? typeof(DefaultLinkLabelWidget);
 
         builder.OpenElement(0, "foreignObject");
-        builder.AddAttribute(1, "class", "link-label");
+        builder.AddAttribute(1, "class", "diagram-link-label");
         builder.AddAttribute(2, "x", (position.X + (Label.Offset?.X ?? 0)).ToInvariantString());
         builder.AddAttribute(3, "y", (position.Y + (Label.Offset?.Y ?? 0)).ToInvariantString());
         

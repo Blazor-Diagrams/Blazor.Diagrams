@@ -1,10 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
+<style>
+    .gradient {
+        background: linear-gradient(90deg, #108c8f 0%, #68bbbd 100%);
+    }
+</style>
+
 <!--Nav-->
 <nav id="header" class="fixed w-full z-30 top-0 text-white bg-white">
     <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2">
         <div class="pl-4 flex items-center">
-            <a class="toggleColour no-underline hover:no-underline font-bold text-2xl lg:text-4xl text-gray-800" href="#">
+            <a class="toggleColour no-underline hover:no-underline font-bold text-2xl lg:text-4xl text-gray-800" href="/">
                 <img src="img/ZBD.png" alt="logo" width="32" height="32" class="h-8 inline" />
                 BLAZOR DIAGRAMS
             </a>
@@ -20,24 +26,24 @@
         <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 lg:bg-transparent text-black p-4 lg:p-0 z-20 bg-white" id="nav-content">
             <ul class="list-reset lg:flex justify-end flex-1 items-center">
                 <li class="mr-3">
-                    <a class="font-bold inline-block py-2 px-4 no-underline hover:text-gray-800 hover:text-underline" href="#">
+                    <a class="font-bold inline-block py-2 px-4 no-underline hover:text-gray-800 hover:text-underline hover:text-palette-main" href="/documentation">
                         Documentation
                     </a>
                 </li>
                 <li class="mr-3">
-                    <a class="font-bold inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="#">
+                    <a class="font-bold inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4 hover:text-palette-main" href="#">
                         Examples
                     </a>
                 </li>
                 <li class="mr-3">
-                    <a class="font-bold inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4"
+                    <a class="font-bold inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4 hover:text-palette-main"
                        href="https://github.com/Blazor-Diagrams/Blazor.Diagrams"
                        target="_blank">
                         GitHub
                     </a>
                 </li>
             </ul>
-            <button id="navAction" class="mx-auto lg:mx-0 hover:underline font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out gradient text-white">
+            <button id="navAction" class="mx-auto lg:mx-0 hover:no-underline font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out gradient text-white">
                 Get started
             </button>
         </div>

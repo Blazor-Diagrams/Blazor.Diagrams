@@ -21,6 +21,7 @@ namespace Site.Components.Landing.Features
             _diagram.Options.Links.RequireTarget = false;
             _diagram.Options.Links.DefaultPathGenerator = new StraightPathGenerator();
             _diagram.RegisterComponent<ColoredNodeModel, ColoredNodeWidget>();
+            _diagram.RegisterComponent<LinkLabelModel, LinkLabelWidget>();
 
             var smoothPathGenerator = new SmoothPathGenerator();
 

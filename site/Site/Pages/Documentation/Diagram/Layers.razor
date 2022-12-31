@@ -1,0 +1,37 @@
+﻿@page "/documentation/diagram-layers"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Diagram Layers - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Diagram Layers</h1>
+
+<p>
+    It is very important to know that in Blazor Diagrams, everything is rendered in 2 layers:
+</p>
+
+<h2>SVG</h2>
+
+<pre><code class="language-html">
+&lt;svg class=&quot;diagram-svg-layer&quot; style=&quot;transform: translate(0px, 0px) scale(1); z-index: 0;&quot;&gt;
+</code></pre>
+
+<p>
+    This layer is basically a svg. It is mainly used to render links, since they require the <code>&lt;path&gt;</code> element.<br />
+    However, it is also possible to render nodes in it by inherting from <code>SvgNodeModel</code> or <code>SvgGroupModel</code>.
+    This lets you use any svg elements and features with ease.
+</p>
+
+<h2>HTML</h2>
+
+<pre><code class="language-html">
+&lt;div class=&quot;diagram-html-layer&quot; style=&quot;transform: translate(0px, 0px) scale(1);&quot;&gt;
+</code></pre>
+
+<p>
+    This layer is a simple html div. It is mainly used to render nodes.
+    It is very useful since you can re-use any html you might already have in your nodes, as well as include interactivity through inputs for example.
+</p>
+
+<NavigationButtons NextTitle="Behaviors"
+                   NextLink="/documentation/diagram-behaviors" />

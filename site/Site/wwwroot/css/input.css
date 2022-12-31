@@ -14,6 +14,18 @@
 	h3 {
 		@apply text-xl font-bold my-4;
 	}
+
+	table {
+		@apply border-collapse table-auto w-full my-4;
+	}
+
+	tr {
+		@apply border-b;
+	}
+
+	td, th {
+		@apply px-6 py-4 text-left;
+	}
 }
 
 #blazor-error-ui {

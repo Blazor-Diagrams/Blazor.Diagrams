@@ -44,3 +44,4 @@ jobs:
       with:
         name: packages
         path: packages/
+        retention-days: 5

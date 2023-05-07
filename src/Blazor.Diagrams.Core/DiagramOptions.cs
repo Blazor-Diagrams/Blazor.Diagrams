@@ -8,8 +8,8 @@ namespace Blazor.Diagrams.Core
 {
     public class DiagramOptions
     {
-        [Description("Key code for deleting entities")]
-        public string DeleteKey { get; set; } = "Delete";
+        [Description("Key codes for deleting entities")]
+        public string[] DeleteKeys { get; set; } = {"Delete", "Backspace"};
         [Description("The default component for nodes")]
         public Type? DefaultNodeComponent { get; set; }
         [Description("The grid size (grid-based snaping")]

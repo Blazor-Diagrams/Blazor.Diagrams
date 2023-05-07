@@ -14,7 +14,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void Diagram_KeyDown(KeyboardEventArgs e)
         {
-            if (e.AltKey || e.CtrlKey || e.ShiftKey || e.Code != Diagram.Options.DeleteKey)
+            if (e.AltKey || e.CtrlKey || e.ShiftKey || !Diagram.Options.DeleteKeys.Contains(e.Code))
                 return;
 
             Diagram.Batch(() =>

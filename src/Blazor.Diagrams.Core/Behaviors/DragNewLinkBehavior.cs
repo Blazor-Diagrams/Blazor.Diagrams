@@ -114,17 +114,29 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private PortModel? FindNearPortToAttachTo()
         {
-            var ongoingPosition = _targetPositionAnchor!.GetPosition(_ongoingLink!)!;
-            foreach (var port in Diagram.Nodes.SelectMany(n => n.Ports))
+            if (_ongoingLink is null || _targetPositionAnchor is null)
+                return null;
+
+            PortModel? nearestSnapPort = null;
+            var nearestSnapPortDistance = double.PositiveInfinity;
+
+            var position = _targetPositionAnchor!.GetPosition(_ongoingLink)!;
+
+            foreach (var port in Diagram.Nodes.SelectMany((NodeModel n) => n.Ports))
             {
-                if (ongoingPosition.DistanceTo(port.MiddlePosition) < Diagram.Options.Links.SnappingRadius
-                    && (_ongoingLink!.Source.Model == null || _ongoingLink.Source.Model.CanAttachTo(port)))
+                var distance = position.DistanceTo(port.Position);
+
+                if (distance <= Diagram.Options.Links.SnappingRadius && (_ongoingLink.Source.Model?.CanAttachTo(port) != false))
                 {
-                    return port;
+                    if (distance < nearestSnapPortDistance)
+                    {
+                        nearestSnapPortDistance = distance;
+                        nearestSnapPort = port;
+                    }
                 }
             }
 
-            return null;
+            return nearestSnapPort;
         }
 
         public override void Dispose()

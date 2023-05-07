@@ -21,7 +21,13 @@ namespace Site.Static
                 new MenuItem("Layers", "/documentation/diagram-layers"),
                 new MenuItem("Behaviors", "/documentation/diagram-behaviors"),
                 new MenuItem("Options", "/documentation/diagram-options"),
+                new MenuItem("Keyboard Shortcuts", "/documentation/keyboard-shortcuts"),
                 new MenuItem("API", "/documentation/diagram-api"),
+            }),
+            new MenuGroup("Groups", new List<MenuItem>
+            {
+                new MenuItem("Overview", "/documentation/groups-overview"),
+                new MenuItem("SVG", "/documentation/groups-svg"),
             }),
             new MenuGroup("Customization", new List<MenuItem>
             {

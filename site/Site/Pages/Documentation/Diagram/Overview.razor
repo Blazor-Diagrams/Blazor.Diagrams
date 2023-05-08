@@ -1,16 +1,30 @@
-﻿@page "/documentation/diagram-layers"
+﻿@page "/documentation/diagram"
 @layout DocumentationLayout
 @inherits DocumentationPage
 
-<PageTitle>Diagram Layers - Documentation - Blazor Diagrams</PageTitle>
+<PageTitle>Diagram - Documentation - Blazor Diagrams</PageTitle>
 
-<h1>Diagram Layers</h1>
+<h1>Diagram</h1>
+
+<h2>Structure</h2>
+
+The component <code>DiagramCanvas</code> generates the follolwing structure:
+
+<pre><code class="language-cshtml">
+&lt;div class=&quot;diagram-canvas&quot; tabindex=&quot;-1&quot;&gt;
+    &lt;!-- LAYERS --&gt;
+&lt;/div&gt;
+</code></pre>
+
+You can add your own CSS classes using the <code>Class</code> parameter.
+
+<h2>Layers</h2>
 
 <p>
     It is very important to know that in Blazor Diagrams, everything is rendered in 2 layers:
 </p>
 
-<h2>SVG</h2>
+<h3>SVG</h3>
 
 <pre><code class="language-html">
 &lt;svg class=&quot;diagram-svg-layer&quot; style=&quot;transform: translate(0px, 0px) scale(1); z-index: 0;&quot;&gt;
@@ -22,16 +36,31 @@
     This lets you use any svg elements and features with ease.
 </p>
 
-<h2>HTML</h2>
+<h3>HTML</h3>
 
 <pre><code class="language-html">
-&lt;div class=&quot;diagram-html-layer&quot; style=&quot;transform: translate(0px, 0px) scale(1);&quot;&gt;
+&lt;div class=&quot;diagram-html-layer&quot; style=&quot;transform: translate(0px, 0px) scale(1); z-index: 0;&quot;&gt;
 </code></pre>
 
 <p>
     This layer is a simple html div. It is mainly used to render nodes.
     It is very useful since you can re-use any html you might already have in your nodes, as well as include interactivity through inputs for example.
 </p>
+
+<h3>Additional Content</h3>
+
+You can add additional content to each layer using the available render fragments:
+
+<pre><code class="language-cshtml">
+&lt;DiagramCanvas&gt;
+    &lt;AdditionalHtml&gt;
+        &lt;!-- EXTRA HTML --&gt;
+    &lt;/AdditionalHtml&gt;
+    &lt;AdditionalSvg&gt;
+        &lt;!-- EXTRA SVG --&gt;
+    &lt;/AdditionalSvg&gt;
+&lt;/DiagramCanvas&gt;
+</code></pre>
 
 <NavigationButtons NextTitle="Behaviors"
                    NextLink="/documentation/diagram-behaviors" />

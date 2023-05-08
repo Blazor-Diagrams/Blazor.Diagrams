@@ -18,7 +18,7 @@ namespace Site.Static
             }),
             new MenuGroup("Diagram", new List<MenuItem>
             {
-                new MenuItem("Layers", "/documentation/diagram-layers"),
+                new MenuItem("Overview", "/documentation/diagram"),
                 new MenuItem("Behaviors", "/documentation/diagram-behaviors"),
                 new MenuItem("Options", "/documentation/diagram-options"),
                 new MenuItem("Keyboard Shortcuts", "/documentation/keyboard-shortcuts"),
@@ -28,13 +28,6 @@ namespace Site.Static
             {
                 new MenuItem("Overview", "/documentation/groups-overview"),
                 new MenuItem("SVG", "/documentation/groups-svg"),
-            }),
-            new MenuGroup("Customization", new List<MenuItem>
-            {
-                new MenuItem("Custom Nodes", "/documentation/custom-nodes"),
-                new MenuItem("Custom Ports", "/documentation/custom-ports"),
-                new MenuItem("Custom Links", "/documentation/custom-links"),
-                new MenuItem("Custom Groups", "/documentation/custom-groups"),
             })
         });
     }

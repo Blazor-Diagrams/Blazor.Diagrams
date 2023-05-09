@@ -13,6 +13,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
 
     public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
     public event Action<BaseLinkModel, Anchor, Anchor>? TargetChanged;
+    public event Action<BaseLinkModel>? TargetAttached;
 
     protected BaseLinkModel(Anchor source, Anchor target)
     {
@@ -97,6 +98,11 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     }
 
     public bool CanAttachTo(ILinkable other) => true;
+
+    /// <summary>
+    /// Triggers the TargetAttached event
+    /// </summary>
+    public void TriggerTargetAttached() => TargetAttached?.Invoke(this);
 
     private void GeneratePath()
     {

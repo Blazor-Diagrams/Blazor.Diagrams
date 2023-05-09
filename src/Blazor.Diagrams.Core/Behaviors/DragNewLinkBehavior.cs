@@ -93,6 +93,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             if (_ongoingLink.IsAttached) // Snapped already
             {
+                _ongoingLink.TriggerTargetAttached();
                 _ongoingLink = null;
                 return;
             }
@@ -101,6 +102,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             {
                 var targetAnchor = Diagram.Options.Links.TargetAnchorFactory(Diagram, _ongoingLink, linkable);
                 _ongoingLink.SetTarget(targetAnchor);
+                _ongoingLink.TriggerTargetAttached();
                 _ongoingLink.Refresh();
                 _ongoingLink.RefreshLinks();
             }

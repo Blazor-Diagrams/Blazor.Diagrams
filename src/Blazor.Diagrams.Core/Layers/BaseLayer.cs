@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Core
             Diagram = diagram;
         }
 
-        public virtual T Add(T item)
+        public virtual TSpecific Add<TSpecific>(TSpecific item) where TSpecific : T
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

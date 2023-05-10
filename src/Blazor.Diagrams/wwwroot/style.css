@@ -35,7 +35,7 @@
     overflow: visible;
 }
 
-.node {
+.diagram-node {
     position: absolute;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -45,11 +45,11 @@
     pointer-events: all;
 }
 
-.node.locked {
-    cursor: pointer;
-}
+    .diagram-node.locked {
+        cursor: pointer;
+    }
 
-.link {
+.diagram-link {
     pointer-events: visiblePainted;
     cursor: pointer;
 }
@@ -63,7 +63,7 @@
     border: 2px solid black;
 }
 
-.group {
+.diagram-group {
     position: absolute;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -73,22 +73,22 @@
     pointer-events: all;
 }
 
-.group .children {
-    position: absolute;
+    .diagram-group .children {
+        position: absolute;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+.diagram-link foreignObject.diagram-link-label {
     overflow: visible;
     pointer-events: none;
 }
 
-.link foreignObject.link-label {
-    overflow: visible;
-    pointer-events: none;
-}
-
-div.control {
+div.diagram-control {
     position: absolute;
 }
 
-.executable.control {
+.executable.diagram-control {
     pointer-events: all;
     cursor: pointer;
 }

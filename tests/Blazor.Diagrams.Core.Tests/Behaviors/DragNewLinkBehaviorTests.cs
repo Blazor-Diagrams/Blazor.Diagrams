@@ -255,7 +255,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
-        public void Behavior_ShouldRemoveLink_WhenMouseUpOnCanvas()
+        public void Behavior_ShouldRemoveLink_WhenMouseUpOnCanvasAndRequireTargetIsTrue()
         {
             // Arrange
             var diagram = new TestDiagram();
@@ -363,6 +363,83 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Assert
             diagram.Links.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void Behavior_ShouldTriggerLinkTargetAttached_WhenMouseUpOnOtherPort()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+            var node1 = new NodeModel(position: new Point(100, 50));
+            var node2 = new NodeModel(position: new Point(160, 50));
+            diagram.Nodes.Add(new[] { node1, node2 });
+            var port1 = node1.AddPort(new PortModel(node1)
+            {
+                Initialized = true,
+                Position = new Point(110, 60),
+                Size = new Size(10, 20)
+            });
+            var port2 = node2.AddPort(new PortModel(node2)
+            {
+                Initialized = true,
+                Position = new Point(170, 60),
+                Size = new Size(10, 20)
+            });
+            var targetAttachedTriggers = 0;
+
+            // Act
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            diagram.Links.Single().TargetAttached += _ => targetAttachedTriggers++;
+
+            diagram.TriggerPointerUp(port2,
+                new PointerEventArgs(105, 105, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            // Assert
+            targetAttachedTriggers.Should().Be(1);
+        }
+
+        [Fact]
+        public void Behavior_ShouldTriggerLinkTargetAttached_WhenLinkSnappedToPortAndMouseUp()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+            diagram.Options.Links.EnableSnapping = true;
+            diagram.Options.Links.SnappingRadius = 60;
+            var node1 = new NodeModel(position: new Point(100, 50));
+            var node2 = new NodeModel(position: new Point(160, 50));
+            diagram.Nodes.Add(new[] { node1, node2 });
+            var port1 = node1.AddPort(new PortModel(node1)
+            {
+                Initialized = true,
+                Position = new Point(110, 60),
+                Size = new Size(10, 20)
+            });
+            var port2 = node2.AddPort(new PortModel(node2)
+            {
+                Initialized = true,
+                Position = new Point(170, 60),
+                Size = new Size(10, 20)
+            });
+            var targetAttachedTriggers = 0;
+
+            // Act
+            diagram.TriggerPointerDown(port1,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            diagram.TriggerPointerMove(null,
+                new PointerEventArgs(140, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            diagram.Links.Single().TargetAttached += _ => targetAttachedTriggers++;
+
+            diagram.TriggerPointerUp(null,
+                new PointerEventArgs(140, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+            // Assert
+            targetAttachedTriggers.Should().Be(1);
         }
     }
 }

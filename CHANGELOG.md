@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0-beta.6) - 2023-05-09
+
+### Added
+
+- `Style` parameter to `PortRenderer`
+- `TargetAttached` to links, which triggers when a dragged link attaches to a target
+	- If port snapping is enabled, it will trigger only once when you let go of the mouse
+- `SuspendSorting` to `Diagram` in order to suspend sorting models in each `OrderChanged`
+	- If you know what you're doing, you could save some processing and avoid sorting everytime
+- `RefreshOrders` to be called after unsuspending sorting in order to sort the models again and refresh the diagram
+
+### Changed
+
+- `BaseLayer.Add` now returns the specific type given to it in argument
+- **[BREAKING]** CSS classes are now prefixed with `diagram-` to avoid clashes with other libraries
+	- `diagram-group`, `diagram-node`, `diagram-link`, `diagram-port`, `diagram-link-label`, `diagram-link-vertex`, `diagram-control`
+
+### Fixed
+
+- Portless links in children not refreshing when moving the parent group
+- Link's `GetBounds` not returning a valid box
+- Port snapping choosing the first port in radius rather than the closest one
+- Remove `Console.WriteLine` from `KeyboardShortcutsBehavior`
+- Diagram overwriting `Order` when it's not zero (zero being the default int value, which we now consider as not set)
+
 ## Diagrams (3.0.0-beta.5) - 2022-11-23
 
 ### Added

@@ -57,7 +57,7 @@ public partial class ControlsLayerRenderer : IDisposable
         {
             builder.OpenElement(0, svg ? "g" : "div");
             builder.AddAttribute(1, "class",
-                $"{(control is ExecutableControl ? "executable " : "")}control {control.GetType().Name}");
+                $"{(control is ExecutableControl ? "executable " : "")}diagram-control {control.GetType().Name}");
             if (svg)
                 builder.AddAttribute(2, "transform",
                     $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");

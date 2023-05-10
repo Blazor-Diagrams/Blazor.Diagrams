@@ -355,11 +355,11 @@ namespace Blazor.Diagrams.Core
 
         private void OnSelectableAdded(SelectableModel model)
         {
+            var maxOrder = GetMaxOrder();
             _orderedSelectables.Add(model);
 
             if (model.Order == 0)
             {
-                var maxOrder = GetMaxOrder();
                 model.Order = maxOrder + 1;
             }
 

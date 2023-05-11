@@ -61,7 +61,10 @@ namespace Blazor.Diagrams.Core.Models
             base.SetPosition(x, y);
 
             foreach (var node in Children)
+            {
                 node.UpdatePositionSilently(deltaX, deltaY);
+                node.RefreshLinks();
+            }
 
             Refresh();
             RefreshLinks();

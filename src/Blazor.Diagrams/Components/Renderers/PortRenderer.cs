@@ -22,13 +22,10 @@ public class PortRenderer : ComponentBase, IDisposable
     private bool _updatingDimensions;
 
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
-
     [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
-
     [Parameter] public PortModel Port { get; set; } = null!;
-
     [Parameter] public string? Class { get; set; }
-
+    [Parameter] public string? Style { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     public void Dispose()
@@ -67,16 +64,17 @@ public class PortRenderer : ComponentBase, IDisposable
             return;
         
         builder.OpenElement(0, _isParentSvg ? "g" : "div");
-        builder.AddAttribute(1, "class",
-            "port" + " " + Port.Alignment.ToString().ToLower() + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " +
+        builder.AddAttribute(1, "style", Style);
+        builder.AddAttribute(2, "class",
+            "diagram-port" + " " + Port.Alignment.ToString().ToLower() + " " + (Port.Links.Count > 0 ? "has-links" : "") + " " +
             Class);
-        builder.AddAttribute(2, "data-port-id", Port.Id);
-        builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
-        builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
-        builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
-        builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
-        builder.AddElementReferenceCapture(7, __value => { _element = __value; });
-        builder.AddContent(8, ChildContent);
+        builder.AddAttribute(3, "data-port-id", Port.Id);
+        builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+        builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
+        builder.AddAttribute(6, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+        builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
+        builder.AddElementReferenceCapture(8, __value => { _element = __value; });
+        builder.AddContent(9, ChildContent);
         builder.CloseElement();
     }
 

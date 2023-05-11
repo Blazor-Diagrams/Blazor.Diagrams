@@ -1,0 +1,18 @@
+﻿<div class="border shadow-lg bg-color3 text-black p-4">
+    <p class="font-semibold mb-2">
+        HTML Charger
+    </p>
+    <input type="range" min="0" max="50" value="@Node.Getter()"
+           @oninput="OnValueChanged"
+           onmousedown='event.stopPropagation();'
+           onpointerdown='event.stopPropagation();'>
+</div>
+
+@code {
+    [Parameter] public BatteryChargerNodeModel Node { get; set; } = null!;
+
+    private void OnValueChanged(ChangeEventArgs e)
+    {
+        Node.Setter(int.Parse(e.Value!.ToString()!));
+    }
+}

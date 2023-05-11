@@ -1,0 +1,59 @@
+﻿@page "/documentation/keyboard-shortcuts"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Keyboard Shortcuts - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Keyboard Shortcuts</h1>
+
+<p>
+    Blazor Diagrams provides a utility behavior to handle keyboard shortcuts: <code>KeyboardShortcutsBehavior</code>.
+</p>
+
+<h2>Default shortcuts</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Keys</th>
+            <th>Implementation</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Delete</td>
+            <td><code>KeyboardShortcutsDefaults.DeleteSelection</code></td>
+            <td>Deletes the selected models (nodes, groups and links)</td>
+        </tr>
+        <tr>
+            <td>Ctrl+Alt+g</td>
+            <td><code>KeyboardShortcutsDefaults.Grouping</code></td>
+            <td>Groups the selected models</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Adding a shortcut</h2>
+
+<pre><code class="language-csharp">
+var ksb = _blazorDiagram.GetBehavior&lt;KeyboardShortcutsBehavior&gt;();
+ksb.SetShortcut(&quot;s&quot;, ctrl: true, shift: true, alt: true, SaveToMyServer);
+
+private async ValueTask SaveToMyServer()
+{
+    await FakeHttpCall();
+}
+</code></pre>
+
+<h2>Removing a shortcut</h2>
+
+<pre><code class="language-csharp">
+var ksb = _blazorDiagram.GetBehavior&lt;KeyboardShortcutsBehavior&gt;();
+ksb.RemoveShortcut(&quot;s&quot;, ctrl: true, shift: true, alt: true);
+</code></pre>
+
+<NavigationButtons PreviousTitle="Options"
+                   PreviousLink="/documentation/diagram-options"
+                   NextTitle="API"
+                   NextLink="/documentation/diagram-api" />

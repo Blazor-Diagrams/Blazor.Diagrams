@@ -1,0 +1,19 @@
+﻿@{
+    var color = Node.Percentage > 70 ? "green" : (Node.Percentage > 30 ? "orange" : "red");
+}
+
+<rect width="110" height="44" fill="black" />
+
+<PortRenderer Port="Node.Ports[0]">
+    <rect x="105" y="8" width="16" height="8" fill="black" rx="4"></rect>
+</PortRenderer>
+<PortRenderer Port="Node.Ports[1]">
+    <rect x="105" y="26" width="16" height="8" fill="black" rx="4"></rect>
+</PortRenderer>
+
+<rect x="5" y="5" width="@Node.Percentage" height="34" fill="@color"></rect>
+<text x="55" y="22" fill="white" dominant-baseline="middle" text-anchor="middle">SVG Battery</text>
+
+@code {
+    [Parameter] public BatteryNodeModel Node { get; set; } = null!;
+}

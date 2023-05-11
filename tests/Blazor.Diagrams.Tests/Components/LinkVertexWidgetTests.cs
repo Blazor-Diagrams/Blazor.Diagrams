@@ -31,7 +31,7 @@ namespace Blazor.Diagrams.Tests.Components
                 .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             // Assert
-            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"red\" /></g>");
+            cut.MarkupMatches("<g class=\"diagram-link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"red\" /></g>");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Blazor.Diagrams.Tests.Components
                 .Add(n => n.BlazorDiagram, new BlazorDiagram()));
 
             // Assert
-            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"blue\" /></g>");
+            cut.MarkupMatches("<g class=\"diagram-link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"5\" fill=\"blue\" /></g>");
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace Blazor.Diagrams.Tests.Components
                 .Add(n => n.BlazorDiagram, diagram));
 
             // Assert
-            cut.MarkupMatches("<g class=\"link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"10\" fill=\"red\" /></g>");
+            cut.MarkupMatches("<g class=\"diagram-link-vertex\" cursor=\"move\"><circle cx=\"10.5\" cy=\"20\" r=\"10\" fill=\"red\" /></g>");
         }
     }
 }

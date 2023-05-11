@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,7 +10,7 @@
     <AssemblyVersion>3.0.0</AssemblyVersion>
     <FileVersion>3.0.0</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>3.0.0-beta.5</Version>
+    <Version>3.0.0-beta.7</Version>
     <PackageId>Z.Blazor.Diagrams.Algorithms</PackageId>
     <PackageTags>blazor diagrams diagramming svg drag algorithms layouts</PackageTags>
     <Product>Z.Blazor.Diagrams.Algorithms</Product>

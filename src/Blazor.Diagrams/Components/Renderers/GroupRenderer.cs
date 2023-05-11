@@ -84,7 +84,7 @@ public class GroupRenderer : ComponentBase, IDisposable
             return;
         
         var componentType = BlazorDiagram.GetComponent(Group) ?? typeof(DefaultGroupWidget);
-        var classes = new StringBuilder("group")
+        var classes = new StringBuilder("diagram-group")
             .AppendIf(" locked", Group.Locked)
             .AppendIf(" selected", Group.Selected)
             .AppendIf(" default", componentType == typeof(DefaultGroupWidget));

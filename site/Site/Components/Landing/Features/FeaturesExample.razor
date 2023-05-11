@@ -1,0 +1,34 @@
+﻿<section class="bg-white border-b py-8">
+
+    <div class="container mx-auto m-8">
+        <div class="md:grid md:grid-cols-5 md:gap-4">
+            <div class="md:col-span-2 p-6">
+                <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
+                    Lots of features
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    Blazor Diagrams offers many features, including:
+                </p>
+                <ul class="text-gray-600 list-disc list-inside">
+                    <li>Touch support</li>
+                    <li>Fully customization and extensibility</li>
+                    <li>Link routers, path generators, markers and labels</li>
+                    <li>Controls on top of nodes/links</li>
+                    <li>Node Ports</li>
+                    <li>And much more</li>
+                </ul>
+            </div>
+            <div class="md:col-span-3 shadow border">
+                <div style="width: 100%; height: 450px; position: relative;">
+                    <CascadingValue Value="_diagram">
+                        <DiagramCanvas>
+                            <Widgets>
+                                <SelectionBoxWidget />
+                            </Widgets>
+                        </DiagramCanvas>
+                    </CascadingValue>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

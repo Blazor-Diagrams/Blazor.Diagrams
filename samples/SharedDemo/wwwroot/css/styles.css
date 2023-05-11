@@ -1550,15 +1550,15 @@ body {
     max-width: 400px;
 }
 
-.custom-node.selected, .custom-node.selected .port {
+.custom-node.selected, .custom-node.selected .diagram-port {
     border: 1px solid #6e9fd4;
 }
 
-.custom-node:hover .port {
+.custom-node:hover .diagram-port {
     visibility: visible;
 }
 
-.custom-node .port {
+.custom-node .diagram-port {
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -1568,18 +1568,18 @@ body {
     visibility: hidden;
 }
 
-    .custom-node .port:hover, .node > .card .port.has-links {
+    .custom-node .diagram-port:hover, .diagram-node > .card .diagram-port.has-links {
         visibility: visible;
         background-color: black;
     }
 
-    .custom-node .port.bottom {
+    .custom-node .diagram-port.bottom {
         position: absolute;
         bottom: -10px;
         left: 115px;
     }
 
-    .custom-node .port.top {
+    .custom-node .diagram-port.top {
         position: absolute;
         top: -10px;
         left: 115px;
@@ -1599,16 +1599,16 @@ body {
         border-color: blue;
     }
 
-    .colored-node .port {
+    .colored-node .diagram-port {
         width: 30px;
         height: 30px;
     }
 
-        .colored-node .port.blue {
+        .colored-node .diagram-port.blue {
             background-color: blue;
         }
 
-        .colored-node .port.red {
+        .colored-node .diagram-port.red {
             background-color: red;
         }
 
@@ -1616,12 +1616,12 @@ body {
     background: #40babd !important;
 }
 
-div.group:not(.default) {
+div.diagram-group:not(.default) {
     outline: 2px solid black;
     background-color: #6fbb6e;
 }
 
-div.group:not(.default) > span.title {
+div.diagram-group:not(.default) > span.title {
     padding: 20px;
     position: absolute;
     left: 50%;
@@ -1634,11 +1634,11 @@ div.group:not(.default) > span.title {
     text-transform: uppercase;
 }
 
-g.group:not(.default) rect {
+g.diagram-group:not(.default) rect {
     outline: 2px solid black;
 }
 
-g.group:not(.default) text {
+g.diagram-group:not(.default) text {
     text-anchor: middle;
     dominant-baseline: middle;
 }

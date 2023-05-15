@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Options;
 using Moq;
 using Xunit;
@@ -12,7 +13,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns(true);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Pan);
+            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             Assert.Equal(0, diagram.Object.Pan.X);
             Assert.Equal(0, diagram.Object.Pan.Y);
@@ -34,6 +36,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
             diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns(false);
+            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             Assert.Equal(0, diagram.Object.Pan.X);
             Assert.Equal(0, diagram.Object.Pan.Y);

@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
@@ -17,45 +18,34 @@ public class PanBehavior : Behavior
         Diagram.PointerUp += OnPointerUp;
     }
 
-    private void OnPointerDown(Model? model, PointerEventArgs e)
-    {
-        if (e.Button != (int)MouseEventButton.Left)
-            return;
+        private void OnPointerDown(Model? model, PointerEventArgs e)
+        {
+            if (e.Button != (int)MouseEventButton.Left || model != null || !Diagram.Options.AllowPanning || !Diagram.IsBehaviorEnabled(e, DiagramDragBehavior.Pan))
+                return;
 
-        Start(model, e.ClientX, e.ClientY, e.ShiftKey);
-    }
+            _initialPan = Diagram.Pan;
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+        }
 
     private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
 
     private void OnPointerUp(Model? model, PointerEventArgs e) => End();
 
-    private void Start(Model? model, double clientX, double clientY, bool shiftKey)
-    {
-        if (!Diagram.Options.AllowPanning || model != null || shiftKey)
-            return;
-
-        _initialPan = Diagram.Pan;
-        _lastClientX = clientX;
-        _lastClientY = clientY;
-    }
-
-    private void Move(double clientX, double clientY)
-    {
-        if (!Diagram.Options.AllowPanning || _initialPan == null)
-            return;
+        private void Move(double clientX, double clientY)
+        {
+            if (_initialPan == null)
+                return;
 
         var deltaX = clientX - _lastClientX - (Diagram.Pan.X - _initialPan.X);
         var deltaY = clientY - _lastClientY - (Diagram.Pan.Y - _initialPan.Y);
         Diagram.UpdatePan(deltaX, deltaY);
     }
 
-    private void End()
-    {
-        if (!Diagram.Options.AllowPanning)
-            return;
-
-        _initialPan = null;
-    }
+        private void End()
+        {
+            _initialPan = null;
+        }
 
     public override void Dispose()
     {

@@ -27,7 +27,8 @@ namespace Blazor.Diagrams.Tests.Components.Widgets
         {
             // Arrange
             using var ctx = new TestContext();
-            var diagram = new BlazorDiagram(new BlazorDiagramOptions { Behaviors = new DiagramBehaviorOptions { DiagramCtrlDragBehavior = DiagramDragBehavior.Select } });
+            var diagram = new BlazorDiagram();
+            diagram.Options.Behaviors.DiagramDragBehavior = DiagramDragBehavior.Select;
             diagram.SetPan(-75, -100);
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(500, 500)));
 

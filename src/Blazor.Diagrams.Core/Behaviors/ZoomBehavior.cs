@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Events;
-
 using System;
+using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
@@ -11,13 +11,10 @@ public class ZoomBehavior : Behavior
         Diagram.Wheel += Diagram_Wheel;
     }
 
-    private void Diagram_Wheel(WheelEventArgs e)
-    {
-        if (Diagram.Container == null || e.DeltaY == 0)
-            return;
-
-        if (!Diagram.Options.Zoom.Enabled)
-            return;
+        private void Diagram_Wheel(WheelEventArgs e)
+        {
+            if (Diagram.Container == null || e.DeltaY == 0 || !Diagram.Options.Zoom.Enabled || !Diagram.IsBehaviorEnabled(e, DiagramWheelBehavior.Zoom))
+                return;
 
         var scale = Diagram.Options.Zoom.ScaleFactor;
         var oldZoom = Diagram.Zoom;

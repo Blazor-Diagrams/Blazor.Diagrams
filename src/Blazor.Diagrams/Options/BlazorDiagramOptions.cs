@@ -12,4 +12,5 @@ public class BlazorDiagramOptions : DiagramOptions
     public override BlazorDiagramGroupOptions Groups { get; } = new();
     public override BlazorDiagramConstraintsOptions Constraints { get; } = new();
     public override BlazorDiagramVirtualizationOptions Virtualization { get; } = new();
+    public override BlazorDiagramBehaviorOptions Behaviors { get; } = new();
 }

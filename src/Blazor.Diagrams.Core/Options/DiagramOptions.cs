@@ -12,4 +12,5 @@ public class DiagramOptions
     public virtual DiagramGroupOptions Groups { get; } = new();
     public virtual DiagramConstraintsOptions Constraints { get; } = new();
     public virtual DiagramVirtualizationOptions Virtualization { get; } = new();
+    public virtual DiagramBehaviorOptions Behaviors { get; init; } = new();
 }

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Options
 {
-    public class DiagramBehaviourOptionsTests
+    public class DiagramBehaviorOptionsTests
     {
         [Fact]
         public void DiagramBehaviorOptions_DragBehavior_IsEnabled()

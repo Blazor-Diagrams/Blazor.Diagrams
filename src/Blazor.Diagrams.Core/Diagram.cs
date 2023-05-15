@@ -66,6 +66,8 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new KeyboardShortcutsBehavior(this));
             RegisterBehavior(new ControlsBehavior(this));
             RegisterBehavior(new VirtualizationBehavior(this));
+            RegisterBehavior(new ScrollBehavior(this));
+            RegisterBehavior(new SelectionBoxBehavior(this));
         }
 
         public abstract DiagramOptions Options { get; }
@@ -387,14 +389,38 @@ namespace Blazor.Diagrams.Core
 
         #endregion
 
-        public virtual bool IsBehaviorEnabled(PointerEventArgs e, DiagramDragBehavior Behavior)
+        public virtual bool IsBehaviorEnabled(PointerEventArgs e, DiagramDragBehavior behavior)
         {
-            return false;
+            if (e.AltKey && !e.CtrlKey && !e.ShiftKey)
+            {
+                return behavior == Options.Behaviors.DiagramAltDragBehavior;
+            }
+            if (e.CtrlKey && !e.AltKey && !e.ShiftKey)
+            {
+                return behavior == Options.Behaviors.DiagramCtrlDragBehavior;
+            }
+            if (e.ShiftKey && !e.AltKey && !e.CtrlKey)
+            {
+                return behavior == Options.Behaviors.DiagramShiftDragBehavior;
+            }
+            return behavior == Options.Behaviors.DiagramDragBehavior;
         }
 
-        public virtual bool IsBehaviorEnabled(WheelEventArgs e, DiagramWheelBehavior Behavior)
+        public virtual bool IsBehaviorEnabled(WheelEventArgs e, DiagramWheelBehavior behavior)
         {
-            return false;
+            if (e.AltKey && !e.CtrlKey && !e.ShiftKey)
+            {
+                return behavior == Options.Behaviors.DiagramAltWheelBehavior;
+            }
+            if (e.CtrlKey && !e.AltKey && !e.ShiftKey)
+            {
+                return behavior == Options.Behaviors.DiagramCtrlWheelBehavior;
+            }
+            if (e.ShiftKey && !e.AltKey && !e.CtrlKey)
+            {
+                return behavior == Options.Behaviors.DiagramShiftWheelBehavior;
+            }
+            return behavior == Options.Behaviors.DiagramWheelBehavior;
         }
     }
 }

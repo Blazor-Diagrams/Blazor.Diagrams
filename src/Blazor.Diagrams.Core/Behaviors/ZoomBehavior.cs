@@ -1,8 +1,6 @@
-﻿using Blazor.Diagrams.Core.Geometry;
-
-using Blazor.Diagrams.Core.Events;
-
+﻿using Blazor.Diagrams.Core.Events;
 using System;
+using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -15,10 +13,7 @@ namespace Blazor.Diagrams.Core.Behaviors
 
         private void Diagram_Wheel(WheelEventArgs e)
         {
-            if (Diagram.Container == null || e.DeltaY == 0)
-                return;
-
-            if (!Diagram.Options.Zoom.Enabled)
+            if (Diagram.Container == null || e.DeltaY == 0 || !Diagram.Options.Zoom.Enabled || !Diagram.IsBehaviorEnabled(e, DiagramWheelBehavior.Zoom))
                 return;
 
             var scale = Diagram.Options.Zoom.ScaleFactor;

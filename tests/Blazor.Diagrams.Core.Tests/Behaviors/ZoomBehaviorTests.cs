@@ -13,7 +13,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<WheelEventArgs>(), It.IsAny<DiagramWheelBehavior>())).Returns(true);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<WheelEventArgs>(), It.IsAny<DiagramWheelBehavior>())).Returns((WheelEventArgs _, DiagramWheelBehavior behaviour) => behaviour == DiagramWheelBehavior.Zoom);
             diagram.Object.SetContainer(new Rectangle(0, 0, 100, 100));
 
             // Act

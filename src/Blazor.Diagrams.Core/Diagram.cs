@@ -402,5 +402,16 @@ public abstract class Diagram
 
     public void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
 
-    #endregion
+        #endregion
+
+        public virtual bool IsBehaviorEnabled(PointerEventArgs e, DiagramDragBehavior Behavior)
+        {
+            return false;
+        }
+
+        public virtual bool IsBehaviorEnabled(WheelEventArgs e, DiagramWheelBehavior Behavior)
+        {
+            return false;
+        }
+    }
 }

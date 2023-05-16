@@ -10,9 +10,10 @@ namespace Blazor.Diagrams.Core.Models.Base;
 public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
 {
     private readonly List<BaseLinkModel> _links = new();
-    
+
     public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
     public event Action<BaseLinkModel, Anchor, Anchor>? TargetChanged;
+    public event Action<BaseLinkModel>? TargetAttached;
 
     protected BaseLinkModel(Anchor source, Anchor target)
     {
@@ -86,19 +87,22 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
         var maxX = double.NegativeInfinity;
         var maxY = double.NegativeInfinity;
 
-        foreach (var path in PathGeneratorResult.Paths)
-        {
-            var bbox = path.GetBBox();
-            minX = Math.Min(minX, bbox.Left);
-            minY = Math.Min(minY, bbox.Top);
-            maxX = Math.Max(maxX, bbox.Right);
-            maxY = Math.Max(maxY, bbox.Bottom);
-        }
+        var path = PathGeneratorResult.FullPath;
+        var bbox = path.GetBBox();
+        minX = Math.Min(minX, bbox.Left);
+        minY = Math.Min(minY, bbox.Top);
+        maxX = Math.Max(maxX, bbox.Right);
+        maxY = Math.Max(maxY, bbox.Bottom);
 
         return new Rectangle(minX, minY, maxX, maxY);
     }
 
     public bool CanAttachTo(ILinkable other) => true;
+
+    /// <summary>
+    /// Triggers the TargetAttached event
+    /// </summary>
+    public void TriggerTargetAttached() => TargetAttached?.Invoke(this);
 
     private void GeneratePath()
     {

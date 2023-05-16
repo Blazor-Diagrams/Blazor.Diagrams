@@ -2,6 +2,8 @@
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 using FluentAssertions;
 using Xunit;
 
@@ -73,6 +75,26 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
             link.Target!.Model.Should().BeSameAs(port);
+        }
+
+        [Fact]
+        public void GetBounds_ShouldReturnPathBBox()
+        {
+            // Arrange
+            var link = new LinkModel(new PositionAnchor(new Point(10, 5)), new PositionAnchor(new Point(100, 80)));
+            link.Diagram = new TestDiagram();
+            link.PathGenerator = new StraightPathGenerator();
+            link.Router = new NormalRouter();
+
+            // Act
+            link.Refresh();
+            var bounds = link.GetBounds()!;
+
+            // Assert
+            bounds.Left.Should().Be(10);
+            bounds.Top.Should().Be(5);
+            bounds.Width.Should().Be(90);
+            bounds.Height.Should().Be(75);
         }
     }
 }

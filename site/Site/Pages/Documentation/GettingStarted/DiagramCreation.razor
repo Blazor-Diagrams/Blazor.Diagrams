@@ -1,0 +1,126 @@
+﻿@page "/documentation/diagram-creation"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Diagram Creation - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Diagram Creation</h1>
+
+<p>
+    You've installed the library, now let's create a diagram!
+    Blazor.Diagrams is very code/oop oriented at the moment, which means all the diagram information needs to be given to it using code.
+</p>
+
+<h2>Creating a Diagram</h2>
+
+<p>
+    First, we'll start by creating a <code>BlazorDiagram</code>, which holds all the data of a diagram, as well as its behaviors.<br />
+    Create a new component and initialize a new diagram:
+</p>
+
+<div class="filename">MyDiagram.razor.cs</div>
+<pre><code class="language-cs">
+using Blazor.Diagrams;
+
+namespace MyNamespace;
+
+public partial class MyDiagram
+{
+    private BlazorDiagram Diagram { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        Diagram = new BlazorDiagram();
+    }
+}
+</code></pre>
+
+<h2>Changing Options</h2>
+
+<div class="filename">MyDiagram.razor.cs</div>
+<pre><code class="language-cs">
+using Blazor.Diagrams;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
+using Blazor.Diagrams.Options;
+
+namespace Site.Components.Documentation;
+
+public partial class MyDiagram
+{
+    private BlazorDiagram Diagram { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var options = new BlazorDiagramOptions
+        {
+            AllowMultiSelection = true,
+            Zoom =
+            {
+                Enabled = false,
+            },
+            Links =
+            {
+                DefaultRouter = new NormalRouter(),
+                DefaultPathGenerator = new SmoothPathGenerator()
+            },
+        };
+
+        Diagram = new BlazorDiagram(options);
+    }
+}
+</code></pre>
+
+<p>
+    You can check out all the available options <a href="/documentation/diagram-options" class="underline hover:text-palette-main">here</a>.
+</p>
+
+<h2>Adding Nodes</h2>
+
+<p>
+    Continuing on our initialization code before, let's create two nodes:
+</p>
+
+<div class="filename">MyDiagram.razor.cs</div>
+<pre><code class="language-cs">
+var firstNode = Diagram.Nodes.Add(new NodeModel(position: new Point(50, 50))
+{
+    Title = "Node 1"
+});
+var secondNode = Diagram.Nodes.Add(new NodeModel(position: new Point(200, 100))
+{
+    Title = "Node 2"
+});
+var leftPort = secondNode.AddPort(PortAlignment.Left);
+var rightPort = secondNode.AddPort(PortAlignment.Right);
+</code></pre>
+
+<p>
+    As you can see, we give the nodes a position and a title, as well as 2 ports for the second node.
+</p>
+
+<h2>Adding a Link</h2>
+
+<p>
+    In Blazor.Diagrams, links are created between 2 anchors (input and output).
+    The library comes with a few out of the box anchors, we'll be using two of them to show how a link can be created from a node to a port.
+</p>
+
+<div class="filename">MyDiagram.razor.cs</div>
+<pre><code class="language-cs">
+// The connection point will be the intersection of
+// a line going from the target to the center of the source
+var sourceAnchor = new ShapeIntersectionAnchor(firstNode);
+// The connection point will be the port's position
+var targetAnchor = new SinglePortAnchor(leftPort);
+var link = Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+</code></pre>
+
+<p>
+    You now have a diagram containing 2 nodes, 2 ports and one link.
+</p>
+
+<NavigationButtons PreviousTitle="Installation"
+                   PreviousLink="/documentation/installation"
+                   NextTitle="Display"
+                   NextLink="/documentation/display" />

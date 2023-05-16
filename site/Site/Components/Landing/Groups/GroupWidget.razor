@@ -1,0 +1,15 @@
+﻿<div class="h-full @("bg-" + Group.Color) @("outline-" + Group.Color + "-darker")">
+    <GroupNodes Group="Group" />
+
+    @foreach (var port in Group.Ports)
+    {
+        <PortRenderer @key="port" Port="port" Class="group-port"></PortRenderer>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public ColoredGroupModel Group { get; set; } = null!;
+
+}

@@ -161,5 +161,38 @@ namespace Blazor.Diagrams.Core.Tests
             // Assert
             refreshes.Should().Be(1);
         }
+
+        [Fact]
+        public void Diagram_ShouldNotUpdateOrders_WhenSuspendSortingIsTrue()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.SuspendSorting = true;
+            var node1 = diagram.Nodes.Add(new NodeModel()); // 1
+            var node2 = diagram.Nodes.Add(new NodeModel()); // 2
+
+            // Act
+            node1.Order = 10;
+
+            // Assert
+            diagram.OrderedSelectables[0].Should().Be(node1);
+            diagram.OrderedSelectables[1].Should().Be(node2);
+        }
+
+        [Fact]
+        public void RefreshOrders_ShouldSortModels()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            var node1 = diagram.Nodes.Add(new NodeModel() { Order = 10 });
+            var node2 = diagram.Nodes.Add(new NodeModel() { Order = 5 });
+
+            // Act
+            diagram.RefreshOrders();
+
+            // Assert
+            diagram.OrderedSelectables[0].Should().Be(node2);
+            diagram.OrderedSelectables[1].Should().Be(node1);
+        }
     }
 }

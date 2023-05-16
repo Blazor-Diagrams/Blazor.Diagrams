@@ -21,7 +21,6 @@ namespace Blazor.Diagrams.Core
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
         private readonly List<SelectableModel> _orderedSelectables;
-        private bool _suspendSorting;
 
         public event Action<Model?, PointerEventArgs>? PointerDown;
         public event Action<Model?, PointerEventArgs>? PointerMove;
@@ -79,6 +78,7 @@ namespace Blazor.Diagrams.Core
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
         public bool SuspendRefresh { get; set; }
+        public bool SuspendSorting { get; set; }
         public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
         public void Refresh()
@@ -306,12 +306,12 @@ namespace Blazor.Diagrams.Core
             // Todo: can optimize this by only updating the order of items before model
             Batch(() =>
             {
-                _suspendSorting = true;
+                SuspendSorting = true;
                 for (var i = 0; i < _orderedSelectables.Count; i++)
                 {
                     _orderedSelectables[i].Order = i + 1;
                 }
-                _suspendSorting = false;
+                SuspendSorting = false;
             });
         }
 
@@ -326,9 +326,9 @@ namespace Blazor.Diagrams.Core
 
             _orderedSelectables.Add(model);
 
-            _suspendSorting = true;
+            SuspendSorting = true;
             model.Order = maxOrder + 1;
-            _suspendSorting = false;
+            SuspendSorting = false;
             Refresh();
         }
 
@@ -342,11 +342,29 @@ namespace Blazor.Diagrams.Core
             return _orderedSelectables.Count > 0 ? _orderedSelectables[^1].Order : 0;
         }
 
+        /// <summary>
+        /// Sorts the list of selectables based on their order
+        /// </summary>
+        public void RefreshOrders(bool refresh = true)
+        {
+            _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
+            
+            if (refresh)
+            {
+                Refresh();
+            }
+        }
+
         private void OnSelectableAdded(SelectableModel model)
         {
             var maxOrder = GetMaxOrder();
             _orderedSelectables.Add(model);
-            model.Order = maxOrder + 1;
+
+            if (model.Order == 0)
+            {
+                model.Order = maxOrder + 1;
+            }
+
             model.OrderChanged += OnModelOrderChanged;
         }
 
@@ -358,11 +376,10 @@ namespace Blazor.Diagrams.Core
 
         private void OnModelOrderChanged(Model model)
         {
-            if (_suspendSorting)
+            if (SuspendSorting)
                 return;
 
-            _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
-            Refresh();
+            RefreshOrders();
         }
 
         #endregion

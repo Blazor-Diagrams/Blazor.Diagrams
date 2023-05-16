@@ -46,7 +46,7 @@ public class LinkRenderer : ComponentBase, IDisposable
         
         var componentType = BlazorDiagram.GetComponent(Link) ?? typeof(LinkWidget);
         var classes = new StringBuilder()
-            .Append("link")
+            .Append("diagram-link")
             .AppendIf(" attached", Link.IsAttached)
             .ToString();
 

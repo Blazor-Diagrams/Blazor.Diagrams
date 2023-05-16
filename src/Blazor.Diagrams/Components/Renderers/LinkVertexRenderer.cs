@@ -43,7 +43,7 @@ namespace Blazor.Diagrams.Components.Renderers
             var componentType = BlazorDiagram.GetComponent(Vertex);
 
             builder.OpenElement(0, "g");
-            builder.AddAttribute(1, "class", "link-vertex");
+            builder.AddAttribute(1, "class", "diagram-link-vertex");
             builder.AddAttribute(4, "cursor", "move");
             builder.AddAttribute(5, "ondblclick", value: EventCallback.Factory.Create<MouseEventArgs>(this, OnDoubleClick));
             builder.AddAttribute(6, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));

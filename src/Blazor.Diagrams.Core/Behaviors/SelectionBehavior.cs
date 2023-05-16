@@ -10,10 +10,9 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.PointerDown += OnPointerDown;
         }
 
-        private void OnPointerDown(Model? model, PointerEventArgs e) => Process(model, e.CtrlKey);
-
-        private void Process(Model? model, bool ctrlKey)
+        private void OnPointerDown(Model? model, PointerEventArgs e)
         {
+            var ctrlKey = e.CtrlKey;
             switch (model)
             {
                 case null:

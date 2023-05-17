@@ -93,6 +93,10 @@ namespace Blazor.Diagrams.Core.Models
             _children.Clear();
         }
 
+        public override ResizerModel AddResizer(ResizerModel model) => throw new NotImplementedException();
+
+        public override bool RemoveResizer(ResizerModel model) => throw new NotImplementedException();
+
         private void Initialize(IEnumerable<NodeModel> children)
         {
             foreach (var child in children)

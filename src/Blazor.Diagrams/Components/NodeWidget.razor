@@ -1,8 +1,15 @@
-﻿<div class="default-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")">
+﻿<div 
+    class="default-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")"
+    style=@GenerateStyle()
+>
     @(Node.Title ?? "Title")
     @foreach (var port in Node.Ports)
     {
         <PortRenderer @key="port" Port="port" Class="default"></PortRenderer>
+    }
+    @foreach (var resizer in Node.Resizers)
+    {
+        <ResizerRenderer @key="resizer" Resizer="resizer"></ResizerRenderer>
     }
 </div>
 
@@ -11,4 +18,12 @@
     [Parameter]
     public NodeModel Node { get; set; } = null!;
 
+    private string GenerateStyle()
+    {
+        if (Node.Size is not null)
+        {
+            return FormattableString.Invariant($"width: {Node.Size.Width}px; height: {Node.Size.Height}px");
+        }
+        return string.Empty;
+    }
 }

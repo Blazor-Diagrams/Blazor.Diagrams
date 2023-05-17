@@ -10,6 +10,7 @@ namespace Blazor.Diagrams.Core.Models
     {
         private readonly List<PortModel> _ports = new();
         private readonly List<BaseLinkModel> _links = new();
+        private readonly List<ResizerModel> _resizers = new();
         private Size? _size;
 
         public event Action<NodeModel>? SizeChanged;
@@ -42,6 +43,7 @@ namespace Blazor.Diagrams.Core.Models
         public IReadOnlyList<PortModel> Ports => _ports;
         public IReadOnlyList<BaseLinkModel> Links => _links;
         public IEnumerable<BaseLinkModel> PortLinks => Ports.SelectMany(p => p.Links);
+        public IReadOnlyList<ResizerModel> Resizers => _resizers;
 
         #region Ports
 
@@ -139,6 +141,19 @@ namespace Blazor.Diagrams.Core.Models
         public virtual IShape GetShape() => Shapes.Rectangle(this);
 
         public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
+
+        public Size MinimumDimensions { get; set; } = new Size(0, 0);
+
+        public ResizerModel AddResizer(ResizerPosition alignment)
+            => AddResizer(new ResizerModel(this, alignment));
+
+        public virtual ResizerModel AddResizer(ResizerModel model)
+        {
+            _resizers.Add(model);
+            return model;
+        }
+
+        public virtual bool RemoveResizer(ResizerModel model) => _resizers.Remove(model);
 
         private void UpdatePortPositions(double deltaX, double deltaY)
         {

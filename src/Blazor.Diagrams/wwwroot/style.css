@@ -43,6 +43,7 @@
     user-select: none;
     cursor: move;
     pointer-events: all;
+    box-sizing: border-box;
 }
 
     .diagram-node.locked {

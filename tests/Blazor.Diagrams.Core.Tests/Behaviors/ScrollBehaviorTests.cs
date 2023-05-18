@@ -22,7 +22,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.Object.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 100, 200, 0, 0));
 
             // Assert
-            Assert.Equal(95, diagram.Object.Pan.X, 0);
+            Assert.Equal(-95, diagram.Object.Pan.X, 0);
             Assert.Equal(-190, diagram.Object.Pan.Y, 0);
         }
 

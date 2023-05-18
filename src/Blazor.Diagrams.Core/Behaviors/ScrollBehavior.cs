@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (Diagram.Container == null || !Diagram.IsBehaviorEnabled(e, DiagramWheelBehavior.Scroll))
                 return;
 
-            var x = Diagram.Pan.X + (e.DeltaX / Diagram.Options.Zoom.ScaleFactor);
+            var x = Diagram.Pan.X - (e.DeltaX / Diagram.Options.Zoom.ScaleFactor);
             var y = Diagram.Pan.Y - (e.DeltaY / Diagram.Options.Zoom.ScaleFactor);
 
             Diagram.SetPan(x, y);

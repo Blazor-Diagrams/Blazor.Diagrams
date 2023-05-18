@@ -15,7 +15,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
+                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
             diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
@@ -46,7 +47,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns(false);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
+                .Returns(false);
             diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
@@ -74,7 +76,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
+                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
             diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
@@ -106,7 +109,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>())).Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
+            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
+                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
             diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var node = new NodeModel()

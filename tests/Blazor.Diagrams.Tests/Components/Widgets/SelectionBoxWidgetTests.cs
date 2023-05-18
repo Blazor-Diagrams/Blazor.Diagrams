@@ -44,10 +44,10 @@ namespace Blazor.Diagrams.Tests.Components.Widgets
 
             // Assert
             var widget = cut.Find("div");
-            widget.GetStyle().GetWidth().Equals(100);
-            widget.GetStyle().GetHeight().Equals(150);
-            widget.GetStyle().GetTop().Equals(175);
-            widget.GetStyle().GetLeft().Equals(300);
+            Assert.Equal("100px", widget.GetStyle().GetWidth());
+            Assert.Equal("100px", widget.GetStyle().GetHeight());
+            Assert.Equal("150px", widget.GetStyle().GetTop());
+            Assert.Equal("100px", widget.GetStyle().GetLeft());
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
 
             var x = Diagram.Pan.X + (e.DeltaX / Diagram.Options.Zoom.ScaleFactor);
-            var y = Diagram.Pan.Y + (e.DeltaY / Diagram.Options.Zoom.ScaleFactor);
+            var y = Diagram.Pan.Y - (e.DeltaY / Diagram.Options.Zoom.ScaleFactor);
 
             Diagram.SetPan(x, y);
         }

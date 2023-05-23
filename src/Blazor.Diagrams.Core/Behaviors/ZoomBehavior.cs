@@ -1,19 +1,18 @@
-﻿using Blazor.Diagrams.Core.Events;
+﻿using Blazor.Diagrams.Core.Behaviors.Base;
+using Blazor.Diagrams.Core.Events;
 using System;
-using Blazor.Diagrams.Core.Options;
 
-namespace Blazor.Diagrams.Core.Behaviors;
-
-public class ZoomBehavior : Behavior
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    public ZoomBehavior(Diagram diagram) : base(diagram)
+    public class ZoomBehavior : WheelBehavior
     {
-        Diagram.Wheel += Diagram_Wheel;
-    }
-
-        private void Diagram_Wheel(WheelEventArgs e)
+        public ZoomBehavior(Diagram diagram) : base(diagram)
         {
-            if (Diagram.Container == null || e.DeltaY == 0 || !Diagram.Options.Zoom.Enabled || !Diagram.IsBehaviorEnabled(e, DiagramWheelBehavior.Zoom))
+        }
+
+        protected override void OnDiagramWheel(WheelEventArgs e)
+        {
+            if (Diagram.Container == null || e.DeltaY == 0 || !Diagram.Options.Zoom.Enabled || !IsBehaviorEnabled(e))
                 return;
 
         var scale = Diagram.Options.Zoom.ScaleFactor;
@@ -38,15 +37,11 @@ public class ZoomBehavior : Behavior
         var newPanX = Diagram.Pan.X - widthDiff * xFactor;
         var newPanY = Diagram.Pan.Y - heightDiff * yFactor;
 
-        Diagram.Batch(() =>
-        {
-            Diagram.SetPan(newPanX, newPanY);
-            Diagram.SetZoom(newZoom);
-        });
-    }
-
-    public override void Dispose()
-    {
-        Diagram.Wheel -= Diagram_Wheel;
+            Diagram.Batch(() =>
+            {
+                Diagram.SetPan(newPanX, newPanY);
+                Diagram.SetZoom(newZoom);
+            });
+        }
     }
 }

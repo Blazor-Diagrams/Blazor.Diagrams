@@ -1,41 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Behaviors.Base;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace Blazor.Diagrams.Core.Options
 {
     public class DiagramBehaviorOptions
     {
-        public DiagramWheelBehavior DiagramWheelBehavior { get; set; } = DiagramWheelBehavior.Zoom;
+        public Type? DiagramWheelBehavior
+        {
+            get => diagramWheelBehavior;
+            set => UpdateBehaviorOption<WheelBehavior>(ref diagramWheelBehavior, value);
+        }
+        Type? diagramWheelBehavior;
 
-        public DiagramWheelBehavior DiagramAltWheelBehavior { get; set; } = DiagramWheelBehavior.Zoom;
+        public Type? DiagramAltWheelBehavior
+        {
+            get => diagramAltWheelBehavior;
+            set => UpdateBehaviorOption<WheelBehavior>(ref diagramAltWheelBehavior, value);
+        }
+        Type? diagramAltWheelBehavior;
 
-        public DiagramWheelBehavior DiagramCtrlWheelBehavior { get; set; } = DiagramWheelBehavior.Zoom;
+        public Type? DiagramCtrlWheelBehavior
+        {
+            get => diagramCtrlWheelBehavior;
+            set => UpdateBehaviorOption<WheelBehavior>(ref diagramCtrlWheelBehavior, value);
+        }
+        Type? diagramCtrlWheelBehavior;
 
-        public DiagramWheelBehavior DiagramShiftWheelBehavior { get; set; } = DiagramWheelBehavior.Zoom;
+        public Type? DiagramShiftWheelBehavior
+        {
+            get => diagramShiftWheelBehavior;
+            set => UpdateBehaviorOption<WheelBehavior>(ref diagramShiftWheelBehavior, value);
+        }
+        Type? diagramShiftWheelBehavior;
 
-        public DiagramDragBehavior DiagramDragBehavior { get; set; } = DiagramDragBehavior.Pan;
+        public Type? DiagramDragBehavior
+        {
+            get => diagramDragBehavior;
+            set => UpdateBehaviorOption<DragBehavior>(ref diagramDragBehavior, value);
+        }
+        Type? diagramDragBehavior;
 
-        public DiagramDragBehavior DiagramAltDragBehavior { get; set; } = DiagramDragBehavior.Pan;
+        public Type? DiagramAltDragBehavior
+        {
+            get => diagramAltDragBehavior;
+            set => UpdateBehaviorOption<DragBehavior>(ref diagramAltDragBehavior, value);
+        }
+        Type? diagramAltDragBehavior;
 
-        public DiagramDragBehavior DiagramCtrlDragBehavior { get; set; } = DiagramDragBehavior.Pan;
+        public Type? DiagramCtrlDragBehavior
+        {
+            get => diagramCtrlDragBehavior;
+            set => UpdateBehaviorOption<DragBehavior>(ref diagramCtrlDragBehavior, value);
+        }
+        Type? diagramCtrlDragBehavior;
 
-        public DiagramDragBehavior DiagramShiftDragBehavior { get; set; } = DiagramDragBehavior.Select;
-    }
+        public Type? DiagramShiftDragBehavior
+        {
+            get => diagramShiftDragBehavior;
+            set => UpdateBehaviorOption<DragBehavior>(ref diagramShiftDragBehavior, value);
+        }
+        Type? diagramShiftDragBehavior;
 
-    public enum DiagramWheelBehavior
-    {
-        None,
-        Zoom,
-        Scroll,
-    }
-
-    public enum DiagramDragBehavior
-    {
-        None,
-        Pan,
-        Select,
+        void UpdateBehaviorOption<T>(ref Type? property, Type? value, [CallerMemberName] string propertyName = "") where T : Behavior
+        {
+            if (value is not null && !value.IsSubclassOf(typeof(T)))
+            {
+                throw new InvalidOperationException($"{propertyName} must be a type of {typeof(T).Name}");
+            }
+            property = value;
+        }
     }
 }

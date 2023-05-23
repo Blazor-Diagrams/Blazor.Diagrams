@@ -44,13 +44,13 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (_initialClientPoint == null)
                 return;
 
+            UpdateSelectionBox(e);
+
             var start = Diagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
             var end = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
             var bounds = new Rectangle(sX, sY, eX, eY);
-
-            SelectionBoundsChanged?.Invoke(this, bounds);
 
             foreach (var node in Diagram.Nodes)
             {
@@ -62,6 +62,15 @@ namespace Blazor.Diagrams.Core.Behaviors
                     Diagram.SelectModel(node, false);
                 else if (node.Selected) Diagram.UnselectModel(node);
             }
+        }
+
+        void UpdateSelectionBox(MouseEventArgs e)
+        {
+            var start = Diagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
+            var end = Diagram.GetRelativePoint(e.ClientX, e.ClientY);
+            var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
+            var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+            SelectionBoundsChanged?.Invoke(this, new Rectangle(sX, sY, eX, eY));
         }
 
         private void OnPointerUp(Model? model, PointerEventArgs e)

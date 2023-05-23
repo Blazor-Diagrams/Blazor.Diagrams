@@ -42,6 +42,6 @@ public partial class SelectionBoxWidget : IDisposable
     private string GenerateStyle()
     {
         return FormattableString.Invariant(
-            $"position: absolute; background: {Background}; top: {_selectionBounds!.Top + BlazorDiagram.Pan.Y}px; left: {_selectionBounds.Left + BlazorDiagram.Pan.X}px; width: {_selectionBounds.Width}px; height: {_selectionBounds.Height}px;");
+            $"position: absolute; background: {Background}; top: {_selectionBounds!.Top}px; left: {_selectionBounds.Left}px; width: {_selectionBounds.Width}px; height: {_selectionBounds.Height}px;");
     }
 }

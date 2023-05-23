@@ -1,22 +1,10 @@
-﻿using Blazor.Diagrams.Components.Renderers;
-using Blazor.Diagrams.Components;
-using Blazor.Diagrams.Core.Models;
-using Bunit;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Bunit;
 using Xunit;
 using Blazor.Diagrams.Components.Widgets;
-using AngleSharp.Dom;
 using AngleSharp.Css.Dom;
-using Blazor.Diagrams.Options;
-using Blazor.Diagrams.Core.Options;
-using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Behaviors;
 
 namespace Blazor.Diagrams.Tests.Components.Widgets
 {
@@ -28,7 +16,7 @@ namespace Blazor.Diagrams.Tests.Components.Widgets
             // Arrange
             using var ctx = new TestContext();
             var diagram = new BlazorDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = DiagramDragBehavior.Select;
+            diagram.Options.Behaviors.DiagramDragBehavior = typeof(SelectionBoxBehavior);
             diagram.SetPan(-75, -100);
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(500, 500)));
 

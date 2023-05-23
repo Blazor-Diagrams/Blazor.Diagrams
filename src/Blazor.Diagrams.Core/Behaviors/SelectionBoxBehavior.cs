@@ -1,16 +1,13 @@
-﻿using Blazor.Diagrams.Core.Events;
+﻿using Blazor.Diagrams.Core.Behaviors.Base;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
-    public class SelectionBoxBehavior : Behavior
+    public class SelectionBoxBehavior : DragBehavior
     {
         private Point? _initialClientPoint;
 
@@ -31,15 +28,15 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.PointerUp -= OnPointerUp;
         }
 
-        private void OnPointerDown(Model? model, PointerEventArgs e)
+        protected override void OnPointerDown(Model? model, PointerEventArgs e)
         {
-            if (SelectionBoundsChanged is null || model != null || !Diagram.IsBehaviorEnabled(e, DiagramDragBehavior.Select))
+            if (SelectionBoundsChanged is null || model != null || !IsBehaviorEnabled(e))
                 return;
 
             _initialClientPoint = new Point(e.ClientX, e.ClientY);
         }
 
-        private void OnPointerMove(Model? model, PointerEventArgs e)
+        protected override void OnPointerMove(Model? model, PointerEventArgs e)
         {
             if (_initialClientPoint == null)
                 return;
@@ -73,7 +70,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             SelectionBoundsChanged?.Invoke(this, new Rectangle(sX, sY, eX, eY));
         }
 
-        private void OnPointerUp(Model? model, PointerEventArgs e)
+        protected override void OnPointerUp(Model? model, PointerEventArgs e)
         {
             _initialClientPoint = null;
             SelectionBoundsChanged?.Invoke(this, null);

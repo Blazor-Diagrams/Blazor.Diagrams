@@ -2,8 +2,6 @@
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Options;
-using Moq;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors
@@ -14,12 +12,11 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_WhenBehaviorEnabled_ShouldUpdateSelectionBounds()
         {
             // Arrange
-            var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
-                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
-            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+            var diagram = new TestDiagram();
+            diagram.Options.Behaviors.DiagramDragBehavior = typeof(SelectionBoxBehavior);
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
-            var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
             bool boundsChangedEventInvoked = false;
             Rectangle? lastBounds = null;
             selectionBoxBehavior.SelectionBoundsChanged += (_, newBounds) =>
@@ -29,9 +26,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             };
 
             // Act
-            diagram.Object.TriggerPointerDown(null,
+            diagram.TriggerPointerDown(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(200, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
@@ -46,12 +43,11 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_WhenBehaviorDisabled_ShouldNotUpdateSelectionBounds()
         {
             // Arrange
-            var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
-                .Returns(false);
-            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+            var diagram = new TestDiagram();
+            diagram.Options.Behaviors.DiagramDragBehavior = null;
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
-            var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
             bool boundsChangedEventInvoked = false;
             Rectangle? lastBounds = null;
             selectionBoxBehavior.SelectionBoundsChanged += (_, newBounds) =>
@@ -61,9 +57,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             };
 
             // Act
-            diagram.Object.TriggerPointerDown(null,
+            diagram.TriggerPointerDown(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(200, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
@@ -75,12 +71,11 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_WithBoundsChangedDelegate_ShouldSelectNodesInsideArea()
         {
             // Arrange
-            var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
-                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
-            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+            var diagram = new TestDiagram();
+            diagram.Options.Behaviors.DiagramDragBehavior = typeof(SelectionBoxBehavior);
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
-            var selectionBoxBehavior = diagram.Object.GetBehavior<SelectionBoxBehavior>()!;
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
             selectionBoxBehavior.SelectionBoundsChanged += (_, _) => { };
 
             var node = new NodeModel()
@@ -88,18 +83,18 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
                 Size = new Size(100, 100),
                 Position = new Point(150, 150)
             };
-            diagram.Object.Nodes.Add(node);
+            diagram.Nodes.Add(node);
 
             // Act
-            diagram.Object.TriggerPointerDown(null,
+            diagram.TriggerPointerDown(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(300, 300, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             Assert.True(node.Selected);
 
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             Assert.False(node.Selected);
         }
@@ -108,28 +103,27 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         public void Behavior_WithoutBoundsChangedDelegate_ShouldNotSelectNodesInsideArea()
         {
             // Arrange
-            var diagram = new Mock<TestDiagram>(null) { CallBase = true };
-            diagram.Setup(d => d.IsBehaviorEnabled(It.IsAny<PointerEventArgs>(), It.IsAny<DiagramDragBehavior>()))
-                .Returns((PointerEventArgs _, DiagramDragBehavior behaviour) => behaviour == DiagramDragBehavior.Select);
-            diagram.Object.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+            var diagram = new TestDiagram();
+            diagram.Options.Behaviors.DiagramDragBehavior = typeof(SelectionBoxBehavior);
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var node = new NodeModel()
             {
                 Size = new Size(100, 100),
                 Position = new Point(150, 150)
             };
-            diagram.Object.Nodes.Add(node);
+            diagram.Nodes.Add(node);
 
             // Act
-            diagram.Object.TriggerPointerDown(null,
+            diagram.TriggerPointerDown(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(300, 300, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
 
             // Assert
             Assert.False(node.Selected);
 
-            diagram.Object.TriggerPointerMove(null,
+            diagram.TriggerPointerMove(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             Assert.False(node.Selected);
         }

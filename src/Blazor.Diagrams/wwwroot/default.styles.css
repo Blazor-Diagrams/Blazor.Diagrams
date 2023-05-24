@@ -127,4 +127,69 @@ g.diagram-group.default.selected > rect {
     transform: translate(-50%, -50%);
 }
 
+.resizer {
+    width: 5px;
+    height: 5px;
+    background-color: #f5f5f5;
+    border: 1px solid #6e9fd4;
+    position: absolute;
+    visibility: hidden;
+}
+
+.resizer.topleft {
+    left: -5px;
+    top: -5px;
+    cursor: nwse-resize;
+}
+
+.resizer.topright {
+    right: -5px;
+    top: -5px;
+    cursor: nesw-resize;
+}
+
+.resizer.bottomleft {
+    left: -5px;
+    bottom: -5px;
+    cursor: nesw-resize;
+}
+
+.resizer.bottomright {
+    right: -5px;
+    bottom: -5px;
+    cursor: nwse-resize;
+}
+
+.resizer.left {
+    left: -5px;
+    top: 50%;
+    cursor: w-resize;
+}
+
+.resizer.right {
+    right: -5px;
+    top: 50%;
+    cursor: w-resize;
+}
+
+.resizer.bottom {
+    left: 50%;
+    bottom: -5px;
+    cursor: n-resize;
+}
+
+.resizer.top {
+    left: 50%;
+    top: -5px;
+    cursor: n-resize;
+}
+
+.default-node.selected .resizer {
+    visibility: visible;
+}
+
+.group.selected > .resizer {
+    visibility: visible;
+}
+
 /*# sourceMappingURL=wwwroot\default.styles.css.map */

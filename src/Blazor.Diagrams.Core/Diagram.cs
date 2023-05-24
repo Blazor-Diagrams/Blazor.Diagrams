@@ -182,6 +182,7 @@ namespace Blazor.Diagrams.Core
             RegisterBehavior(new VirtualizationBehavior(this));
             RegisterBehavior(new ScrollBehavior(this));
             RegisterBehavior(new SelectionBoxBehavior(this));
+            RegisterBehavior(new ResizeBehavior(this));
         }
 
         public void RegisterBehavior(Behavior behavior)

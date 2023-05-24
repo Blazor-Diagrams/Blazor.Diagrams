@@ -1,4 +1,5 @@
-﻿using Blazor.Diagrams.Core.Events;
+﻿using Blazor.Diagrams.Core.Behaviors.Base;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Utils;
 using System;
 using System.Collections.Generic;

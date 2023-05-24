@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazor.Diagrams.Core;
+namespace Blazor.Diagrams.Core.Behaviors.Base;
 
 public abstract class Behavior : IDisposable
 {

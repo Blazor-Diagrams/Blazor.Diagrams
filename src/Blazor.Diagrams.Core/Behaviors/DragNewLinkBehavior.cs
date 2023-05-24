@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System.Linq;
 using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Behaviors.Base;
 using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Core.Behaviors;

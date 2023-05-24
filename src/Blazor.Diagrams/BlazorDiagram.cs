@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blazor.Diagrams.Components.Controls;
 using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Options;
@@ -23,6 +24,9 @@ public class BlazorDiagram : Diagram
         };
 
         Options = options ?? new BlazorDiagramOptions();
+        Options.Behaviors.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
+        Options.Behaviors.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
+        Options.Behaviors.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
     }
 
     public override BlazorDiagramOptions Options { get; }

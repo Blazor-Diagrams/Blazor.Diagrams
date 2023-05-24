@@ -16,10 +16,10 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_DragBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = null;
             Assert.False(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
         }
 
@@ -27,14 +27,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_AltDragBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
-            diagram.Options.Behaviors.DiagramAltDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramAltDragBehavior = null;
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = null;
             Assert.False(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramAltDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramAltDragBehavior = diagram.GetBehavior<PanBehavior>();
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0, 0, 0, string.Empty, true)));
         }
 
@@ -42,14 +42,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_CtrlDragBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
-            diagram.Options.Behaviors.DiagramCtrlDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramCtrlDragBehavior = null;
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = null;
             Assert.False(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramCtrlDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramCtrlDragBehavior = diagram.GetBehavior<PanBehavior>();
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
         }
 
@@ -57,14 +57,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_ShiftDragBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
-            diagram.Options.Behaviors.DiagramShiftDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = null;
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramDragBehavior = null;
+            diagram.BehaviorOptions.DiagramDragBehavior = null;
             Assert.False(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
 
-            diagram.Options.Behaviors.DiagramShiftDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<PanBehavior>();
             Assert.True(diagram.GetBehavior<PanBehavior>()!.IsBehaviorEnabled(new PointerEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true)));
         }
 
@@ -72,10 +72,10 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_DefaultScrollBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = null;
             Assert.False(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0)));
         }
 
@@ -83,14 +83,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_AltScrollBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
-            diagram.Options.Behaviors.DiagramAltWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramAltWheelBehavior = null;
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = null;
             Assert.False(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramAltWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramAltWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, false, true, 0, 0, 0, 0)));
         }
 
@@ -98,14 +98,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_CtrlScrollBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
-            diagram.Options.Behaviors.DiagramCtrlWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramCtrlWheelBehavior = null;
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = null;
             Assert.False(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramCtrlWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramCtrlWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, true, false, false, 0, 0, 0, 0)));
         }
 
@@ -113,14 +113,14 @@ namespace Blazor.Diagrams.Core.Tests.Options
         public void DiagramBehaviorOptions_ShiftScrollBehavior_IsBehaviorEnabled()
         {
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
-            diagram.Options.Behaviors.DiagramShiftWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramShiftWheelBehavior = null;
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramWheelBehavior = null;
+            diagram.BehaviorOptions.DiagramWheelBehavior = null;
             Assert.False(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0)));
 
-            diagram.Options.Behaviors.DiagramShiftWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
+            diagram.BehaviorOptions.DiagramShiftWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
             Assert.True(diagram.GetBehavior<ZoomBehavior>()!.IsBehaviorEnabled(new WheelEventArgs(0, 0, 0, 0, false, true, false, 0, 0, 0, 0)));
         }
     }

@@ -44,10 +44,11 @@ public abstract class Diagram
         _behaviors = new Dictionary<Type, Behavior>();
         _orderedSelectables = new List<SelectableModel>();
 
-        Nodes = new NodeLayer(this);
-        Links = new LinkLayer(this);
-        Groups = new GroupLayer(this);
-        Controls = new ControlsLayer();
+            Nodes = new NodeLayer(this);
+            Links = new LinkLayer(this);
+            Groups = new GroupLayer(this);
+            Controls = new ControlsLayer();
+            BehaviorOptions = new DiagramBehaviorOptions();
 
         Nodes.Added += OnSelectableAdded;
         Links.Added += OnSelectableAdded;
@@ -57,30 +58,25 @@ public abstract class Diagram
         Links.Removed += OnSelectableRemoved;
         Groups.Removed += OnSelectableRemoved;
 
-            RegisterBehavior(new SelectionBehavior(this));
-            RegisterBehavior(new DragMovablesBehavior(this));
-            RegisterBehavior(new DragNewLinkBehavior(this));
-            RegisterBehavior(new PanBehavior(this));
-            RegisterBehavior(new ZoomBehavior(this));
-            RegisterBehavior(new EventsBehavior(this));
-            RegisterBehavior(new KeyboardShortcutsBehavior(this));
-            RegisterBehavior(new ControlsBehavior(this));
-            RegisterBehavior(new VirtualizationBehavior(this));
-            RegisterBehavior(new ScrollBehavior(this));
-            RegisterBehavior(new SelectionBoxBehavior(this));
+            RegisterDefaultBehaviors();
+
+            BehaviorOptions.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
+            BehaviorOptions.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
+            BehaviorOptions.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
         }
 
-    public abstract DiagramOptions Options { get; }
-    public NodeLayer Nodes { get; }
-    public LinkLayer Links { get; }
-    public GroupLayer Groups { get; }
-    public ControlsLayer Controls { get; }
-    public Rectangle? Container { get; private set; }
-    public Point Pan { get; private set; } = Point.Zero;
-    public double Zoom { get; private set; } = 1;
-    public bool SuspendRefresh { get; set; }
-    public bool SuspendSorting { get; set; }
-    public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
+        public abstract DiagramOptions Options { get; }
+        public DiagramBehaviorOptions BehaviorOptions { get; }
+        public NodeLayer Nodes { get; }
+        public LinkLayer Links { get; }
+        public GroupLayer Groups { get; }
+        public ControlsLayer Controls { get; }
+        public Rectangle? Container { get; private set; }
+        public Point Pan { get; private set; } = Point.Zero;
+        public double Zoom { get; private set; } = 1;
+        public bool SuspendRefresh { get; set; }
+        public bool SuspendSorting { get; set; }
+        public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
     public void Refresh()
     {
@@ -173,11 +169,26 @@ public abstract class Diagram
 
     #region Behaviors
 
-    public void RegisterBehavior(Behavior behavior)
-    {
-        var type = behavior.GetType();
-        if (_behaviors.ContainsKey(type))
-            throw new Exception($"Behavior '{type.Name}' already registered");
+        void RegisterDefaultBehaviors()
+        {
+            RegisterBehavior(new SelectionBehavior(this));
+            RegisterBehavior(new DragMovablesBehavior(this));
+            RegisterBehavior(new DragNewLinkBehavior(this));
+            RegisterBehavior(new PanBehavior(this));
+            RegisterBehavior(new ZoomBehavior(this));
+            RegisterBehavior(new EventsBehavior(this));
+            RegisterBehavior(new KeyboardShortcutsBehavior(this));
+            RegisterBehavior(new ControlsBehavior(this));
+            RegisterBehavior(new VirtualizationBehavior(this));
+            RegisterBehavior(new ScrollBehavior(this));
+            RegisterBehavior(new SelectionBoxBehavior(this));
+        }
+
+        public void RegisterBehavior(Behavior behavior)
+        {
+            var type = behavior.GetType();
+            if (_behaviors.ContainsKey(type))
+                throw new Exception($"Behavior '{type.Name}' already registered");
 
         _behaviors.Add(type, behavior);
     }

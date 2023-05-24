@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Blazor.Diagrams.Core.Options;
 using Blazor.Diagrams.Core.Controls;
+using Blazor.Diagrams.Core.Behaviors.Base;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Tests")]
@@ -47,6 +48,7 @@ namespace Blazor.Diagrams.Core
             Links = new LinkLayer(this);
             Groups = new GroupLayer(this);
             Controls = new ControlsLayer();
+            BehaviorOptions = new DiagramBehaviorOptions();
 
             Nodes.Added += OnSelectableAdded;
             Links.Added += OnSelectableAdded;
@@ -56,19 +58,15 @@ namespace Blazor.Diagrams.Core
             Links.Removed += OnSelectableRemoved;
             Groups.Removed += OnSelectableRemoved;
 
-            RegisterBehavior(new SelectionBehavior(this));
-            RegisterBehavior(new DragMovablesBehavior(this));
-            RegisterBehavior(new DragNewLinkBehavior(this));
-            RegisterBehavior(new PanBehavior(this));
-            RegisterBehavior(new ZoomBehavior(this));
-            RegisterBehavior(new EventsBehavior(this));
-            RegisterBehavior(new KeyboardShortcutsBehavior(this));
-            RegisterBehavior(new ControlsBehavior(this));
-            RegisterBehavior(new VirtualizationBehavior(this));
-            RegisterBehavior(new ResizeBehavior(this));
+            RegisterDefaultBehaviors();
+
+            BehaviorOptions.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
+            BehaviorOptions.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
+            BehaviorOptions.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
         }
 
         public abstract DiagramOptions Options { get; }
+        public DiagramBehaviorOptions BehaviorOptions { get; }
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
         public GroupLayer Groups { get; }
@@ -170,6 +168,22 @@ namespace Blazor.Diagrams.Core
         #endregion
 
         #region Behaviors
+
+        void RegisterDefaultBehaviors()
+        {
+            RegisterBehavior(new SelectionBehavior(this));
+            RegisterBehavior(new DragMovablesBehavior(this));
+            RegisterBehavior(new DragNewLinkBehavior(this));
+            RegisterBehavior(new PanBehavior(this));
+            RegisterBehavior(new ZoomBehavior(this));
+            RegisterBehavior(new EventsBehavior(this));
+            RegisterBehavior(new KeyboardShortcutsBehavior(this));
+            RegisterBehavior(new ControlsBehavior(this));
+            RegisterBehavior(new VirtualizationBehavior(this));
+            RegisterBehavior(new ScrollBehavior(this));
+            RegisterBehavior(new SelectionBoxBehavior(this));
+            RegisterBehavior(new ResizeBehavior(this));
+        }
 
         public void RegisterBehavior(Behavior behavior)
         {

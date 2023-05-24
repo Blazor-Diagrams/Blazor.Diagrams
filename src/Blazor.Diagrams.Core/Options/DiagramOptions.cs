@@ -1,3 +1,5 @@
+using Blazor.Diagrams.Core.Behaviors;
+
 namespace Blazor.Diagrams.Core.Options;
 
 public class DiagramOptions

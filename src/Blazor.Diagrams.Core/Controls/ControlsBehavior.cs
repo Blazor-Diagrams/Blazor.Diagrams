@@ -1,3 +1,4 @@
+using Blazor.Diagrams.Core.Behaviors.Base;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Models.Base;
 

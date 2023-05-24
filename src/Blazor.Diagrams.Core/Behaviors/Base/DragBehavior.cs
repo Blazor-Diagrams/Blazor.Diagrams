@@ -22,21 +22,21 @@ namespace Blazor.Diagrams.Core.Behaviors.Base
         public virtual bool IsBehaviorEnabled(PointerEventArgs e)
         {
             if (e.AltKey && !e.CtrlKey && !e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramAltDragBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramAltDragBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramAltDragBehavior;
+                return this == Diagram.BehaviorOptions.DiagramAltDragBehavior;
             }
             else if (!e.AltKey && e.CtrlKey && !e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramCtrlDragBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramCtrlDragBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramCtrlDragBehavior;
+                return this == Diagram.BehaviorOptions.DiagramCtrlDragBehavior;
             }
             else if (!e.AltKey && !e.CtrlKey && e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramShiftDragBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramShiftDragBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramShiftDragBehavior;
+                return this == Diagram.BehaviorOptions.DiagramShiftDragBehavior;
             }
-            return this == Diagram.Options.Behaviors.DiagramDragBehavior;
+            return this == Diagram.BehaviorOptions.DiagramDragBehavior;
         }
 
         public override void Dispose()

@@ -24,9 +24,6 @@ public class BlazorDiagram : Diagram
         };
 
         Options = options ?? new BlazorDiagramOptions();
-        Options.Behaviors.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
-        Options.Behaviors.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
-        Options.Behaviors.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
     }
 
     public override BlazorDiagramOptions Options { get; }

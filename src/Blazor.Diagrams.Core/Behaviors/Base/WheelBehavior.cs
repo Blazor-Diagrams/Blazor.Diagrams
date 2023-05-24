@@ -16,22 +16,22 @@ namespace Blazor.Diagrams.Core.Behaviors.Base
         public virtual bool IsBehaviorEnabled(WheelEventArgs e)
         {
             if (e.AltKey && !e.CtrlKey && !e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramAltWheelBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramAltWheelBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramAltWheelBehavior;
+                return this == Diagram.BehaviorOptions.DiagramAltWheelBehavior;
             }
             else if (!e.AltKey && e.CtrlKey && !e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramCtrlWheelBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramCtrlWheelBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramCtrlWheelBehavior;
+                return this == Diagram.BehaviorOptions.DiagramCtrlWheelBehavior;
             }
             else if (!e.AltKey && !e.CtrlKey && e.ShiftKey
-                && Diagram.Options.Behaviors.DiagramShiftWheelBehavior is not null)
+                && Diagram.BehaviorOptions.DiagramShiftWheelBehavior is not null)
             {
-                return this == Diagram.Options.Behaviors.DiagramShiftWheelBehavior;
+                return this == Diagram.BehaviorOptions.DiagramShiftWheelBehavior;
             }
 
-            return this == Diagram.Options.Behaviors.DiagramWheelBehavior;
+            return this == Diagram.BehaviorOptions.DiagramWheelBehavior;
         }
 
         public override void Dispose()

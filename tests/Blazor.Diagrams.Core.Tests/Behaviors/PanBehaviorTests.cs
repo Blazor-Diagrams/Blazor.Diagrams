@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = typeof(PanBehavior);
+            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
             diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             Assert.Equal(0, diagram.Pan.X);

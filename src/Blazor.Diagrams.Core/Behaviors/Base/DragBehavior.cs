@@ -21,24 +21,22 @@ namespace Blazor.Diagrams.Core.Behaviors.Base
 
         public virtual bool IsBehaviorEnabled(PointerEventArgs e)
         {
-            var dragBehavior = Diagram.Options.Behaviors.DiagramDragBehavior;
             if (e.AltKey && !e.CtrlKey && !e.ShiftKey
                 && Diagram.Options.Behaviors.DiagramAltDragBehavior is not null)
             {
-                dragBehavior = Diagram.Options.Behaviors.DiagramAltDragBehavior;
+                return this == Diagram.Options.Behaviors.DiagramAltDragBehavior;
             }
             else if (!e.AltKey && e.CtrlKey && !e.ShiftKey
                 && Diagram.Options.Behaviors.DiagramCtrlDragBehavior is not null)
             {
-                dragBehavior = Diagram.Options.Behaviors.DiagramCtrlDragBehavior;
+                return this == Diagram.Options.Behaviors.DiagramCtrlDragBehavior;
             }
             else if (!e.AltKey && !e.CtrlKey && e.ShiftKey
                 && Diagram.Options.Behaviors.DiagramShiftDragBehavior is not null)
             {
-                dragBehavior = Diagram.Options.Behaviors.DiagramShiftDragBehavior;
+                return this == Diagram.Options.Behaviors.DiagramShiftDragBehavior;
             }
-
-            return dragBehavior?.IsAssignableFrom(GetType()) ?? false;
+            return this == Diagram.Options.Behaviors.DiagramDragBehavior;
         }
 
         public override void Dispose()

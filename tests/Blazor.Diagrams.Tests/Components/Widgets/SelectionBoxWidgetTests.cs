@@ -16,7 +16,7 @@ namespace Blazor.Diagrams.Tests.Components.Widgets
             // Arrange
             using var ctx = new TestContext();
             var diagram = new BlazorDiagram();
-            diagram.Options.Behaviors.DiagramDragBehavior = typeof(SelectionBoxBehavior);
+            diagram.Options.Behaviors.DiagramDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
             diagram.SetPan(-75, -100);
             diagram.SetContainer(new Rectangle(new Point(0, 0), new Size(500, 500)));
 

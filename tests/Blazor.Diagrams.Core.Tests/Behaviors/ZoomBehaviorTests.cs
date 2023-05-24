@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = typeof(ZoomBehavior);
+            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ZoomBehavior>();
             diagram.SetContainer(new Rectangle(0, 0, 100, 100));
 
             // Act

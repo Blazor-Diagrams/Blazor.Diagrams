@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new TestDiagram();
-            diagram.Options.Behaviors.DiagramWheelBehavior = typeof(ScrollBehavior);
+            diagram.Options.Behaviors.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
             diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
             diagram.Options.Zoom.ScaleFactor = 1.05;
 

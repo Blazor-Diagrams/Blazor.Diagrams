@@ -1,8 +1,8 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
-using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Behaviors.Base;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {

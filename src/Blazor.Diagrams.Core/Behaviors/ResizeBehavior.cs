@@ -113,8 +113,6 @@ namespace Blazor.Diagrams.Core.Behaviors
 
             model.SetPosition(positionX, positionY);
             model.Size = new Size(width, height);
-
-            model.Refresh();
         }
 
         public override void Dispose()

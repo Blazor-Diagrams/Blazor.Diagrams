@@ -266,9 +266,9 @@ namespace Blazor.Diagrams.Core
             Refresh();
         }
 
-        public void SetContainer(Rectangle newRect)
+        public void SetContainer(Rectangle? newRect)
         {
-            if (newRect.Equals(Container))
+            if (Equals(newRect, Container))
                 return;
 
             Container = newRect;

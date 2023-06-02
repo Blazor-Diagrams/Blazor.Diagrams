@@ -122,5 +122,18 @@ namespace Blazor.Diagrams.Core.Tests
             var diagram = new TestDiagram();
             Assert.Throws<ArgumentException>(() => diagram.Options.Zoom.Minimum = zoomValue);
         }
+        
+        [Fact]
+        public void SetContainer_ShouldAcceptNullGracefully()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+
+            //Act
+            var exception = Record.Exception(() => diagram.SetContainer(null));
+
+            // Assert
+            exception.Should().BeNull();
+        }
     }
 }

@@ -24,9 +24,15 @@ namespace Site.Static
                 new MenuItem("Keyboard Shortcuts", "/documentation/keyboard-shortcuts"),
                 new MenuItem("API", "/documentation/diagram-api"),
             }),
+            new MenuGroup("Nodes", new List<MenuItem>
+            {
+                new MenuItem("Overview", "/documentation/nodes"),
+                new MenuItem("SVG", "/documentation/nodes-svg"),
+                new MenuItem("Customization", "/documentation/nodes-customization")
+            }),
             new MenuGroup("Groups", new List<MenuItem>
             {
-                new MenuItem("Overview", "/documentation/groups-overview"),
+                new MenuItem("Overview", "/documentation/groups"),
                 new MenuItem("SVG", "/documentation/groups-svg"),
             })
         });

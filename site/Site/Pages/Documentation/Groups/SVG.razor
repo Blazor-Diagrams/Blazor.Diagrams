@@ -35,7 +35,7 @@
 
 <h3>Interactively</h3>
 
-First, we will need how groups are created:
+First, we will need to change how groups are created:
 
 <pre><code class="language-cs">
 yourDiagram.Options.Groups.Factory = (diagram, children) => new SvgGroupModel(children);
@@ -56,5 +56,5 @@ var node2 = new SvgNodeModel(new Point(50, 50));
 var group = new SvgGroupModel(new[] { node1, node2 });
 </code></pre>
 
-<NavigationButtons PreviousTitle="HTML Groups"
-                   PreviousLink="/documentation/groups-html" />
+<NavigationButtons PreviousTitle="Groups"
+                   PreviousLink="/documentation/groups" />

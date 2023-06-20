@@ -1,0 +1,20 @@
+﻿@using Blazor.Diagrams.Components.Renderers;
+@using Site.Models.Nodes;
+
+<div>
+    <h5 class="card-title">Add</h5>
+    <input type="number" class="form-control" @bind-value="Node.FirstNumber" placeholder="Number 1" />
+    <input type="number" class="form-control" @bind-value="Node.SecondNumber" placeholder="Number 2" />
+
+    @foreach (var port in Node.Ports)
+    {
+        // In case you have any ports to show
+        // IMPORTANT: You are always in charge of rendering ports
+        <PortRenderer @key="port" Port="port" />
+    }
+</div>
+
+@code {
+    // This gets filled by the library
+    [Parameter] public AddTwoNumbersNode Node { get; set; } = null!;
+}

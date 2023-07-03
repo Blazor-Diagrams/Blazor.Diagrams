@@ -21,18 +21,15 @@
 <div class="filename">GingerbreadNode.cs</div>
 <pre><code class="language-cs">
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Models;
 
 namespace YourNamespace;
 
-public class AddTwoNumbersNode : NodeModel
+public class GingerbreadNode : SvgNodeModel
 {
-    public AddTwoNumbersNode(Point? position = null) : base(position) { }
+    public GingerbreadNode(Point? position = null) : base(position) { }
 
-    public double FirstNumber { get; set; }
-    public double SecondNumber { get; set; }
-
-    // Here, you can put whatever you want, such as a method that does the addition
+    // Here, you can put whatever you want
 }
 </code></pre>
 
@@ -42,75 +39,76 @@ public class AddTwoNumbersNode : NodeModel
     Let's create a UI component to control how the node looks like:
 </p>
 
-<div class="filename">AddTwoNumbersWidget.razor</div>
+<div class="filename">GingerbreadWidget.razor</div>
 <pre><code class="language-cshtml">
 @@using Blazor.Diagrams.Components.Renderers;
 @@using Site.Models.Nodes;
 
-&lt;div&gt;
-    &lt;h5 class=&quot;card-title&quot;&gt;Add&lt;/h5&gt;
-    &lt;input type=&quot;number&quot; class=&quot;form-control&quot; @@bind-value=&quot;Node.FirstNumber&quot; placeholder=&quot;Number 1&quot; /&gt;
-    &lt;input type=&quot;number&quot; class=&quot;form-control&quot; @@bind-value=&quot;Node.SecondNumber&quot; placeholder=&quot;Number 2&quot; /&gt;
+&lt;g class=&quot;gingerbread&quot;&gt;
+    &lt;circle class=&quot;body&quot; cx=&quot;60&quot; cy=&quot;30&quot; r=&quot;30&quot; /&gt;
 
-    @@foreach (var port in Node.Ports)
-    {
-        // In case you have any ports to show
-        // IMPORTANT: You are always in charge of rendering ports
-        &lt;PortRenderer @@key=&quot;port&quot; Port=&quot;port&quot; /&gt;
-    }
-&lt;/div&gt;
+    &lt;circle class=&quot;eye&quot; cx=&quot;48&quot; cy=&quot;25&quot; r=&quot;3&quot; /&gt;
+    &lt;circle class=&quot;eye&quot; cx=&quot;72&quot; cy=&quot;25&quot; r=&quot;3&quot; /&gt;
+    &lt;rect class=&quot;mouth&quot; x=&quot;50&quot; y=&quot;40&quot; width=&quot;20&quot; height=&quot;5&quot; rx=&quot;2&quot; /&gt;
+
+    &lt;line class=&quot;limb&quot; x1=&quot;20&quot; y1=&quot;70&quot; x2=&quot;100&quot; y2=&quot;70&quot; /&gt;
+    &lt;line class=&quot;limb&quot; x1=&quot;35&quot; y1=&quot;130&quot; x2=&quot;60&quot; y2=&quot;65&quot; /&gt;
+    &lt;line class=&quot;limb&quot; x1=&quot;85&quot; y1=&quot;130&quot; x2=&quot;60&quot; y2=&quot;65&quot; /&gt;
+
+    &lt;circle class=&quot;button&quot; cx=&quot;60&quot; cy=&quot;70&quot; r=&quot;5&quot; /&gt;
+    &lt;circle class=&quot;button&quot; cx=&quot;60&quot; cy=&quot;90&quot; r=&quot;5&quot; /&gt;
+
+    &lt;PortRenderer @@key=&quot;&#039;l&#039;&quot; Port=&quot;Node.GetPort(PortAlignment.Left)&quot;&gt;
+        &lt;circle class=&quot;hand&quot; cx=&quot;20&quot; cy=&quot;70&quot; r=&quot;17.5&quot; /&gt;
+    &lt;/PortRenderer&gt;
+
+    &lt;PortRenderer @@key=&quot;&#039;r&#039;&quot; Port=&quot;Node.GetPort(PortAlignment.Right)&quot;&gt;
+        &lt;circle class=&quot;hand&quot; cx=&quot;100&quot; cy=&quot;70&quot; r=&quot;17.5&quot; /&gt;
+    &lt;/PortRenderer&gt;
+&lt;/g&gt;
 
 @@code {
     // This gets filled by the library
-    [Parameter] public AddTwoNumbersNode Node { get; set; } = null!;
+    [Parameter] public GingerbreadNode Node { get; set; } = null!;
 }
 </code></pre>
 
 Let's also style our component!
 
-<div class="filename">AddTwoNumbersWidget.razor.css</div>
+<div class="filename">GingerbreadWidget.razor.css</div>
 <pre><code class="language-css">
-div {
-    width: 230px;
-    outline: 1px solid black;
-    padding: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+.gingerbread .body {
+    fill: #cd803d;
 }
 
-    div &gt; h5 {
-        font-weight: 600;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-    }
-
-    div &gt; input[type=number] {
-        padding: 3px;
-        border-radius: 3px;
-        border: 1px solid black;
-        margin-bottom: 8px;
-    }
-
-::deep .diagram-port {
-    position: absolute;
-    width: 30px;
-    height: 20px;
-    background-color: black;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.gingerbread .eye {
+    fill: white;
 }
 
-    ::deep .diagram-port.top {
-        border-top-left-radius: 50%;
-        border-top-right-radius: 50%;
-        top: -10px;
-    }
+.gingerbread .mouth {
+    fill: none;
+    stroke: white;
+    stroke-width: 2px;
+}
 
-    ::deep .diagram-port.bottom {
-        border-bottom-left-radius: 50%;
-        border-bottom-right-radius: 50%;
-        bottom: -30px;
+.gingerbread .limb {
+    stroke: #cd803d;
+    stroke-width: 35px;
+    stroke-linecap: round;
+}
+
+.gingerbread .hand {
+    fill: #cd803d;
+}
+
+    .gingerbread .hand:hover {
+        fill: #75441a;
     }
 </code></pre>
+
+<p>
+    This SVG example is based from <a class="underline" href="https://www.freecodecamp.org/news/svg-tutorial-learn-to-code-images">this article</a>.
+</p>
 
 <h2>Displaying</h2>
 
@@ -125,13 +123,17 @@ protected override void OnInitialized()
 {
     base.OnInitialized();
 
-    Diagram.RegisterComponent&lt;AddTwoNumbersNode, AddTwoNumbersWidget&gt;();
+    Diagram.RegisterComponent&lt;GingerbreadNode, GingerbreadWidget&gt;();
 
-    var node = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(80, 80)));
-    node.AddPort(PortAlignment.Top);
-    node.AddPort(PortAlignment.Bottom);
+    var node = Diagram.Nodes.Add(new GingerbreadNode(new Point(80, 80)));
+    node.AddPort(PortAlignment.Left);
+    node.AddPort(PortAlignment.Right);
 }
 </code></pre>
+
+<p class="mb-2">
+    Grabbing his hands will create a link!
+</p>
 
 <div class="diagram-container">
     <CascadingValue Value="Diagram" IsFixed="true">
@@ -152,7 +154,7 @@ protected override void OnInitialized()
         Diagram.RegisterComponent<GingerbreadNode, GingerbreadWidget>();
 
         var node = Diagram.Nodes.Add(new GingerbreadNode(new Point(80, 80)));
-        node.AddPort(PortAlignment.Top);
-        node.AddPort(PortAlignment.Bottom);
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
     }
 }

@@ -17,3 +17,11 @@
     stroke-width: 35px;
     stroke-linecap: round;
 }
+
+.gingerbread .hand {
+    fill: #cd803d;
+}
+
+    .gingerbread .hand:hover {
+        fill: #75441a;
+    }

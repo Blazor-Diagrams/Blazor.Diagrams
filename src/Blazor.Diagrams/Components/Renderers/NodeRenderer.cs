@@ -33,8 +33,10 @@ public class NodeRenderer : ComponentBase, IDisposable
         Node.Changed -= OnNodeChanged;
         Node.VisibilityChanged -= OnVisibilityChanged;
 
-        if (_element.Id != null)
+        if (_element.Id != null && !Node.FixedSize)
+        {
             _ = JsRuntime.UnobserveResizes(_element);
+        }
 
         _reference?.Dispose();
     }
@@ -49,7 +51,9 @@ public class NodeRenderer : ComponentBase, IDisposable
         size = new Size(size.Width / BlazorDiagram.Zoom, size.Height / BlazorDiagram.Zoom);
         if (Node.Size != null && Node.Size.Width.AlmostEqualTo(size.Width) &&
             Node.Size.Height.AlmostEqualTo(size.Height))
+        {
             return;
+        }
 
         Node.Size = size;
         Node.Refresh();
@@ -128,7 +132,11 @@ public class NodeRenderer : ComponentBase, IDisposable
         if (firstRender || _becameVisible)
         {
             _becameVisible = false;
-            await JsRuntime.ObserveResizes(_element, _reference);
+
+            if (!Node.FixedSize)
+            {
+                await JsRuntime.ObserveResizes(_element, _reference!);
+            }
         }
     }
 

@@ -28,6 +28,19 @@
     The classes that the div can have (beside <code>diagram-node</code>) are: <code>locked</code>, <code>selected</code> and <code>grouped</code>.
 </p>
 
+<h2>Shape</h2>
+
+Nodes can have a specific shape, which by default is a rectangle. It is used for two things at the moment:
+<ul class="list-disc list-inside mt-2">
+    <li><code>ShapeAnglePositionProvider</code>: To return a position for the given angle.</li>
+    <li><code>NavigatorWidget</code>: To know what to draw.</li>
+</ul>
+<br />
+
+<p>
+    You can change the shape of your node by overriding the <code>GetShape</code> method in your custom model.
+</p>
+
 <h2>Creating a node</h2>
 
 <pre><code class="language-cs">

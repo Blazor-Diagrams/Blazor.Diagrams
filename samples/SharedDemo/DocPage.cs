@@ -2,18 +2,17 @@
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace SharedDemo
+namespace SharedDemo;
+
+public class DocPage : ComponentBase
 {
-    public class DocPage : ComponentBase
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        [Inject]
-        private IJSRuntime JsRuntime { get; set; }
+        await base.OnAfterRenderAsync(firstRender);
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
-            await JsRuntime.InvokeVoidAsync("setup");
-        }
+        await JsRuntime.InvokeVoidAsync("setup");
     }
 }

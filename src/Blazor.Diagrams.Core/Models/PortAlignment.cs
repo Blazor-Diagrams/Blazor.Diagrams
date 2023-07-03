@@ -1,14 +1,13 @@
-﻿namespace Blazor.Diagrams.Core.Models
+﻿namespace Blazor.Diagrams.Core.Models;
+
+public enum PortAlignment
 {
-    public enum PortAlignment
-    {
-        Top,
-        TopRight,
-        Right,
-        BottomRight,
-        Bottom,
-        BottomLeft,
-        Left,
-        TopLeft
-    }
+    Top,
+    TopRight,
+    Right,
+    BottomRight,
+    Bottom,
+    BottomLeft,
+    Left,
+    TopLeft
 }

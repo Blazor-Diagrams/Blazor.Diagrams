@@ -1,19 +1,18 @@
 ﻿using System.Text;
 
-namespace Blazor.Diagrams.Core.Utils
+namespace Blazor.Diagrams.Core.Utils;
+
+public static class KeysUtils
 {
-    public static class KeysUtils
+    public static string GetStringRepresentation(bool ctrl, bool shift, bool alt, string key)
     {
-        public static string GetStringRepresentation(bool ctrl, bool shift, bool alt, string key)
-        {
-            var sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-            if (ctrl) sb.Append("Ctrl+");
-            if (shift) sb.Append("Shift+");
-            if (alt) sb.Append("Alt+");
-            sb.Append(key);
+        if (ctrl) sb.Append("Ctrl+");
+        if (shift) sb.Append("Shift+");
+        if (alt) sb.Append("Alt+");
+        sb.Append(key);
 
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

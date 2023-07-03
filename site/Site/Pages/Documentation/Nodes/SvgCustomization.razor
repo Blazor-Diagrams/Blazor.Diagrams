@@ -1,27 +1,24 @@
-﻿@page "/documentation/nodes-customization"
+﻿@page "/documentation/nodes-customization-svg"
 @using Site.Components.Documentation.Nodes;
 @using Site.Models.Nodes;
 @layout DocumentationLayout
 @inherits DocumentationPage
 
-<PageTitle>Nodes Customization - Documentation - Blazor Diagrams</PageTitle>
+<PageTitle>SVG Nodes Customization - Documentation - Blazor Diagrams</PageTitle>
 
-<h1>Nodes Customization</h1>
+<h1>SVG Nodes Customization</h1>
 
 <p>
-    Customizing nodes in Blazor Diagrams is very easy!
+    Creating a custom SVG node is as easy as a HTML one, let's go!
 </p>
 
 <h2>Creating a model</h2>
 
 <p>
-    Most of the time, your nodes will hold more information than just a title, which is why we create a new model to encapsulate all the data and behavior we want.
-    In a perfect world, you would have one node model for each behavior and or UI representation. <br /> <br />
-
-    Let's assume that we want to create a new node that represents addition:
+    Let's assume that we want to create a new node that represents Gingerbread:
 </p>
 
-<div class="filename">AddTwoNumbersNode.cs</div>
+<div class="filename">GingerbreadNode.cs</div>
 <pre><code class="language-cs">
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -143,9 +140,7 @@ protected override void OnInitialized()
 </div>
 
 <NavigationButtons PreviousTitle="SVG Nodes"
-                   PreviousLink="/documentation/nodes-svg"
-                   NextTitle="Customization (SVG)"
-                   NextLink="/documentation/nodes-customization-svg" />
+                   PreviousLink="/documentation/nodes-svg" />
 
 @code {
     private BlazorDiagram Diagram { get; set; } = new();
@@ -154,9 +149,9 @@ protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Diagram.RegisterComponent<AddTwoNumbersNode, AddTwoNumbersWidget>();
+        Diagram.RegisterComponent<GingerbreadNode, GingerbreadWidget>();
 
-        var node = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(80, 80)));
+        var node = Diagram.Nodes.Add(new GingerbreadNode(new Point(80, 80)));
         node.AddPort(PortAlignment.Top);
         node.AddPort(PortAlignment.Bottom);
     }

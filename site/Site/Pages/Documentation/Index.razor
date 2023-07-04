@@ -3,4 +3,21 @@
 
 <PageTitle>Documentation - Blazor Diagrams</PageTitle>
 
-Overview
+<div class="grid md:grid-cols-2 gap-4 mb-10">
+    @foreach (var group in Documentation.Menu.Groups)
+    {
+        <div class="rounded-lg shadow-lg border border-slate-200">
+            <div class="p-4 bg-main rounded-t-lg text-white font-bold uppercase">
+                @group.Title
+            </div>
+            <div>
+                @foreach (var item in group.Children)
+                {
+                    <a class="block w-full cursor-pointer p-4 hover:bg-gray-200 border-b border-slate-200" href="@item.Link">
+                        @item.Title
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

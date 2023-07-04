@@ -55,7 +55,6 @@ public class GroupModel : NodeModel
 
     public override void SetPosition(double x, double y)
     {
-        Console.WriteLine($"({(Group == null ? "Parent" : "Child")}) SetPosition {x:00} {y:00}");
         var deltaX = x - Position.X;
         var deltaY = y - Position.Y;
         base.SetPosition(x, y);
@@ -72,7 +71,6 @@ public class GroupModel : NodeModel
 
     public override void UpdatePositionSilently(double deltaX, double deltaY)
     {
-        Console.WriteLine($"({(Group == null ? "Parent" : "Child")}) UpdatePositionSilently {deltaX:00} {deltaY:00}");
         base.UpdatePositionSilently(deltaX, deltaY);
 
         foreach (var child in Children)

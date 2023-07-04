@@ -36,6 +36,8 @@ public static class Documentation
         {
             new MenuItem("Overview", "/documentation/groups"),
             new MenuItem("SVG", "/documentation/groups-svg"),
+            new MenuItem("Customization", "/documentation/groups-customization"),
+            new MenuItem("Customization (SVG)", "/documentation/groups-customization-svg")
         })
     });
 }

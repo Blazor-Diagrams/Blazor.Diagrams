@@ -20,6 +20,7 @@ public static class Documentation
         {
             new MenuItem("Overview", "/documentation/diagram"),
             new MenuItem("Behaviors", "/documentation/diagram-behaviors"),
+            new MenuItem("Ordering", "/documentation/diagram-ordering"),
             new MenuItem("Options", "/documentation/diagram-options"),
             new MenuItem("Keyboard Shortcuts", "/documentation/keyboard-shortcuts"),
             new MenuItem("API", "/documentation/diagram-api"),

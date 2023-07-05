@@ -33,7 +33,7 @@ public class NodeRenderer : ComponentBase, IDisposable
         Node.Changed -= OnNodeChanged;
         Node.VisibilityChanged -= OnVisibilityChanged;
 
-        if (_element.Id != null && !Node.FixedSize)
+        if (_element.Id != null && !Node.ControlledSize)
         {
             _ = JsRuntime.UnobserveResizes(_element);
         }
@@ -133,7 +133,7 @@ public class NodeRenderer : ComponentBase, IDisposable
         {
             _becameVisible = false;
 
-            if (!Node.FixedSize)
+            if (!Node.ControlledSize)
             {
                 await JsRuntime.ObserveResizes(_element, _reference!);
             }

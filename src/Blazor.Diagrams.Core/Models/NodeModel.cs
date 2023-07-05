@@ -35,7 +35,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
             SizeChanged?.Invoke(this);
         }
     }
-    public bool FixedSize { get; init; }
+    public bool ControlledSize { get; init; }
 
     public GroupModel? Group { get; internal set; }
     public string? Title { get; set; }

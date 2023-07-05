@@ -1,6 +1,4 @@
-﻿using Blazor.Diagrams.Core.Geometry;
-
-using Blazor.Diagrams.Core.Events;
+﻿using Blazor.Diagrams.Core.Events;
 
 using System;
 

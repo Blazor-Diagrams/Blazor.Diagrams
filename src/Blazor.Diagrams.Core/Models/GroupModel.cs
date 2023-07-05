@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

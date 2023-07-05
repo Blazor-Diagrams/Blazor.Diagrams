@@ -1,5 +1,4 @@
-﻿using System;
-using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using System.Collections.Generic;
 
@@ -30,11 +29,11 @@ public class PortModel : Model, IHasBounds, IHasShape, ILinkable
     public NodeModel Parent { get; }
     public PortAlignment Alignment { get; }
     public Point Position { get; set; }
-    public Point MiddlePosition => new(Position.X + Size.Width / 2, Position.Y + Size.Height / 2);
+    public Point MiddlePosition => new(Position.X + (Size.Width / 2), Position.Y + (Size.Height / 2));
     public Size Size { get; set; }
     public IReadOnlyList<BaseLinkModel> Links => _links;
     /// <summary>
-    /// If set to false, a call to Refresh() will force the port to update its position/size using JS
+    /// If set to false, a call to Refresh() will force the port to update its position/size
     /// </summary>
     public bool Initialized { get; set; }
 

@@ -7,7 +7,7 @@ namespace Blazor.Diagrams.Core.Anchors;
 
 public abstract class Anchor
 {
-    public Anchor(ILinkable? model = null)
+    protected Anchor(ILinkable? model = null)
     {
         Model = model;
     }

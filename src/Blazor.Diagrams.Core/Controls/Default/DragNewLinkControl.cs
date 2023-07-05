@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;

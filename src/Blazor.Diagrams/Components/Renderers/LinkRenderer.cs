@@ -12,9 +12,9 @@ public class LinkRenderer : ComponentBase, IDisposable
 {
     private bool _shouldRender = true;
 
-    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; }
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
-    [Parameter] public BaseLinkModel Link { get; set; }
+    [Parameter] public BaseLinkModel Link { get; set; } = null!;
 
     public void Dispose()
     {

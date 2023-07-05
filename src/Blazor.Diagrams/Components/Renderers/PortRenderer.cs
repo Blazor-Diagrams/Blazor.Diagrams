@@ -117,6 +117,9 @@ public class PortRenderer : ComponentBase, IDisposable
 
     private async Task UpdateDimensions()
     {
+        if (BlazorDiagram.Container == null)
+            return;
+
         _updatingDimensions = true;
         var zoom = BlazorDiagram.Zoom;
         var pan = BlazorDiagram.Pan;

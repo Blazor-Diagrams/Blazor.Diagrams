@@ -48,7 +48,7 @@ public class DragNewLinkBehaviorTests
         diagram.Options.Links.Factory = (d, s, ta) =>
         {
             factoryCalled = true;
-            return new LinkModel(new SinglePortAnchor(s as PortModel), ta);
+            return new LinkModel(new SinglePortAnchor((s as PortModel)!), ta);
         };
         var node = new NodeModel(position: new Point(100, 50));
         var port = node.AddPort(new PortModel(node)

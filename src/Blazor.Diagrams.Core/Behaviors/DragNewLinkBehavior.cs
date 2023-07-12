@@ -23,7 +23,7 @@ public class DragNewLinkBehavior : Behavior
         if (_ongoingLink != null)
             return;
 
-        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5));
+        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Subtract(5));
         _ongoingLink = Diagram.Options.Links.Factory(Diagram, source, _targetPositionAnchor);
         if (_ongoingLink == null)
             return;
@@ -36,7 +36,7 @@ public class DragNewLinkBehavior : Behavior
         if (_ongoingLink != null)
             return;
 
-        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Substract(5));
+        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Subtract(5));
         _ongoingLink = link;
         _ongoingLink.SetTarget(_targetPositionAnchor);
         _ongoingLink.Refresh();
@@ -56,7 +56,7 @@ public class DragNewLinkBehavior : Behavior
             if (port.Locked)
                 return;
 
-            _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Substract(5));
+            _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Subtract(5));
             _ongoingLink = Diagram.Options.Links.Factory(Diagram, port, _targetPositionAnchor);
             if (_ongoingLink == null)
                 return;
@@ -71,7 +71,7 @@ public class DragNewLinkBehavior : Behavior
         if (_ongoingLink == null || model != null)
             return;
 
-        _targetPositionAnchor!.SetPosition(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Substract(5));
+        _targetPositionAnchor!.SetPosition(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Subtract(5));
 
         if (Diagram.Options.Links.EnableSnapping)
         {

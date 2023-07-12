@@ -100,10 +100,6 @@ public class DragMovablesBehavior : Behavior
             return n;
 
         var gridSize = Diagram.Options.GridSize.Value;
-
-        // 20 * floor((100 + 10) / 20) = 20 * 5 = 100
-        // 20 * floor((105 + 10) / 20) = 20 * 5 = 100
-        // 20 * floor((110 + 10) / 20) = 20 * 6 = 120
         return gridSize * Math.Floor((n + gridSize / 2.0) / gridSize);
     }
 

@@ -23,8 +23,8 @@ public record Point
     public Point Add(double value) => new(X + value, Y + value);
     public Point Add(double x, double y) => new(X + x, Y + y);
 
-    public Point Substract(double value) => new(X - value, Y - value);
-    public Point Substract(double x, double y) => new(X - x, Y - y);
+    public Point Subtract(double value) => new(X - value, Y - value);
+    public Point Subtract(double x, double y) => new(X - x, Y - y);
 
     public double DistanceTo(Point other) => Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
     public double DistanceTo(double x, double y) => Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y - y, 2));

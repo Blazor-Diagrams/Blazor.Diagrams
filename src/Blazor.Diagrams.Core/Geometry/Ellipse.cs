@@ -23,7 +23,7 @@ public class Ellipse : IShape
         var a1 = line.Start;
         var a2 = line.End;
         var dir = new Point(line.End.X - line.Start.X, line.End.Y - line.Start.Y);
-        var diff = a1.Substract(Cx, Cy);
+        var diff = a1.Subtract(Cx, Cy);
         var mDir = new Point(dir.X / (Rx * Rx), dir.Y / (Ry * Ry));
         var mDiff = new Point(diff.X / (Rx * Rx), diff.Y / (Ry * Ry));
 

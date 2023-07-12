@@ -12,17 +12,20 @@
       fill="none"
       stroke="@color" />
 
-@if (Link.Vertices.Count == 0)
+@if (Link.IsAttached)
 {
-    @GetSelectionHelperPath(color, d, 0)
-}
-else
-{
-    @for (var i = 0; i < result.Paths.Length; i++)
+    @if (Link.Vertices.Count == 0)
     {
-        d = result.Paths[i].ToString();
-        var index = i;
-        @GetSelectionHelperPath(color, d, index)
+        @GetSelectionHelperPath(color, d, 0)
+    }
+    else
+    {
+        @for (var i = 0; i < result.Paths.Length; i++)
+        {
+            d = result.Paths[i].ToString();
+            var index = i;
+            @GetSelectionHelperPath(color, d, index)
+        }
     }
 }
 

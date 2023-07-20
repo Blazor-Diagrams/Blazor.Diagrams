@@ -15,16 +15,28 @@ public record Point
     public double X { get; init; }
     public double Y { get; init; }
 
+    public double Length => Math.Sqrt(Dot(this));
+
     public double Dot(Point other) => X * other.X + Y * other.Y;
     public Point Lerp(Point other, double t)
         => new(X * (1.0 - t) + other.X * t, Y * (1.0 - t) + other.Y * t);
 
-    // Maybe just make Points mutable?
     public Point Add(double value) => new(X + value, Y + value);
     public Point Add(double x, double y) => new(X + x, Y + y);
 
     public Point Subtract(double value) => new(X - value, Y - value);
     public Point Subtract(double x, double y) => new(X - x, Y - y);
+    public Point Subtract(Point other) => new(X - other.X, Y - other.Y);
+
+    public Point Divide(Point other) => new(X / other.X, Y / other.Y);
+
+    public Point Multiply(double value) => new(X * value, Y * value);
+
+    public Point Normalize()
+    {
+        var length = Length;
+        return new Point(X / length, Y / length);
+    }
 
     public double DistanceTo(Point other) => Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
     public double DistanceTo(double x, double y) => Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y - y, 2));

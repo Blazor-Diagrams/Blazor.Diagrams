@@ -61,7 +61,7 @@ public class PortModel : Model, IHasBounds, IHasShape, ILinkable
     public virtual bool CanAttachTo(ILinkable other)
     {
         // Todo: remove in order to support same node links
-        return other is PortModel port && port != this && !port.Locked && Parent != port.Parent; 
+        return other is PortModel port && port != this && !port.Locked && Parent != port.Parent;
     }
 
     void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);

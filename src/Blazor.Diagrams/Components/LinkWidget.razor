@@ -1,9 +1,12 @@
-﻿@{
+﻿@using Blazor.Diagrams.Core.Behaviors;
+
+@{
     var color = Link.Selected ? Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor : Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
     var result = Link.PathGeneratorResult;
     if (result == null)
         return;
 
+    var dnlb = BlazorDiagram.GetBehavior<DragNewLinkBehavior>();
     var d = result.FullPath.ToString();
 }
 
@@ -12,7 +15,7 @@
       fill="none"
       stroke="@color" />
 
-@if (Link.IsAttached)
+@if (dnlb!.OngoingLink == null || dnlb.OngoingLink != Link)
 {
     @if (Link.Vertices.Count == 0)
     {

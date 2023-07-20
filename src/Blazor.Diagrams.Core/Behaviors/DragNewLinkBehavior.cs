@@ -3,13 +3,15 @@ using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System.Linq;
 using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
 public class DragNewLinkBehavior : Behavior
 {
-    private BaseLinkModel? _ongoingLink;
     private PositionAnchor? _targetPositionAnchor;
+
+    public BaseLinkModel? OngoingLink { get; private set; }
 
     public DragNewLinkBehavior(Diagram diagram) : base(diagram)
     {
@@ -20,27 +22,27 @@ public class DragNewLinkBehavior : Behavior
 
     public void StartFrom(ILinkable source, double clientX, double clientY)
     {
-        if (_ongoingLink != null)
+        if (OngoingLink != null)
             return;
 
-        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Subtract(5));
-        _ongoingLink = Diagram.Options.Links.Factory(Diagram, source, _targetPositionAnchor);
-        if (_ongoingLink == null)
+        _targetPositionAnchor = new PositionAnchor(CalculateTargetPosition(clientX, clientY));
+        OngoingLink = Diagram.Options.Links.Factory(Diagram, source, _targetPositionAnchor);
+        if (OngoingLink == null)
             return;
 
-        Diagram.Links.Add(_ongoingLink);
+        Diagram.Links.Add(OngoingLink);
     }
 
     public void StartFrom(BaseLinkModel link, double clientX, double clientY)
     {
-        if (_ongoingLink != null)
+        if (OngoingLink != null)
             return;
 
-        _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(clientX, clientY).Subtract(5));
-        _ongoingLink = link;
-        _ongoingLink.SetTarget(_targetPositionAnchor);
-        _ongoingLink.Refresh();
-        _ongoingLink.RefreshLinks();
+        _targetPositionAnchor = new PositionAnchor(CalculateTargetPosition(clientX, clientY));
+        OngoingLink = link;
+        OngoingLink.SetTarget(_targetPositionAnchor);
+        OngoingLink.Refresh();
+        OngoingLink.RefreshLinks();
     }
 
     private void OnPointerDown(Model? model, MouseEventArgs e)
@@ -48,7 +50,7 @@ public class DragNewLinkBehavior : Behavior
         if (e.Button != (int)MouseEventButton.Left)
             return;
 
-        _ongoingLink = null;
+        OngoingLink = null;
         _targetPositionAnchor = null;
 
         if (model is PortModel port)
@@ -56,79 +58,98 @@ public class DragNewLinkBehavior : Behavior
             if (port.Locked)
                 return;
 
-            _targetPositionAnchor = new PositionAnchor(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Subtract(5));
-            _ongoingLink = Diagram.Options.Links.Factory(Diagram, port, _targetPositionAnchor);
-            if (_ongoingLink == null)
+            _targetPositionAnchor = new PositionAnchor(CalculateTargetPosition(e.ClientX, e.ClientY));
+            OngoingLink = Diagram.Options.Links.Factory(Diagram, port, _targetPositionAnchor);
+            if (OngoingLink == null)
                 return;
 
-            _ongoingLink.SetTarget(_targetPositionAnchor);
-            Diagram.Links.Add(_ongoingLink);
+            OngoingLink.SetTarget(_targetPositionAnchor);
+            Diagram.Links.Add(OngoingLink);
         }
     }
 
     private void OnPointerMove(Model? model, MouseEventArgs e)
     {
-        if (_ongoingLink == null || model != null)
+        if (OngoingLink == null || model != null)
             return;
 
-        _targetPositionAnchor!.SetPosition(Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY).Subtract(5));
+        _targetPositionAnchor!.SetPosition(CalculateTargetPosition(e.ClientX, e.ClientY));
 
         if (Diagram.Options.Links.EnableSnapping)
         {
             var nearPort = FindNearPortToAttachTo();
-            if (nearPort != null || _ongoingLink.Target is not PositionAnchor)
+            if (nearPort != null || OngoingLink.Target is not PositionAnchor)
             {
-                _ongoingLink.SetTarget(nearPort is null ? _targetPositionAnchor : new SinglePortAnchor(nearPort));
+                OngoingLink.SetTarget(nearPort is null ? _targetPositionAnchor : new SinglePortAnchor(nearPort));
             }
         }
 
-        _ongoingLink.Refresh();
-        _ongoingLink.RefreshLinks();
+        OngoingLink.Refresh();
+        OngoingLink.RefreshLinks();
     }
 
     private void OnPointerUp(Model? model, MouseEventArgs e)
     {
-        if (_ongoingLink == null)
+        if (OngoingLink == null)
             return;
 
-        if (_ongoingLink.IsAttached) // Snapped already
+        if (OngoingLink.IsAttached) // Snapped already
         {
-            _ongoingLink.TriggerTargetAttached();
-            _ongoingLink = null;
+            OngoingLink.TriggerTargetAttached();
+            OngoingLink = null;
             return;
         }
 
-        if (model is ILinkable linkable && (_ongoingLink.Source.Model == null || _ongoingLink.Source.Model.CanAttachTo(linkable)))
+        if (model is ILinkable linkable && (OngoingLink.Source.Model == null || OngoingLink.Source.Model.CanAttachTo(linkable)))
         {
-            var targetAnchor = Diagram.Options.Links.TargetAnchorFactory(Diagram, _ongoingLink, linkable);
-            _ongoingLink.SetTarget(targetAnchor);
-            _ongoingLink.TriggerTargetAttached();
-            _ongoingLink.Refresh();
-            _ongoingLink.RefreshLinks();
+            var targetAnchor = Diagram.Options.Links.TargetAnchorFactory(Diagram, OngoingLink, linkable);
+            OngoingLink.SetTarget(targetAnchor);
+            OngoingLink.TriggerTargetAttached();
+            OngoingLink.Refresh();
+            OngoingLink.RefreshLinks();
         }
         else if (Diagram.Options.Links.RequireTarget)
         {
-            Diagram.Links.Remove(_ongoingLink);
+            Diagram.Links.Remove(OngoingLink);
+        }
+        else if (!Diagram.Options.Links.RequireTarget)
+        {
+            OngoingLink.Refresh();
         }
 
-        _ongoingLink = null;
+        OngoingLink = null;
+    }
+
+    private Point CalculateTargetPosition(double clientX, double clientY)
+    {
+        var target = Diagram.GetRelativeMousePoint(clientX, clientY);
+
+        if (OngoingLink == null)
+        {
+            return target;
+        }
+
+        var source = OngoingLink.Source.GetPlainPosition()!;
+        var dirVector = target.Subtract(source).Normalize();
+        var change = dirVector.Multiply(5);
+        return target.Subtract(change);
     }
 
     private PortModel? FindNearPortToAttachTo()
     {
-        if (_ongoingLink is null || _targetPositionAnchor is null)
+        if (OngoingLink is null || _targetPositionAnchor is null)
             return null;
 
         PortModel? nearestSnapPort = null;
         var nearestSnapPortDistance = double.PositiveInfinity;
 
-        var position = _targetPositionAnchor!.GetPosition(_ongoingLink)!;
+        var position = _targetPositionAnchor!.GetPosition(OngoingLink)!;
 
         foreach (var port in Diagram.Nodes.SelectMany((NodeModel n) => n.Ports))
         {
             var distance = position.DistanceTo(port.Position);
 
-            if (distance <= Diagram.Options.Links.SnappingRadius && (_ongoingLink.Source.Model?.CanAttachTo(port) != false))
+            if (distance <= Diagram.Options.Links.SnappingRadius && (OngoingLink.Source.Model?.CanAttachTo(port) != false))
             {
                 if (distance < nearestSnapPortDistance)
                 {

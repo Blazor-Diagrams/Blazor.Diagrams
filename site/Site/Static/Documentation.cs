@@ -32,6 +32,11 @@ public static class Documentation
             new MenuItem("Customization", "/documentation/nodes-customization"),
             new MenuItem("Customization (SVG)", "/documentation/nodes-customization-svg")
         }),
+        new MenuGroup("Ports", new List<MenuItem>
+        {
+            new MenuItem("Overview", "/documentation/ports"),
+            new MenuItem("Customization", "/documentation/ports-customization")
+        }),
         new MenuGroup("Groups", new List<MenuItem>
         {
             new MenuItem("Overview", "/documentation/groups"),

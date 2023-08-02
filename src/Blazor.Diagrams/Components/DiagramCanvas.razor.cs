@@ -26,6 +26,7 @@ namespace Blazor.Diagrams.Components
         protected ElementReference elementReference;
         private DotNetObjectReference<DiagramCanvas> _reference;
         private bool _shouldReRender;
+        private bool _referenceDisposed = false;
 
         private string LayerStyle
             => FormattableString.Invariant($"transform: translate({Diagram.Pan.X}px, {Diagram.Pan.Y}px) scale({Diagram.Zoom});");
@@ -42,7 +43,7 @@ namespace Blazor.Diagrams.Components
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            if (firstRender)
+            if (firstRender && !_referenceDisposed)
             {
                 Diagram.Container = await JSRuntime.GetBoundingClientRect(elementReference);
                 await JSRuntime.ObserveResizes(elementReference, _reference);
@@ -96,6 +97,7 @@ namespace Blazor.Diagrams.Components
                 _ = JSRuntime.UnobserveResizes(elementReference);
 
             _reference.Dispose();
+            _referenceDisposed = true;
         }
     }
 }

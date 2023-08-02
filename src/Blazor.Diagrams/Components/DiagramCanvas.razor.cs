@@ -36,6 +36,7 @@ namespace Blazor.Diagrams.Components
             base.OnInitialized();
 
             _reference = DotNetObjectReference.Create(this);
+            _referenceDisposed = false;
             Diagram.Changed += OnDiagramChanged;
         }
 

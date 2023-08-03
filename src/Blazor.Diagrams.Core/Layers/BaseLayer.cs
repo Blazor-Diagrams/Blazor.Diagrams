@@ -17,15 +17,18 @@ namespace Blazor.Diagrams.Core
             Diagram = diagram;
         }
 
-        public virtual void Add(T item)
+        public virtual TSpecific Add<TSpecific>(TSpecific item) where TSpecific : T
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
 
-            _items.Add(item);
-            OnItemAdded(item);
-            Added?.Invoke(item);
-            Diagram.Refresh();
+            Diagram.Batch(() =>
+            {
+                _items.Add(item);
+                OnItemAdded(item);
+                Added?.Invoke(item);
+            });
+            return item;
         }
 
         public virtual void Add(IEnumerable<T> items)
@@ -51,9 +54,11 @@ namespace Blazor.Diagrams.Core
 
             if (_items.Remove(item))
             {
-                OnItemRemoved(item);
-                Removed?.Invoke(item);
-                Diagram.Refresh();
+                Diagram.Batch(() =>
+                {
+                    OnItemRemoved(item);
+                    Removed?.Invoke(item);
+                });
             }
         }
 

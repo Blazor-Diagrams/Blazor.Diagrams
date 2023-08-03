@@ -6,31 +6,23 @@ using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models
 {
-    public class NodeModel : MovableModel
+    public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     {
-        private readonly List<PortModel> _ports = new List<PortModel>();
-        private readonly List<BaseLinkModel> _links = new List<BaseLinkModel>();
+        private readonly List<PortModel> _ports = new();
+        private readonly List<BaseLinkModel> _links = new();
         private Size? _size;
 
         public event Action<NodeModel>? SizeChanged;
         public event Action<NodeModel>? Moving;
 
-        public NodeModel(Point? position = null, RenderLayer layer = RenderLayer.HTML,
-            ShapeDefiner? shape = null) : base(position)
+        public NodeModel(Point? position = null) : base(position)
         {
-            Layer = layer;
-            ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
-        public NodeModel(string id, Point? position = null, RenderLayer layer = RenderLayer.HTML,
-            ShapeDefiner? shape = null) : base(id, position)
+        public NodeModel(string id, Point? position = null) : base(id, position)
         {
-            Layer = layer;
-            ShapeDefiner = shape ?? Shapes.Rectangle;
         }
 
-        public RenderLayer Layer { get; }
-        public ShapeDefiner ShapeDefiner { get; }
         public Size? Size
         {
             get => _size;
@@ -43,12 +35,15 @@ namespace Blazor.Diagrams.Core.Models
                 SizeChanged?.Invoke(this);
             }
         }
+
         public GroupModel? Group { get; internal set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public IReadOnlyList<PortModel> Ports => _ports;
         public IReadOnlyList<BaseLinkModel> Links => _links;
-        public IEnumerable<BaseLinkModel> AllLinks => Ports.SelectMany(p => p.Links);
+        public IEnumerable<BaseLinkModel> PortLinks => Ports.SelectMany(p => p.Links);
+
+        #region Ports
 
         public PortModel AddPort(PortModel port)
         {
@@ -59,9 +54,15 @@ namespace Blazor.Diagrams.Core.Models
         public PortModel AddPort(PortAlignment alignment = PortAlignment.Bottom)
             => AddPort(new PortModel(this, alignment, Position));
 
-        public PortModel GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
+        public PortModel? GetPort(PortAlignment alignment) => Ports.FirstOrDefault(p => p.Alignment == alignment);
 
-        public T GetPort<T>(PortAlignment alignment) where T : PortModel => (T)GetPort(alignment);
+        public T? GetPort<T>(PortAlignment alignment) where T : PortModel => (T?)GetPort(alignment);
+
+        public bool RemovePort(PortModel port) => _ports.Remove(port);
+
+        #endregion
+
+        #region Refreshing
 
         public void RefreshAll()
         {
@@ -74,6 +75,7 @@ namespace Blazor.Diagrams.Core.Models
             foreach (var link in Links)
             {
                 link.Refresh();
+                link.RefreshLinks();
             }
         }
 
@@ -86,7 +88,7 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        public bool RemovePort(PortModel port) => _ports.Remove(port);
+        #endregion
 
         public override void SetPosition(double x, double y)
         {
@@ -107,7 +109,9 @@ namespace Blazor.Diagrams.Core.Models
             Refresh();
         }
 
-        public Rectangle? GetBounds(bool includePorts = false)
+        public Rectangle? GetBounds() => GetBounds(false);
+
+        public Rectangle? GetBounds(bool includePorts)
         {
             if (Size == null)
                 return null;
@@ -122,15 +126,19 @@ namespace Blazor.Diagrams.Core.Models
 
             var left = leftPort == null ? Position.X : Math.Min(Position.X, leftPort.Position.X);
             var top = topPort == null ? Position.Y : Math.Min(Position.Y, topPort.Position.Y);
-            var right = rightPort == null ? Position.X + Size!.Width :
-                Math.Max(rightPort.Position.X + rightPort.Size.Width, Position.X + Size!.Width);
-            var bottom = bottomPort == null ? Position.Y + Size!.Height :
-                Math.Max(bottomPort.Position.Y + bottomPort.Size.Height, Position.Y + Size!.Height);
+            var right = rightPort == null
+                ? Position.X + Size!.Width
+                : Math.Max(rightPort.Position.X + rightPort.Size.Width, Position.X + Size!.Width);
+            var bottom = bottomPort == null
+                ? Position.Y + Size!.Height
+                : Math.Max(bottomPort.Position.Y + bottomPort.Size.Height, Position.Y + Size!.Height);
 
             return new Rectangle(left, top, right, bottom);
         }
 
-        public IShape GetShape() => ShapeDefiner(this);
+        public virtual IShape GetShape() => Shapes.Rectangle(this);
+
+        public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
 
         private void UpdatePortPositions(double deltaX, double deltaY)
         {
@@ -142,8 +150,13 @@ namespace Blazor.Diagrams.Core.Models
             }
         }
 
-        internal void AddLink(BaseLinkModel link) => _links.Add(link);
+        protected void TriggerMoving()
+        {
+            Moving?.Invoke(this);
+        }
 
-        internal void RemoveLink(BaseLinkModel link) => _links.Remove(link);
+        void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
+
+        void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
     }
 }

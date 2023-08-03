@@ -2,80 +2,89 @@
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
-using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Blazor.Diagrams.Core.Options;
+using Blazor.Diagrams.Core.Controls;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams")]
+[assembly: InternalsVisibleTo("Blazor.Diagrams.Tests")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Core.Tests")]
+
 namespace Blazor.Diagrams.Core
 {
-    public class Diagram : Model
+    public abstract class Diagram
     {
         private readonly Dictionary<Type, Behavior> _behaviors;
-        private readonly Dictionary<Type, Type> _componentByModelMapping;
-        private readonly List<GroupModel> _groups;
+        private readonly List<SelectableModel> _orderedSelectables;
 
-        public event Action<Model, MouseEventArgs>? MouseDown;
-        public event Action<Model, MouseEventArgs>? MouseMove;
-        public event Action<Model, MouseEventArgs>? MouseUp;
+        public event Action<Model?, PointerEventArgs>? PointerDown;
+        public event Action<Model?, PointerEventArgs>? PointerMove;
+        public event Action<Model?, PointerEventArgs>? PointerUp;
+        public event Action<Model?, PointerEventArgs>? PointerEnter;
+        public event Action<Model?, PointerEventArgs>? PointerLeave;
         public event Action<KeyboardEventArgs>? KeyDown;
         public event Action<WheelEventArgs>? Wheel;
-        public event Action<Model, MouseEventArgs>? MouseClick;
-        public event Action<Model, MouseEventArgs>? MouseDoubleClick;
-        public event Action<Model, TouchEventArgs>? TouchStart;
-        public event Action<Model, TouchEventArgs>? TouchMove;
-        public event Action<Model, TouchEventArgs>? TouchEnd;
+        public event Action<Model?, PointerEventArgs>? PointerClick;
+        public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
         public event Action<SelectableModel>? SelectionChanged;
-        public event Action<GroupModel>? GroupAdded;
-        public event Action<GroupModel>? GroupUngrouped;
-        public event Action<GroupModel>? GroupRemoved;
-
         public event Action? PanChanged;
         public event Action? ZoomChanged;
         public event Action? ContainerChanged;
+        public event Action? Changed;
 
-        public Diagram(DiagramOptions? options = null)
+        protected Diagram()
         {
             _behaviors = new Dictionary<Type, Behavior>();
-            _componentByModelMapping = new Dictionary<Type, Type>();
-            _groups = new List<GroupModel>();
+            _orderedSelectables = new List<SelectableModel>();
 
-            Options = options ?? new DiagramOptions();
             Nodes = new NodeLayer(this);
             Links = new LinkLayer(this);
+            Groups = new GroupLayer(this);
+            Controls = new ControlsLayer();
+
+            Nodes.Added += OnSelectableAdded;
+            Links.Added += OnSelectableAdded;
+            Groups.Added += OnSelectableAdded;
+
+            Nodes.Removed += OnSelectableRemoved;
+            Links.Removed += OnSelectableRemoved;
+            Groups.Removed += OnSelectableRemoved;
 
             RegisterBehavior(new SelectionBehavior(this));
             RegisterBehavior(new DragMovablesBehavior(this));
             RegisterBehavior(new DragNewLinkBehavior(this));
-            RegisterBehavior(new DeleteSelectionBehavior(this));
             RegisterBehavior(new PanBehavior(this));
             RegisterBehavior(new ZoomBehavior(this));
-            RegisterBehavior(new GroupingBehavior(this));
             RegisterBehavior(new EventsBehavior(this));
+            RegisterBehavior(new KeyboardShortcutsBehavior(this));
+            RegisterBehavior(new ControlsBehavior(this));
+            RegisterBehavior(new VirtualizationBehavior(this));
         }
 
+        public abstract DiagramOptions Options { get; }
         public NodeLayer Nodes { get; }
         public LinkLayer Links { get; }
-        public IReadOnlyList<GroupModel> Groups => _groups;
-        public Rectangle? Container { get; internal set; }
+        public GroupLayer Groups { get; }
+        public ControlsLayer Controls { get; }
+        public Rectangle? Container { get; private set; }
         public Point Pan { get; private set; } = Point.Zero;
         public double Zoom { get; private set; } = 1;
-        public DiagramOptions Options { get; }
         public bool SuspendRefresh { get; set; }
+        public bool SuspendSorting { get; set; }
+        public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
-        public override void Refresh()
+        public void Refresh()
         {
             if (SuspendRefresh)
                 return;
 
-            base.Refresh();
+            Changed?.Invoke();
         }
 
         public void Batch(Action action)
@@ -93,87 +102,6 @@ namespace Blazor.Diagrams.Core
             SuspendRefresh = false;
             Refresh();
         }
-
-        #region Groups
-
-        /// <summary>
-        /// Groups 2 or more children.
-        /// </summary>
-        /// <param name="children">An array of child nodes.</param>
-        /// <returns>The created group instance.</returns>
-        public GroupModel Group(params NodeModel[] children)
-        {
-            if (children.Any(n => n.Group != null))
-                throw new InvalidOperationException("Cannot group nodes that already belong to another group");
-
-            var group = Options.Groups.Factory(this, children);
-            AddGroup(group);
-            return group;
-        }
-
-        /// <summary>
-        /// Adds the group to the diagram after validating it.
-        /// </summary>
-        /// <param name="group">A group instance.</param>
-        public void AddGroup(GroupModel group)
-        {
-            if (group.Children.Count > 0)
-            {
-                var layers = group.Children.Select(n => n.Layer).Distinct();
-                if (layers.Count() > 1)
-                    throw new InvalidOperationException("Cannot group nodes with different layers");
-
-                if (layers.First() == RenderLayer.SVG)
-                    throw new InvalidOperationException("SVG groups aren't implemented yet");
-            }
-
-            foreach (var child in group.Children)
-            {
-                if (child is NodeModel node && !Nodes.Contains(node))
-                    throw new Exception("One of the nodes isn't in the diagram. Make sure to add all the nodes before creating the group.");
-            }
-
-            _groups.Add(group);
-            GroupAdded?.Invoke(group);
-            Refresh();
-        }
-
-        /// <summary>
-        /// Splits up the group by deleting the group and keeping the children.
-        /// </summary>
-        /// <param name="group">A group instance.</param>
-        public void Ungroup(GroupModel group)
-        {
-            if (!_groups.Remove(group))
-                return;
-
-            Batch(() =>
-            {
-                group.Ungroup();
-                Links.Remove(group.AllLinks.ToArray());
-                GroupUngrouped?.Invoke(group);
-            });
-        }
-
-        /// <summary>
-        /// Deletes the group and all its children from the diagram.
-        /// </summary>
-        /// <param name="group">A group instnace.</param>
-        public void RemoveGroup(GroupModel group)
-        {
-            if (!_groups.Remove(group))
-                return;
-
-            Batch(() =>
-            {
-                Nodes.Remove(group.Children.ToArray());
-                Links.Remove(group.AllLinks.ToArray());
-                group.Ungroup();
-                GroupRemoved?.Invoke(group);
-            });
-        }
-
-        #endregion
 
         #region Selection
 
@@ -251,6 +179,12 @@ namespace Blazor.Diagrams.Core
             _behaviors.Add(type, behavior);
         }
 
+        public T? GetBehavior<T>() where T : Behavior
+        {
+            var type = typeof(T);
+            return (T?)(_behaviors.ContainsKey(type) ? _behaviors[type] : null);
+        }
+
         public void UnregisterBehavior<T>() where T : Behavior
         {
             var type = typeof(T);
@@ -262,23 +196,6 @@ namespace Blazor.Diagrams.Core
         }
 
         #endregion
-
-        public void RegisterModelComponent<M, C>() where M : Model where C : ComponentBase
-            => RegisterModelComponent(typeof(M), typeof(C));
-
-        public void RegisterModelComponent(Type modelType, Type componentType)
-        {
-            if (_componentByModelMapping.ContainsKey(modelType))
-                throw new Exception($"Component already registered for model '{modelType.Name}'.");
-
-            _componentByModelMapping.Add(modelType, componentType);
-        }
-
-        public Type? GetComponentForModel<M>(M model) where M : Model
-        {
-            var modelType = model.GetType();
-            return _componentByModelMapping.ContainsKey(modelType) ? _componentByModelMapping[modelType] : null;
-        }
 
         public void ZoomToFit(double margin = 10)
         {
@@ -323,6 +240,12 @@ namespace Blazor.Diagrams.Core
 
         public void SetZoom(double newZoom)
         {
+            if (newZoom <= 0)
+                throw new ArgumentException($"{nameof(newZoom)} cannot be equal or lower than 0");
+
+            if (newZoom < Options.Zoom.Minimum)
+                newZoom = Options.Zoom.Minimum;
+
             Zoom = newZoom;
             ZoomChanged?.Invoke();
             Refresh();
@@ -341,7 +264,8 @@ namespace Blazor.Diagrams.Core
         public Point GetRelativeMousePoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point((clientX - Container.Left - Pan.X) / Zoom, (clientY - Container.Top - Pan.Y) / Zoom);
         }
@@ -349,7 +273,8 @@ namespace Blazor.Diagrams.Core
         public Point GetRelativePoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point(clientX - Container.Left, clientY - Container.Top);
         }
@@ -357,32 +282,125 @@ namespace Blazor.Diagrams.Core
         public Point GetScreenPoint(double clientX, double clientY)
         {
             if (Container == null)
-                throw new Exception("Container not available. Make sure you're not using this method before the diagram is fully loaded");
+                throw new Exception(
+                    "Container not available. Make sure you're not using this method before the diagram is fully loaded");
 
             return new Point(Zoom * clientX + Container.Left + Pan.X, Zoom * clientY + Container.Top + Pan.Y);
         }
 
+        #region Ordering
+
+        public void SendToBack(SelectableModel model)
+        {
+            var minOrder = GetMinOrder();
+            if (model.Order == minOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Insert(0, model);
+
+            // Todo: can optimize this by only updating the order of items before model
+            Batch(() =>
+            {
+                SuspendSorting = true;
+                for (var i = 0; i < _orderedSelectables.Count; i++)
+                {
+                    _orderedSelectables[i].Order = i + 1;
+                }
+                SuspendSorting = false;
+            });
+        }
+
+        public void SendToFront(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            if (model.Order == maxOrder)
+                return;
+
+            if (!_orderedSelectables.Remove(model))
+                return;
+
+            _orderedSelectables.Add(model);
+
+            SuspendSorting = true;
+            model.Order = maxOrder + 1;
+            SuspendSorting = false;
+            Refresh();
+        }
+
+        public int GetMinOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[0].Order : 0;
+        }
+
+        public int GetMaxOrder()
+        {
+            return _orderedSelectables.Count > 0 ? _orderedSelectables[^1].Order : 0;
+        }
+
+        /// <summary>
+        /// Sorts the list of selectables based on their order
+        /// </summary>
+        public void RefreshOrders(bool refresh = true)
+        {
+            _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
+            
+            if (refresh)
+            {
+                Refresh();
+            }
+        }
+
+        private void OnSelectableAdded(SelectableModel model)
+        {
+            var maxOrder = GetMaxOrder();
+            _orderedSelectables.Add(model);
+
+            if (model.Order == 0)
+            {
+                model.Order = maxOrder + 1;
+            }
+
+            model.OrderChanged += OnModelOrderChanged;
+        }
+
+        private void OnSelectableRemoved(SelectableModel model)
+        {
+            model.OrderChanged -= OnModelOrderChanged;
+            _orderedSelectables.Remove(model);
+        }
+
+        private void OnModelOrderChanged(Model model)
+        {
+            if (SuspendSorting)
+                return;
+
+            RefreshOrders();
+        }
+
+        #endregion
+
         #region Events
 
-        internal void OnMouseDown(Model model, MouseEventArgs e) => MouseDown?.Invoke(model, e);
+        public void TriggerPointerDown(Model? model, PointerEventArgs e) => PointerDown?.Invoke(model, e);
 
-        internal void OnMouseMove(Model model, MouseEventArgs e) => MouseMove?.Invoke(model, e);
+        public void TriggerPointerMove(Model? model, PointerEventArgs e) => PointerMove?.Invoke(model, e);
 
-        internal void OnMouseUp(Model model, MouseEventArgs e) => MouseUp?.Invoke(model, e);
+        public void TriggerPointerUp(Model? model, PointerEventArgs e) => PointerUp?.Invoke(model, e);
 
-        internal void OnKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
+        public void TriggerPointerEnter(Model? model, PointerEventArgs e) => PointerEnter?.Invoke(model, e);
 
-        internal void OnWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+        public void TriggerPointerLeave(Model? model, PointerEventArgs e) => PointerLeave?.Invoke(model, e);
 
-        internal void OnMouseClick(Model model, MouseEventArgs e) => MouseClick?.Invoke(model, e);
+        public void TriggerKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
-        internal void OnMouseDoubleClick(Model model, MouseEventArgs e) => MouseDoubleClick?.Invoke(model, e);
+        public void TriggerWheel(WheelEventArgs e) => Wheel?.Invoke(e);
 
-        internal void OnTouchStart(Model model, TouchEventArgs e) => TouchStart?.Invoke(model, e);
+        public void TriggerPointerClick(Model? model, PointerEventArgs e) => PointerClick?.Invoke(model, e);
 
-        internal void OnTouchMove(Model model, TouchEventArgs e) => TouchMove?.Invoke(model, e);
-
-        internal void OnTouchEnd(Model model, TouchEventArgs e) => TouchEnd?.Invoke(model, e);
+        public void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
 
         #endregion
     }

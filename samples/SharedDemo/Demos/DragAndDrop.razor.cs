@@ -1,4 +1,4 @@
-﻿using Blazor.Diagrams.Core;
+﻿using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -6,7 +6,7 @@ namespace SharedDemo.Demos
 {
     public partial class DragAndDrop
     {
-        private readonly Diagram _diagram = new Diagram();
+        private readonly BlazorDiagram _blazorDiagram = new BlazorDiagram();
         private int? _draggedType;
 
         protected override void OnInitialized()
@@ -17,7 +17,7 @@ namespace SharedDemo.Demos
             LayoutData.Info = "A very simple drag & drop implementation using the HTML5 events.";
             LayoutData.DataChanged();
 
-            _diagram.RegisterModelComponent<BotAnswerNode, BotAnswerWidget>();
+            _blazorDiagram.RegisterComponent<BotAnswerNode, BotAnswerWidget>();
         }
 
         private void OnDragStart(int key)
@@ -31,11 +31,11 @@ namespace SharedDemo.Demos
             if (_draggedType == null) // Unkown item
                 return;
 
-            var position = _diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
+            var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
             var node = _draggedType == 0 ? new NodeModel(position) : new BotAnswerNode(position);
             node.AddPort(PortAlignment.Top);
             node.AddPort(PortAlignment.Bottom);
-            _diagram.Nodes.Add(node);
+            _blazorDiagram.Nodes.Add(node);
             _draggedType = null;
         }
     }

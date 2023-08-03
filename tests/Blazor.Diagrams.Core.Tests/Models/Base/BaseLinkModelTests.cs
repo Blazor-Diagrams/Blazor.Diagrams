@@ -1,5 +1,9 @@
-﻿using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 using FluentAssertions;
 using Xunit;
 
@@ -8,19 +12,20 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
     public class BaseLinkModelTests
     {
         [Fact]
-        public void SetSourcePort_ShouldChangePropertiesAndTriggerEvent()
+        public void SetSource_ShouldChangePropertiesAndTriggerEvent()
         {
             // Arrange
-            var link = new TestLink(sourcePort: new PortModel(null), targetPort: null);
+            var link = new LinkModel(sourcePort: new PortModel(null), targetPort: null);
             var parent = new NodeModel();
-            var sp = new PortModel(parent);
+            var port = new PortModel(parent);
+            var sp = new SinglePortAnchor(port);
             var eventsTriggered = 0;
-            PortModel oldSp = null;
-            PortModel newSp = null;
-            BaseLinkModel linkInstance = null;
+            Anchor? oldSp = null;
+            Anchor? newSp = null;
+            BaseLinkModel? linkInstance = null;
 
             // Act
-            link.SourcePortChanged += (l, o, n) =>
+            link.SourceChanged += (l, o, n) =>
             {
                 eventsTriggered++;
                 linkInstance = l;
@@ -28,31 +33,32 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
                 newSp = n;
             };
 
-            link.SetSourcePort(sp);
+            link.SetSource(sp);
 
             // Assert
             eventsTriggered.Should().Be(1);
-            link.SourcePort.Should().BeSameAs(sp);
+            link.Source.Should().BeSameAs(sp);
             oldSp.Should().NotBeNull();
             newSp.Should().BeSameAs(sp);
             linkInstance.Should().BeSameAs(link);
-            link.SourceNode.Should().BeSameAs(parent);
+            link.Source.Model.Should().BeSameAs(port);
         }
 
         [Fact]
-        public void SetTargetPort_ShouldChangePropertiesAndTriggerEvent()
+        public void SetTarget_ShouldChangePropertiesAndTriggerEvent()
         {
             // Arrange
-            var link = new TestLink(sourcePort: new PortModel(null), targetPort: null);
+            var link = new LinkModel(new SinglePortAnchor(null), new PositionAnchor(Point.Zero));
             var parent = new NodeModel();
-            var tp = new PortModel(parent);
+            var port = new PortModel(parent);
+            var tp = new SinglePortAnchor(port);
             var eventsTriggered = 0;
-            PortModel oldTp = null;
-            PortModel newTp = null;
-            BaseLinkModel linkInstance = null;
+            Anchor? oldTp = null;
+            Anchor? newTp = null;
+            BaseLinkModel? linkInstance = null;
 
             // Act
-            link.TargetPortChanged += (l, o, n) =>
+            link.TargetChanged += (l, o, n) =>
             {
                 eventsTriggered++;
                 linkInstance = l;
@@ -60,34 +66,35 @@ namespace Blazor.Diagrams.Core.Tests.Models.Base
                 newTp = n;
             };
 
-            link.SetTargetPort(tp);
+            link.SetTarget(tp);
 
             // Assert
             eventsTriggered.Should().Be(1);
-            link.TargetPort.Should().BeSameAs(tp);
-            oldTp.Should().BeNull();
+            link.Target.Should().BeSameAs(tp);
+            oldTp.Should().BeOfType<PositionAnchor>();
             newTp.Should().BeSameAs(tp);
             linkInstance.Should().BeSameAs(link);
-            link.TargetNode.Should().BeSameAs(parent);
+            link.Target!.Model.Should().BeSameAs(port);
         }
 
-        private class TestLink : BaseLinkModel
+        [Fact]
+        public void GetBounds_ShouldReturnPathBBox()
         {
-            public TestLink(NodeModel sourceNode, NodeModel targetNode) : base(sourceNode, targetNode)
-            {
-            }
+            // Arrange
+            var link = new LinkModel(new PositionAnchor(new Point(10, 5)), new PositionAnchor(new Point(100, 80)));
+            link.Diagram = new TestDiagram();
+            link.PathGenerator = new StraightPathGenerator();
+            link.Router = new NormalRouter();
 
-            public TestLink(PortModel sourcePort, PortModel targetPort = null) : base(sourcePort, targetPort)
-            {
-            }
+            // Act
+            link.Refresh();
+            var bounds = link.GetBounds()!;
 
-            public TestLink(string id, NodeModel sourceNode, NodeModel targetNode) : base(id, sourceNode, targetNode)
-            {
-            }
-
-            public TestLink(string id, PortModel sourcePort, PortModel targetPort = null) : base(id, sourcePort, targetPort)
-            {
-            }
+            // Assert
+            bounds.Left.Should().Be(10);
+            bounds.Top.Should().Be(5);
+            bounds.Width.Should().Be(90);
+            bounds.Height.Should().Be(75);
         }
     }
 }

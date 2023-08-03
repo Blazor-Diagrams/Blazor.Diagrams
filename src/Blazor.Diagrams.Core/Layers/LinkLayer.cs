@@ -1,4 +1,6 @@
-﻿using Blazor.Diagrams.Core.Models.Base;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Models.Base;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Layers
 {
@@ -8,42 +10,56 @@ namespace Blazor.Diagrams.Core.Layers
 
         protected override void OnItemAdded(BaseLinkModel link)
         {
-            if (!link.IsPortless)
-            {
-                link.SourcePort!.AddLink(link);
-                link.TargetPort?.AddLink(link);
+            link.Diagram = Diagram;
+            HandleAnchor(link, link.Source, true);
+            HandleAnchor(link, link.Target, true);
+            link.Refresh();
 
-                link.SourcePort.Refresh();
-                link.TargetPort?.Refresh();
-            }
-            else
-            {
-                link.SourceNode.AddLink(link);
-                link.TargetNode?.AddLink(link);
-            }
-
-            link.SourceNode.Group?.Refresh();
-            link.TargetNode?.Group?.Refresh();
+            link.SourceChanged += OnLinkSourceChanged;
+            link.TargetChanged += OnLinkTargetChanged;
         }
 
         protected override void OnItemRemoved(BaseLinkModel link)
         {
-            if (!link.IsPortless)
-            {
-                link.SourcePort!.RemoveLink(link);
-                link.TargetPort?.RemoveLink(link);
+            link.Diagram = null;
+            HandleAnchor(link, link.Source, false);
+            HandleAnchor(link, link.Target, false);
+            link.Refresh();
 
-                link.SourcePort.Refresh();
-                link.TargetPort?.Refresh();
+            link.SourceChanged -= OnLinkSourceChanged;
+            link.TargetChanged -= OnLinkTargetChanged;
+            
+            Diagram.Controls.RemoveFor(link);
+            Remove(link.Links.ToList());
+        }
+
+        private static void OnLinkSourceChanged(BaseLinkModel link, Anchor old, Anchor @new)
+        {
+            HandleAnchor(link, old, add: false);
+            HandleAnchor(link, @new, add: true);
+        }
+
+        private static void OnLinkTargetChanged(BaseLinkModel link, Anchor old, Anchor @new)
+        {
+            HandleAnchor(link, old, add: false);
+            HandleAnchor(link, @new, add: true);
+        }
+
+        private static void HandleAnchor(BaseLinkModel link, Anchor anchor, bool add)
+        {
+            if (add)
+            {
+                anchor.Model?.AddLink(link);
             }
             else
             {
-                link.SourceNode.RemoveLink(link);
-                link.TargetNode?.RemoveLink(link);
+                anchor.Model?.RemoveLink(link);
             }
 
-            link.SourceNode.Group?.Refresh();
-            link.TargetNode?.Group?.Refresh();
+            if (anchor.Model is Model model)
+            {
+                model.Refresh();
+            }
         }
     }
 }

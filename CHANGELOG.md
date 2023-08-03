@@ -1,8 +1,226 @@
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Diagrams (3.0.0-beta.6) - 2023-05-09
+
+### Added
+
+- `Style` parameter to `PortRenderer`
+- `TargetAttached` to links, which triggers when a dragged link attaches to a target
+	- If port snapping is enabled, it will trigger only once when you let go of the mouse
+- `SuspendSorting` to `Diagram` in order to suspend sorting models in each `OrderChanged`
+	- If you know what you're doing, you could save some processing and avoid sorting everytime
+- `RefreshOrders` to be called after unsuspending sorting in order to sort the models again and refresh the diagram
+
+### Changed
+
+- `BaseLayer.Add` now returns the specific type given to it in argument
+- **[BREAKING]** CSS classes are now prefixed with `diagram-` to avoid clashes with other libraries
+	- `diagram-group`, `diagram-node`, `diagram-link`, `diagram-port`, `diagram-link-label`, `diagram-link-vertex`, `diagram-control`
+
+### Fixed
+
+- Portless links in children not refreshing when moving the parent group
+- Link's `GetBounds` not returning a valid box
+- Port snapping choosing the first port in radius rather than the closest one
+- Remove `Console.WriteLine` from `KeyboardShortcutsBehavior`
+- Diagram overwriting `Order` when it's not zero (zero being the default int value, which we now consider as not set)
+
+## Diagrams (3.0.0-beta.5) - 2022-11-23
+
+### Added
+
+- `AdditionalSvg` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `AdditionalHtml` option to `DiagramCanvas` in order to render any exatra SVG content you want
+- `DistanceTo` overload method to `Point` that takes x and y
+- `MoveAlongLine` method to `Point`
+- `FullPath` to `PathGeneratorResult` to represent the full path without cuts
+- Fallback router to Orthogonal router
+- Margin options to `OrthogonalRouter`
+- `radius` option to `StraightPathGenerator` in order to generate rounded bends
+- Support for custom vertices
+- `AutoSize` option to groups to control whether moving children resizes the group
+
+### Changed
+
+- All routers are now classes instead of functions, they inherit from the new abstract class `Router`
+- All path generators are now classes instead of functions, they inherit from the new abstract class `PathGenerator`
+- Optimize Orthogonal router by using custom A* (x5 improvement)
+
+### Removed
+
+- `Router` delegate
+- `PathGenerator` delegate
+
+## Diagrams (3.0.0-beta.4) - 2022-10-16
+
+### Added
+
+- Initial version of Ordering!
+	- Nodes, groups and links can now be ordered using the new `Order` property or `SendToFront/Back` methods
+	- `Diagram.OrderedSelectables` returns the ordered selectables/models
+	- `DiagramCanvas` now uses this new property to render everything
+- `GridSnapToCenter` option in order to snap nodes from their center instead of their top/left position (thanks to @[Jeremy Vance](https://github.com/240026763))
+- More unit tests
+
+### Changed
+
+- `Groups` is not a list of groups anymore, but a layer instead (just like `Nodes` and `Links`)
+
+### Fixed
+
+- Deleting a group doesn't delete links attached to it
+- Deleting a group inside of a group doesn't refresh the parent group
+- Links not refreshing when a group's dimensions are updated directly (e.g. deleting a child)
+- Layers causing more refreshes than intended
+
+### Removed
+
+- All group-related methods and events from `Diagram`, please use the new layer from now on
+
+## Diagrams (3.0.0-beta.3) - 2022-09-18
+
+### Added
+
+- Support for `LinkFactory` to return null in order to not create an ongoing link
+- Support for free links (no source/target required)
+- `PositionAnchor` which reprensents a simple plain position (mutable)
+- `ArrowHeadControl` to control a link's Source/Target on the fly
+- `attached` css class to attached links
+
+### Changed
+
+- Replace `OngoingPosition` with the new `PositionAnchor`
+	- `BaseLinkModel.Target` will never be null anymore. An ongoing link will have a position anchor as the target
+- `Links.Factory` signature now takes the diagram, source (model) and the target anchor
+- Move `DynamicAnchor` back to `Anchors` namespace and seal all `Anchor` classes
+
+### Fixed
+
+- Links attached to links not refreshing when the others are
+- `LinkPathPositionProvider` not working with maxlength ratios
+- Deleting a link not deleting the links attached to it
+
+### Removed
+
+- `PositionProvider` argument from `ExecutableControl` for more freedom
+- `Id` and `Refresh` from `ILinkable`
+- Unused `Offset` from `Anchor` and make `Model` nullable
+
+## Diagrams (3.0.0-beta.2) - 2022-09-11
+
+### Added
+
+- `Moved` event to Movables
+- `Visible` property and `VisbilityChanged` event to models
+- `Options.Virtualization` (of type `[Diagram]VirtualizationOptions`) for virtualization options
+- `PointerEnter/Leave` events for groups as well 
+- **Experimental Link to Link** (using `LinkAnchor`) 
+
+### Changed
+
+- Rename `RegisterModelComponent` to `RegisterComponent`
+- Rename `GetComponentForModel` to `GetComponent`
+- Virtualization is now handled by a behavior instead of NodeRender
+  - This means that it works for almost all models (nodes, groups and links)
+- Render link labels without foreignObject in widget nor MarkupString (Thank you .NET 6)
+- Custom link labels only need to contain relevant content, they don't need to handle positioning anymore 
+
+### Removed
+
+- `EnableVirtualization` option (see added alternative)
+
+## Diagrams (3.0.0-beta.1) - 2022-09-04
+
+.NET 6!
+
+A lot of things changed in this version, a lot of breaking changes were introduced but I believe it was necessary.   
+Many changes were required to make everything clearer, customizable and cleaner (code wise).  
+I'm aiming to completely decouple the Core library from the UI, because I'm thinking of giving MAUI Diagrams a try very soon!
+
+### Added
+
+- `BlazorDiagram` class (inherits `Diagram`) to the blazor package to replace the old Core one
+- `BlazorDiagramOptions` that inherit from the other diagram options to add Blazor (UI) specific options
+- `Blazor.Diagrams.Models.SvgNodeModel` class to represent a node that needs to be rendered in the SVG layer
+- `GetBehavior<T>` method to `Diagram` in order to retrieve a registered behavior
+- `KeyboardShortcutsBehavior` class which handles keyboard shortcuts/actions:
+	- `SetShortcut`: sets an action (`Func<Diagrambase, ValueTask>`) to be executed whenever the specified combination is pressed
+	- `RemoveShortcut`: removes a defined action (if it exists)
+- `KeyboardShortcutsDefaults` containing the default shortcuts that were deleted (`DeleteSelection` and `Grouping`)
+- Anchors functionality:
+	- An Anchor determines where on an element the link will connect
+	- Instead of links requiring the source and target to be either both nodes or both ports, there is now only one `Source` and `Target` of type `Anchor`
+	- This lets the link not worry about the details of from/to where its going, as long as the anchor provides it with its position when asked for
+	- Current implementations:
+		- `SinglePortAnchor`: Specifies that the connection point is a specific port (supports shape & alignment)
+		- `ShapeIntersectionAnchor`: Specifies that the connection point is the intersection of a line with the node's shape
+		- `DynamicAnchor`: Specifies that the connection point is one of the given positions (closest)
+- Virtual `IShape GetShape()` method on nodes (default `Rectangle`) and ports (default `Circle`) 
+- `Options.LinksLayerOrder` to indicate the order of the links layer (svg for blazor)
+- `Options.NodesLayerOrder` to indicate the order of the nodes layer (html for blazor)
+- Support for SVG groups that also represent children as a hierarchy (`SvgGroupModel`)
+- Node renderer will now append, in addition to `node locked`, the classes `selected grouped`
+- `IHasBounds` and `IHasShape` interfaces to both nodes and ports 
+- `IPositionProvider` to encapsulate how certain positions are calculated given a model
+  - They are used for dynamic anchors and controls for now
+  - `BoundsBasedPositionProvider` returns the position based on the bounds of the model (e.g. (0.5, 0.5) would be the center)
+  - `ShapeAnglePositionProvider` returns the position as the point at the angle of the shape
+  - `LinkPathPositionProvider` returns the position based on the link's path (`getPointAtLength`)
+- Links have a reference to `Diagram` now
+- `PointerEnter` and `PointerLeave` events for nodes and links for now 
+- `GeneratedPathResult` and `Paths` to `BaseLinkModel` to always have access to the actual paths
+- `Controls` feature (beta):
+  - They are things that can show up on top of nodes/links and can even be clicked to be executed
+  - Their UI is also picked up from the registered components 
+  - `Control` designates a control that has a position and will be rendered if visible
+  - `ExecutableControl` designates a control that has a position and will be executed when pressed (PointerDown event)
+  - Default controls for now are:
+    - `BoundaryControl` shows the model's boundary
+    - `RemoveControl` shows a button that when clicked, removes the model from the diagram
+    - `DragNewLink` shows a button that when clicked, starts a new link dragging from that node
+- `GridWidget` a background grid that moves with the diagram instead of being fixed like in the Snap to grid example 
+- More unit tests
+	
+### Changed
+
+- Core package changes:
+	- Web dependency was removed from the Core package
+      - `Diagram` is now abstract
+      - These changes were done to decouple the core from the rendering, in the future we might have a MAUI renderer
+- `Diagram.GetComponentForModel` now accepts a `checkSubclasses` argument (default `true`)
+- Constraints now must return a `ValueTask<bool>` instead of a simple `bool`
+- Renamed `AllLinks` to `PortLinks` for more clarity on which links, since `Links` contains the others
+- Dragging links from ports will now follow the mouse at the same pace minus 5 pixels so that it doesn't go on top of the link it self or other ports
+- How groups are rendered
+	- `GroupRenderer` will take care of rendering the group with the appropriate style and classes
+	- Only `GroupNodes` is required, `GroupLinks` was deleted because all links are shown in the svg layer (with appropriate order)
+- `Diagram.AddGroup` will now return the added group
+- All `Mouse` events have been converted to `Pointer` events
+- `PathGenerator` now return `SvgPath` instead of just strings 
+- `NavigatorWidget` was rewritten to be faster, lighter, WORKING and customizable
+  - It now can also take the shape of the nodes into account (rect and ellipse for now) 
+
+### Fixed
+
+- Virtualization throwing a JSException (#155)
+- Ports not rendering correctly because of the missing `@key` (#220)
+- Link not refreshing when a new vertex is created, which was showing out of link 
+
+### Removed
+
+- `DefaultNodeComponent` and `DefaultLinkComponent` options (see `GetComponentForModel` changes)
+- `RenderLayer` from the Core package and all its usage
+- `DeleteSelectionBehavior` since there is a new keyboard shortcuts system
+- `GroupingBehavior` since there is a new keyboard shortcuts system
+- `BaseLinkModelExtensions` since it was Obselete
+- Unnecessary port refreshes when dragging a link ends or when link snapping
+- `ShapeDefiner` delegate and constructor arguments on nodes since delegates can't be serialized
+- `TouchX` events
 
 ## Diagrams (2.1.6) - 2021-10-31
 

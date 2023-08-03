@@ -1,6 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
 using System;
 
@@ -21,7 +21,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (!Diagram.Options.Zoom.Enabled)
                 return;
 
-            var scale = Math.Clamp(Diagram.Options.Zoom.ScaleFactor, 1.01, 2);
+            var scale = Diagram.Options.Zoom.ScaleFactor;
             var oldZoom = Diagram.Zoom;
             var deltaY = Diagram.Options.Zoom.Inverse ? e.DeltaY * -1 : e.DeltaY;
             var newZoom = deltaY > 0 ? oldZoom * scale : oldZoom / scale;

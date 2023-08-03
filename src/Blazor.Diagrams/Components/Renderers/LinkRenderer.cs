@@ -1,74 +1,93 @@
-﻿using Blazor.Diagrams.Core;
+﻿using System;
+using System.Text;
 using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using System;
 
-namespace Blazor.Diagrams.Components.Renderers
+namespace Blazor.Diagrams.Components.Renderers;
+
+public class LinkRenderer : ComponentBase, IDisposable
 {
-    public class LinkRenderer : ComponentBase, IDisposable
+    private bool _shouldRender = true;
+
+    [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; }
+
+    [Parameter] public BaseLinkModel Link { get; set; }
+
+    public void Dispose()
     {
-        private bool _shouldRender = true;
+        Link.Changed -= OnLinkChanged;
+        Link.VisibilityChanged -= OnLinkChanged;
+    }
 
-        [CascadingParameter]
-        public Diagram Diagram { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-        [Parameter]
-        public BaseLinkModel Link { get; set; }
+        Link.Changed += OnLinkChanged;
+        Link.VisibilityChanged += OnLinkChanged;
+    }
 
-        public void Dispose()
-        {
-            Link.Changed -= Link_Changed;
-        }
+    protected override bool ShouldRender()
+    {
+        if (!_shouldRender)
+            return false;
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+        _shouldRender = false;
+        return true;
+    }
 
-            Link.Changed += Link_Changed;
-        }
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        if (!Link.Visible)
+            return;
+        
+        var componentType = BlazorDiagram.GetComponent(Link) ?? typeof(LinkWidget);
+        var classes = new StringBuilder()
+            .Append("diagram-link")
+            .AppendIf(" attached", Link.IsAttached)
+            .ToString();
 
-        protected override bool ShouldRender() => _shouldRender;
+        builder.OpenElement(0, "g");
+        builder.AddAttribute(1, "class", classes);
+        builder.AddAttribute(2, "data-link-id", Link.Id);
+        builder.AddAttribute(3, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerDown));
+        builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
+        builder.AddAttribute(5, "onpointerup", EventCallback.Factory.Create<PointerEventArgs>(this, OnPointerUp));
+        builder.AddEventStopPropagationAttribute(6, "onpointerup", true);
+        builder.AddAttribute(7, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
+        builder.AddAttribute(8, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
+        builder.OpenComponent(9, componentType);
+        builder.AddAttribute(10, "Link", Link);
+        builder.CloseComponent();
+        builder.CloseElement();
+    }
 
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            var componentType = Diagram.GetComponentForModel(Link) ??
-                Diagram.Options.Links.DefaultLinkComponent ??
-                typeof(LinkWidget);
+    private void OnLinkChanged(Model _)
+    {
+        _shouldRender = true;
+        InvokeAsync(StateHasChanged);
+    }
 
-            builder.OpenElement(0, "g");
-            builder.AddAttribute(1, "class", "link");
-            builder.AddAttribute(2, "data-link-id", Link.Id);
-            builder.AddAttribute(3, "onmousedown", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown));
-            builder.AddEventStopPropagationAttribute(4, "onmousedown", true);
-            builder.AddAttribute(5, "onmouseup", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseUp));
-            builder.AddEventStopPropagationAttribute(6, "onmouseup", true);
-            builder.AddAttribute(7, "ontouchstart", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchStart));
-            builder.AddEventStopPropagationAttribute(8, "ontouchstart", true);
-            builder.AddAttribute(9, "ontouchend", EventCallback.Factory.Create<TouchEventArgs>(this, OnTouchEnd));
-            builder.AddEventStopPropagationAttribute(10, "ontouchend", true);
-            builder.AddEventPreventDefaultAttribute(11, "ontouchend", true);
-            builder.OpenComponent(12, componentType);
-            builder.AddAttribute(13, "Link", Link);
-            builder.CloseComponent();
-            builder.CloseElement();
-        }
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerDown(Link, e.ToCore());
+    }
 
-        protected override void OnAfterRender(bool firstRender) => _shouldRender = false;
+    private void OnPointerUp(PointerEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerUp(Link, e.ToCore());
+    }
 
-        private void Link_Changed()
-        {
-            _shouldRender = true;
-            StateHasChanged();
-        }
+    private void OnMouseEnter(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerEnter(Link, e.ToCore());
+    }
 
-        private void OnMouseDown(MouseEventArgs e) => Diagram.OnMouseDown(Link, e);
-
-        private void OnMouseUp(MouseEventArgs e) => Diagram.OnMouseUp(Link, e);
-
-        private void OnTouchStart(TouchEventArgs e) => Diagram.OnTouchStart(Link, e);
-
-        private void OnTouchEnd(TouchEventArgs e) => Diagram.OnTouchEnd(Link, e);
+    private void OnMouseLeave(MouseEventArgs e)
+    {
+        BlazorDiagram.TriggerPointerLeave(Link, e.ToCore());
     }
 }

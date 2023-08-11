@@ -15,7 +15,7 @@ public static class Documentation
             new MenuItem("Installation", "/documentation/installation"),
             new MenuItem("Diagram Creation", "/documentation/diagram-creation"),
             new MenuItem("Display", "/documentation/display"),
-        }),
+        }, Icon: Icons.Awards),
         new MenuGroup("Diagram", new List<MenuItem>
         {
             new MenuItem("Overview", "/documentation/diagram"),
@@ -24,25 +24,30 @@ public static class Documentation
             new MenuItem("Options", "/documentation/diagram-options"),
             new MenuItem("Keyboard Shortcuts", "/documentation/keyboard-shortcuts"),
             new MenuItem("API", "/documentation/diagram-api"),
-        }),
+        }, Icon: Icons.ListTree),
         new MenuGroup("Nodes", new List<MenuItem>
         {
             new MenuItem("Overview", "/documentation/nodes"),
             new MenuItem("SVG", "/documentation/nodes-svg"),
             new MenuItem("Customization", "/documentation/nodes-customization"),
             new MenuItem("Customization (SVG)", "/documentation/nodes-customization-svg")
-        }),
+        }, Icon: Icons.Square),
         new MenuGroup("Ports", new List<MenuItem>
         {
             new MenuItem("Overview", "/documentation/ports"),
             new MenuItem("Customization", "/documentation/ports-customization")
-        }),
+        }, Icon: Icons.Circle),
+        new MenuGroup("Links", new List<MenuItem>
+        {
+            new MenuItem("Overview", "/documentation/links"),
+            new MenuItem("Anchors", "/documentation/links-anchors"),
+        }, Icon: Icons.Link),
         new MenuGroup("Groups", new List<MenuItem>
         {
             new MenuItem("Overview", "/documentation/groups"),
             new MenuItem("SVG", "/documentation/groups-svg"),
             new MenuItem("Customization", "/documentation/groups-customization"),
             new MenuItem("Customization (SVG)", "/documentation/groups-customization-svg")
-        })
+        }, Icon: Icons.Ratio)
     });
 }

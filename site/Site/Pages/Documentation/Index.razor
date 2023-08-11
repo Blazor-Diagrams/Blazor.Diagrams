@@ -8,6 +8,17 @@
     {
         <div class="rounded-lg shadow-lg border border-slate-200">
             <div class="p-4 bg-main rounded-t-lg text-white font-bold uppercase">
+                @if (group.Icon != null)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="currentColor"
+                         class="inline mr-1">
+                        <path d="@group.Icon" />
+                    </svg>
+                }
                 @group.Title
             </div>
             <div>

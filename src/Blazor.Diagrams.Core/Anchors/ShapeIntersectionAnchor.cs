@@ -34,7 +34,7 @@ public sealed class ShapeIntersectionAnchor : Anchor
 
         var line = new Line(pt, nodeCenter);
         var intersections = Node.GetShape().GetIntersectionsWithLine(line);
-        return GetClosestPointTo(intersections, pt); // Todo: use Offset
+        return GetClosestPointTo(intersections, pt);
     }
 
     public override Point? GetPlainPosition() => Node.GetBounds()?.Center ?? null;

@@ -93,7 +93,7 @@ public class SmoothPathGenerator : PathGenerator
         {
             return GetCurvePoint(pX, pY, cX, cY, spa.Port.Alignment);
         }
-        else if (anchor is ShapeIntersectionAnchor or DynamicAnchor)
+        else if (anchor is ShapeIntersectionAnchor or DynamicAnchor or LinkAnchor)
         {
             if (Math.Abs(route[0].X - route[1].X) >= Math.Abs(route[0].Y - route[1].Y))
             {

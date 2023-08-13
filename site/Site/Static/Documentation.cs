@@ -41,6 +41,8 @@ public static class Documentation
         {
             new MenuItem("Overview", "/documentation/links"),
             new MenuItem("Anchors", "/documentation/links-anchors"),
+            new MenuItem("Routers", "/documentation/links-routers"),
+            new MenuItem("Path Generators", "/documentation/links-path-generators"),
         }, Icon: Icons.Link),
         new MenuGroup("Groups", new List<MenuItem>
         {

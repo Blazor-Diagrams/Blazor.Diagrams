@@ -1,0 +1,130 @@
+﻿@page "/documentation/links-markers"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Link Markers - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Link Markers</h1>
+
+<p>
+    A <code>LinkMarker</code> is a SVG path that can be drawn at the beginning and/or at the end of a link. <br />
+    They are automatically rotated to fit the direction.
+</p>
+
+<h2>Usage</h2>
+
+<p>
+    You can simply use the provided markers:
+</p>
+
+<pre><code class="language-cs">
+yourLink.SourceMarker = LinkMarker.Arrow;
+// OR
+yourLink.TargetMarker = LinkMarker.Circle;
+// OR
+yourLink.TargetMarker = LinkMarker.Square;
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_sampleDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Customization</h2>
+
+<p>
+    You can either customize the predefined shapes:
+</p>
+
+<pre><code class="language-cs">
+yourLink.SourceMarker = LinkMarker.NewCircle(10);
+yourLink.SourceMarker = LinkMarker.NewSquare(20);
+yourLink.TargetMarker = LinkMarker.NewArrow(20, 30);
+yourLink.TargetMarker = LinkMarker.NewRectangle(20, 30);
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_cpDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<p class="mt-4">
+    Or provide your own SVG paths:<br />
+    <b>Requirements:</b>
+    <ul class="list-disc list-inside">
+        <li>Know the width of your path</li>
+        <li>Your path should not go to the negative side</li>
+    </ul>
+</p>
+
+<pre><code class="language-cs">
+yourLink.SourceMarker = new LinkMarker("M 0 -8 L 3 -8 3 8 0 8 z M 4 -8 7 -8 7 8 4 8 z M 8 -8 16 0 8 8 z", 16);
+yourLink.TargetMarker = new LinkMarker("M 0 -8 L 8 -8 4 0 8 8 0 8 4 0 z", 8);
+</code></pre>
+
+<div class="diagram-container mb-2" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_cDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<p class="mb-2">
+    You can use the <a class="underline" href="https://yqnn.github.io/svg-path-editor" target="_blank">SvgPathEditor</a> app to easily create these.
+</p>
+
+<img src="/img/ExampleSvgPathEditor.png" alt="" />
+
+<NavigationButtons PreviousTitle="Path Generators"
+                   PreviousLink="/documentation/links-path-generators"
+                   NextTitle="Vertices"
+                   NextLink="/documentation/links-vertices" />
+
+@code {
+    private BlazorDiagram _sampleDiagram = new();
+    private BlazorDiagram _cpDiagram = new();
+    private BlazorDiagram _cDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _sampleDiagram.Options.Zoom.Enabled = false;
+        _cpDiagram.Options.Zoom.Enabled = false;
+        _cDiagram.Options.Zoom.Enabled = false;
+
+        // Sample
+        var node1 = _sampleDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var node2 = _sampleDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        var link = _sampleDiagram.Links.Add(new LinkModel(node1, node2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+
+        link.SourceMarker = LinkMarker.Arrow;
+        link.TargetMarker = LinkMarker.Square;
+
+        // Customize Predefined
+        var cpNode1 = _cpDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var cpNode2 = _cpDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        var cpLink = _cpDiagram.Links.Add(new LinkModel(cpNode1, cpNode2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+
+        cpLink.SourceMarker = LinkMarker.NewCircle(10);
+        cpLink.TargetMarker = LinkMarker.NewRectangle(20, 30);
+
+        // Customize
+        var cNode1 = _cDiagram.Nodes.Add(new NodeModel(new Point(150, 110)));
+        var cNode2 = _cDiagram.Nodes.Add(new NodeModel(new Point(450, 110)));
+        var cLink = _cDiagram.Links.Add(new LinkModel(cNode1, cNode2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+
+        cLink.SourceMarker = new LinkMarker("M 0 -8 L 3 -8 3 8 0 8 z M 4 -8 7 -8 7 8 4 8 z M 8 -8 16 0 8 8 z", 16);
+        cLink.TargetMarker = new LinkMarker("M 0 -8 L 8 -8 4 0 8 8 0 8 4 0 z", 8);
+    }
+}

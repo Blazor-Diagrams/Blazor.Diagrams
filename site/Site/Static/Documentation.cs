@@ -63,6 +63,10 @@ public static class Documentation
         {
             new MenuItem("Overview", "/documentation/controls"),
             new MenuItem("Customization", "/documentation/controls-customization"),
-        }, Icon: Icons.Controls)
+        }, Icon: Icons.Controls),
+        new MenuGroup("Misc", new List<MenuItem>
+        {
+            new MenuItem("Position Providers", "/documentation/position-providers")
+        })
     });
 }

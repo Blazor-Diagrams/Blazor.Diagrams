@@ -58,6 +58,11 @@ public static class Documentation
             new MenuItem("Navigator", "/documentation/navigator-widget"),
             new MenuItem("Grid", "/documentation/grid-widget"),
             new MenuItem("Selection Box", "/documentation/selection-box-widget"),
-        }, Icon: Icons.Components)
+        }, Icon: Icons.Components),
+        new MenuGroup("Controls", new List<MenuItem>
+        {
+            new MenuItem("Overview", "/documentation/controls"),
+            new MenuItem("Customization", "/documentation/controls-customization"),
+        }, Icon: Icons.Controls)
     });
 }

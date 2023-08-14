@@ -18,5 +18,6 @@ public static class Icons
 
     // Custom
     public static readonly string Components = "M 0 0 v 8 h 8 V 0 H 0 Z M 10 0 L 18 0 V 8 H 10 Z M 0 10 H 8 V 18 H 0 Z M 10 10 H 18 V 18 H 10 Z";
+    public static readonly string Controls = "M1 0h2v24h-2zM7 0h2v24h-2zM13 0h2V24h-2zM0 3h4v2h-4zM6 19h4v2h-4zM12 10h4v2h-4z";
 
 }

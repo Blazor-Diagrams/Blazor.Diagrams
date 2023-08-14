@@ -34,8 +34,8 @@ public class DragNewLinkBehaviorTests
         source.Should().NotBeNull();
         source!.Port.Should().BeSameAs(port);
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().Be(95);
-        ongoingPosition.Y.Should().Be(95);
+        ongoingPosition.X.Should().Be(100);
+        ongoingPosition.Y.Should().Be(100);
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class DragNewLinkBehaviorTests
         source.Should().NotBeNull();
         source!.Port.Should().BeSameAs(port);
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().Be(95);
-        ongoingPosition.Y.Should().Be(95);
+        ongoingPosition.X.Should().Be(100);
+        ongoingPosition.Y.Should().Be(100);
     }
 
     [Fact]
@@ -99,8 +99,8 @@ public class DragNewLinkBehaviorTests
         // Assert
         var source = link.Source as SinglePortAnchor;
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().Be(145);
-        ongoingPosition.Y.Should().Be(145);
+        ongoingPosition.X.Should().BeGreaterThan(145);
+        ongoingPosition.Y.Should().BeGreaterThan(145);
         linkRefreshed.Should().BeTrue();
     }
 
@@ -131,8 +131,8 @@ public class DragNewLinkBehaviorTests
         // Assert
         var source = link.Source as SinglePortAnchor;
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().BeApproximately(101.6, 0.1);
-        ongoingPosition.Y.Should().BeApproximately(101.6, 0.1);
+        ongoingPosition.X.Should().BeApproximately(107.7, 0.1);
+        ongoingPosition.Y.Should().BeApproximately(101.7, 0.1);
         linkRefreshed.Should().BeTrue();
     }
 

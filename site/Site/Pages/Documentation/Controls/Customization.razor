@@ -1,0 +1,172 @@
+﻿@page "/documentation/controls-customization"
+@using Blazor.Diagrams.Core.Controls;
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@using Site.Components.Documentation.Controls;
+@using Site.Models.Controls;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Controls Customization - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Controls Customization</h1>
+
+<p>
+    Customizing controls is done the same way as any other customization.<br />
+    <ul class="list-disc list-inside">
+        <li>
+            For completely new controls, you create a model class and its accompanying widget.
+        </li>
+        <li>For existing controls, you simply register a new widget for them.</li>
+    </ul>
+    In this document, we will only talk about new controls.
+</p>
+
+<h2>Simple Control</h2>
+
+<p>
+    Let's say we want to show some information about a node when we hover on it:
+</p>
+
+<div class="filename">NodeInformationControl.cs</div>
+<pre><code class="language-cs">
+public class NodeInformationControl : Control
+{
+    public override Point? GetPosition(Model model)
+    {
+        // We want the information to be under the node
+        var node = (model as NodeModel)!;
+        if (node.Size == null)
+            return null;
+
+        return node.Position.Add(0, node.Size!.Height + 10);
+    }
+}
+</code></pre>
+
+<div class="filename">NodeInformationControlWidget.razor</div>
+<pre><code class="language-cshtml">
+@@using Blazor.Diagrams.Core.Models.Base;
+@@using YourNamespace;
+
+&lt;div style=&quot;background-color: #eee; width: @@(Node.Size!.Width)px; padding: 5px;&quot;&gt;
+    &lt;div&gt;Width: @@Node.Size.Width&lt;/div&gt;
+    &lt;div&gt;Height: @@Node.Size.Height&lt;/div&gt;
+    &lt;div&gt;Ports: @@Node.Ports.Count&lt;/div&gt;
+    &lt;div&gt;Links: @@(Node.Links.Count + Node.PortLinks.Count())&lt;/div&gt;
+&lt;/div&gt;
+
+@@code
+{
+    [Parameter]
+    public NodeInformationControl Control { get; set; } = null!;
+
+    [Parameter]
+    public Model Model { get; set; } = null!;
+
+    public NodeModel Node =&gt; (Model as NodeModel)!;
+}
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 320px;">
+    <CascadingValue Value="_cDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Executable Control</h2>
+
+<p>
+    Let's say we want to show an alert button (I'm out of ideas):
+</p>
+
+<div class="filename">AlertControl.cs</div>
+<pre><code class="language-cs">
+public class AlertControl : ExecutableControl
+{
+    private readonly IJSRuntime _jSRuntime;
+
+    public AlertControl(IJSRuntime jSRuntime)
+    {
+        _jSRuntime = jSRuntime;
+    }
+
+    public override Point? GetPosition(Model model)
+    {
+        // Fixed at top-right
+        var node = (model as NodeModel)!;
+        if (node.Size == null)
+            return null;
+
+        return node.Position.Add(node.Size.Width + 10, -10);
+    }
+
+    public override async ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs e)
+    {
+        await _jSRuntime.InvokeVoidAsync("alert", "Some Alert??");
+    }
+}
+</code></pre>
+
+<div class="filename">AlertControl.Widget.razor</div>
+<pre><code class="language-cshtml">
+@@using Blazor.Diagrams.Core.Models.Base;
+@@using YourNamespace;
+
+&lt;div class=&quot;rounded-full p-1 text-center text-white&quot;
+     style=&quot;background-color: red; width: 30px; height: 30px;&quot;&gt;
+    !
+&lt;/div&gt;
+
+@@code
+{
+    [Parameter]
+    public AlertControl Control { get; set; } = null!;
+
+    [Parameter]
+    public Model Model { get; set; } = null!;
+
+    public NodeModel Node =&gt; (Model as NodeModel)!;
+}
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 320px;">
+    <CascadingValue Value="_ecDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Overview"
+                   PreviousLink="/documentation/controls" />
+
+@code {
+    private BlazorDiagram _cDiagram = new();
+    private BlazorDiagram _ecDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _cDiagram.Options.Zoom.Enabled = false;
+        _ecDiagram.Options.Zoom.Enabled = false;
+
+        // Simple Control
+        _cDiagram.RegisterComponent<NodeInformationControl, NodeInformationControlWidget>();
+        var cNode1 = _cDiagram.Nodes.Add(new NodeModel(new Point(150, 70)));
+        var cNode2 = _cDiagram.Nodes.Add(new NodeModel(new Point(450, 100)));
+        cNode1.Title = "Select me";
+        cNode2.Title = "Hover on me";
+        _cDiagram.Controls.AddFor(cNode1, ControlsType.OnSelection).Add(new NodeInformationControl());
+        _cDiagram.Controls.AddFor(cNode2, ControlsType.OnHover).Add(new NodeInformationControl());
+        _cDiagram.SelectModel(cNode1, false);
+
+        // Executable Control
+        _ecDiagram.RegisterComponent<AlertControl, AlertControlWidget>();
+        var ecNode1 = _ecDiagram.Nodes.Add(new NodeModel(new Point(150, 70)));
+        var ecNode2 = _ecDiagram.Nodes.Add(new NodeModel(new Point(450, 100)));
+        ecNode1.Title = "Select me";
+        ecNode2.Title = "Select me";
+        _ecDiagram.Controls.AddFor(ecNode1).Add(new AlertControl(JSRuntime));
+        _ecDiagram.Controls.AddFor(ecNode2).Add(new AlertControl(JSRuntime));
+        _ecDiagram.SelectModel(ecNode1, false);
+        _ecDiagram.SelectModel(ecNode2, false);
+    }
+}

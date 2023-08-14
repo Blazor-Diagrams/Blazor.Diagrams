@@ -1,16 +1,15 @@
-﻿namespace Blazor.Diagrams.Core.Geometry
+﻿namespace Blazor.Diagrams.Core.Geometry;
+
+public record Size
 {
-    public record Size
+    public static Size Zero { get; } = new(0, 0);
+
+    public Size(double width, double height)
     {
-        public static Size Zero { get; } = new(0, 0);
-
-        public Size(double width, double height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        public double Width { get; init; }
-        public double Height { get; init; }
+        Width = width;
+        Height = height;
     }
+
+    public double Width { get; init; }
+    public double Height { get; init; }
 }

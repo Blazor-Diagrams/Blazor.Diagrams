@@ -39,7 +39,7 @@ public class ShapeAnglePositionProviderTests
         var position = provider.GetPosition(nodeMock.Object);
 
         // Assert
-        position.X.Should().Be(105);
+        position!.X.Should().Be(105);
         position.Y.Should().Be(40);
     }
 }

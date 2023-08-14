@@ -1,0 +1,133 @@
+﻿@page "/documentation/groups-customization-svg"
+@using Site.Components.Documentation.Nodes;
+@using Site.Models.Nodes;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>SVG Groups Customization - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>SVG Groups Customization</h1>
+
+<p>
+    Creating a custom SVG group is as easy as a HTML one, let's go! <br />
+    This tutorial is based on the SVG Nodes Customization one, make sure you look at that one first.
+    <br />
+    <br />
+    Don't be jealous of my arts.
+</p>
+
+<h2>Creating a model</h2>
+
+<p>
+    Let's assume that we want to create a new group that represents a house for gingerbreads:
+</p>
+
+<div class="filename">GingerbreadHouse.cs</div>
+<pre><code class="language-cs">
+namespace YourNamespace;
+
+public class GingerbreadHouse : SvgGroupModel
+{
+    public GingerbreadHouse(IEnumerable&lt;NodeModel&gt; children, byte padding = 30, bool autoSize = true) : base(children, padding, autoSize)
+    {
+    }
+}
+</code></pre>
+
+<h2>Creating a component</h2>
+
+<p>
+    Let's create a UI component to control how the group looks like: <br />
+</p>
+
+<div class="filename">GingerbreadHouseWidget.razor</div>
+<pre><code class="language-cshtml">
+@@using YourNamspace;
+
+@@{
+    var halfWidth = Group.Size!.Width / 2;
+}
+
+&lt;path d=&quot;m @@halfWidth -100 l @@halfWidth 100 l -@@Group.Size.Width 0 z&quot;
+      fill=&quot;transparent&quot;
+      stroke=&quot;black&quot;
+      stroke-width=&quot;2&quot; /&gt;
+
+&lt;rect width=&quot;@@Group.Size!.Width&quot;
+      height=&quot;@@Group.Size!.Height&quot;
+      fill=&quot;transparent&quot;
+      stroke=&quot;black&quot;
+      stroke-width=&quot;2&quot;&gt;&lt;/rect&gt;
+
+@@* This is required and it&#039;s what renders the children *@@
+&lt;GroupNodes Group=&quot;Group&quot; /&gt;
+
+@@foreach (var port in Group.Ports)
+{
+    &lt;PortRenderer Port=&quot;port&quot; Class=&quot;group-port&quot;&gt;&lt;/PortRenderer&gt;
+}
+
+@@code {
+    // This gets filled by the library
+    [Parameter] public GingerbreadHouse Group { get; set; } = null!;
+}
+</code></pre>
+
+<h2>Displaying</h2>
+
+<p>
+    All we have to do now is register our new creation!
+</p>
+
+<pre><code class="language-cs">
+private BlazorDiagram Diagram { get; set; } = new();
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    Diagram.RegisterComponent&lt;GingerbreadNode, GingerbreadWidget&gt;();
+    Diagram.RegisterComponent&lt;GingerbreadHouse, GingerbreadHouseWidget&gt;();
+
+    var node1 = Diagram.Nodes.Add(new GingerbreadNode(new Point(160, 300)));
+    node1.AddPort(PortAlignment.Left);
+    node1.AddPort(PortAlignment.Right);
+
+    var node2 = Diagram.Nodes.Add(new GingerbreadNode(new Point(410, 350)));
+    node2.AddPort(PortAlignment.Left);
+    node2.AddPort(PortAlignment.Right);
+
+    var group = Diagram.Groups.Add(new GingerbreadHouse(new[] { node1, node2 }, padding: 50));
+}
+</code></pre>
+
+<div class="diagram-container">
+    <CascadingValue Value="Diagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Customization"
+                   PreviousLink="/documentation/groups-customization" />
+
+@code {
+    private BlazorDiagram Diagram { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Diagram.RegisterComponent<GingerbreadNode, GingerbreadWidget>();
+        Diagram.RegisterComponent<GingerbreadHouse, GingerbreadHouseWidget>();
+
+        var node1 = Diagram.Nodes.Add(new GingerbreadNode(new Point(160, 300)));
+        node1.AddPort(PortAlignment.Left);
+        node1.AddPort(PortAlignment.Right);
+
+        var node2 = Diagram.Nodes.Add(new GingerbreadNode(new Point(410, 350)));
+        node2.AddPort(PortAlignment.Left);
+        node2.AddPort(PortAlignment.Right);
+
+        var group = Diagram.Groups.Add(new GingerbreadHouse(new[] { node1, node2 }, padding: 50));
+    }
+}

@@ -55,6 +55,20 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
         }
     }
 
+    public LinkLabelModel AddLabel(string content, double? distance = null, Point? offset = null)
+    {
+        var label = new LinkLabelModel(this, content, distance, offset);
+        Labels.Add(label);
+        return label;
+    }
+
+    public LinkVertexModel AddVertex(Point? position = null)
+    {
+        var vertex = new LinkVertexModel(this, position);
+        Vertices.Add(vertex);
+        return vertex;
+    }
+
     public void SetSource(Anchor anchor)
     {
         ArgumentNullException.ThrowIfNull(anchor, nameof(anchor));

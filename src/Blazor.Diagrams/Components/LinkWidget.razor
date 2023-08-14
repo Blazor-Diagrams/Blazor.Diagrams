@@ -1,9 +1,12 @@
-﻿@{
+﻿@using Blazor.Diagrams.Core.Behaviors;
+
+@{
     var color = Link.Selected ? Link.SelectedColor ?? BlazorDiagram.Options.Links.DefaultSelectedColor : Link.Color ?? BlazorDiagram.Options.Links.DefaultColor;
     var result = Link.PathGeneratorResult;
     if (result == null)
         return;
 
+    var dnlb = BlazorDiagram.GetBehavior<DragNewLinkBehavior>();
     var d = result.FullPath.ToString();
 }
 
@@ -12,17 +15,20 @@
       fill="none"
       stroke="@color" />
 
-@if (Link.Vertices.Count == 0)
+@if (dnlb!.OngoingLink == null || dnlb.OngoingLink != Link)
 {
-    @GetSelectionHelperPath(color, d, 0)
-}
-else
-{
-    @for (var i = 0; i < result.Paths.Length; i++)
+    @if (Link.Vertices.Count == 0)
     {
-        d = result.Paths[i].ToString();
-        var index = i;
-        @GetSelectionHelperPath(color, d, index)
+        @GetSelectionHelperPath(color, d, 0)
+    }
+    else
+    {
+        @for (var i = 0; i < result.Paths.Length; i++)
+        {
+            d = result.Paths[i].ToString();
+            var index = i;
+            @GetSelectionHelperPath(color, d, index)
+        }
     }
 }
 

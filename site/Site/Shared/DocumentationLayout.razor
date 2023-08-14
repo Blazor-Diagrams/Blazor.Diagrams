@@ -83,7 +83,17 @@
                 @foreach (var group in Documentation.Menu.Groups)
                 {
                     <li>
-                        <h5 class="mb-3 font-semibold text-slate-900 dark:text-slate-200">@group.Title</h5>
+                        <h5 class="mb-3 font-semibold text-slate-900 dark:text-slate-200">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 class="inline mr-1">
+                                <path d="@group.Icon" />
+                            </svg>
+                            @group.Title
+                        </h5>
                         <ul class="ml-0.5 space-y-2 border-l-2 border-slate-100 dark:border-slate-800">
                             @foreach (var item in group.Children)
                             {

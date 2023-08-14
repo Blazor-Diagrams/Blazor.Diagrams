@@ -1,0 +1,52 @@
+﻿@page "/documentation/nodes"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Nodes - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Nodes</h1>
+
+<p>
+    Nodes are the most important concept in Blazor Diagrams.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The internal component <code>NodeRenderer</code> generates the following structure:
+</p>
+
+<pre><code class="language-cshtml">
+&lt;div class=&quot;diagram-node ...&quot;
+     data-node-id=&quot;28e9606d-08dd-47d5-a4c7-b25e541bcf1e&quot;
+     style=&quot;top: 10px; left: 10px;&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+    The classes that the div can have (beside <code>diagram-node</code>) are: <code>locked</code>, <code>selected</code> and <code>grouped</code>.
+</p>
+
+<h2>Shape</h2>
+
+Nodes can have a specific shape, which by default is a rectangle. It is used for two things at the moment:
+<ul class="list-disc list-inside mt-2">
+    <li><code>ShapeAnglePositionProvider</code>: To return a position for the given angle.</li>
+    <li><code>NavigatorWidget</code>: To know what to draw.</li>
+</ul>
+<br />
+
+<p>
+    You can change the shape of your node by overriding the <code>GetShape</code> method in your custom model.
+</p>
+
+<h2>Creating a node</h2>
+
+<pre><code class="language-cs">
+var node1 = new NodeModel(new Point(10, 10));
+BlazorDiagram.Nodes.Add(node1);
+</code></pre>
+
+<NavigationButtons NextTitle="SVG Nodes"
+                   NextLink="/documentation/nodes-svg" />

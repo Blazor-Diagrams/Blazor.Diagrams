@@ -1,0 +1,8 @@
+﻿<circle cx="@Vertex.Position.X" cy="@Vertex.Position.Y" r="5" fill="red"></circle>
+<circle cx="@Vertex.Position.X" cy="@Vertex.Position.Y" r="10"
+        fill="none" stroke="red" stroke-width="4"></circle>
+
+@code {
+    [Parameter] public LinkVertexModel Vertex { get; set; } = null!;
+    [Parameter] public string Color { get; set; } = null!;
+}

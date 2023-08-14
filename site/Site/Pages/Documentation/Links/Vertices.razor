@@ -1,0 +1,122 @@
+﻿@page "/documentation/links-vertices"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Link Vertices - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Link Vertices</h1>
+
+<p>
+    <code>LinkVertexModel</code> are user-defined points for the link to pass through.
+</p>
+
+<h2>Usage</h2>
+
+<h3>Programmatically</h3>
+
+<pre><code class="language-cs">
+yourLink.Vertices.Add(new LinkVertexModel(new Point(50, 200)));
+// OR
+yourLink.AddVertex(new Point(50, 200));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_sampleDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h3>Interactively</h3>
+
+<pre><code class="language-cs">
+yourLink.Segmentable = true;
+// Clicking a link will now create vertices
+// Double clicking a vertex deletes it
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_interactiveDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Customization</h2>
+
+<p>
+    If you need any additional data, feel free to create a separate model (class) and inherit <code>LinkVertexModel</code>.<br />
+    In all cases, you will need to register a custom Blazor component to be used.
+</p>
+
+<pre><code class="language-cs">
+Diagram.RegisterComponent&lt;LinkVertexModel, MyVertexWidget&gt;();
+</code></pre>
+
+
+<div class="filename">MyVertexWidget.razor</div>
+<pre><code class="language-cshtml">
+&lt;circle cx=&quot;@@Vertex.Position.X&quot; cy=&quot;@@Vertex.Position.Y&quot; r=&quot;5&quot; fill=&quot;red&quot;&gt;&lt;/circle&gt;
+&lt;circle cx=&quot;@@Vertex.Position.X&quot; cy=&quot;@@Vertex.Position.Y&quot; r=&quot;10&quot;
+        fill=&quot;none&quot; stroke=&quot;red&quot; stroke-width=&quot;4&quot;&gt;&lt;/circle&gt;
+
+@@code {
+    [Parameter] public LinkVertexModel Vertex { get; set; } = null!;
+    [Parameter] public string Color { get; set; } = null!;
+}
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_cDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Markers"
+                   PreviousLink="/documentation/links-markers" />
+
+@code {
+    private BlazorDiagram _sampleDiagram = new();
+    private BlazorDiagram _interactiveDiagram = new();
+    private BlazorDiagram _cDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _sampleDiagram.Options.Zoom.Enabled = false;
+        _interactiveDiagram.Options.Zoom.Enabled = false;
+        _cDiagram.Options.Zoom.Enabled = false;
+
+        // Sample
+        var node1 = _sampleDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var node2 = _sampleDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        var link1 = _sampleDiagram.Links.Add(new LinkModel(node1, node2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+        link1.AddVertex(new Point(50, 250));
+        var link2 = _sampleDiagram.Links.Add(new LinkModel(node1, node2));
+        link2.AddVertex(new Point(400, 70));
+        link2.AddVertex(new Point(600, 40));
+
+        // Interactive
+        var inode1 = _interactiveDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var inode2 = _interactiveDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        var ilink1 = _interactiveDiagram.Links.Add(new LinkModel(inode1, inode2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        }).Segmentable = true;
+
+        // Sample
+        _cDiagram.RegisterComponent<LinkVertexModel, MyVertexWidget>();
+        var cnode1 = _cDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var cnode2 = _cDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        var clink1 = _cDiagram.Links.Add(new LinkModel(cnode1, cnode2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+        clink1.AddVertex(new Point(50, 250));
+        var clink2 = _cDiagram.Links.Add(new LinkModel(cnode1, cnode2));
+        clink2.AddVertex(new Point(400, 70));
+        clink2.AddVertex(new Point(600, 40));
+    }
+}

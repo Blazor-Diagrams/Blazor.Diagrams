@@ -1,0 +1,160 @@
+﻿@page "/documentation/nodes-customization-svg"
+@using Site.Components.Documentation.Nodes;
+@using Site.Models.Nodes;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>SVG Nodes Customization - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>SVG Nodes Customization</h1>
+
+<p>
+    Creating a custom SVG node is as easy as a HTML one, let's go!
+</p>
+
+<h2>Creating a model</h2>
+
+<p>
+    Let's assume that we want to create a new node that represents Gingerbread:
+</p>
+
+<div class="filename">GingerbreadNode.cs</div>
+<pre><code class="language-cs">
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Models;
+
+namespace YourNamespace;
+
+public class GingerbreadNode : SvgNodeModel
+{
+    public GingerbreadNode(Point? position = null) : base(position) { }
+
+    // Here, you can put whatever you want
+}
+</code></pre>
+
+<h2>Creating a component</h2>
+
+<p>
+    Let's create a UI component to control how the node looks like:
+</p>
+
+<div class="filename">GingerbreadWidget.razor</div>
+<pre><code class="language-cshtml">
+@@using Blazor.Diagrams.Components.Renderers;
+@@using Site.Models.Nodes;
+
+&lt;g class=&quot;gingerbread&quot;&gt;
+    &lt;circle class=&quot;body&quot; cx=&quot;60&quot; cy=&quot;30&quot; r=&quot;30&quot; /&gt;
+
+    &lt;circle class=&quot;eye&quot; cx=&quot;48&quot; cy=&quot;25&quot; r=&quot;3&quot; /&gt;
+    &lt;circle class=&quot;eye&quot; cx=&quot;72&quot; cy=&quot;25&quot; r=&quot;3&quot; /&gt;
+    &lt;rect class=&quot;mouth&quot; x=&quot;50&quot; y=&quot;40&quot; width=&quot;20&quot; height=&quot;5&quot; rx=&quot;2&quot; /&gt;
+
+    &lt;line class=&quot;limb&quot; x1=&quot;20&quot; y1=&quot;70&quot; x2=&quot;100&quot; y2=&quot;70&quot; /&gt;
+    &lt;line class=&quot;limb&quot; x1=&quot;35&quot; y1=&quot;130&quot; x2=&quot;60&quot; y2=&quot;65&quot; /&gt;
+    &lt;line class=&quot;limb&quot; x1=&quot;85&quot; y1=&quot;130&quot; x2=&quot;60&quot; y2=&quot;65&quot; /&gt;
+
+    &lt;circle class=&quot;button&quot; cx=&quot;60&quot; cy=&quot;70&quot; r=&quot;5&quot; /&gt;
+    &lt;circle class=&quot;button&quot; cx=&quot;60&quot; cy=&quot;90&quot; r=&quot;5&quot; /&gt;
+
+    &lt;PortRenderer @@key=&quot;&#039;l&#039;&quot; Port=&quot;Node.GetPort(PortAlignment.Left)&quot;&gt;
+        &lt;circle class=&quot;hand&quot; cx=&quot;20&quot; cy=&quot;70&quot; r=&quot;17.5&quot; /&gt;
+    &lt;/PortRenderer&gt;
+
+    &lt;PortRenderer @@key=&quot;&#039;r&#039;&quot; Port=&quot;Node.GetPort(PortAlignment.Right)&quot;&gt;
+        &lt;circle class=&quot;hand&quot; cx=&quot;100&quot; cy=&quot;70&quot; r=&quot;17.5&quot; /&gt;
+    &lt;/PortRenderer&gt;
+&lt;/g&gt;
+
+@@code {
+    // This gets filled by the library
+    [Parameter] public GingerbreadNode Node { get; set; } = null!;
+}
+</code></pre>
+
+Let's also style our component!
+
+<div class="filename">GingerbreadWidget.razor.css</div>
+<pre><code class="language-css">
+.gingerbread .body {
+    fill: #cd803d;
+}
+
+.gingerbread .eye {
+    fill: white;
+}
+
+.gingerbread .mouth {
+    fill: none;
+    stroke: white;
+    stroke-width: 2px;
+}
+
+.gingerbread .limb {
+    stroke: #cd803d;
+    stroke-width: 35px;
+    stroke-linecap: round;
+}
+
+.gingerbread .hand {
+    fill: #cd803d;
+}
+
+    .gingerbread .hand:hover {
+        fill: #75441a;
+    }
+</code></pre>
+
+<p>
+    This SVG example is based from <a class="underline" href="https://www.freecodecamp.org/news/svg-tutorial-learn-to-code-images">this article</a>.
+</p>
+
+<h2>Displaying</h2>
+
+<p>
+    All we have to do now is register our new creation!
+</p>
+
+<pre><code class="language-cs">
+private BlazorDiagram Diagram { get; set; } = new();
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    Diagram.RegisterComponent&lt;GingerbreadNode, GingerbreadWidget&gt;();
+
+    var node = Diagram.Nodes.Add(new GingerbreadNode(new Point(80, 80)));
+    node.AddPort(PortAlignment.Left);
+    node.AddPort(PortAlignment.Right);
+}
+</code></pre>
+
+<p class="mb-2">
+    Grabbing his hands will create a link!
+</p>
+
+<div class="diagram-container">
+    <CascadingValue Value="Diagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Customization"
+                   PreviousLink="/documentation/nodes-customization" />
+
+@code {
+    private BlazorDiagram Diagram { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Diagram.RegisterComponent<GingerbreadNode, GingerbreadWidget>();
+
+        var node = Diagram.Nodes.Add(new GingerbreadNode(new Point(80, 80)));
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
+    }
+}

@@ -3,69 +3,68 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace SharedDemo
+namespace SharedDemo;
+
+public static class ReflectionUtils
 {
-    public static class ReflectionUtils
+    public static IEnumerable<PossibleOption> ExtractPossibleOptions<T>()
     {
-        public static IEnumerable<PossibleOption> ExtractPossibleOptions<T>()
-        {
-            var type = typeof(T);
-            return ExtractPossibleOptions(type, string.Empty, Activator.CreateInstance(type));
-        }
+        var type = typeof(T);
+        return ExtractPossibleOptions(type, string.Empty, Activator.CreateInstance(type));
+    }
 
-        private static IEnumerable<PossibleOption> ExtractPossibleOptions(Type type, string prefix, object instance)
+    private static IEnumerable<PossibleOption> ExtractPossibleOptions(Type type, string prefix, object instance)
+    {
+        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            var name = $"{prefix}{property.Name}";
+            var propertyValue = instance == null ? null : property.GetValue(instance);
+
+            if (!IsPrimitiveOrNullable(property.PropertyType))
             {
-                var name = $"{prefix}{property.Name}";
-                var propertyValue = instance == null ? null : property.GetValue(instance);
+                foreach (var entry in ExtractPossibleOptions(property.PropertyType, name + ".", propertyValue))
+                    yield return entry;
 
-                if (!IsPrimitiveOrNullable(property.PropertyType))
-                {
-                    foreach (var entry in ExtractPossibleOptions(property.PropertyType, name + ".", propertyValue))
-                        yield return entry;
-
-                    continue;
-                }
-
-                var typeName = FormatPropertyType(property.PropertyType);
-                var @default = propertyValue?.ToString();
-                var description = property.GetCustomAttribute<DescriptionAttribute>().Description;
-                yield return new PossibleOption(name, typeName, @default, description);
+                continue;
             }
-        }
 
-        private static string FormatPropertyType(Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                return $"{type.GetGenericArguments()[0].Name}?";
-
-            return type.Name;
-        }
-
-        private static bool IsPrimitiveOrNullable(Type type)
-        {
-            return type == typeof(object) ||
-                type == typeof(Type) ||
-                Type.GetTypeCode(type) != TypeCode.Object ||
-                Nullable.GetUnderlyingType(type) != null ||
-                typeof(Delegate).IsAssignableFrom(type);
+            var typeName = FormatPropertyType(property.PropertyType);
+            var @default = propertyValue?.ToString();
+            var description = property.GetCustomAttribute<DescriptionAttribute>().Description;
+            yield return new PossibleOption(name, typeName, @default, description);
         }
     }
 
-    public class PossibleOption
+    private static string FormatPropertyType(Type type)
     {
-        public string Name { get; }
-        public string Type { get; }
-        public string Default { get; }
-        public string Description { get; }
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            return $"{type.GetGenericArguments()[0].Name}?";
 
-        public PossibleOption(string name, string type, string @default, string description)
-        {
-            Name = name;
-            Type = type;
-            Default = @default;
-            Description = description;
-        }
+        return type.Name;
+    }
+
+    private static bool IsPrimitiveOrNullable(Type type)
+    {
+        return type == typeof(object) ||
+            type == typeof(Type) ||
+            Type.GetTypeCode(type) != TypeCode.Object ||
+            Nullable.GetUnderlyingType(type) != null ||
+            typeof(Delegate).IsAssignableFrom(type);
+    }
+}
+
+public class PossibleOption
+{
+    public string Name { get; }
+    public string Type { get; }
+    public string Default { get; }
+    public string Description { get; }
+
+    public PossibleOption(string name, string type, string @default, string description)
+    {
+        Name = name;
+        Type = type;
+        Default = @default;
+        Description = description;
     }
 }

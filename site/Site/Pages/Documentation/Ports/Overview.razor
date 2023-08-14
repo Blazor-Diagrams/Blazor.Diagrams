@@ -1,0 +1,65 @@
+﻿@page "/documentation/ports"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Ports - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Ports</h1>
+
+<p>
+    Ports are locations/endpoints on your nodes/groups from where a link can be created and/or attached.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The internal component <code>PortRenderer</code> generates the following structures: <br />
+    The classes that the element can have (beside <code>diagram-port</code>) are: <br />
+    <ul class="list-disc list-inside ml-4">
+        <li>The alignment (e.g. <code>top</code>, <code>bottom</code>)</li>
+        <li>If the port contains ingoing/outgoing links, <code>has-links</code></li>
+        <li>Extra classes you provide using the <code>Class</code> parameter</li>
+    </ul>
+</p>
+
+<h3>When the parent is HTML</h3>
+
+<pre><code class="language-cshtml">
+&lt;div class=&quot;diagram-port ...&quot;
+     data-port-id=&quot;28e9606d-08dd-47d5-a4c7-b25e541bcf1n&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h3>When the parent is SVG</h3>
+
+<pre><code class="language-cshtml">
+&lt;g class=&quot;diagram-port ...&quot;
+   data-port-id=&quot;28e9606d-08dd-47d5-a4c7-b25e541bcf1n&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/g&gt;
+</code></pre>
+
+<h2>Shape</h2>
+
+Ports can have a specific shape, which by default is a circle. It is used for two things at the moment:
+<ul class="list-disc list-inside mt-2">
+    <li><code>ShapeAnglePositionProvider</code>: To return a position for the given angle.</li>
+    <li><code>SinglePortAnchor</code>: When <code>UseShapeAndAlignment</code> is true.</li>
+</ul>
+<br />
+
+<p>
+    You can change the shape of your node by overriding the <code>GetShape</code> method in your custom model.
+</p>
+
+<h2>Creating a port</h2>
+
+<pre><code class="language-cs">
+var port = myNode.AddPort(PortAlignment.Top);
+// OR
+var port = myNode.AddPort(new PortModel(myNode, PortAlignment.Top));
+</code></pre>
+
+<NavigationButtons NextTitle="Customization"
+                   NextLink="/documentation/ports-customization" />

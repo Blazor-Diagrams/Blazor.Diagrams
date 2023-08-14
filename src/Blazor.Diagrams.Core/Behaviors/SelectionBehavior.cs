@@ -1,41 +1,40 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 
-namespace Blazor.Diagrams.Core.Behaviors
+namespace Blazor.Diagrams.Core.Behaviors;
+
+public class SelectionBehavior : Behavior
 {
-    public class SelectionBehavior : Behavior
+    public SelectionBehavior(Diagram diagram) : base(diagram)
     {
-        public SelectionBehavior(Diagram diagram) : base(diagram)
-        {
-            Diagram.PointerDown += OnPointerDown;
-        }
+        Diagram.PointerDown += OnPointerDown;
+    }
 
-        private void OnPointerDown(Model? model, PointerEventArgs e)
+    private void OnPointerDown(Model? model, PointerEventArgs e)
+    {
+        var ctrlKey = e.CtrlKey;
+        switch (model)
         {
-            var ctrlKey = e.CtrlKey;
-            switch (model)
+            case null:
+                Diagram.UnselectAll();
+                break;
+            case SelectableModel sm when ctrlKey && sm.Selected:
+                Diagram.UnselectModel(sm);
+                break;
+            case SelectableModel sm:
             {
-                case null:
-                    Diagram.UnselectAll();
-                    break;
-                case SelectableModel sm when ctrlKey && sm.Selected:
-                    Diagram.UnselectModel(sm);
-                    break;
-                case SelectableModel sm:
+                if (!sm.Selected)
                 {
-                    if (!sm.Selected)
-                    {
-                        Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
-                    }
-
-                    break;
+                    Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
                 }
+
+                break;
             }
         }
+    }
 
-        public override void Dispose()
-        {
-            Diagram.PointerDown -= OnPointerDown;
-        }
+    public override void Dispose()
+    {
+        Diagram.PointerDown -= OnPointerDown;
     }
 }

@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.0) - 2023-08-14
+
+Finally, the new documentation website is here!  
+Please don't hesitate to create issues for any problems or improvements.  
+PS: I suck at design.
+
+### Added
+
+- `AddLabel` method to links to easily create `LinkLabelModel`
+- `AddVertex` method to links to easily create `LinkVertexModel`
+- `ControlledSize` property to nodes. If `true`, the node will not be registered in the `ResizeObserver` (saves a JS call).
+- `autoSize` argument to `SvgGroupModel` constructor
+
+### Changed
+
+- Renamed `Point.Substract` to `Subtract` (duh)
+- Avoid rendering link selection helper on dragged link
+
+### Fixed
+
+- `SmoothPathGenerator` not working with `LinkAnchor`
+- Mouse overlapping dragged link
+- Useless Console Logs from `GroupModel` are now removed
+- JS exception in `(un)oberve` methods when the element doesn't exist anymore
+
 ## Diagrams (3.0.0-beta.6) - 2023-05-09
 
 ### Added

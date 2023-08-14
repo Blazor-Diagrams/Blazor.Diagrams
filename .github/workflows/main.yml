@@ -1,6 +1,6 @@
 name: DeployDemoToGitHubPages
 env:
-  PUBLISH_DIR: site/Site/bin/Release/netstandard2.1/publish/wwwroot
+  PUBLISH_DIR: site/Site/bin/Release/net6.0/publish/wwwroot
 
 on:
   push:

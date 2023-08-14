@@ -14,7 +14,7 @@ public partial class SelectionBoxWidget : IDisposable
 
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
-    [Parameter] public string Background { get; set; } = "rgb(110 159 212 / 25%);";
+    [Parameter] public string Background { get; set; } = "rgb(110 159 212 / 25%)";
 
     public void Dispose()
     {

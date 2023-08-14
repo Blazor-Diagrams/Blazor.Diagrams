@@ -52,6 +52,12 @@ public static class Documentation
             new MenuItem("SVG", "/documentation/groups-svg"),
             new MenuItem("Customization", "/documentation/groups-customization"),
             new MenuItem("Customization (SVG)", "/documentation/groups-customization-svg")
-        }, Icon: Icons.Ratio)
+        }, Icon: Icons.Ratio),
+        new MenuGroup("Diagram Widgets", new List<MenuItem>
+        {
+            new MenuItem("Navigator", "/documentation/navigator-widget"),
+            new MenuItem("Grid", "/documentation/grid-widget"),
+            new MenuItem("Selection Box", "/documentation/selection-box-widget"),
+        }, Icon: Icons.Components)
     });
 }

@@ -1,0 +1,73 @@
+﻿@page "/documentation/selection-box-widget"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Selection Box Widget - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Selection Box Widget</h1>
+
+<p>
+	A <code>SelectionBoxWidget</code> lets you hold SHIFT and click+drag to show a selection box that selects all models intersecting with it.
+</p>
+
+<h2>Options</h2>
+
+<table>
+    <thead>
+        <tr>
+			<th>Name</th>
+			<th>Type</th>
+            <th>Default</th>
+        </tr>
+    </thead>
+    <tbody>
+		<tr>
+			<td>Background</td>
+			<td>string</td>
+			<td>rgb(110 159 212 / 25%)</td>
+		</tr>
+    </tbody>
+</table>
+
+<h2>Usage</h2>
+
+<pre><code class="language-cshtml">
+&lt;CascadingValue Value=&quot;_diagram&quot; IsFixed=&quot;true&quot;&gt;
+	&lt;DiagramCanvas&gt;
+		&lt;Widgets&gt;
+			&lt;SelectionBoxWidget /&gt;
+		&lt;/Widgets&gt;
+	&lt;/DiagramCanvas&gt;
+&lt;/CascadingValue&gt;
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_diagram" IsFixed="true">
+        <DiagramCanvas>
+			<Widgets>
+				<SelectionBoxWidget />
+			</Widgets>
+		</DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Grid"
+                   PreviousLink="/documentation/grid-widget" />
+
+@code {
+    private BlazorDiagram _diagram = new();
+
+    protected override void OnInitialized()
+    {
+        _diagram.Options.Zoom.Enabled = false;
+
+		var node1 = _diagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var node2 = _diagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		_diagram.Links.Add(new LinkModel(node1, node2)
+		{
+			PathGenerator = new StraightPathGenerator()
+		});
+    }
+}

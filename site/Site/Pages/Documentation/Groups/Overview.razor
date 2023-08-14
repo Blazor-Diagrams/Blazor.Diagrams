@@ -1,0 +1,68 @@
+﻿@page "/documentation/groups"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Groups - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Groups</h1>
+
+<p>
+    In Blazor Diagrams, Groups are a way to group nodes together. <br />
+    Groups can also contain other groups, so you can create hierarchies.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The internal component <code>GroupRenderer</code> generates the following structure:
+</p>
+
+<pre><code class="language-cshtml">
+&lt;div class=&quot;diagram-group ...&quot;
+     data-group-id=&quot;28e9606d-08dd-47d5-a4c7-b95e541bcf1e&quot;
+     style=&quot;top: 10px; left: 10px; width: 100px; height: 100px&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+    The classes that the div can have (beside <code>diagram-group</code>) are: <code>locked</code>, <code>selected</code> and <code>default</code>.
+</p>
+
+<h2>Creating a group</h2>
+
+<h3>Interactively</h3>
+
+<p>
+    By default, users can group selected nodes/groups using the keys <code>Ctrl+g</code> (if <code>Options.Groups.Enabled</code> is set to <code>true</code>).
+    Check out <a class="underline" href="/documentation/keyboard-shortcuts">Keyboard Shortcuts</a> in order to change the required keys.
+</p>
+
+<h3>Programmatically</h3>
+
+Assuming we have two nodes, we can simply:
+
+<pre><code class="language-cs">
+var node1 = new NodeModel(new Point(10, 10));
+var node2 = new NodeModel(new Point(50, 50));
+var group = BlazorDiagram.Groups.Group(node1, node2);
+</code></pre>
+
+<h2>! Important Note</h2>
+
+Most of the time, groups will have a background of some sort (e.g. a color), which will hide all the links beneath it since
+if you remember, the nodes layer is above the links layer. There are 2 solutions for this:
+
+<h3>SVG Group</h3>
+
+If you use svg nodes, then make sure you add your groups first, then your links.
+<br />
+If you're grouping nodes dynamically, make sure to bring links associated to those groups and their nodes to the front (or the created groups to the back) using the ordering methods available.
+
+<h3>Layers order</h3>
+
+The <code>BlazorDiagramOptions</code> class contains two properties in order to control the order (z-index) of the layers: <code>LinksLayerOrder</code> and <code>NodesLayerOrder</code>.
+All you have to do for groups to work properly is to set <code>LinksLayerOrder</code> to a bigger value than the other.
+
+<NavigationButtons NextTitle="SVG Groups"
+                   NextLink="/documentation/groups-svg" />

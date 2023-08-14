@@ -1,0 +1,89 @@
+﻿@page "/documentation/links-path-generators"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Path Generators - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Path Generators</h1>
+
+<p>
+    A <code>PathGenerator</code> is responsible of creating the SVG path for a given route.
+</p>
+
+<h2>Smooth Path Generator</h2>
+
+<p>
+    The <code>SmoothPathGenerator</code> generates a Cubic Bezier Curve.<br />
+    It is the default path generator.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var link = Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+link.PathGenerator = new SmoothPathGenerator();
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_smpgDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Straight Path Generator</h2>
+
+<p>
+    The <code>StraightPathGenerator</code> generates straight lines.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var link = Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+link.PathGenerator = new StraightPathGenerator();
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_stpgDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Routers"
+                   PreviousLink="/documentation/links-routers"
+                   NextTitle="Markers"
+                   NextLink="/documentation/links-markers" />
+
+@code {
+    private BlazorDiagram _smpgDiagram = new();
+    private BlazorDiagram _stpgDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _smpgDiagram.Options.Zoom.Enabled = false;
+        _stpgDiagram.Options.Zoom.Enabled = false;
+
+        // Smooth Path Generator
+        var smpgNode1 = _smpgDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var smpgNode2 = _smpgDiagram.Nodes.Add(new NodeModel(new Point(450, 110)));
+        var smpgBottomPort1 = smpgNode1.AddPort(PortAlignment.Bottom);
+        var smpgRightPort1 = smpgNode1.AddPort(PortAlignment.Right);
+        var smpgBottomPort2 = smpgNode2.AddPort(PortAlignment.Bottom);
+        var smpgLeftPort2 = smpgNode2.AddPort(PortAlignment.Left);
+        _smpgDiagram.Links.Add(new LinkModel(smpgBottomPort1, smpgBottomPort2));
+        _smpgDiagram.Links.Add(new LinkModel(smpgRightPort1, smpgLeftPort2));
+
+        // Straight Path Generator
+        var stpgNode1 = _stpgDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var stpgNode2 = _stpgDiagram.Nodes.Add(new NodeModel(new Point(450, 110)));
+        var stpgBottomPort1 = stpgNode1.AddPort(PortAlignment.BottomRight);
+        var stpgRightPort1 = stpgNode1.AddPort(PortAlignment.Right);
+        var stpgBottomPort2 = stpgNode2.AddPort(PortAlignment.BottomLeft);
+        var stpgLeftPort2 = stpgNode2.AddPort(PortAlignment.Left);
+        _stpgDiagram.Links.Add(new LinkModel(stpgBottomPort1, stpgBottomPort2)).PathGenerator = new StraightPathGenerator();
+        _stpgDiagram.Links.Add(new LinkModel(stpgRightPort1, stpgLeftPort2)).PathGenerator = new StraightPathGenerator();
+
+    }
+}

@@ -1,0 +1,30 @@
+﻿@using Blazor.Diagrams.Components.Renderers;
+@using Site.Models.Nodes;
+
+<g class="gingerbread">
+    <circle class="body" cx="60" cy="30" r="30" />
+
+    <circle class="eye" cx="48" cy="25" r="3" />
+    <circle class="eye" cx="72" cy="25" r="3" />
+    <rect class="mouth" x="50" y="40" width="20" height="5" rx="2" />
+
+    <line class="limb" x1="20" y1="70" x2="100" y2="70" />
+    <line class="limb" x1="35" y1="130" x2="60" y2="65" />
+    <line class="limb" x1="85" y1="130" x2="60" y2="65" />
+
+    <circle class="button" cx="60" cy="70" r="5" />
+    <circle class="button" cx="60" cy="90" r="5" />
+
+    <PortRenderer @key="'l'" Port="Node.GetPort(PortAlignment.Left)">
+        <circle class="hand" cx="20" cy="70" r="17.5" />
+    </PortRenderer>
+    
+    <PortRenderer @key="'r'" Port="Node.GetPort(PortAlignment.Right)">
+        <circle class="hand" cx="100" cy="70" r="17.5" />
+    </PortRenderer>
+</g>
+
+@code {
+    // This gets filled by the library
+    [Parameter] public GingerbreadNode Node { get; set; } = null!;
+}

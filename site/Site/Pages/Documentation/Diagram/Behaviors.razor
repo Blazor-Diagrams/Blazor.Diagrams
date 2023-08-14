@@ -1,0 +1,120 @@
+﻿@page "/documentation/diagram-behaviors"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Diagram Behaviors - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Diagram Behaviors</h1>
+
+<p>
+    Behaviors are a way to encapsulate a functionality.
+    They are separated into classes mainly for readability, separation of concerns, and for the library users to be able to remove/replace them.
+    The behaviors inherit from the base class <code>Behavior</code> and use the available events to do what they need.
+</p>
+
+<h2>Example</h2>
+
+<pre><code class="language-cs">
+using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Events;
+
+namespace Blazor.Diagrams.Core.Behaviors
+{
+    public class SelectionBehavior : Behavior
+    {
+        public SelectionBehavior(Diagram diagram) : base(diagram)
+        {
+            Diagram.PointerDown += OnPointerDown;
+        }
+
+        private void OnPointerDown(Model? model, PointerEventArgs e)
+        {
+            var ctrlKey = e.CtrlKey;
+
+            switch (model)
+            {
+                case null:
+                    Diagram.UnselectAll();
+                    break;
+                case SelectableModel sm when ctrlKey && sm.Selected:
+                    Diagram.UnselectModel(sm);
+                    break;
+                case SelectableModel sm:
+                {
+                    if (!sm.Selected)
+                    {
+                        Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        public override void Dispose()
+        {
+            Diagram.PointerDown -= OnPointerDown;
+        }
+    }
+}
+</code></pre>
+
+<p>
+    As you can see, the behavior simply uses the <code>PointerDown</code> event in order to (un)select stuff.
+</p>
+
+<h2>Replacing a behavior</h2>
+
+Let's say you didn't like how the <code>SelectionBehavior</code> works, let's replace it by a simpler one.<br />
+We just want to keep selecting models without CTRL and only unselect everything once the canvas is clicked.
+
+<pre><code class="language-cs">
+using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.Events;
+
+namespace Blazor.Diagrams.Core.Behaviors
+{
+    public class MySelectionBehavior : Behavior
+    {
+        public SelectionBehavior(Diagram diagram) : base(diagram)
+        {
+            Diagram.PointerDown += OnPointerDown;
+        }
+
+        private void OnPointerDown(Model? model, PointerEventArgs e)
+        {
+            if (model == null) // Canvas
+            {
+                Diagram.UnselectAll();
+            }
+            else if (model is SelectableModel sm)
+            {
+                Diagram.SelectModel(sm);
+            }
+        }
+
+        public override void Dispose()
+        {
+            Diagram.PointerDown -= OnPointerDown;
+        }
+    }
+}
+</code></pre>
+
+<p>
+    A very simple class indeed. Inherting from <code>Behavior</code> automatically forces you to have the constructor, in order to have the <code>Diagram</code> instance,
+    but also the <code>Dispose</code> method in order to remove any event handlers in case the behavior is unregistered.<br /><br />
+    Let's now replace the old behavior with ours:
+</p>
+
+<pre><code class="language-cs">
+// In case you want to keep the old behavior intance
+var oldSelectionBehavior = Diagram.GetBehavior&lt;SelectionBehavior&gt;()!;
+Diagram.UnregisterBehavior&lt;SelectionBehavior&gt;();
+Diagram.RegisterBehavior(new MySelectionBehavior(Diagram));
+</code></pre>
+
+<NavigationButtons PreviousLink="/documentation/diagram"
+                   PreviousTitle="Overview"
+                   NextTitle="Ordering"
+                   NextLink="/documentation/diagram-ordering" />

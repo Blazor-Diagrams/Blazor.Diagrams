@@ -1,0 +1,43 @@
+﻿@page "/documentation/links"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Links - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Links</h1>
+
+<p>
+    Links (also called Edges) are relationships between nodes, groups, ports and even other links! <br />
+    They are always rendered in the SVG layer.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The internal component <code>LinkRenderer</code> generates the following structure:
+</p>
+
+<pre><code class="language-cshtml">
+&lt;g class=&quot;diagram-link&quot;
+   data-link-id=&quot;9566f945-cc88-46bc-8d50-1ec15502f6fb&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/g&gt;
+</code></pre>
+
+<p>
+    The classes that the g can have (beside <code>diagram-link</code>) are: <code>attached</code>.
+</p>
+
+<h2>Creating a link</h2>
+
+<pre><code class="language-csharp">
+var link = Diagram.Links.Add(new LinkModel(node1, node2));
+// OR
+var link = Diagram.Links.Add(new LinkModel(port1, port2));
+// OR
+var link = Diagram.Links.Add(new LinkModel(anchor1, anchor2));
+</code></pre>
+
+
+<NavigationButtons NextTitle="Anchors"
+                   NextLink="/documentation/links-anchors" />

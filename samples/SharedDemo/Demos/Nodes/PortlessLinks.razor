@@ -2,6 +2,13 @@
 @layout DemoLayout
 @inject LayoutData LayoutData
 
-<CascadingValue Value="_diagram">
-    <DiagramCanvas></DiagramCanvas>
+<CascadingValue Value="_blazorDiagram">
+    <DiagramCanvas>
+        <Widgets>
+            <NavigatorWidget Width="200"
+                             Height="150"
+                             Style="position: absolute; bottom: 15px; right: 15px; border: 1px solid black;">
+            </NavigatorWidget>
+        </Widgets>
+    </DiagramCanvas>
 </CascadingValue>

@@ -1,43 +1,40 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
+using Blazor.Diagrams.Core.Events;
 
-namespace Blazor.Diagrams.Core.Behaviors
+namespace Blazor.Diagrams.Core.Behaviors;
+
+public class SelectionBehavior : Behavior
 {
-    public class SelectionBehavior : Behavior
+    public SelectionBehavior(Diagram diagram) : base(diagram)
     {
-        public SelectionBehavior(Diagram diagram) : base(diagram)
+        Diagram.PointerDown += OnPointerDown;
+    }
+
+    private void OnPointerDown(Model? model, PointerEventArgs e)
+    {
+        var ctrlKey = e.CtrlKey;
+        switch (model)
         {
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.TouchStart += OnTouchStart;
-        }
-
-        private void OnTouchStart(Model model, TouchEventArgs e) => Process(model, e.CtrlKey);
-
-        private void OnMouseDown(Model model, MouseEventArgs e) => Process(model, e.CtrlKey);
-
-        private void Process(Model model, bool ctrlKey)
-        {
-            if (model == null)
-            {
+            case null:
                 Diagram.UnselectAll();
-            }
-            else if (model is SelectableModel sm)
+                break;
+            case SelectableModel sm when ctrlKey && sm.Selected:
+                Diagram.UnselectModel(sm);
+                break;
+            case SelectableModel sm:
             {
-                if (ctrlKey && sm.Selected)
-                {
-                    Diagram.UnselectModel(sm);
-                }
-                else if (!sm.Selected)
+                if (!sm.Selected)
                 {
                     Diagram.SelectModel(sm, !ctrlKey || !Diagram.Options.AllowMultiSelection);
                 }
+
+                break;
             }
         }
+    }
 
-        public override void Dispose()
-        {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.TouchStart -= OnTouchStart;
-        }
+    public override void Dispose()
+    {
+        Diagram.PointerDown -= OnPointerDown;
     }
 }

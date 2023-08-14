@@ -1,62 +1,65 @@
-﻿using Blazor.Diagrams.Algorithms.Extensions;
-using Blazor.Diagrams.Core;
-using Blazor.Diagrams.Core.Models;
+﻿using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Anchors;
 using System.Collections.Generic;
 using System.Linq;
+using Blazor.Diagrams.Core.Models.Base;
 
-namespace Blazor.Diagrams.Algorithms
+namespace Blazor.Diagrams.Algorithms;
+
+public static class LinksReconnectionAlgorithms
 {
-    public static class LinksReconnectionAlgorithms
+    public static void ReconnectLinksToClosestPorts(this Diagram diagram)
     {
-        public static void ReconnectLinksToClosestPorts(this Diagram diagram)
+        // Only refresh ports once
+        var modelsToRefresh = new HashSet<Model>();
+
+        foreach (var link in diagram.Links.ToArray())
         {
-            // Only refresh ports once
-            var portsToRefresh = new HashSet<PortModel>();
+            if (link.Source is not SinglePortAnchor spa1 || link.Target is not SinglePortAnchor spa2)
+                continue;
 
-            foreach (var link in diagram.Links.ToArray())
+            var sourcePorts = spa1.Port.Parent.Ports;
+            var targetPorts = spa2.Port.Parent.Ports;
+
+            // Find the ports with minimal distance
+            var minDistance = double.MaxValue;
+            var minSourcePort = spa1.Port;
+            var minTargetPort = spa2.Port;
+            foreach (var sourcePort in sourcePorts)
             {
-                if (link.TargetPort == null)
-                    continue;
-
-                var sourcePorts = link.SourcePort.Parent.Ports;
-                var targetPorts = link.TargetPort.Parent.Ports;
-
-                // Find the ports with minimal distance
-                var minDistance = double.MaxValue;
-                var minSourcePort = link.SourcePort;
-                var minTargetPort = link.TargetPort;
-                foreach (var sourcePort in sourcePorts)
+                foreach (var targetPort in targetPorts)
                 {
-                    foreach (var targetPort in targetPorts)
+                    var distance = sourcePort.Position.DistanceTo(targetPort.Position);
+                    if (distance < minDistance)
                     {
-                        var distance = sourcePort.Position.DistanceTo(targetPort.Position);
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                            minSourcePort = sourcePort;
-                            minTargetPort = targetPort;
-                        }
+                        minDistance = distance;
+                        minSourcePort = sourcePort;
+                        minTargetPort = targetPort;
                     }
-                }
-
-                // Reconnect
-                if (link.SourcePort != minSourcePort)
-                {
-                    portsToRefresh.Add(link.SourcePort);
-                    portsToRefresh.Add(minSourcePort);
-                    link.SetSourcePort(minSourcePort);
-                }
-
-                if (link.TargetPort != minTargetPort)
-                {
-                    portsToRefresh.Add(link.TargetPort);
-                    portsToRefresh.Add(minTargetPort);
-                    link.SetTargetPort(minTargetPort);
                 }
             }
 
-            foreach (var port in portsToRefresh)
-                port.Refresh();
+            // Reconnect
+            if (spa1.Port != minSourcePort)
+            {
+                modelsToRefresh.Add(spa1.Port);
+                modelsToRefresh.Add(minSourcePort);
+                link.SetSource(new SinglePortAnchor(minSourcePort));
+                modelsToRefresh.Add(link);
+            }
+
+            if (spa2.Port != minTargetPort)
+            {
+                modelsToRefresh.Add(spa2.Port);
+                modelsToRefresh.Add(minTargetPort);
+                link.SetTarget(new SinglePortAnchor(minTargetPort));
+                modelsToRefresh.Add(link);
+            }
+        }
+
+        foreach (var model in modelsToRefresh)
+        {
+            model.Refresh();
         }
     }
 }

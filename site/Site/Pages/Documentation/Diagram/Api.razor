@@ -1,0 +1,362 @@
+﻿@page "/documentation/diagram-api"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+@{
+    RenderFragment readonlySubtitle = @<i class="block text-xs font-normal">Read only</i>;
+}
+
+<PageTitle>Diagram API - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Diagram API</h1>
+
+<h2>Properties</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Options @readonlySubtitle</td>
+            <td>BlazorDiagramOptions</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Nodes @readonlySubtitle</td>
+            <td>NodeLayer</td>
+            <td>-</td>
+            <td>Acts as a list for the nodes</td>
+        </tr>
+        <tr>
+            <td>Links @readonlySubtitle</td>
+            <td>LinkLayer</td>
+            <td>-</td>
+            <td>Acts as a list for the links</td>
+        </tr>
+        <tr>
+            <td>Groups @readonlySubtitle</td>
+            <td>GroupLayer</td>
+            <td>-</td>
+            <td>Acts as a list for the groups</td>
+        </tr>
+        <tr>
+            <td>Controls @readonlySubtitle</td>
+            <td>ControlsLayer</td>
+            <td>-</td>
+            <td>Only way to Get/Add/Remove controls for a model</td>
+        </tr>
+        <tr>
+            <td>Container @readonlySubtitle</td>
+            <td>Rectangle?</td>
+            <td>null</td>
+            <td>Boundaries representing the canvas, retrieved with JS</td>
+        </tr>
+        <tr>
+            <td>Pan @readonlySubtitle</td>
+            <td>Point?</td>
+            <td>Zero</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Zoom @readonlySubtitle</td>
+            <td>Double</td>
+            <td>1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SuspendRefresh</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Suspends the refreshes related to the diagram (canvas)</td>
+        </tr>
+        <tr>
+            <td>OrderedSelectables @readonlySubtitle</td>
+            <td>IReadOnlyList&lt;SelectableModel&gt;</td>
+            <td>-</td>
+            <td>Ordered list of models using the Order property</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Events</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>PointerDown</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerMove</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerUp</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerEnter</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerLeave</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>KeyDown</td>
+            <td>Action&lt;KeyboardEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Wheel</td>
+            <td>Action&lt;WheelEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerClick</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PointerDoubleClick</td>
+            <td>Action&lt;Model?, PointerEventArgs&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SelectionChanged</td>
+            <td>Action&lt;SelectableModel&gt;?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PanChanged</td>
+            <td>Action?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ZoomChanged</td>
+            <td>Action?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ContainerChanged</td>
+            <td>Action?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Changed</td>
+            <td>Action?</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Methods</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Return Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>RegisterComponent&lt;TModel, TComponent&gt;(bool replace = false)</td>
+            <td>void</td>
+            <td>Register a Blazor component to render for every instance of TModel</td>
+        </tr>
+        <tr>
+            <td>RegisterComponent(Type modelType, Type componentType, bool replace = false)</td>
+            <td>void</td>
+            <td>Register a Blazor component to render for every instance of modelType</td>
+        </tr>
+        <tr>
+            <td>GetComponent(Type modelType, bool checkSubclasses = true)</td>
+            <td>Type?</td>
+            <td>Returns the component Type registered for the modelType</td>
+        </tr>
+        <tr>
+            <td>GetComponent&lt;TModel&gt;(bool checkSubclasses = true)</td>
+            <td>Type?</td>
+            <td>Returns the component Type registered for TModel</td>
+        </tr>
+        <tr>
+            <td>GetComponent(Model model, bool checkSubclasses = true)</td>
+            <td>Type?</td>
+            <td>Returns the component Type registered for typeof(Model)</td>
+        </tr>
+        <tr>
+            <td>Refresh()</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Batch(Action action)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetSelectedModels()</td>
+            <td>IEnumerable&lt;SelectableModel&gt;</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SelectModel(SelectableModel model, bool unselectOthers)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>UnselectModel(SelectableModel model)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>UnselectAll()</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RegisterBehavior(Behavior behavior)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetBehavior&lt;T&gt;() where T : Behavior</td>
+            <td>T?</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>UnregisterBehavior&lt;T&gt;() where T : Behavior</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ZoomToFit(double margin </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SetPan(double x, double y)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>UpdatePan(double deltaX, double deltaY)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SetZoom(double newZoom)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SetContainer(Rectangle newRect)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetRelativeMousePoint(double clientX, double clientY)</td>
+            <td>Point</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetRelativePoint(double clientX, double clientY)</td>
+            <td>Point</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetScreenPoint(double clientX, double clientY)</td>
+            <td>Point</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SendToBack(SelectableModel model)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>SendToFront(SelectableModel model)</td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetMinOrder()</td>
+            <td>int</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>GetMaxOrder()</td>
+            <td>int</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerDown(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerMove(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerUp(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerEnter(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerLeave(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerKeyDown(KeyboardEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerWheel(WheelEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerClick(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TriggerPointerDoubleClick(Model? model, PointerEventArgs e) </td>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<NavigationButtons PreviousTitle="Options"
+                   PreviousLink="/documentation/diagram-options" />

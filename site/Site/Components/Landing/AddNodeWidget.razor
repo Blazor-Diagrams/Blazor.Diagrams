@@ -1,0 +1,27 @@
+<div class="drop-shadow-lg bg-white border">
+    <div class="bg-main p-2 pr-6 font-semibold text-white uppercase">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="inline">
+            <path d="M11.883 3.007 12 3a1 1 0 0 1 .993.883L13 4v7h7a1 1 0 0 1 .993.883L21 12a1 1 0 0 1-.883.993L20 13h-7v7a1 1 0 0 1-.883.993L12 21a1 1 0 0 1-.993-.883L11 20v-7H4a1 1 0 0 1-.993-.883L3 12a1 1 0 0 1 .883-.993L4 11h7V4a1 1 0 0 1 .883-.993L12 3l-.117.007Z" fill="#ffffff"/>
+        </svg>
+        Add
+    </div>
+    <div class="py-4 px-8 relative">
+        @Node.Value
+        <PortRenderer Port="@Node.Ports[0]"
+                      Class="rounded-full bg-main p-2 absolute"
+                      Style="left: -8px; top: 33%; transform: translateY(-50%);"/>
+        <PortRenderer Port="@Node.Ports[1]"
+                      Class="rounded-full bg-main p-2 absolute"
+                      Style="left: -8px; top: 66%; transform: translateY(-50%);"/>
+        <PortRenderer Port="@Node.Ports[2]"
+                      Class="rounded-full bg-main p-2 absolute"
+                      Style="right: -8px; top: 50%; transform: translateY(-50%);"/>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public AddNodeModel Node { get; set; } = null!;
+
+}

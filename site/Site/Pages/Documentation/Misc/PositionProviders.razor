@@ -1,0 +1,125 @@
+﻿@page "/documentation/position-providers"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Position Providers - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Position Providers</h1>
+
+<p>
+    Position Providers simply take some input (e.g. a model and some arguments) and return a position (Point) when asked to (by some other features in the library).
+</p>
+
+<h2>Bounds Based</h2>
+
+<h3>Options</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>x</td>
+            <td>double</td>
+            <td>A number between 0 and 1 that will be multiplied by the width</td>
+        </tr>
+        <tr>
+            <td>y</td>
+            <td>double</td>
+            <td>A number between 0 and 1 that will be multiplied by the height</td>
+        </tr>
+        <tr>
+            <td>offsetX</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+        <tr>
+            <td>offsetY</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Demonstration</h3>
+
+<img src="/img/BoundsBasedPositionProvider.png" alt="Bounds Based Position Provider" />
+
+<h2>Shape Angle</h2>
+
+<h3>Options</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>angle</td>
+            <td>double</td>
+            <td>In degrees</td>
+        </tr>
+        <tr>
+            <td>offsetX</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+        <tr>
+            <td>offsetY</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Demonstration</h3>
+
+<img src="/img/ShapeAnglePositionProvider.png" alt="Bounds Based Position Provider" />
+
+<h2>Link Path</h2>
+
+<h3>Options</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>distance</td>
+            <td>double</td>
+            <td>
+                If between 0 and 1, it will be multiplied by the link's length<br />
+                If less than 0, it will start from the end of the link<br />
+                If greater than 1, it will start from the beginning of the link
+            </td>
+        </tr>
+        <tr>
+            <td>offsetX</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+        <tr>
+            <td>offsetY</td>
+            <td>double</td>
+            <td>Any number</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Demonstration</h3>
+
+<img src="/img/LinkPathPositionProvider.png" alt="Bounds Based Position Provider" />

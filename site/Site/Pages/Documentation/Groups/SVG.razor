@@ -1,0 +1,62 @@
+﻿@page "/documentation/groups-svg"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>SVG Groups - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>SVG Groups</h1>
+
+<p>
+    SVG groups are groups that will be rendered in the SVG layer. <br />
+    In this page, we will talk about the differences between them and normal groups.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The component <code>GroupRenderer</code> generates the following structure:
+</p>
+
+<pre><code class="language-cshtml">
+&lt;g class=&quot;diagram-group ...&quot;
+   data-group-id=&quot;28e9606d-08dd-47d5-a4c7-b95e541bcf1e&quot;
+   transform=&quot;translate(10 10)&quot;&gt;
+
+   &lt;rect width=&quot;100&quot; height=&quot;100&quot; fill=&quot;none&quot;&gt;&lt;/rect&gt;
+
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+
+&lt;/g&gt;
+</code></pre>
+
+<p>The <code>rect</code> is there for you to be able to style the background of the group, since we can't style <code>g</code> elements.</p>
+
+<h2>Creating a SVG group</h2>
+
+<h3>Interactively</h3>
+
+First, we will need to change how groups are created:
+
+<pre><code class="language-cs">
+yourDiagram.Options.Groups.Factory = (diagram, children) => new SvgGroupModel(children);
+</code></pre>
+
+<p>
+    By default, users can group selected nodes/groups using the keys <code>Ctrl+g</code> (if <code>Options.Groups.Enabled</code> is set to <code>true</code>).
+    Check out <a class="underline" href="/documentation/keyboard-shortcuts">Keyboard Shortcuts</a> in order to change the required keys.
+</p>
+
+<h3>Programmatically</h3>
+
+Assuming we have two nodes, we can simply:
+
+<pre><code class="language-cs">
+var node1 = new SvgNodeModel(new Point(10, 10));
+var node2 = new SvgNodeModel(new Point(50, 50));
+var group = new SvgGroupModel(new[] { node1, node2 });
+</code></pre>
+
+<NavigationButtons PreviousTitle="Groups"
+                   PreviousLink="/documentation/groups"
+                   NextTitle="Customization"
+                   NextLink="/documentation/groups-customization" />

@@ -1,0 +1,17 @@
+﻿@using Blazor.Diagrams.Core.Models.Base;
+@using Site.Models.Controls;
+
+<div class="rounded-full p-1 text-center text-white" style="background-color: red; width: 30px; height: 30px;">
+    !
+</div>
+
+@code
+{
+    [Parameter]
+    public AlertControl Control { get; set; } = null!;
+
+    [Parameter]
+    public Model Model { get; set; } = null!;
+
+    public NodeModel Node => (Model as NodeModel)!;
+}

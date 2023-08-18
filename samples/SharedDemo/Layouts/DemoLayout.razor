@@ -21,7 +21,7 @@
 
 @if (LayoutData.Info != null)
 {
-    <div class="floating alert alert-primary" role="alert">
+    <div class="floating alert alert-primary" style="z-index: 10000;" role="alert">
         <h4 class="alert-heading">@LayoutData.Title</h4>
         <p>@((MarkupString)LayoutData.Info)</p>
     </div>
@@ -93,6 +93,9 @@
                 </li>
                 <li>
                     <a href="demos/custom-group" class="list-group-item list-group-item-action bg-light">Custom group</a>
+                </li>
+                <li>
+                    <a href="demos/custom-svg-group" class="list-group-item list-group-item-action bg-light">Custom SVG group</a>
                 </li>
             </DemoMenu>
             <DemoMenu Text="Algorithms">

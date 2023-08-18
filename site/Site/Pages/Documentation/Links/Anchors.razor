@@ -1,0 +1,253 @@
+﻿@page "/documentation/links-anchors"
+@using Blazor.Diagrams.Core.Anchors;
+@using Blazor.Diagrams.Core.Controls.Default;
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Positions;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Anchors - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Anchors</h1>
+
+<p>
+    An anchor represents the exact position where on an <code>ILinkable</code> (node, group, port, ...) a link should connect.<br />
+    Links have two anchors, <code>Source</code> and <code>Target</code>.
+</p>
+
+<h2>Position Anchor</h2>
+
+<p>
+    <code>PositionAnchor</code> is the most basic anchor. It wraps a <code>Point</code> position and is meant to be used for static and/or known positions (without calculations).
+    This anchor was created for internal use, so that links couldn't have <code>null</code> as a target, but you can use it if you see fit.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var paSourceAnchor = new PositionAnchor(new Point(50, 40));
+var paTargetAnchor = new PositionAnchor(new Point(300, 70));
+Diagram.Links.Add(new LinkModel(paSourceAnchor, paTargetAnchor));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 100px;">
+    <CascadingValue Value="_paDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Single Port Anchor</h2>
+
+<p>
+    <code>SinglePortAnchor</code> calculates a position on the specified port based on the chosen options.
+</p>
+
+<h3>Options</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>MiddleIfNoMarker</td>
+            <td>false</td>
+            <td>If the corresponding side doesn't have a Marker, the center of the port will be used as the position</td>
+        </tr>
+        <tr>
+            <td>UseShapeAndAlignment</td>
+            <td>true</td>
+            <td>Using the port's shape, the point at an angle (depending on the alignment) will be used as the position</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+    If both options are false, the point at the boundary (depending on the alignment) will be used as the position.
+</p>
+
+<h3>Usage</h3>
+
+<p>
+    For the purpose of this example, the SVG layer will be rendered on top of the HTML one.
+</p>
+
+<pre><code class="language-cs">
+var spaSourceAnchor = new SinglePortAnchor(spaPort)
+{
+    MiddleIfNoMarker = false,
+    UseShapeAndAlignment = true
+};
+Diagram.Links.Add(new LinkModel(spaSourceAnchor, someTargetAnchor));
+// OR
+Diagram.Links.Add(new LinkModel(sourcePort, targetPort));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 400px;">
+    <CascadingValue Value="_spaDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Shape Intersection Anchor</h2>
+
+<p>
+    <code>ShapeIntersectionAnchor</code> calculates the position as the intersection a line going from the other end to the center of the specified node.
+    This anchor is used to create port-less links that take into account the node's shape.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var sourceAnchor = new ShapeIntersectionAnchor(firstNode);
+var targetAnchor = new ShapeIntersectionAnchor(secondNode);
+Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+// OR
+Diagram.Links.Add(new LinkModel(firstNode, secondNode));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_siaDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Link Anchor</h2>
+
+<p>
+    <code>LinkAnchor</code> calculates the position along the given link based on the chosen options.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var sourceAnchor = new LinkAnchor(otherLink, distance: 0.5, offsetX: 0, offsetY: 0);
+Diagram.Links.Add(new LinkModel(sourceAnchor, someTargetAnchor));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 400px;">
+    <CascadingValue Value="_laDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Dynamic Anchor</h2>
+
+<p>
+    <code>DynamicAnchor</code> chooses the closest position from the given calculated positions.<br />
+    You can check out the list of position providers <a class="underline" href="/documentation/position-providers">here</a>.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var sourceAnchor = new DynamicAnchor(someNode, new[]
+{
+    new BoundsBasedPositionProvider(0.5, 0), // Center top
+    new BoundsBasedPositionProvider(1, 0.5), // Center right
+    new BoundsBasedPositionProvider(0.5, 1), // Center bottom
+    new BoundsBasedPositionProvider(0, 0.5), // Center left
+});
+Diagram.Links.Add(new LinkModel(daSourceAnchor, someTargetAnchor));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 400px;">
+    <CascadingValue Value="_daDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Links"
+                   PreviousLink="/documentation/links"
+                   NextTitle="Routers"
+                   NextLink="/documentation/links-routers" />
+
+@code {
+    private BlazorDiagram _paDiagram = new();
+    private BlazorDiagram _spaDiagram = new();
+    private BlazorDiagram _siaDiagram = new();
+    private BlazorDiagram _laDiagram = new();
+    private BlazorDiagram _daDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _paDiagram.Options.Zoom.Enabled = false;
+        _spaDiagram.Options.Zoom.Enabled = false;
+        _siaDiagram.Options.Zoom.Enabled = false;
+        _laDiagram.Options.Zoom.Enabled = false;
+        _daDiagram.Options.Zoom.Enabled = false;
+
+        // Position Anchor
+        var paSourceAnchor = new PositionAnchor(new Point(50, 40));
+        var paTargetAnchor = new PositionAnchor(new Point(300, 70));
+        _paDiagram.Links.Add(new LinkModel(paSourceAnchor, paTargetAnchor));
+
+        // Single Port Anchor
+        _spaDiagram.Options.LinksLayerOrder = 5;
+        SetupSpaSample(60, true, false, "MiddleIfNoMarker = true");
+        SetupSpaSample(160, false, true, "UseShapeAndAlignment = true");
+        SetupSpaSample(260, false, false, "Fallback / Default");
+
+        // Shape Intersection Anchor
+        _siaDiagram.RegisterComponent<ColoredNodeModel, ColoredNodeWidget>();
+        var siaNode1 = _siaDiagram.Nodes.Add(new ColoredNodeModel("Rectangle", false, "color1", new Point(100, 100)));
+        var siaNode2 = _siaDiagram.Nodes.Add(new ColoredNodeModel("Circle", true, "color2", new Point(350, 150)));
+        _siaDiagram.Links.Add(new LinkModel(siaNode1, siaNode2));
+
+        // Link Anchor
+        _laDiagram.Options.Links.RequireTarget = false;
+        var laNode1 = _laDiagram.Nodes.Add(new NodeModel(new Point(50, 100)));
+        var laNode2 = _laDiagram.Nodes.Add(new NodeModel(new Point(350, 250)));
+        var laPort1 = laNode1.AddPort(PortAlignment.Right);
+        var laPort2 = laNode2.AddPort(PortAlignment.Top);
+        var laBaseLink = _laDiagram.Links.Add(new LinkModel(laPort1, laPort2));
+
+        var laChildLink1 = _laDiagram.Links.Add(new LinkModel(new LinkAnchor(laBaseLink, 0.5), new PositionAnchor(new Point(600, 50))));
+        laChildLink1.PathGenerator = new StraightPathGenerator();
+        laChildLink1.AddLabel("Distance = 0.5");
+        laChildLink1.TargetMarker = LinkMarker.Arrow;
+
+        var laChildLink2 = _laDiagram.Links.Add(new LinkModel(new LinkAnchor(laBaseLink, 0.1, 0, 10), new PositionAnchor(new Point(100, 300))));
+        laChildLink2.PathGenerator = new StraightPathGenerator();
+        laChildLink2.AddLabel("Distance = 0.1, OffsetY = 10");
+        laChildLink2.TargetMarker = LinkMarker.Arrow;
+
+        var laChildLink3 = _laDiagram.Links.Add(new LinkModel(new LinkAnchor(laBaseLink, 0.9, 10), new PositionAnchor(new Point(650, 250))));
+        laChildLink3.PathGenerator = new StraightPathGenerator();
+        laChildLink3.AddLabel("Distance = 0.9, OffsetX = 10");
+        laChildLink3.TargetMarker = LinkMarker.Arrow;
+
+        // Dynamic Anchor
+        var daNode = _daDiagram.Nodes.Add(new NodeModel(new Point(50, 160)));
+        var daSourceAnchor = new DynamicAnchor(daNode, new[]
+        {
+            new BoundsBasedPositionProvider(0.5, 0), // Center top
+            new BoundsBasedPositionProvider(1, 0.5), // Center right
+            new BoundsBasedPositionProvider(0.5, 1), // Center bottom
+            new BoundsBasedPositionProvider(0, 0.5), // Center left
+        });
+        var daLink = _daDiagram.Links.Add(new LinkModel(daSourceAnchor, new PositionAnchor(new Point(350, 200))));
+        daLink.PathGenerator = new StraightPathGenerator();
+        daLink.SourceMarker = LinkMarker.Arrow;
+        daLink.TargetMarker = LinkMarker.Arrow;
+    }
+
+    private void SetupSpaSample(double y, bool middleIfNoMarker, bool useShapeAndAlignment, string title)
+    {
+        var spaNode = _spaDiagram.Nodes.Add(new NodeModel(new Point(50, y)));
+        var spaPort = spaNode.AddPort(PortAlignment.TopRight);
+        var spaSourceAnchor = new SinglePortAnchor(spaPort)
+            {
+                MiddleIfNoMarker = middleIfNoMarker,
+                UseShapeAndAlignment = useShapeAndAlignment
+            };
+        var spaLink = _spaDiagram.Links.Add(new LinkModel(spaSourceAnchor, new PositionAnchor(new Point(600, y - 10))));
+        spaLink.PathGenerator = new StraightPathGenerator();
+        spaLink.Color = "red";
+        spaLink.Labels.Add(new LinkLabelModel(spaLink, title));
+    }
+}

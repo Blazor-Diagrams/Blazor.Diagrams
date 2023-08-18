@@ -1,0 +1,38 @@
+﻿@page "/documentation/nodes-svg"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>SVG Nodes - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>SVG Nodes</h1>
+
+<p>
+    SVG nodes are nodes that will be rendered in the SVG layer. <br />
+    In this page, we will talk about the differences between them and normal nodes.
+</p>
+
+<h2>Structure</h2>
+
+<p>
+    The component <code>NodeRenderer</code> generates the following structure:
+</p>
+
+<pre><code class="language-cshtml">
+&lt;g class=&quot;diagram-node ...&quot;
+   data-node-id=&quot;28e9606d-08dd-47d5-a4c7-b25e541bcf1e&quot;
+   transform=&quot;translate(10 10)&quot;&gt;
+    &lt;!-- YOUR CONTENT WILL BE HERE --&gt;
+&lt;/g&gt;
+</code></pre>
+
+<h2>Creating a SVG node</h2>
+
+<pre><code class="language-cs">
+var node1 = new SvgNodeModel(new Point(10, 10));
+BlazorDiagram.Nodes.Add(node1);
+</code></pre>
+
+<NavigationButtons PreviousTitle="Nodes"
+                   PreviousLink="/documentation/nodes"
+                   NextTitle="Customization"
+                   NextLink="/documentation/nodes-customization" />

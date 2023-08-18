@@ -1,0 +1,55 @@
+﻿@page "/documentation/installation"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Installation - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Installation</h1>
+
+<p class="mb-2">
+    Let's begin by installing the NuGet package. <br />
+    You can use Visual Studio's Nuget Package Manager, or one of the following commands:
+</p>
+
+<b>.NET CLI</b>
+
+<pre><code class="language-bash">
+dotnet add package Z.Blazor.Diagrams
+</code></pre>
+
+<b>Package Manager</b>
+
+<pre><code class="language-bash">
+Install-Package Z.Blazor.Diagrams
+</code></pre>
+
+<h2>Project Setup</h2>
+<p>
+    Next, we'll setup the project and add the static resources for the library to work.
+</p>
+
+<div class="filename">wwwroot/index.html or Pages/_Host.cshtml</div>
+<pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;!-- ... --&gt;
+    &lt;link href=&quot;_content/Z.Blazor.Diagrams/style.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+    &lt;!-- If you want the default style --&gt;
+    &lt;link href=&quot;_content/Z.Blazor.Diagrams/default.styles.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;!-- ... --&gt;
+    &lt;script src=&quot;_content/Z.Blazor.Diagrams/script.min.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<p>
+    You're now ready to create your first diagram!
+</p>
+
+<NavigationButtons NextTitle="Diagram Creation" NextLink="/documentation/diagram-creation" />

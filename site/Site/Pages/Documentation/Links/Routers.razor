@@ -1,0 +1,106 @@
+﻿@page "/documentation/links-routers"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Routers - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Routers</h1>
+
+<p>
+    A <code>Router</code> is responsible of creating the route that the link will go through.<br />
+    It takes as input the list of vertices (if any) and outputs a list of new computed points.
+</p>
+
+<h2>Normal Router</h2>
+
+<p>
+    The <code>NormalRouter</code> is the default router.<br />
+    It simply returns the list of user-created vertices as is to ensure the link goes through them.
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var link = Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+link.Router = new NormalRouter();
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_nrDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h2>Orthogonal Router</h2>
+
+<p>
+    The <code>OrthogonalRouter</code> is a router that ensures an orthogonal path.<br />
+    It will add as many points as necessary to create that route using a simplified A* algorithm.<br />
+    <br />
+    <b>Limitations:</b>
+    <ul class="list-disc list-inside">
+        <li>Only supports links between 2 ports</li>
+        <li>Ignores user-defined Vertices</li>
+    </ul>
+</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-cs">
+var link = Diagram.Links.Add(new LinkModel(sourcePort, targetPort));
+link.Router = new OrthogonalRouter();
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_orDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="Anchors"
+                   PreviousLink="/documentation/links-anchors"
+                   NextTitle="Path Generators"
+                   NextLink="/documentation/links-path-generators" />
+
+@code {
+    private BlazorDiagram _nrDiagram = new();
+    private BlazorDiagram _orDiagram = new();
+
+    protected override void OnInitialized()
+    {
+        _nrDiagram.Options.Zoom.Enabled = false;
+        _orDiagram.Options.Zoom.Enabled = false;
+        
+        // Normal Router
+        var node1 = _nrDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
+        var node2 = _nrDiagram.Nodes.Add(new NodeModel(new Point(450, 150)));
+        _nrDiagram.Links.Add(new LinkModel(node1, node2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        });
+        _nrDiagram.Links.Add(new LinkModel(node1, node2)
+        {
+            PathGenerator = new StraightPathGenerator()
+        }).AddVertex(new Point(200, 190));
+
+        // Orthogonal Router
+        var orNode1 = _orDiagram.Nodes.Add(new NodeModel(new Point(100, 110)));
+        var orNode2 = _orDiagram.Nodes.Add(new NodeModel(new Point(500, 110)));
+        var orTopPort1 = orNode1.AddPort(PortAlignment.Top);
+        var orRightPort1 = orNode1.AddPort(PortAlignment.Right);
+        var orTopPort2 = orNode2.AddPort(PortAlignment.Top);
+        var orRightPort2 = orNode2.AddPort(PortAlignment.Right);
+        _orDiagram.Links.Add(new LinkModel(orTopPort1, orTopPort2)
+        {
+            PathGenerator = new StraightPathGenerator(),
+            Router = new OrthogonalRouter()
+        });
+        _orDiagram.Links.Add(new LinkModel(orRightPort1, orRightPort2)
+        {
+            PathGenerator = new StraightPathGenerator(),
+            Router = new OrthogonalRouter()
+        });
+    }
+}

@@ -6,16 +6,16 @@
                 <input type="text" class="form-control"
                        @bind-value="Node.Answer"
                        placeholder="Answer"
-                       @onmousedown:stopPropagation
-                       @onmouseup:stopPropagation
-                       @onmousemove:stopPropagation />
+                       @onpointerdown:stopPropagation
+                       @onpointerup:stopPropagation
+                       @onpointermove:stopPropagation />
             </div>
         </div>
     </div>
 
     @foreach (var port in Node.Ports)
     {
-        <PortRenderer Port="port"></PortRenderer>
+        <PortRenderer @key="port" Port="port"></PortRenderer>
     }
 </div>
 

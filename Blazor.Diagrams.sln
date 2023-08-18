@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.128
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE32E278-A887-454E-987D-FFE9E37169FE}"
 EndProject
@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Algorithms"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{260DF53D-FF2B-4D1D-ACA7-431F6B62EE38}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		CHANGELOG.md = CHANGELOG.md
+		.github\workflows\main.yml = .github\workflows\main.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -31,11 +33,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Core.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A9FC9B20-A9F1-4066-8B59-83BD26D3B1C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diagram-Demo", "docs\Diagram-Demo\Diagram-Demo.csproj", "{5F423724-5319-4DCE-B9F2-8B2D7E1FDC17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diagram-Demo", "docs\Diagram-Demo\Diagram-Demo.csproj", "{5F423724-5319-4DCE-B9F2-8B2D7E1FDC17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomNodesLinks", "docs\CustomNodesLinks\CustomNodesLinks.csproj", "{3D104DB4-C7F0-42CA-9D78-AB2C8A8AE3D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomNodesLinks", "docs\CustomNodesLinks\CustomNodesLinks.csproj", "{3D104DB4-C7F0-42CA-9D78-AB2C8A8AE3D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Layouts", "docs\Layouts\Layouts.csproj", "{78C85C89-B464-4083-8829-78BA52BB4780}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Layouts", "docs\Layouts\Layouts.csproj", "{78C85C89-B464-4083-8829-78BA52BB4780}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Tests", "tests\Blazor.Diagrams.Tests\Blazor.Diagrams.Tests.csproj", "{ED3B0D8F-F29A-4C66-A167-C36824A76902}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "site", "site", "{F1E6F4C0-3EC7-4CFF-834A-0CF207CCFF3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Site", "site\Site\Site.csproj", "{F26307EC-C188-44BD-B3E5-960318F43C0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +91,14 @@ Global
 		{78C85C89-B464-4083-8829-78BA52BB4780}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78C85C89-B464-4083-8829-78BA52BB4780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78C85C89-B464-4083-8829-78BA52BB4780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED3B0D8F-F29A-4C66-A167-C36824A76902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED3B0D8F-F29A-4C66-A167-C36824A76902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED3B0D8F-F29A-4C66-A167-C36824A76902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED3B0D8F-F29A-4C66-A167-C36824A76902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F26307EC-C188-44BD-B3E5-960318F43C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F26307EC-C188-44BD-B3E5-960318F43C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F26307EC-C188-44BD-B3E5-960318F43C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F26307EC-C188-44BD-B3E5-960318F43C0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +114,8 @@ Global
 		{5F423724-5319-4DCE-B9F2-8B2D7E1FDC17} = {A9FC9B20-A9F1-4066-8B59-83BD26D3B1C8}
 		{3D104DB4-C7F0-42CA-9D78-AB2C8A8AE3D5} = {A9FC9B20-A9F1-4066-8B59-83BD26D3B1C8}
 		{78C85C89-B464-4083-8829-78BA52BB4780} = {A9FC9B20-A9F1-4066-8B59-83BD26D3B1C8}
+		{ED3B0D8F-F29A-4C66-A167-C36824A76902} = {CEEAE4C2-CE68-4FC3-9E0F-D4781B91F7F4}
+		{F26307EC-C188-44BD-B3E5-960318F43C0C} = {F1E6F4C0-3EC7-4CFF-834A-0CF207CCFF3E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {969540A2-8162-4063-A4E3-B488F69BD582}

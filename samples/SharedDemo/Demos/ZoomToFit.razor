@@ -17,8 +17,8 @@
 
 <button class="btn btn-primary position-absolute m-2"
         style="z-index: 999;"
-        @onclick="() => diagram.ZoomToFit(50)">Zoom to fit</button>
+        @onclick="() => BlazorDiagram.ZoomToFit(50)">Zoom to fit</button>
 
-<CascadingValue Value="diagram">
+<CascadingValue Value="BlazorDiagram">
     <DiagramCanvas></DiagramCanvas>
 </CascadingValue>

@@ -1,21 +1,35 @@
 ﻿using System;
 
-namespace Blazor.Diagrams.Core.Models.Base
+namespace Blazor.Diagrams.Core.Models.Base;
+
+public abstract class Model
 {
-    public abstract class Model
+    private bool _visible = true;
+    
+    protected Model() : this(Guid.NewGuid().ToString()) { }
+
+    protected Model(string id)
     {
-        public Model() : this(Guid.NewGuid().ToString()) { }
-
-        public Model(string id)
-        {
-            Id = id;
-        }
-
-        public event Action? Changed;
-
-        public string Id { get; }
-        public bool Locked { get; set; }
-
-        public virtual void Refresh() => Changed?.Invoke();
+        Id = id;
     }
+
+    public event Action<Model>? Changed;
+    public event Action<Model>? VisibilityChanged;
+
+    public string Id { get; }
+    public bool Locked { get; set; }
+    public bool Visible
+    {
+        get => _visible;
+        set
+        {
+            if (_visible == value)
+                return;
+
+            _visible = value;
+            VisibilityChanged?.Invoke(this);
+        }
+    }
+
+    public virtual void Refresh() => Changed?.Invoke(this);
 }

@@ -1,0 +1,170 @@
+﻿@page "/documentation/groups-customization"
+@using Site.Components.Documentation.Nodes;
+@using Site.Models.Nodes;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Groups Customization - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Groups Customization</h1>
+
+<p>
+    Customizing groups in Blazor Diagrams is very easy! <br />
+    This tutorial is based on the Nodes Customization one, make sure you look at that one first.
+</p>
+
+<h2>Creating a model</h2>
+
+<p>
+    Let's assume that we want to create a new group that represents a container of arithmetic operations:
+</p>
+
+<div class="filename">ArithmeticContainer.cs</div>
+<pre><code class="language-cs">
+namespace YourNamespace;
+
+public class ArithmeticContainer : GroupModel
+{
+    public ArithmeticContainer(IEnumerable&lt;NodeModel&gt; children, byte padding = 30, bool autoSize = true) : base(children, padding, autoSize)
+    {
+    }
+}
+</code></pre>
+
+<h2>Creating a component</h2>
+
+<p>
+    Let's create a UI component to control how the group looks like: <br />
+</p>
+
+<div class="filename">ArithmeticContainerWidget.razor</div>
+<pre><code class="language-cshtml">
+@@using Site.Models.Nodes;
+
+&lt;div class=&quot;arithmetic-container&quot;&gt;
+    &lt;div class=&quot;title&quot;&gt;
+        @@Group.Title
+    &lt;/div&gt;
+
+    @@* This is required and it&#039;s what renders the children *@@
+    &lt;GroupNodes Group=&quot;Group&quot; /&gt;
+
+    @@foreach (var port in Group.Ports)
+    {
+        &lt;PortRenderer Port=&quot;port&quot; Class=&quot;group-port&quot;&gt;&lt;/PortRenderer&gt;
+    }
+&lt;/div&gt;
+
+@@code {
+    // This gets filled by the library
+    [Parameter] public ArithmeticContainer Group { get; set; } = null!;
+}
+</code></pre>
+
+Let's also style our component!
+
+<div class="filename">ArithmeticContainerWidget.razor.css</div>
+<pre><code class="language-css">
+.arithmetic-container {
+    width: 100%;
+    height: 100%;
+    border: 2px dashed black;
+}
+
+    .arithmetic-container .title {
+        position: absolute;
+        right: 0;
+        padding: 8px;
+        text-align: right;
+        border-left: 2px dashed black;
+        border-bottom: 2px dashed black;
+    }
+
+::deep .diagram-port {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background-color: black;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    ::deep .diagram-port.top {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        top: -10px;
+    }
+
+    ::deep .diagram-port.bottom {
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        bottom: -30px;
+    }
+</code></pre>
+
+<h2>Displaying</h2>
+
+<p>
+    All we have to do now is register our new creation!
+</p>
+
+<pre><code class="language-cs">
+private BlazorDiagram Diagram { get; set; } = new();
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    Diagram.RegisterComponent&lt;AddTwoNumbersNode, AddTwoNumbersWidget&gt;();
+    Diagram.RegisterComponent&lt;ArithmeticContainer, ArithmeticContainerWidget&gt;();
+
+    var node1 = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(120, 140)));
+    node1.AddPort(PortAlignment.Top);
+    node1.AddPort(PortAlignment.Bottom);
+
+    var node2 = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(370, 340)));
+    node2.AddPort(PortAlignment.Top);
+    node2.AddPort(PortAlignment.Bottom);
+
+    var group = Diagram.Groups.Add(new ArithmeticContainer(new[] { node1, node2 }, padding: 50));
+    group.AddPort(PortAlignment.Top);
+    group.AddPort(PortAlignment.Bottom);
+    group.Title = &quot;First Container&quot;;
+}
+</code></pre>
+
+<div class="diagram-container">
+    <CascadingValue Value="Diagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="SVG"
+                   PreviousLink="/documentation/groups-svg"
+                   NextTitle="Customization (SVG)"
+                   NextLink="/documentation/groups-customization-svg" />
+
+@code {
+    private BlazorDiagram Diagram { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Diagram.RegisterComponent<AddTwoNumbersNode, AddTwoNumbersWidget>();
+        Diagram.RegisterComponent<ArithmeticContainer, ArithmeticContainerWidget>();
+
+        var node1 = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(120, 140)));
+        node1.AddPort(PortAlignment.Top);
+        node1.AddPort(PortAlignment.Bottom);
+
+        var node2 = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(370, 340)));
+        node2.AddPort(PortAlignment.Top);
+        node2.AddPort(PortAlignment.Bottom);
+
+        var group = Diagram.Groups.Add(new ArithmeticContainer(new[] { node1, node2 }, padding: 50));
+        group.AddPort(PortAlignment.Top);
+        group.AddPort(PortAlignment.Bottom);
+        group.Title = "First Container";
+    }
+}

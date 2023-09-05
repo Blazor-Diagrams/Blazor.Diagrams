@@ -1,0 +1,34 @@
+﻿@page "/documentation"
+@layout DocumentationLayout
+
+<PageTitle>Documentation - Blazor Diagrams</PageTitle>
+
+<div class="grid md:grid-cols-2 gap-4 mb-10">
+    @foreach (var group in Documentation.Menu.Groups)
+    {
+        <div class="rounded-lg shadow-lg border border-slate-200">
+            <div class="p-4 bg-main rounded-t-lg text-white font-bold uppercase">
+                @if (group.Icon != null)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="currentColor"
+                         class="inline mr-1">
+                        <path d="@group.Icon" />
+                    </svg>
+                }
+                @group.Title
+            </div>
+            <div>
+                @foreach (var item in group.Children)
+                {
+                    <a class="block w-full cursor-pointer p-4 hover:bg-gray-200 border-b border-slate-200" href="@item.Link">
+                        @item.Title
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

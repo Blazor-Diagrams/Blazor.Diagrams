@@ -1,0 +1,284 @@
+﻿@page "/documentation/diagram-options"
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Diagram Options - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Diagram Options</h1>
+
+<p>
+    Here are all the available options in <code>BlazorDiagramOptions</code>:
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>LinksLayerOrder</td>
+            <td>Integer</td>
+            <td>0</td>
+            <td>The order (z-index) of the SVG layer</td>
+        </tr>
+        <tr>
+            <td>NodesLayerOrder</td>
+            <td>Integer</td>
+            <td>0</td>
+            <td>The order (z-index) of the HTML layer</td>
+        </tr>
+        <tr>
+            <td>Zoom</td>
+            <td>BlazorDiagramZoomOptions</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Links</td>
+            <td>BlazorDiagramLinkOptions</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Groups</td>
+            <td>BlazorDiagramGroupOptions</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Constraints</td>
+            <td>BlazorDiagramConstraintsOptions</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Virtualization</td>
+            <td>BlazorDiagramVirtualizationOptions</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Zoom</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Enabled</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Inverse</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Minimum</td>
+            <td>Double</td>
+            <td>0.1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Maximum</td>
+            <td>Double</td>
+            <td>2</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ScaleFactor</td>
+            <td>Double</td>
+            <td>1.05</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Links</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>DefaultColor</td>
+            <td>String</td>
+            <td>black</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DefaultSelectedColor</td>
+            <td>String</td>
+            <td>rgb(110, 159, 212)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DefaultRouter</td>
+            <td>Router</td>
+            <td>NormalRouter</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DefaultPathGenerator</td>
+            <td>PathGenerator</td>
+            <td>SmoothPathGenerator</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>EnableSnapping</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>If true, dragging new links will snap them to the closest ports</td>
+        </tr>
+        <tr>
+            <td>SnappingRadius</td>
+            <td>Double</td>
+            <td>50</td>
+            <td>Used to calculate the distance and decide whether to snap the link</td>
+        </tr>
+        <tr>
+            <td>RequireTarget</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>If false, links can be free (without target)</td>
+        </tr>
+        <tr>
+            <td>Factory</td>
+            <td>LinkFactory</td>
+            <td>-</td>
+            <td>Delegate to control how a link is instanciated</td>
+        </tr>
+        <tr>
+            <td>TargetAnchorFactory</td>
+            <td>AnchorFactory</td>
+            <td>-</td>
+            <td>Delegate to control how the target anchor is instanciated</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Groups</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Enabled</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Factory</td>
+            <td>GroupFactory</td>
+            <td>-</td>
+            <td>Delegate to control how a group is instanciated</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Constraints</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ShouldDeleteNode</td>
+            <td>Func&lt;NodeModel, ValueTask&lt;bool&gt;&gt;</td>
+            <td>true</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ShouldDeleteLink</td>
+            <td>Func&lt;BaseLinkModel, ValueTask&lt;bool&gt;&gt;</td>
+            <td>true</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ShouldDeleteGroup</td>
+            <td>Func&lt;GroupModel, ValueTask&lt;bool&gt;&gt;</td>
+            <td>true</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Virtualization</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Enabled</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>OnNodes</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>OnGroups</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>OnLinks</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<NavigationButtons PreviousTitle="Ordering"
+                   PreviousLink="/documentation/diagram-ordering"
+                   NextTitle="Keyboard Shortcuts"
+                   NextLink="/documentation/keyboard-shortcuts" />

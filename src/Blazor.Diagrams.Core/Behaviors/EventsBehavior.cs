@@ -1,66 +1,70 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
-using Microsoft.AspNetCore.Components.Web;
-using System;
+using Blazor.Diagrams.Core.Events;
 using System.Diagnostics;
 
-namespace Blazor.Diagrams.Core.Behaviors
+namespace Blazor.Diagrams.Core.Behaviors;
+
+public class EventsBehavior : Behavior
 {
-    public class EventsBehavior : Behavior
+    private readonly Stopwatch _mouseClickSw;
+    private Model? _model;
+    private bool _captureMouseMove;
+    private int _mouseMovedCount;
+
+    public EventsBehavior(Diagram diagram) : base(diagram)
     {
-        private readonly Stopwatch _mouseClickSw;
-        private bool _captureMouseMove;
-        private int _mouseMovedCount;
+        _mouseClickSw = new Stopwatch();
 
-        public EventsBehavior(Diagram diagram) : base(diagram)
+        Diagram.PointerDown += OnPointerDown;
+        Diagram.PointerMove += OnPointerMove;
+        Diagram.PointerUp += OnPointerUp;
+        Diagram.PointerClick += OnPointerClick;
+    }
+
+    private void OnPointerClick(Model? model, PointerEventArgs e)
+    {
+        if (_mouseClickSw.IsRunning && _mouseClickSw.ElapsedMilliseconds <= 500)
         {
-            _mouseClickSw = new Stopwatch();
-
-            Diagram.MouseDown += OnMouseDown;
-            Diagram.MouseMove += OnMouseMove;
-            Diagram.MouseUp += OnMouseUp;
-            Diagram.MouseClick += OnMouseClick;
+            Diagram.TriggerPointerDoubleClick(model, e);
         }
 
-        private void OnMouseClick(Model model, MouseEventArgs e)
+        _mouseClickSw.Restart();
+    }
+
+    private void OnPointerDown(Model? model, PointerEventArgs e)
+    {
+        _captureMouseMove = true;
+        _mouseMovedCount = 0;
+        _model = model;
+    }
+
+    private void OnPointerMove(Model? model, PointerEventArgs e)
+    {
+        if (!_captureMouseMove)
+            return;
+
+        _mouseMovedCount++;
+    }
+
+    private void OnPointerUp(Model? model, PointerEventArgs e)
+    {
+        if (!_captureMouseMove) return; // Only set by OnMouseDown
+        _captureMouseMove = false;
+        if (_mouseMovedCount > 0) return;
+
+        if (_model == model)
         {
-            if (_mouseClickSw.IsRunning && _mouseClickSw.ElapsedMilliseconds <= 500)
-            {
-                Diagram.OnMouseDoubleClick(model, e);
-            }
-
-            _mouseClickSw.Restart();
+            Diagram.TriggerPointerClick(model, e);
+            _model = null;
         }
+    }
 
-        private void OnMouseDown(Model model, MouseEventArgs e)
-        {
-            _captureMouseMove = true;
-        }
-
-        private void OnMouseMove(Model model, MouseEventArgs e)
-        {
-            if (!_captureMouseMove)
-                return;
-
-            _mouseMovedCount++;
-        }
-
-        private void OnMouseUp(Model model, MouseEventArgs e)
-        {
-            _captureMouseMove = false;
-            if (_mouseMovedCount > 0)
-            {
-                _mouseMovedCount = 0;
-                return;
-            }
-
-            Diagram.OnMouseClick(model, e);
-        }
-
-        public override void Dispose()
-        {
-            Diagram.MouseDown -= OnMouseDown;
-            Diagram.MouseMove -= OnMouseMove;
-            Diagram.MouseUp -= OnMouseUp;
-        }
+    public override void Dispose()
+    {
+        Diagram.PointerDown -= OnPointerDown;
+        Diagram.PointerMove -= OnPointerMove;
+        Diagram.PointerUp -= OnPointerUp;
+        Diagram.PointerClick -= OnPointerClick;
+        _model = null;
     }
 }

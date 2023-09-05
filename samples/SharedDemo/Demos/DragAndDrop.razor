@@ -8,20 +8,24 @@
         <div class="row h-100 p-4 no-gutters" style="background: #eee;">
             <div class="col-6">
                 <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(0)">
-                    <img class="d-block m-auto" src="_content/SharedDemo/img/DefaultNodeWidget.png" />
-                    <span>Default Node</span>
+                    <div style="pointer-events:none;">
+                        <img class="d-block m-auto" src="_content/SharedDemo/img/DefaultNodeWidget.png"/>
+                        <span>Default Node</span>
+                    </div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(1)">
-                    <img class="d-block m-auto" src="_content/SharedDemo/img/BotAnswerNodeWidget.png" />
-                    <span>Bot Answer Node</span>
+                    <div style="pointer-events:none;">
+                        <img class="d-block m-auto" src="_content/SharedDemo/img/BotAnswerNodeWidget.png"/>
+                        <span>Bot Answer Node</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-8" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="OnDrop">
-        <CascadingValue Value="_diagram">
+        <CascadingValue Value="_blazorDiagram">
             <DiagramCanvas></DiagramCanvas>
         </CascadingValue>
     </div>

@@ -1,0 +1,20 @@
+﻿@using Site.Models.Nodes;
+
+<div class="arithmetic-container">
+    <div class="title">
+        @Group.Title
+    </div>
+
+    @* This is required and it's what renders the children *@
+    <GroupNodes Group="Group" />
+
+    @foreach (var port in Group.Ports)
+    {
+        <PortRenderer Port="port" Class="group-port"></PortRenderer>
+    }
+</div>
+
+@code {
+    // This gets filled by the library
+    [Parameter] public ArithmeticContainer Group { get; set; } = null!;
+}

@@ -1,0 +1,202 @@
+﻿@page "/documentation/controls"
+@using Blazor.Diagrams.Core.Controls.Default;
+@using Blazor.Diagrams.Core.Controls;
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Positions;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Controls - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Controls</h1>
+
+<p>
+    Controls are "extra" UI element that show when models are selected or hovered on.<br />
+	The internal <code>ControlsLayerRenderer</code> component is responsible of rendering them in the appropriate layer, which means
+	you can have HTML controls as well as SVG controls based on the parent's layer.<br />
+	<b>This feature is still somewhat new and might be improved based on feedback.</b>
+</p>
+
+<h2>Types</h2>
+
+<h3>Control</h3>
+
+<p>
+	A <code>Control</code> is just a UI element with no behavior (e.g. <code>BoundaryControl</code>).
+</p>
+
+<h3>Executable Control</h3>
+
+<p>
+	A <code>ExecutableControl</code> is a clickable UI element with some attached behavior (e.g. <code>RemoveControl</code>).<br />
+	For now, executable controls work best using <code>ControlsType.OnSelection</code>.
+</p>
+
+<h2>Demonstration</h2>
+
+<pre><code class="language-cs">
+// Initialize
+var node1Controls = Diagram.Controls.AddFor(Node1); // OnSelection default
+var node2Controls = Diagram.Controls.AddFor(Node2, ControlsType.OnHover);
+
+// Add
+node1Controls.Add(new SomeControl());
+node2Controls.Add(new SomeControl());
+
+// Get the controls whenever
+node1Controls = Diagram.Controls.GetFor(Node1);
+node2Controls = Diagram.Controls.GetFor(Node2);
+
+// Manually control visibility
+node1Controls.Show();
+node2Controls.Hide();
+
+// Remove all controls for a model
+Diagram.Controls.RemoveFor(Node1);
+</code></pre>
+
+<h2>Out of the box controls</h2>
+
+The library comes with a couple of controls:
+
+<h3>Boundary Control</h3>
+
+<p>
+	The <code>BoundaryControl</code> simply shows a border alongside the boundary of the model based on <code>GetBounds</code>.
+</p>
+
+<pre><code class="language-cs">
+Diagram.Controls.AddFor(SomeModel).Add(new BoundaryControl());
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+	<CascadingValue Value="_bDiagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<h3>Remove Control</h3>
+
+<p>
+	The <code>RemoveControl</code> adds a deletion button positioned using <a class="underline" href="/documentation/position-providers">Position Providers</a>.
+</p>
+
+<pre><code class="language-cs">
+Diagram.Controls.AddFor(SomeModel)
+	.Add(new RemoveControl(0.5, 0)); // BoundsBasedPositionProvider (top center)
+// OR
+Diagram.Controls.AddFor(SomeModel)
+	.Add(new RemoveControl(somePositionProvider));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+	<CascadingValue Value="_rDiagram" IsFixed="true">
+		<DiagramCanvas></DiagramCanvas>
+	</CascadingValue>
+</div>
+
+<h3>Arrow Head Control</h3>
+
+<p>
+	The <code>ArrowHeadControl</code> adds a draggable arrow head on links to enable changing the source and/or target interactively.
+</p>
+
+<pre><code class="language-cs">
+Diagram.Controls.AddFor(SomeModel).Add(new ArrowHeadControl(source: true));
+Diagram.Controls.AddFor(SomeModel).Add(new ArrowHeadControl(source: false)); // Target
+Diagram.Controls.AddFor(SomeModel).Add(new ArrowHeadControl(true, customLinkMarker));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+	<CascadingValue Value="_ahDiagram" IsFixed="true">
+		<DiagramCanvas></DiagramCanvas>
+	</CascadingValue>
+</div>
+
+<h3>Drag New Link Control</h3>
+
+<p>
+	The <code>DragNewLinkControl</code> adds a link creation button positioned using <a class="underline" href="/documentation/position-providers">Position Providers</a>.<br />
+	This is mainly for port-less links, the source anchor will be a <code>ShapeIntersectionAnchor</code> by default.
+</p>
+
+<pre><code class="language-cs">
+Diagram.Controls.AddFor(SomeModel).Add(new DragNewLinkControl(1, 0.5, offsetX: 20));
+Diagram.Controls.AddFor(SomeModel).Add(new DragNewLinkControl(0, 0.5, offsetX: -20));
+// OR
+Diagram.Controls.AddFor(SomeModel)
+	.Add(new DragNewLinkControl(somePositionProvider));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+	<CascadingValue Value="_dnlDiagram" IsFixed="true">
+		<DiagramCanvas></DiagramCanvas>
+	</CascadingValue>
+</div>
+
+<NavigationButtons NextTitle="Customization"
+                   NextLink="/documentation/controls-customization" />
+
+@code {
+	private BlazorDiagram _bDiagram = new();
+	private BlazorDiagram _rDiagram = new();
+	private BlazorDiagram _ahDiagram = new();
+	private BlazorDiagram _dnlDiagram = new();
+
+	protected override void OnInitialized()
+	{
+		_bDiagram.Options.Zoom.Enabled = false;
+		_rDiagram.Options.Zoom.Enabled = false;
+		_ahDiagram.Options.Zoom.Enabled = false;
+		_dnlDiagram.Options.Zoom.Enabled = false;
+
+		// Boundary Control
+		var bNode1 = _bDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var bNode2 = _bDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		var bLink1 = _bDiagram.Links.Add(new LinkModel(bNode1, bNode2));
+		bNode1.Title = "Select me";
+		bNode2.Title = "Hover on me";
+		bLink1.AddLabel("Select me", distance: 0.5);
+		_bDiagram.Controls.AddFor(bNode1, ControlsType.OnSelection).Add(new BoundaryControl());
+		_bDiagram.Controls.AddFor(bNode2, ControlsType.OnHover).Add(new BoundaryControl());
+		_bDiagram.Controls.AddFor(bLink1, ControlsType.OnSelection).Add(new BoundaryControl());
+		_bDiagram.SelectModel(bNode1, false);
+		_bDiagram.SelectModel(bLink1, false);
+
+		// Remove Control
+		var rNode1 = _rDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var rNode2 = _rDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		var rLink1 = _rDiagram.Links.Add(new LinkModel(rNode1, rNode2));
+		rNode1.Title = "Select me";
+		rNode2.Title = "Select me";
+		rLink1.AddLabel("Select me", distance: 0.5);
+		_rDiagram.Controls.AddFor(rNode1, ControlsType.OnSelection).Add(new RemoveControl(0.5, 0));
+		_rDiagram.Controls.AddFor(rNode2, ControlsType.OnSelection).Add(new RemoveControl(0.5, 1));
+		_rDiagram.Controls.AddFor(rLink1, ControlsType.OnSelection).Add(new RemoveControl(new LinkPathPositionProvider(0.8, 0, -10)));
+		_rDiagram.SelectModel(rNode1, false);
+		_rDiagram.SelectModel(rNode2, false);
+		_rDiagram.SelectModel(rLink1, false);
+
+		// Arrow Head Control
+		_ahDiagram.Options.Links.RequireTarget = false;
+		var ahNode1 = _ahDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var ahNode2 = _ahDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		var ahLink1 = _ahDiagram.Links.Add(new LinkModel(ahNode1, ahNode2));
+		ahLink1.AddLabel("Select me", distance: 0.5);
+		_ahDiagram.Controls.AddFor(ahLink1).Add(new ArrowHeadControl(true))
+			.Add(new ArrowHeadControl(false, LinkMarker.NewCircle(10)));
+		_ahDiagram.SelectModel(ahLink1, false);
+
+		// Drag New Link Control
+		_dnlDiagram.Options.Links.RequireTarget = false;
+		var dnlNode1 = _dnlDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var dnlNode2 = _dnlDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		dnlNode1.Title = "Select me";
+		dnlNode2.Title = "Select me";
+		_dnlDiagram.Controls.AddFor(dnlNode1).Add(new DragNewLinkControl(1, 0.5, offsetX: 20));
+		_dnlDiagram.Controls.AddFor(dnlNode2).Add(new DragNewLinkControl(0, 0.5, offsetX: -20));
+		_dnlDiagram.SelectModel(dnlNode1, false);
+		_dnlDiagram.SelectModel(dnlNode2, false);
+	}
+}

@@ -1,0 +1,127 @@
+﻿@page "/documentation/navigator-widget"
+@using Blazor.Diagrams.Core.PathGenerators;
+@using Blazor.Diagrams.Core.Routers;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Navigator Widget - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Navigator Widget</h1>
+
+<p>
+    A <code>NavigatorWidget</code> (also called a Minimap) is a simplified view of the whole diagram.
+</p>
+
+<h2>Options</h2>
+
+<table>
+    <thead>
+        <tr>
+			<th>Name</th>
+			<th>Type</th>
+            <th>Default</th>
+        </tr>
+    </thead>
+    <tbody>
+		<tr>
+			<td>UseNodeShape</td>
+			<td>bool</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>Width</td>
+			<td>double</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Height</td>
+			<td>double</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Margin</td>
+			<td>double</td>
+			<td>5</td>
+		</tr>
+		<tr>
+			<td>NodeColor</td>
+			<td>string</td>
+			<td>#40babd</td>
+		</tr>
+		<tr>
+			<td>GroupColor</td>
+			<td>string</td>
+			<td>#9fd0d1</td>
+		</tr>
+		<tr>
+			<td>ViewStrokeColor</td>
+			<td>string</td>
+			<td>#40babd</td>
+		</tr>
+		<tr>
+			<td>ViewStrokeWidth</td>
+			<td>double</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>Class</td>
+			<td>string</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Style</td>
+			<td>string</td>
+			<td></td>
+		</tr>
+    </tbody>
+</table>
+
+<h2>Usage</h2>
+
+<pre><code class="language-cshtml">
+&lt;CascadingValue Value=&quot;_diagram&quot; IsFixed=&quot;true&quot;&gt;
+	&lt;DiagramCanvas&gt;
+		&lt;Widgets&gt;
+			&lt;NavigatorWidget Width=&quot;200&quot; Height=&quot;120&quot;
+								Class=&quot;border border-black bg-white absolute&quot;
+								Style=&quot;bottom: 15px; right: 15px;&quot; /&gt;
+		&lt;/Widgets&gt;
+	&lt;/DiagramCanvas&gt;
+&lt;/CascadingValue&gt;
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+    <CascadingValue Value="_diagram" IsFixed="true">
+        <DiagramCanvas>
+			<Widgets>
+				<NavigatorWidget Width="200" Height="120"
+								 Class="border border-black bg-white absolute"
+								 Style="bottom: 15px; right: 15px;" />
+			</Widgets>
+		</DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons NextTitle="Grid"
+                   NextLink="/documentation/grid-widget" />
+
+@code {
+    private BlazorDiagram _diagram = new();
+
+    protected override void OnInitialized()
+    {
+        _diagram.Options.Zoom.Enabled = false;
+
+		var node1 = _diagram.Nodes.Add(new NodeModel(new Point(100, 50)));
+		var node2 = _diagram.Nodes.Add(new NodeModel(new Point(400, 150)));
+		var node3 = _diagram.Nodes.Add(new NodeModel(new Point(250, -150)));
+		_diagram.Links.Add(new LinkModel(node1, node2)
+		{
+			PathGenerator = new StraightPathGenerator()
+		});
+		_diagram.Links.Add(new LinkModel(node3, node2)
+		{
+			PathGenerator = new StraightPathGenerator()
+		});
+    }
+}

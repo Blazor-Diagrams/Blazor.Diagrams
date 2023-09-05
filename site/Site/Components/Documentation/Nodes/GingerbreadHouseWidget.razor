@@ -1,0 +1,29 @@
+﻿@using Site.Models.Nodes;
+
+@{
+    var halfWidth = Group.Size!.Width / 2;
+}
+
+<path d="m @halfWidth -100 l @halfWidth 100 l -@Group.Size.Width 0 z"
+      fill="transparent"
+      stroke="black"
+      stroke-width="2" />
+
+<rect width="@Group.Size!.Width"
+      height="@Group.Size!.Height"
+      fill="transparent"
+      stroke="black"
+      stroke-width="2"></rect>
+
+@* This is required and it's what renders the children *@
+<GroupNodes Group="Group" />
+
+@foreach (var port in Group.Ports)
+{
+    <PortRenderer Port="port" Class="group-port"></PortRenderer>
+}
+
+@code {
+    // This gets filled by the library
+    [Parameter] public GingerbreadHouse Group { get; set; } = null!;
+}

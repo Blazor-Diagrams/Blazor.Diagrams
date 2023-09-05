@@ -1,0 +1,163 @@
+﻿@page "/documentation/nodes-customization"
+@using Site.Components.Documentation.Nodes;
+@using Site.Models.Nodes;
+@layout DocumentationLayout
+@inherits DocumentationPage
+
+<PageTitle>Nodes Customization - Documentation - Blazor Diagrams</PageTitle>
+
+<h1>Nodes Customization</h1>
+
+<p>
+    Customizing nodes in Blazor Diagrams is very easy!
+</p>
+
+<h2>Creating a model</h2>
+
+<p>
+    Most of the time, your nodes will hold more information than just a title, which is why we create a new model to encapsulate all the data and behavior we want.
+    In a perfect world, you would have one node model for each behavior and or UI representation. <br /> <br />
+
+    Let's assume that we want to create a new node that represents addition:
+</p>
+
+<div class="filename">AddTwoNumbersNode.cs</div>
+<pre><code class="language-cs">
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
+
+namespace YourNamespace;
+
+public class AddTwoNumbersNode : NodeModel
+{
+    public AddTwoNumbersNode(Point? position = null) : base(position) { }
+
+    public double FirstNumber { get; set; }
+    public double SecondNumber { get; set; }
+
+    // Here, you can put whatever you want, such as a method that does the addition
+}
+</code></pre>
+
+<h2>Creating a component</h2>
+
+<p>
+    Let's create a UI component to control how the node looks like:
+</p>
+
+<div class="filename">AddTwoNumbersWidget.razor</div>
+<pre><code class="language-cshtml">
+@@using Blazor.Diagrams.Components.Renderers;
+@@using YourNamespace;
+
+&lt;div&gt;
+    &lt;h5 class=&quot;card-title&quot;&gt;Add&lt;/h5&gt;
+    &lt;input type=&quot;number&quot; class=&quot;form-control&quot; @@bind-value=&quot;Node.FirstNumber&quot; placeholder=&quot;Number 1&quot; /&gt;
+    &lt;input type=&quot;number&quot; class=&quot;form-control&quot; @@bind-value=&quot;Node.SecondNumber&quot; placeholder=&quot;Number 2&quot; /&gt;
+
+    @@foreach (var port in Node.Ports)
+    {
+        // In case you have any ports to show
+        // IMPORTANT: You are always in charge of rendering ports
+        &lt;PortRenderer @@key=&quot;port&quot; Port=&quot;port&quot; /&gt;
+    }
+&lt;/div&gt;
+
+@@code {
+    // This gets filled by the library
+    [Parameter] public AddTwoNumbersNode Node { get; set; } = null!;
+}
+</code></pre>
+
+Let's also style our component!
+
+<div class="filename">AddTwoNumbersWidget.razor.css</div>
+<pre><code class="language-css">
+div {
+    width: 230px;
+    outline: 1px solid black;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+    div &gt; h5 {
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    div &gt; input[type=number] {
+        padding: 3px;
+        border-radius: 3px;
+        border: 1px solid black;
+        margin-bottom: 8px;
+    }
+
+::deep .diagram-port {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background-color: black;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    ::deep .diagram-port.top {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        top: -10px;
+    }
+
+    ::deep .diagram-port.bottom {
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        bottom: -30px;
+    }
+</code></pre>
+
+<h2>Displaying</h2>
+
+<p>
+    All we have to do now is register our new creation!
+</p>
+
+<pre><code class="language-cs">
+private BlazorDiagram Diagram { get; set; } = new();
+
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+
+    Diagram.RegisterComponent&lt;AddTwoNumbersNode, AddTwoNumbersWidget&gt;();
+
+    var node = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(80, 80)));
+    node.AddPort(PortAlignment.Top);
+    node.AddPort(PortAlignment.Bottom);
+}
+</code></pre>
+
+<div class="diagram-container">
+    <CascadingValue Value="Diagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+<NavigationButtons PreviousTitle="SVG Nodes"
+                   PreviousLink="/documentation/nodes-svg"
+                   NextTitle="Customization (SVG)"
+                   NextLink="/documentation/nodes-customization-svg" />
+
+@code {
+    private BlazorDiagram Diagram { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Diagram.RegisterComponent<AddTwoNumbersNode, AddTwoNumbersWidget>();
+
+        var node = Diagram.Nodes.Add(new AddTwoNumbersNode(new Point(80, 80)));
+        node.AddPort(PortAlignment.Top);
+        node.AddPort(PortAlignment.Bottom);
+    }
+}

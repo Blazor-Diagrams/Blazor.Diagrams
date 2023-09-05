@@ -4,6 +4,7 @@
 @inject LayoutData LayoutData
 
 @code {
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -12,27 +13,32 @@
         LayoutData.Info = "A simple example of Blazor.Diagrams.";
         LayoutData.DataChanged();
     }
+
 }
 
 <div style="position: absolute; z-index: 9999;">
     <div class="custom-control custom-checkbox ml-2">
-        <input id="zoomCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleZoom" checked />
+        <input id="zoomCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleZoom" checked/>
         <label class="custom-control-label" for="zoomCheckbox">Toggle Zoom</label>
     </div>
     <div class="custom-control custom-checkbox ml-2">
-        <input id="panningCheckbox" type="checkbox" class="custom-control-input" @onchange="TogglePanning" checked />
+        <input id="panningCheckbox" type="checkbox" class="custom-control-input" @onchange="TogglePanning" checked/>
         <label class="custom-control-label" for="panningCheckbox">Toggle Panning</label>
     </div>
     <div class="custom-control custom-checkbox ml-2">
-        <input id="virtualizationCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleVirtualization" checked />
+        <input id="virtualizationCheckbox" type="checkbox" class="custom-control-input" @onchange="ToggleVirtualization" checked/>
         <label class="custom-control-label" for="virtualizationCheckbox">Toggle Virtualization</label>
     </div>
 </div>
 
-<CascadingValue Value="diagram">
+<CascadingValue Value="BlazorDiagram">
     <DiagramCanvas>
         <Widgets>
-            <NavigatorWidget Width="300" Height="200" DefaultStyle="true"></NavigatorWidget>
+            <NavigatorWidget Width="200"
+                             Height="150"
+                             Style="position: absolute; bottom: 15px; right: 15px; border: 1px solid black;">
+            </NavigatorWidget>
+            <SelectionBoxWidget/>
         </Widgets>
     </DiagramCanvas>
 </CascadingValue>

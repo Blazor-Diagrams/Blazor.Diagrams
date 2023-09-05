@@ -36,7 +36,7 @@ jobs:
 
     - name: Pack
       if: matrix.configuration == 'Release'
-      run: dotnet pack --configuration ${{ matrix.configuration }} -o packages
+      run: dotnet pack --configuration ${{ matrix.configuration }} -o packages --no-build
 
     - name: Upload packages
       if: matrix.configuration == 'Release'

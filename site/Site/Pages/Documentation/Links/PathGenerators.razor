@@ -35,7 +35,8 @@ link.PathGenerator = new SmoothPathGenerator();
 <h2>Straight Path Generator</h2>
 
 <p>
-    The <code>StraightPathGenerator</code> generates straight lines.
+    The <code>StraightPathGenerator</code> generates straight lines.<br />
+    You can also choose a radius for when the path contains vertices or direction changes.
 </p>
 
 <h3>Usage</h3>
@@ -78,12 +79,13 @@ link.PathGenerator = new StraightPathGenerator();
         // Straight Path Generator
         var stpgNode1 = _stpgDiagram.Nodes.Add(new NodeModel(new Point(150, 50)));
         var stpgNode2 = _stpgDiagram.Nodes.Add(new NodeModel(new Point(450, 110)));
-        var stpgBottomPort1 = stpgNode1.AddPort(PortAlignment.BottomRight);
+        var stpgBottomPort1 = stpgNode1.AddPort(PortAlignment.Bottom);
         var stpgRightPort1 = stpgNode1.AddPort(PortAlignment.Right);
         var stpgBottomPort2 = stpgNode2.AddPort(PortAlignment.BottomLeft);
         var stpgLeftPort2 = stpgNode2.AddPort(PortAlignment.Left);
-        _stpgDiagram.Links.Add(new LinkModel(stpgBottomPort1, stpgBottomPort2)).PathGenerator = new StraightPathGenerator();
         _stpgDiagram.Links.Add(new LinkModel(stpgRightPort1, stpgLeftPort2)).PathGenerator = new StraightPathGenerator();
-
+        var link = _stpgDiagram.Links.Add(new LinkModel(stpgBottomPort1, stpgBottomPort2));
+        link.PathGenerator = new StraightPathGenerator(10);
+        link.AddVertex(new Point(200, 250));
     }
 }

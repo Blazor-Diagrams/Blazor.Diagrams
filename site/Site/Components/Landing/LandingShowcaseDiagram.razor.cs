@@ -76,7 +76,10 @@ public partial class LandingShowcaseDiagram
     private void OnLinkRemoved(BaseLinkModel link)
     {
         (link.Source.Model as PortModel)!.Parent.Refresh();
-        if (link.Target != null && link.Target.Model is PortModel portModel) portModel.Parent.Refresh();
+        if (link.Target is SinglePortAnchor anchor && anchor.Model is PortModel portModel)
+        {
+            portModel.Parent.Refresh();
+        }
         link.TargetChanged -= OnLinKTargetChanged;
     }
 }

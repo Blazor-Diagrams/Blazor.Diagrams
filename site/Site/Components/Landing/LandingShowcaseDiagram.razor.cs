@@ -67,9 +67,12 @@ public partial class LandingShowcaseDiagram
 
     private void OnLinKTargetChanged(BaseLinkModel link, Anchor? oldTarget, Anchor? newTarget)
     {
-        if (link.IsAttached && newTarget is not null)
+        // only refresh on the first time the link is attached
+        if (oldTarget is PositionAnchor 
+            && newTarget.Model is PortModel targetModel
+            && link.IsAttached)        
         {
-            (newTarget.Model as PortModel)!.Parent.Refresh();
+            targetModel.Parent.Refresh();
         }
     }
 

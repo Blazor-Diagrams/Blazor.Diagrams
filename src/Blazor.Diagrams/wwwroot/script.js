@@ -40,8 +40,9 @@ var s = {
         }
     },
     unobserve: (element, id) => {
-        if (!element) return;
-        s.ro.unobserve(element);
+        if (element) {
+            s.ro.unobserve(element);
+        }
         delete s.tracked[id];
         delete s.canvases[id];
     }

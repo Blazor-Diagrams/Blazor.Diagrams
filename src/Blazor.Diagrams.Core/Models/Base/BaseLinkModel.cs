@@ -30,6 +30,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public Anchor Source { get; private set; }
     public Anchor Target { get; private set; }
     public Diagram? Diagram { get; internal set; }
+    public Point[]? Route { get; private set; }
     public PathGeneratorResult? PathGeneratorResult { get; private set; }
     public bool IsAttached => Source is not PositionAnchor && Target is not PositionAnchor;
     public Router? Router { get; set; }
@@ -129,11 +130,13 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
             var target = Target.GetPosition(this, route);
             if (source != null && target != null)
             {
+                Route = route;
                 PathGeneratorResult = pathGenerator.GetResult(Diagram, this, route, source, target);
                 return;
             }
         }
 
+        Route = null;
         PathGeneratorResult = null;
     }
 

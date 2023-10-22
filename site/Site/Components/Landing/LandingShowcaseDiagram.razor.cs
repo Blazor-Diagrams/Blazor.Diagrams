@@ -65,7 +65,7 @@ public partial class LandingShowcaseDiagram
         link.TargetChanged += OnLinKTargetChanged;
     }
 
-    private void OnLinKTargetChanged(BaseLinkModel link, Anchor? oldTarget, Anchor? newTarget)
+    private void OnLinKTargetChanged(BaseLinkModel link, Anchor oldTarget, Anchor newTarget)
     {
         // only refresh on the first time the link is attached
         if (oldTarget is PositionAnchor 

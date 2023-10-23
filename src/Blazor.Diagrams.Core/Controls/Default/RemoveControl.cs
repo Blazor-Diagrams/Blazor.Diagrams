@@ -23,18 +23,25 @@ public class RemoveControl : ExecutableControl
 
     public override Point? GetPosition(Model model) => _positionProvider.GetPosition(model);
 
-    public override ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs _)
+    public override async ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs _)
     {
         switch (model)
         {
+
             case NodeModel node:
-                diagram.Nodes.Remove(node);
+                if (await diagram.Options.Constraints.ShouldDeleteNode.Invoke(node))
+                {
+                    diagram.Nodes.Remove(node);
+                }
                 break;
             case BaseLinkModel link:
-                diagram.Links.Remove(link);
+                if (await diagram.Options.Constraints.ShouldDeleteLink.Invoke(link))
+                {
+                    diagram.Links.Remove(link);
+                }
                 break;
-        }
 
-        return ValueTask.CompletedTask;
+            
+        }
     }
 }

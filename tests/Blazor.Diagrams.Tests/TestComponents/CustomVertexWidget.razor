@@ -1,6 +1,6 @@
 ﻿@using Blazor.Diagrams.Core.Models;
 
-<circle cx="@Vertex.Position.X" cy="@Vertex.Position.Y" fill="@Color" r="10" />
+<circle cx="@Vertex.Position.X.ToInvariantString()" cy="@Vertex.Position.Y.ToInvariantString()" fill="@Color" r="10" />
 
 @code {
     [Parameter] public LinkVertexModel Vertex { get; set; } = null!;

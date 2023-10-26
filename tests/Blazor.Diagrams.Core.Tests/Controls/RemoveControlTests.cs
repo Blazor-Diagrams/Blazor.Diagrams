@@ -175,5 +175,98 @@ namespace Blazor.Diagrams.Core.Tests.Controls
             Assert.Contains(link, diagram.Links);
         }
 
+        [Fact]
+        public async Task OnPointerDown_NoConstraints_RemovesGroup()
+        {
+            // Arrange
+            RemoveControl removeControl = new(0, 0);
+            Diagram diagram = new TestDiagram();
+
+            var node1 = new NodeModel(new Point(50, 50));
+            var node2 = new NodeModel(new Point(300, 300));
+            diagram.Nodes.Add(new[] { node1, node2 });
+            node1.AddPort(PortAlignment.Right);
+            node2.AddPort(PortAlignment.Left);
+
+            var group = new GroupModel(new[] { node1, node2 });
+
+
+            diagram.Groups.Add(group);
+
+            // Act
+            await removeControl.OnPointerDown(diagram, group, PointerEventArgs);
+
+            // Assert
+            Assert.Empty(diagram.Groups);
+            Assert.Empty(diagram.Nodes);
+        }
+
+        [Fact]
+        public async Task OnPointerDown_ShouldDeleteGroupTrue_RemovesGroup()
+        {
+            // Arrange
+            RemoveControl removeControl = new(0, 0);
+            Diagram diagram = new TestDiagram(
+                new Options.DiagramOptions
+                {
+                    Constraints =
+                    {
+                        ShouldDeleteGroup = (node) => ValueTask.FromResult(true)
+                    }
+                });
+
+            var node1 = new NodeModel(new Point(50, 50));
+            var node2 = new NodeModel(new Point(300, 300));
+            diagram.Nodes.Add(new[] { node1, node2 });
+            node1.AddPort(PortAlignment.Right);
+            node2.AddPort(PortAlignment.Left);
+
+            var group = new GroupModel(new[] { node1, node2 });
+
+
+            diagram.Groups.Add(group);
+
+            // Act
+            await removeControl.OnPointerDown(diagram, group, PointerEventArgs);
+
+            // Assert
+            Assert.Empty(diagram.Groups);
+            Assert.Empty(diagram.Nodes);
+        }
+
+        [Fact]
+        public async Task OnPointerDown_ShouldDeleteGroupFalse_KeepsGroup()
+        {
+            // Arrange
+            RemoveControl removeControl = new(0, 0);
+            Diagram diagram = new TestDiagram(
+                new Options.DiagramOptions
+                {
+                    Constraints =
+                    {
+                        ShouldDeleteGroup = (node) => ValueTask.FromResult(false)
+                    }
+                });
+
+            var node1 = new NodeModel(new Point(50, 50));
+            var node2 = new NodeModel(new Point(300, 300));
+            diagram.Nodes.Add(new[] { node1, node2 });
+            node1.AddPort(PortAlignment.Right);
+            node2.AddPort(PortAlignment.Left);
+
+            var group = new GroupModel(new[] { node1, node2 });
+
+
+            diagram.Groups.Add(group);
+
+            // Act
+            await removeControl.OnPointerDown(diagram, group, PointerEventArgs);
+
+            // Assert
+            Assert.Contains(group, diagram.Groups);
+            Assert.Contains(node1, diagram.Nodes);
+            Assert.Contains(node2, diagram.Nodes);
+        }
+
     }
 }

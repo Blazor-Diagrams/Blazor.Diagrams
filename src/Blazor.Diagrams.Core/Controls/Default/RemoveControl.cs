@@ -25,23 +25,42 @@ public class RemoveControl : ExecutableControl
 
     public override async ValueTask OnPointerDown(Diagram diagram, Model model, PointerEventArgs _)
     {
-        switch (model)
+        if (await ShouldDeleteModel(diagram, model))
         {
-
-            case NodeModel node:
-                if (await diagram.Options.Constraints.ShouldDeleteNode.Invoke(node))
-                {
-                    diagram.Nodes.Remove(node);
-                }
-                break;
-            case BaseLinkModel link:
-                if (await diagram.Options.Constraints.ShouldDeleteLink.Invoke(link))
-                {
-                    diagram.Links.Remove(link);
-                }
-                break;
-
-            
+            DeleteModel(diagram, model);
         }
+    }
+
+    private static void DeleteModel(Diagram diagram, Model model)
+    {
+       switch (model)
+        {
+            case GroupModel group:
+                diagram.Groups.Delete(group);
+                return;
+            case NodeModel node:
+                diagram.Nodes.Remove(node);
+                return;
+
+            case BaseLinkModel link:
+                diagram.Links.Remove(link);
+                return;
+        }
+    }
+
+    private static async ValueTask<bool> ShouldDeleteModel(Diagram diagram, Model model)
+    {
+        if (model.Locked)
+        {
+            return false;
+        }
+
+        return model switch
+        {
+            GroupModel group => await diagram.Options.Constraints.ShouldDeleteGroup.Invoke(group),
+            NodeModel node => await diagram.Options.Constraints.ShouldDeleteNode.Invoke(node),
+            BaseLinkModel link => await diagram.Options.Constraints.ShouldDeleteLink.Invoke(link),
+            _ => false,
+        };
     }
 }

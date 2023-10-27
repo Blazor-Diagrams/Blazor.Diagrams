@@ -65,18 +65,24 @@ public partial class LandingShowcaseDiagram
         link.TargetChanged += OnLinKTargetChanged;
     }
 
-    private void OnLinKTargetChanged(BaseLinkModel link, Anchor? oldTarget, Anchor? newTarget)
+    private void OnLinKTargetChanged(BaseLinkModel link, Anchor oldTarget, Anchor newTarget)
     {
-        if (oldTarget == null && newTarget != null) // First attach
+        // only refresh on the first time the link is attached
+        if (oldTarget is PositionAnchor 
+            && newTarget.Model is PortModel targetModel
+            && link.IsAttached)        
         {
-            (newTarget.Model as PortModel)!.Parent.Refresh();
+            targetModel.Parent.Refresh();
         }
     }
 
     private void OnLinkRemoved(BaseLinkModel link)
     {
         (link.Source.Model as PortModel)!.Parent.Refresh();
-        if (link.Target != null) (link.Target.Model as PortModel)!.Parent.Refresh();
+        if (link.Target is SinglePortAnchor anchor && anchor.Model is PortModel portModel)
+        {
+            portModel.Parent.Refresh();
+        }
         link.TargetChanged -= OnLinKTargetChanged;
     }
 }

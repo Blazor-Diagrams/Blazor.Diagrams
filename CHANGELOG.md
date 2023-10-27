@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.1) - 2023-10-27
+
+### Added
+
+- `Route` property to `BaseLinkModel` to hold the result of the executed router
+
+### Fixed
+
+- Constraints not checked when using `RemoveControl` (thanks to @[K0369](https://github.com/K0369))
+- NRE Exception on the landing page demo when dragging a new link and not linking it to something (thanks to @[K0369](https://github.com/K0369))
+- `LinkVertexWidgetTests` failing on cultures that are not using a dot as decimal separator (thanks to @[K0369](https://github.com/K0369))
+- NRE exception in the Diagram Demo project (thanks to @[Suraj0500](https://github.com/Suraj0500))
+
 ## Diagrams (3.0.0) - 2023-08-14
 
 Finally, the new documentation website is here!  

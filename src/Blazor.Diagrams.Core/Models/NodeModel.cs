@@ -11,7 +11,9 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     private readonly List<PortModel> _ports = new();
     private readonly List<BaseLinkModel> _links = new();
     private Size? _size;
+    public Size MinimumDimensions { get; set; } = new Size(0, 0);
 
+    public event Action<NodeModel>? SizeChanging;
     public event Action<NodeModel>? SizeChanged;
     public event Action<NodeModel>? Moving;
 
@@ -28,11 +30,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         get => _size;
         set
         {
-            if (value?.Equals(_size) == true)
-                return;
-
             _size = value;
-            SizeChanged?.Invoke(this);
         }
     }
     public bool ControlledSize { get; init; }
@@ -101,6 +99,23 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         Refresh();
         RefreshLinks();
         Moving?.Invoke(this);
+    }
+
+    public void SetSize(double width, double height)
+    {
+        var newSize = new Size(width, height);
+        if (newSize.Equals(_size) == true)
+            return;
+
+        Size = newSize;
+        Refresh();
+        RefreshLinks();
+        SizeChanging?.Invoke(this);
+    }
+
+    public void TriggerSizeChanged()
+    {
+        SizeChanged?.Invoke(this);
     }
 
     public virtual void UpdatePositionSilently(double deltaX, double deltaY)

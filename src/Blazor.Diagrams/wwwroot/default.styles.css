@@ -127,4 +127,28 @@ g.diagram-group.default.selected > rect {
     transform: translate(-50%, -50%);
 }
 
+.default-node-resizer {
+    width: 5px;
+    height: 5px;
+    background-color: #f5f5f5;
+    border: 1px solid #6e9fd4;
+    position: absolute;
+}
+
+.default-node-resizer.bottomright {
+    cursor: nwse-resize;
+}
+
+.default-node-resizer.topright {
+    cursor: nesw-resize;
+}
+
+.default-node-resizer.bottomleft {
+    cursor: nesw-resize;
+}
+
+.default-node-resizer.topleft {
+    cursor: nwse-resize;
+}
+
 /*# sourceMappingURL=wwwroot\default.styles.css.map */

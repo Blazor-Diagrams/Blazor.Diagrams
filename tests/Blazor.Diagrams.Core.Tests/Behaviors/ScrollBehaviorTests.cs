@@ -62,7 +62,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 			// Assert
 			Assert.Equal(-95, diagram.Pan.X, 0);
 			Assert.Equal(-190, diagram.Pan.Y, 0);
-			Assert.Equal(-190, node.Position.Y);
+			Assert.Equal(200, node.Position.Y);
 		}
 
 	}

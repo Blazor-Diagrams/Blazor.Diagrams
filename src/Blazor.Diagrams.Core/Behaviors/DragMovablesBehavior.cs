@@ -120,8 +120,8 @@ public class DragMovablesBehavior : Behavior
 		private double? _lastClientX;
 		private double? _lastClientY;
 		private bool _moved;
-		private double _totalScrollX = 0;
-		private double _totalScrollY = 0;
+		private double _totalMovedX = 0;
+		private double _totalMovedY = 0;
 
 		public DragMovablesBehavior(Diagram diagram) : base(diagram)
 		{
@@ -172,7 +172,14 @@ public class DragMovablesBehavior : Behavior
 			var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
 			var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
-			moveNodes(model, deltaX, deltaY);
+			_totalMovedX += deltaX;
+			_totalMovedY += deltaY;
+
+			moveNodes(model, _totalMovedX, _totalMovedY);
+
+			_lastClientX = e.ClientX;
+			_lastClientY = e.ClientY;
+
 		}
 
 		public void OnPointerMove(WheelEventArgs e)
@@ -182,27 +189,19 @@ public class DragMovablesBehavior : Behavior
 
 			_moved = true;
 
-			_totalScrollX += e.DeltaX;
-			_totalScrollY += e.DeltaY;
+			_totalMovedX += e.DeltaX;
+			_totalMovedY += e.DeltaY;
 
-			// Use _totalScrollX and _totalScrollY for moving nodes
-			moveNodes(null, _totalScrollX, _totalScrollY);
-
-			Console.WriteLine($"TotalScrollX: {_totalScrollX}, TotalScrollY: {_totalScrollY}");
-
-			_lastClientX -= e.DeltaX;
-			_lastClientY -= e.DeltaY;
-
-			Console.WriteLine($"Updated LastClientX: {_lastClientX}, Updated LastClientY: {_lastClientY}");
+			moveNodes(null, _totalMovedX, _totalMovedY);
 		}
 
 		private void moveNodes(Model? model, double deltaX, double deltaY)
 		{
-			Console.WriteLine($"DeltaX: {deltaX}, DeltaY: {deltaY}");
 			foreach (var (movable, initialPosition) in _initialPositions)
 			{
 				var ndx = ApplyGridSize(deltaX + initialPosition.X);
 				var ndy = ApplyGridSize(deltaY + initialPosition.Y);
+
 				if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
 				{
 					node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
@@ -228,8 +227,8 @@ public class DragMovablesBehavior : Behavior
 			}
 
 			_initialPositions.Clear();
-			_totalScrollX = 0;
-			_totalScrollY = 0;
+			_totalMovedX = 0;
+			_totalMovedY = 0;
 			_lastClientX = null;
 			_lastClientY = null;
 		}

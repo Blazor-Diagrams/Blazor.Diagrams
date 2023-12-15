@@ -7,12 +7,15 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
 {
     public class TopRightResizerProvider : IResizerProvider
     {
-		public string? Class => "topright";
+        public string? Class => "topright";
 
-		private Size _originalSize = null!;
+        private Size _originalSize = null!;
         private Point _originalPosition = null!;
-        private Point _originalMousePosition = null!;
         private NodeModel _nodeModel = null!;
+        private double? _lastClientX;
+        private double? _lastClientY;
+        private double _totalMovedX = 0;
+        private double _totalMovedY = 0;
 
         public Point? GetPosition(Model model)
         {
@@ -23,28 +26,70 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             return null;
         }
 
-        public void OnResizeStart(Diagram diagram, Model model, PointerEventArgs eventArgs)
+        public void OnResizeStart(Diagram diagram, Model model, PointerEventArgs e)
         {
             if (model is NodeModel nodeModel)
             {
+                _lastClientX = e.ClientX;
+                _lastClientY = e.ClientY;
                 _originalPosition = new Point(nodeModel.Position.X, nodeModel.Position.Y);
-                _originalMousePosition = new Point(eventArgs.ClientX, eventArgs.ClientY);
                 _originalSize = nodeModel.Size!;
                 _nodeModel = nodeModel;
             }
         }
 
-        public void OnPointerMove(Model? model, PointerEventArgs args)
+        public void OnPointerMove(Model? model, PointerEventArgs e)
+        {
+            if (_nodeModel is null || _lastClientX == null || _lastClientY == null)
+            {
+                return;
+            }
+
+            var deltaX = (e.ClientX - _lastClientX.Value);
+            var deltaY = (e.ClientY - _lastClientY.Value);
+
+            _totalMovedX += deltaX;
+            _totalMovedY += deltaY;
+
+            var height = _originalSize.Height - _totalMovedY;
+            var width = _originalSize.Width + _totalMovedX;
+
+            var positionX = _originalPosition.X;
+            var positionY = _originalPosition.Y + _totalMovedY;
+
+            if (width < _nodeModel.MinimumDimensions.Width)
+            {
+                width = _nodeModel.MinimumDimensions.Width;
+                positionX = _nodeModel.Position.X;
+            }
+            if (height < _nodeModel.MinimumDimensions.Height)
+            {
+                height = _nodeModel.MinimumDimensions.Height;
+                positionY = _nodeModel.Position.Y;
+            }
+
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+
+            _nodeModel.SetPosition(positionX, positionY);
+            _nodeModel.SetSize(width, height);
+        }
+
+        public void OnPointerMove(WheelEventArgs e)
         {
             if (_nodeModel is null)
             {
                 return;
             }
-            var height = _originalSize.Height - (args.ClientY - _originalMousePosition.Y);
-            var width = _originalSize.Width + (args.ClientX - _originalMousePosition.X);
+
+            _totalMovedX += e.DeltaX;
+            _totalMovedY += e.DeltaY;
+
+            var height = _originalSize.Height - _totalMovedY;
+            var width = _originalSize.Width + _totalMovedX;
 
             var positionX = _originalPosition.X;
-            var positionY = _originalPosition.Y + (args.ClientY - _originalMousePosition.Y);
+            var positionY = _originalPosition.Y + _totalMovedY;
 
             if (width < _nodeModel.MinimumDimensions.Width)
             {
@@ -66,7 +111,10 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             _nodeModel?.TriggerSizeChanged();
             _originalSize = null!;
             _originalPosition = null!;
-            _originalMousePosition = null!;
+            _totalMovedX = 0;
+            _totalMovedY = 0;
+            _lastClientX = null;
+            _lastClientY = null;
             _nodeModel = null!;
         }
 

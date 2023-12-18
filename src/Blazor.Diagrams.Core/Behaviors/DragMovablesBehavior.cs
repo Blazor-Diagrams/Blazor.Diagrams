@@ -56,13 +56,12 @@ public class DragMovablesBehavior : Behavior
         _moved = false;
     }
 
-    public void OnPointerMove(Model? model, PointerEventArgs e)
+    private void OnPointerMove(Model? model, PointerEventArgs e)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
 
         _moved = true;
-
         var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
         var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
@@ -95,7 +94,6 @@ public class DragMovablesBehavior : Behavior
         {
             var ndx = ApplyGridSize(deltaX + initialPosition.X);
             var ndy = ApplyGridSize(deltaY + initialPosition.Y);
-
             if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
             {
                 node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
@@ -119,7 +117,6 @@ public class DragMovablesBehavior : Behavior
                 movable.TriggerMoved();
             }
         }
-
         _initialPositions.Clear();
         _totalMovedX = 0;
         _totalMovedY = 0;
@@ -133,14 +130,12 @@ public class DragMovablesBehavior : Behavior
             return n;
 
         var gridSize = Diagram.Options.GridSize.Value;
-
         return gridSize * Math.Floor((n + gridSize / 2.0) / gridSize);
     }
 
     public override void Dispose()
     {
         _initialPositions.Clear();
-
         Diagram.PointerDown -= OnPointerDown;
         Diagram.PointerMove -= OnPointerMove;
         Diagram.PointerUp -= OnPointerUp;

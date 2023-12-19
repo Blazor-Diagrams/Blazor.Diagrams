@@ -23,7 +23,7 @@ public class DragMovablesBehavior : Behavior
         Diagram.PointerDown += OnPointerDown;
         Diagram.PointerMove += OnPointerMove;
         Diagram.PointerUp += OnPointerUp;
-        Diagram.Wheel += OnPointerMove;
+        Diagram.Wheel += OnWheel;
     }
 
     private void OnPointerDown(Model? model, PointerEventArgs e)
@@ -68,14 +68,14 @@ public class DragMovablesBehavior : Behavior
         _totalMovedX += deltaX;
         _totalMovedY += deltaY;
 
-        moveNodes(model, _totalMovedX, _totalMovedY);
+        MoveNodes(model, _totalMovedX, _totalMovedY);
 
         _lastClientX = e.ClientX;
         _lastClientY = e.ClientY;
 
     }
 
-    public void OnPointerMove(WheelEventArgs e)
+    public void OnWheel(WheelEventArgs e)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
@@ -85,10 +85,10 @@ public class DragMovablesBehavior : Behavior
         _totalMovedX += e.DeltaX;
         _totalMovedY += e.DeltaY;
 
-        moveNodes(null, _totalMovedX, _totalMovedY);
+        MoveNodes(null, _totalMovedX, _totalMovedY);
     }
 
-    private void moveNodes(Model? model, double deltaX, double deltaY)
+    private void MoveNodes(Model? model, double deltaX, double deltaY)
     {
         foreach (var (movable, initialPosition) in _initialPositions)
         {
@@ -139,6 +139,6 @@ public class DragMovablesBehavior : Behavior
         Diagram.PointerDown -= OnPointerDown;
         Diagram.PointerMove -= OnPointerMove;
         Diagram.PointerUp -= OnPointerUp;
-        Diagram.Wheel -= OnPointerMove;
+        Diagram.Wheel -= OnWheel;
     }
 }

@@ -20,7 +20,7 @@ public class DragNewLinkBehavior : Behavior
         Diagram.PointerDown += OnPointerDown;
         Diagram.PointerMove += OnPointerMove;
         Diagram.PointerUp += OnPointerUp;
-        Diagram.Wheel += OnPointerMove;
+        Diagram.Wheel += OnWheel;
     }
 
     public void StartFrom(ILinkable source, double clientX, double clientY)
@@ -79,7 +79,7 @@ public class DragNewLinkBehavior : Behavior
         UpdateLinkPosition(e.ClientX, e.ClientY);
     }
 
-    private void OnPointerMove(WheelEventArgs e)
+    private void OnWheel(WheelEventArgs e)
     {
         if (OngoingLink == null)
             return;
@@ -101,7 +101,7 @@ public class DragNewLinkBehavior : Behavior
         }
 
         OngoingLink!.Refresh();
-        OngoingLink!.RefreshLinks();
+        OngoingLink.RefreshLinks();
     }
 
     private void OnPointerUp(Model? model, MouseEventArgs e)
@@ -183,6 +183,6 @@ public class DragNewLinkBehavior : Behavior
         Diagram.PointerDown -= OnPointerDown;
         Diagram.PointerMove -= OnPointerMove;
         Diagram.PointerUp -= OnPointerUp;
-        Diagram.Wheel -= OnPointerMove;
+        Diagram.Wheel -= OnWheel;
     }
 }

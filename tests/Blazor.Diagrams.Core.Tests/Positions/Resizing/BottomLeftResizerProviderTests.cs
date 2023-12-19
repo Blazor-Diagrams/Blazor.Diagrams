@@ -47,6 +47,37 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
         }
 
         [Fact]
+        public void ScrollingWheel_ShouldResizeNode()
+        {
+            // setup
+            var diagram = new TestDiagram();
+            diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+            var node = new NodeModel(position: new Point(0, 0));
+            node.Size = new Size(100, 200);
+            var control = new ResizeControl(new BottomLeftResizerProvider());
+            diagram.Controls.AddFor(node).Add(control);
+            diagram.SelectModel(node, false);
+
+            // before resize
+            node.Position.X.Should().Be(0);
+            node.Position.Y.Should().Be(0);
+            node.Size.Width.Should().Be(100);
+            node.Size.Height.Should().Be(200);
+
+            // resize
+            var eventArgs = new PointerEventArgs(0, 0, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
+            control.OnPointerDown(diagram, node, eventArgs);
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 10, 100, 0, 0));
+
+
+            // after resize
+            node.Position.X.Should().Be(10);
+            node.Position.Y.Should().Be(0);
+            node.Size.Width.Should().Be(90);
+            node.Size.Height.Should().Be(300);
+        }
+
+        [Fact]
         public void DragResizer_SmallerThanMinSize_SetsNodeToMinSize()
         {
             // setup

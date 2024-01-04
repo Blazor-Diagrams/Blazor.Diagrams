@@ -39,7 +39,7 @@ public class ZoomBehavior : WheelBehavior
 
         Diagram.Batch(() =>
         {
-            Diagram.SetPan(newPanX, newPanY, 0, 0);
+            Diagram.SetPan(newPanX, newPanY, 0, 0, 0, 0);
             Diagram.SetZoom(newZoom);
         });
     }

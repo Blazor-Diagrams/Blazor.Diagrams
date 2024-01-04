@@ -74,7 +74,7 @@ public class DragMovablesBehavior : Behavior
         _lastClientY = e.ClientY;
 
     }
-    public void OnPanChanged(double deltaX, double deltaY)
+    public void OnPanChanged(double deltaX, double deltaY, double clientX, double clientY)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;

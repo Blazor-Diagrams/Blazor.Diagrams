@@ -26,7 +26,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             var deltaX = e.ClientX - _lastClientX + (Diagram.Pan.X - x);
             var deltaY = e.ClientY - _lastClientY + (Diagram.Pan.Y - y);
 
-            Diagram.SetPan(x, y, deltaX, deltaY);
+            Diagram.SetPan(x, y, deltaX, deltaY, _lastClientX, _lastClientY);
         }
     }
 }

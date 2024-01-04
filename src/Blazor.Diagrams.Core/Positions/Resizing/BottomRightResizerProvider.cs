@@ -49,11 +49,11 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             ResizeNode(deltaX, deltaY);
         }
 
-        public void OnWheel(WheelEventArgs e)
+        public void OnPanChanged(double deltaX, double deltaY)
         {
             if (_nodeModel is null) return;
 
-            ResizeNode(e.DeltaX, e.DeltaY);
+            ResizeNode(deltaX, deltaY);
         }
 
         public void ResizeNode(double deltaX, double deltaY)

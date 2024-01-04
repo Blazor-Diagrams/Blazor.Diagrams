@@ -23,7 +23,7 @@ namespace Blazor.Diagrams.Core.Controls.Default
         {
             _resizeProvider.OnResizeStart(diagram, model, e);
             diagram.PointerMove += _resizeProvider.OnPointerMove;
-            diagram.Wheel += _resizeProvider.OnWheel;
+            diagram.PanChanged += _resizeProvider.OnPanChanged;
             diagram.PointerUp += _resizeProvider.OnResizeEnd;
             diagram.PointerUp += (_, _) => OnResizeEnd(diagram);
 
@@ -33,7 +33,7 @@ namespace Blazor.Diagrams.Core.Controls.Default
         void OnResizeEnd(Diagram diagram)
         {
             diagram.PointerMove -= _resizeProvider.OnPointerMove;
-            diagram.Wheel -= _resizeProvider.OnWheel;
+            diagram.PanChanged -= _resizeProvider.OnPanChanged;
             diagram.PointerUp -= _resizeProvider.OnResizeEnd;
         }
     }

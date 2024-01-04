@@ -84,7 +84,7 @@ public class DiagramTests
         // Act
         diagram.Changed += () => refreshes++;
         diagram.ZoomChanged += () => zoomChanges++;
-        diagram.PanChanged += (x, y) => panChanges++;
+        diagram.PanChanged += (deltaX, deltaY, clientX, clientY) => panChanges++;
         diagram.ZoomToFit(10);
 
         // Assert

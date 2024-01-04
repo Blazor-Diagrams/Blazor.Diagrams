@@ -52,7 +52,7 @@ public class DebugEventsBehavior : Behavior
         Console.WriteLine($"Nodes.Added, Nodes=[{obj}]");
     }
 
-    private void Diagram_PanChanged()
+    private void Diagram_PanChanged(double deltaX, double deltaY)
     {
         Console.WriteLine($"PanChanged, Pan={Diagram.Pan}");
     }

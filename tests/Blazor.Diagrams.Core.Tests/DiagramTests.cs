@@ -84,7 +84,7 @@ public class DiagramTests
         // Act
         diagram.Changed += () => refreshes++;
         diagram.ZoomChanged += () => zoomChanges++;
-        diagram.PanChanged += () => panChanges++;
+        diagram.PanChanged += (x, y) => panChanges++;
         diagram.ZoomToFit(10);
 
         // Assert
@@ -122,7 +122,7 @@ public class DiagramTests
         var diagram = new TestDiagram();
         Assert.Throws<ArgumentException>(() => diagram.Options.Zoom.Minimum = zoomValue);
     }
-        
+
     [Fact]
     public void SetContainer_ShouldAcceptNullGracefully()
     {

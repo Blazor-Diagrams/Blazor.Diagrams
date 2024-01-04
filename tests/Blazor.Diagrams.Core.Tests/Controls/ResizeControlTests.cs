@@ -12,7 +12,7 @@ namespace Blazor.Diagrams.Core.Tests.Controls
         [Fact]
         public void GetPosition_ShouldUseResizeProviderGetPosition()
         {
-            var resizeProvider = new Mock<IResizerProvider>();
+            var resizeProvider = new Mock<ResizerProvider>();
             var control = new ResizeControl(resizeProvider.Object);
             var model = new Mock<Model>();
 
@@ -24,7 +24,7 @@ namespace Blazor.Diagrams.Core.Tests.Controls
         [Fact]
         public void OnPointerDown_ShouldInvokeResizeStart()
         {
-            var resizeProvider = new Mock<IResizerProvider>();
+            var resizeProvider = new Mock<ResizerProvider>();
             var control = new ResizeControl(resizeProvider.Object);
             var diagram = Mock.Of<Diagram>();
             var model = Mock.Of<Model>();
@@ -38,14 +38,14 @@ namespace Blazor.Diagrams.Core.Tests.Controls
         [Fact]
         public void OnPointerDown_ShouldAddEventHandlers()
         {
-            var resizeProvider = new Mock<IResizerProvider>();
+            var resizeProvider = new Mock<ResizerProvider>();
             var control = new ResizeControl(resizeProvider.Object);
             var diagram = new TestDiagram();
             var model = Mock.Of<Model>();
             var eventArgs = new PointerEventArgs(0, 0, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true);
 
             control.OnPointerDown(diagram, model, eventArgs);
-            
+
             diagram.TriggerPointerMove(model, eventArgs);
             resizeProvider.Verify(m => m.OnPointerMove(model, eventArgs), Times.Once);
 
@@ -56,7 +56,7 @@ namespace Blazor.Diagrams.Core.Tests.Controls
         [Fact]
         public void OnPointerUp_ShouldRemoveEventHandlers()
         {
-            var resizeProvider = new Mock<IResizerProvider>();
+            var resizeProvider = new Mock<ResizerProvider>();
             var control = new ResizeControl(resizeProvider.Object);
             var diagram = new TestDiagram();
             var model = Mock.Of<Model>();

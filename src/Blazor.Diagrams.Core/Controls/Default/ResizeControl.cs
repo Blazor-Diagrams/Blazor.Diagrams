@@ -8,9 +8,9 @@ namespace Blazor.Diagrams.Core.Controls.Default
 {
     public class ResizeControl : ExecutableControl
     {
-        private readonly IResizerProvider _resizeProvider;
+        private readonly ResizerProvider _resizeProvider;
 
-        public ResizeControl(IResizerProvider resizeProvider)
+        public ResizeControl(ResizerProvider resizeProvider)
         {
             _resizeProvider = resizeProvider;
         }

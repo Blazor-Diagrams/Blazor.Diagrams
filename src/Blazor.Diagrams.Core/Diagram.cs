@@ -237,7 +237,7 @@ public abstract class Diagram
         Refresh();
     }
 
-    public void SetPan(double x, double y, double deltaX, double deltaY, double clientX, double clientY)
+    public void SetPan(double x, double y, double deltaX = 0, double deltaY = 0, double clientX = 0, double clientY = 0)
     {
         Pan = new Point(x, y);
         PanChanged?.Invoke(deltaX, deltaY, clientX, clientY);

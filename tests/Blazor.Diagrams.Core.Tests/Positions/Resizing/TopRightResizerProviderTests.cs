@@ -1,14 +1,10 @@
-﻿using Blazor.Diagrams.Core.Controls.Default;
+﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Positions.Resizing;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
@@ -47,7 +43,7 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
         }
 
         [Fact]
-        public void ScrollingWheel_ShouldResizeNode()
+        public void PanChanged_ShouldResizeNode()
         {
             // setup
             var diagram = new TestDiagram();
@@ -57,6 +53,7 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
             var control = new ResizeControl(new TopRightResizerProvider());
             diagram.Controls.AddFor(node).Add(control);
             diagram.SelectModel(node, false);
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
 
             // before resize
             node.Position.X.Should().Be(0);
@@ -67,13 +64,13 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
             // resize
             var eventArgs = new PointerEventArgs(0, 0, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
             control.OnPointerDown(diagram, node, eventArgs);
-            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 10, 100, 0, 0));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 10, -100, 0, 0));
 
             // after resize
             node.Position.X.Should().Be(0);
-            node.Position.Y.Should().Be(100);
-            node.Size.Width.Should().Be(110);
-            node.Size.Height.Should().Be(100);
+            node.Position.Y.Should().BeApproximately(-195, 1);
+            node.Size.Width.Should().BeApproximately(119, 1);
+            node.Size.Height.Should().BeApproximately(395, 1);
         }
 
         [Fact]

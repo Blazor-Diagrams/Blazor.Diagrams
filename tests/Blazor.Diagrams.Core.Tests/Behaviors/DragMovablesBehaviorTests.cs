@@ -1,3 +1,4 @@
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -142,13 +143,15 @@ public class DragMovablesBehaviorTests
     }
 
     [Fact]
-    public void Behavior_ShouldCallSetPosition_WhenWheelIsTriggered()
+    public void Behavior_ShouldCallSetPosition_WhenPanChanges()
     {
         // Arrange
         var diagram = new TestDiagram();
         var nodeMock = new Mock<NodeModel>(Point.Zero);
         var node = diagram.Nodes.Add(nodeMock.Object);
         diagram.SelectModel(node, false);
+        diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+        diagram.SetContainer(new Rectangle(0, 0, 100, 100));
 
         // Act
         diagram.TriggerPointerDown(node,
@@ -156,6 +159,6 @@ public class DragMovablesBehaviorTests
         diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 100, 100, 0, 0));
 
         // Assert
-        nodeMock.Verify(n => n.SetPosition(100, 100), Times.Once);
+        nodeMock.Verify(n => n.SetPosition(It.IsInRange<double>(194, 196, Range.Exclusive), It.IsInRange<double>(194, 196, Range.Exclusive)), Times.Once);
     }
 }

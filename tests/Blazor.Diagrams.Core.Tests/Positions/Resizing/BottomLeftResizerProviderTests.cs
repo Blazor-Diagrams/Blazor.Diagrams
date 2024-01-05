@@ -1,14 +1,10 @@
-﻿using Blazor.Diagrams.Core.Controls.Default;
+﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Positions.Resizing;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
@@ -47,7 +43,7 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
         }
 
         [Fact]
-        public void ScrollingWheel_ShouldResizeNode()
+        public void PanChanged_ShouldResizeNode()
         {
             // setup
             var diagram = new TestDiagram();
@@ -57,6 +53,7 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
             var control = new ResizeControl(new BottomLeftResizerProvider());
             diagram.Controls.AddFor(node).Add(control);
             diagram.SelectModel(node, false);
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
 
             // before resize
             node.Position.X.Should().Be(0);
@@ -71,10 +68,10 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
 
 
             // after resize
-            node.Position.X.Should().Be(10);
+            node.Position.X.Should().BeApproximately(19, 1);
             node.Position.Y.Should().Be(0);
-            node.Size.Width.Should().Be(90);
-            node.Size.Height.Should().Be(300);
+            node.Size.Width.Should().BeApproximately(80, 1);
+            node.Size.Height.Should().BeApproximately(395, 1);
         }
 
         [Fact]

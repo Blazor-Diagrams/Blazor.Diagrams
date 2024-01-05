@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -443,7 +444,7 @@ public class DragNewLinkBehaviorTests
     }
 
     [Fact]
-    public void Behavior_ShouldUpdateOngoingPosition_WhenWheelIsTriggered()
+    public void Behavior_ShouldUpdateOngoingPosition_WhenPanChanges()
     {
         // Arrange
         var diagram = new TestDiagram();
@@ -456,6 +457,7 @@ public class DragNewLinkBehaviorTests
             Position = new Point(110, 60),
             Size = new Size(10, 20)
         });
+        diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
 
         // Act
         diagram.TriggerPointerDown(port,
@@ -469,8 +471,8 @@ public class DragNewLinkBehaviorTests
         // Assert
         var source = link.Source as SinglePortAnchor;
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().BeGreaterThan(245);
-        ongoingPosition.Y.Should().BeGreaterThan(245);
+        ongoingPosition.X.Should().BeApproximately(337, 1);
+        ongoingPosition.Y.Should().BeApproximately(337, 1);
         linkRefreshed.Should().BeTrue();
     }
 }

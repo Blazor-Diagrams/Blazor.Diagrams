@@ -29,7 +29,7 @@ public class DragNewLinkControl : ExecutableControl
         if (model is not NodeModel node || node.Locked)
             return ValueTask.CompletedTask;
         
-        var behavior = diagram.GetBehavior<DragNewLinkBehavior>();
+        var behavior = diagram.GetBehavior<IDragNewLinkBehavior>();
         if (behavior == null)
             throw new DiagramsException($"DragNewLinkBehavior was not found");
 

@@ -6,7 +6,7 @@
     if (result == null)
         return;
 
-    var dnlb = BlazorDiagram.GetBehavior<DragNewLinkBehavior>();
+    var dnlb = BlazorDiagram.GetBehavior<IDragNewLinkBehavior>();
     var d = result.FullPath.ToString();
 }
 

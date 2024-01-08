@@ -2,7 +2,7 @@
 
 namespace Blazor.Diagrams.Core;
 
-public abstract class Behavior : IDisposable
+public abstract class Behavior : IBehavior, IDisposable
 {
     public Behavior(Diagram diagram)
     {

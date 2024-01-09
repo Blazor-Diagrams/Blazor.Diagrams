@@ -159,6 +159,6 @@ public class DragMovablesBehaviorTests
         diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 100, 100, 0, 0));
 
         // Assert
-        nodeMock.Verify(n => n.SetPosition(It.IsInRange<double>(194, 196, Range.Exclusive), It.IsInRange<double>(194, 196, Range.Exclusive)), Times.Once);
+        nodeMock.Verify(n => n.SetPosition(100, 100), Times.Once);
     }
 }

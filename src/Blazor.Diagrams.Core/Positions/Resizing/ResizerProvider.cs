@@ -86,7 +86,7 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             ResizeNode(deltaX, deltaY);
         }
 
-        virtual public void OnPanChanged(double deltaX, double deltaY, double clientX, double clientY)
+        virtual public void OnPanChanged(double deltaX, double deltaY)
         {
             if (_nodeModel is null) return;
 

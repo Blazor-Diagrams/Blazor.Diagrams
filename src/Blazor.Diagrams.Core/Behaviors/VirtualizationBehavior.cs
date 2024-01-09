@@ -12,7 +12,7 @@ public class VirtualizationBehavior : Behavior
         Diagram.ContainerChanged += CheckVisibility;
     }
 
-    private void CheckVisibility(double deltaX, double deltaY, double clientX, double clientY)
+    private void CheckVisibility(double deltaX, double deltaY)
     {
         CheckVisibility();
     }

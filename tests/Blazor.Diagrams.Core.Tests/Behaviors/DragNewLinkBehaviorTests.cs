@@ -454,7 +454,7 @@ public class DragNewLinkBehaviorTests
         var port = node.AddPort(new PortModel(node)
         {
             Initialized = true,
-            Position = new Point(110, 60),
+            Position = new Point(100, 50),
             Size = new Size(10, 20)
         });
         diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
@@ -471,8 +471,8 @@ public class DragNewLinkBehaviorTests
         // Assert
         var source = link.Source as SinglePortAnchor;
         var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
-        ongoingPosition.X.Should().BeApproximately(337, 1);
-        ongoingPosition.Y.Should().BeApproximately(337, 1);
+        ongoingPosition.X.Should().BeApproximately(expectedValue: 246, 1);
+        ongoingPosition.Y.Should().BeApproximately(expectedValue: 246, 1);
         linkRefreshed.Should().BeTrue();
     }
 }

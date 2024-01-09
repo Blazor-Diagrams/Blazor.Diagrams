@@ -4,7 +4,6 @@ using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using System;
 using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors;
@@ -14,6 +13,8 @@ public class DragNewLinkBehavior : Behavior
     private PositionAnchor? _targetPositionAnchor;
 
     public BaseLinkModel? OngoingLink { get; private set; }
+    private double? _lastClientX;
+    private double? _lastClientY;
 
     public DragNewLinkBehavior(Diagram diagram) : base(diagram)
     {
@@ -69,22 +70,27 @@ public class DragNewLinkBehavior : Behavior
             OngoingLink.SetTarget(_targetPositionAnchor);
             Diagram.Links.Add(OngoingLink);
         }
+        _lastClientX = e.ClientX;
+        _lastClientY = e.ClientY;
     }
 
     private void OnPointerMove(Model? model, MouseEventArgs e)
     {
-        if (OngoingLink == null || model != null)
+        if (OngoingLink == null || model != null || _lastClientX == null || _lastClientY == null)
             return;
 
-        UpdateLinkPosition(e.ClientX, e.ClientY);
+        _lastClientX = e.ClientX;
+        _lastClientY = e.ClientY;
+
+        UpdateLinkPosition((double)_lastClientX, (double)_lastClientY);
     }
 
-    private void OnPanChanged(double deltaX, double deltaY, double clientX, double clientY)
+    private void OnPanChanged(double deltaX, double deltaY)
     {
         if (OngoingLink == null)
             return;
 
-        UpdateLinkPosition(clientX + deltaX, clientY + deltaY);
+        UpdateLinkPosition((double)_lastClientX!, (double)_lastClientY!);
     }
 
     private void UpdateLinkPosition(double clientX, double clientY)
@@ -134,6 +140,8 @@ public class DragNewLinkBehavior : Behavior
         }
 
         OngoingLink = null;
+        _lastClientX = null;
+        _lastClientY = null;
     }
 
     private Point CalculateTargetPosition(double clientX, double clientY)

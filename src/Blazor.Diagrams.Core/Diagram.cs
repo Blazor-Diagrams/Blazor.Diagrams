@@ -34,7 +34,7 @@ public abstract class Diagram
     public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
     public event Action<SelectableModel>? SelectionChanged;
-    public event Action<double, double, double, double>? PanChanged;
+    public event Action<double, double>? PanChanged;
     public event Action? ZoomChanged;
     public event Action? ContainerChanged;
     public event Action? Changed;
@@ -237,17 +237,17 @@ public abstract class Diagram
         Refresh();
     }
 
-    public void SetPan(double x, double y, double deltaX = 0, double deltaY = 0, double clientX = 0, double clientY = 0)
+    public void SetPan(double x, double y)
     {
         Pan = new Point(x, y);
-        PanChanged?.Invoke(deltaX, deltaY, clientX, clientY);
+        PanChanged?.Invoke(x, y);
         Refresh();
     }
 
     public void UpdatePan(double deltaX, double deltaY)
     {
         Pan = Pan.Add(deltaX, deltaY);
-        PanChanged?.Invoke(deltaX, deltaY, 0, 0);
+        PanChanged?.Invoke(-deltaX, -deltaY);
         Refresh();
     }
 

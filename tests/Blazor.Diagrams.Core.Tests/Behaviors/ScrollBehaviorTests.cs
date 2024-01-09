@@ -1,7 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors
@@ -21,8 +20,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, false, false, 100, 200, 0, 0));
 
             // Assert
-            Assert.Equal(-95, diagram.Pan.X, 0);
-            Assert.Equal(-190, diagram.Pan.Y, 0);
+            Assert.Equal(-100, diagram.Pan.X);
+            Assert.Equal(-200, diagram.Pan.Y);
         }
 
         [Fact]

@@ -69,10 +69,10 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Resizing
 
 
             // after resize
-            node.Position.X.Should().BeApproximately(19, 1);
-            node.Position.Y.Should().BeApproximately(-195, 1);
-            node.Size.Width.Should().BeApproximately(80, 1);
-            node.Size.Height.Should().BeApproximately(395, 1);
+            node.Position.X.Should().Be(10);
+            node.Position.Y.Should().Be(-100);
+            node.Size.Width.Should().Be(90);
+            node.Size.Height.Should().Be(300);
         }
 
         [Fact]

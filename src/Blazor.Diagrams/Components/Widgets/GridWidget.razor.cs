@@ -38,7 +38,7 @@ public partial class GridWidget : IDisposable
         _visible = BlazorDiagram.Zoom > ZoomThreshold;
     }
 
-    private void RefreshPosition(double deltaX, double deltaY, double clientX, double clientY)
+    private void RefreshPosition(double deltaX, double deltaY)
     {
         RefreshPosition();
     }

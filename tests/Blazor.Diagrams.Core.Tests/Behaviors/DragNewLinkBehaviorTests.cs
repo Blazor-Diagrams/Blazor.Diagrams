@@ -21,7 +21,8 @@ public class DragNewLinkBehaviorTests
         {
             Initialized = true,
             Position = new Point(110, 60),
-            Size = new Size(10, 20)
+            Size = new Size(10, 20),
+            DisableDragNewLink = false,
         });
 
         // Act
@@ -440,5 +441,28 @@ public class DragNewLinkBehaviorTests
 
         // Assert
         targetAttachedTriggers.Should().Be(1);
+    }
+
+    [Fact]
+    public void Behavior_ShouldNotCreateLinkWithSinglePortAnchorSource_WhenMouseDownOnPort()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+        var node = new NodeModel(position: new Point(100, 50));
+        var port = node.AddPort(new PortModel(node)
+        {
+            Initialized = true,
+            Position = new Point(110, 60),
+            Size = new Size(10, 20),
+            DisableDragNewLink = true,
+        });
+
+        // Act
+        diagram.TriggerPointerDown(port,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        diagram.Links.Count.Should().Be(0);
     }
 }

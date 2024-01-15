@@ -18,7 +18,7 @@ public abstract class Model
 
     public string Id { get; }
     public bool Locked { get; set; }
-    public bool DisableDragNewLink { get; set; }
+    public bool Enabled { get; set; }
     public bool Visible
     {
         get => _visible;

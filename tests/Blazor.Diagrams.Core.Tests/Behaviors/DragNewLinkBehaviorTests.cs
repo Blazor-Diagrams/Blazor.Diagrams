@@ -22,7 +22,7 @@ public class DragNewLinkBehaviorTests
             Initialized = true,
             Position = new Point(110, 60),
             Size = new Size(10, 20),
-            DisableDragNewLink = false,
+            Enabled = false,
         });
 
         // Act
@@ -455,7 +455,7 @@ public class DragNewLinkBehaviorTests
             Initialized = true,
             Position = new Point(110, 60),
             Size = new Size(10, 20),
-            DisableDragNewLink = true,
+            Enabled = true,
         });
 
         // Act

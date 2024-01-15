@@ -56,7 +56,7 @@ public class DragNewLinkBehavior : Behavior
 
         if (model is PortModel port)
         {
-            if (port.Locked || port.DisableDragNewLink)
+            if (port.Locked || port.Enabled)
                 return;
 
             _targetPositionAnchor = new PositionAnchor(CalculateTargetPosition(e.ClientX, e.ClientY));

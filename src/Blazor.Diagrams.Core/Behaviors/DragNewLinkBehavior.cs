@@ -87,26 +87,29 @@ public class DragNewLinkBehavior : Behavior
 
     private void OnPanChanged(double deltaX, double deltaY)
     {
-        if (OngoingLink == null)
+        if (OngoingLink == null || _lastClientX == null || _lastClientY == null)
             return;
 
-        UpdateLinkPosition((double)_lastClientX!, (double)_lastClientY!);
+        UpdateLinkPosition((double)_lastClientX, (double)_lastClientY);
     }
 
     private void UpdateLinkPosition(double clientX, double clientY)
     {
+        if (OngoingLink == null)
+            return;
+
         _targetPositionAnchor!.SetPosition(CalculateTargetPosition(clientX, clientY));
 
         if (Diagram.Options.Links.EnableSnapping)
         {
             var nearPort = FindNearPortToAttachTo();
-            if (nearPort != null || OngoingLink!.Target is not PositionAnchor)
+            if (nearPort != null || OngoingLink.Target is not PositionAnchor)
             {
-                OngoingLink!.SetTarget(nearPort is null ? _targetPositionAnchor : new SinglePortAnchor(nearPort));
+                OngoingLink.SetTarget(nearPort is null ? _targetPositionAnchor : new SinglePortAnchor(nearPort));
             }
         }
 
-        OngoingLink!.Refresh();
+        OngoingLink.Refresh();
         OngoingLink.RefreshLinks();
     }
 

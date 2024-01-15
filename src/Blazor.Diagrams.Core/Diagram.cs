@@ -239,8 +239,11 @@ public abstract class Diagram
 
     public void SetPan(double x, double y)
     {
+        var oldPanX = Pan.X;
+        var oldPanY = Pan.Y;
+
         Pan = new Point(x, y);
-        PanChanged?.Invoke(x, y);
+        PanChanged?.Invoke(oldPanX - Pan.X, oldPanY - Pan.Y);
         Refresh();
     }
 

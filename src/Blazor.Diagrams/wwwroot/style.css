@@ -4,8 +4,6 @@
     position: relative;
     outline: none;
     overflow: hidden;
-    cursor: -webkit-grab;
-    cursor: grab;
     touch-action: none;
 }
 

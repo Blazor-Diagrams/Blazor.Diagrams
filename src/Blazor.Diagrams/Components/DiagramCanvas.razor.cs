@@ -53,7 +53,7 @@ public partial class DiagramCanvas : IDisposable
 
         _reference = DotNetObjectReference.Create(this);
         BlazorDiagram.Changed += OnDiagramChanged;
-        Style = BlazorDiagram.Options.AllowPanning ? "cursor: grab;" : "cursor: default;";
+        Style = BlazorDiagram.Options.AllowPanning ? "cursor: grab; cursor: -webkit-grab;" : "cursor: default;";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

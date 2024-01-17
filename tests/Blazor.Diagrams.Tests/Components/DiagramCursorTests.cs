@@ -22,10 +22,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             var cut = ctx.RenderComponent<DiagramCanvas>(parameters => parameters
             .Add(n => n.BlazorDiagram, diagram));
             var diagramCanvas = cut.Find(".diagram-canvas");
-            var canvasStyle = diagramCanvas.GetStyle().CssText;
 
             // Assert
-            canvasStyle.Should().Contain("cursor: grab");
+            diagramCanvas.ToMarkup().Should().Contain("cursor: grab; cursor: -webkit-grab;");
         }
 
         [Fact]

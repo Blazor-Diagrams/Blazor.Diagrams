@@ -1,15 +1,8 @@
 ﻿using AngleSharp.Css.Dom;
-using AngleSharp.Dom;
 using Blazor.Diagrams.Components;
-using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Bunit;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors

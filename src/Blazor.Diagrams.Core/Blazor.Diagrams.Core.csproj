@@ -3,20 +3,19 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Authors>zHaytam</Authors>
+		<Authors>zHaytam, WiseTech Global</Authors>
 		<Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-		<AssemblyVersion>3.0.1</AssemblyVersion>
-		<FileVersion>3.0.1</FileVersion>
-		<RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
-		<Version>3.0.1</Version>
-		<PackageId>Z.Blazor.Diagrams.Core</PackageId>
+		<RepositoryUrl>https://github.com/WiseTechGlobal/Blazor.Diagrams</RepositoryUrl>
+		<PackageId>WTG.Z.Blazor.Diagrams.Core</PackageId>
 		<PackageTags>blazor diagrams diagramming svg drag</PackageTags>
-		<Product>Z.Blazor.Diagrams.Core</Product>
+		<Product>WTG.Z.Blazor.Diagrams.Core</Product>
 		<PackageIcon>ZBD.png</PackageIcon>
 		<PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\Blazor.Diagrams\sgKey.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -32,6 +31,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="SvgPathProperties" Version="1.1.2" />
+    <PackageReference Include="Brutal.Dev.StrongNameSigner" Version="3.3.3" PrivateAssets="All"/>
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,61 @@
+name: Create release
+# On push to master branch. i.e. when we merge a PR.
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  PACKAGE_PATH: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
+
+jobs:
+  build:
+    name: Build - Release
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+            6.0.x
+            3.1.x
+      
+      # Finds the latest release and increases the version
+    - name: Get next version
+      uses: reecetech/version-increment@2023.9.3
+      id: version
+      with:
+        scheme: semver
+        increment: patch
+
+    - name: Install version tool
+      run: dotnet tool install dotnetCampus.TagToVersion -g --version 1.0.11
+
+      # Writes the new version number to build/Version.props
+    - name: Set version
+      run: dotnet TagToVersion -t ${{ steps.version.outputs.version }}
+
+    - name: Install dependencies
+      run: dotnet restore
+
+      # Pacakge is created on build
+    - name: Build
+      run: dotnet build --configuration Release
+
+      # Upload package as an atrifact to the GitHub action
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: package
+        path: ${{ env.PACKAGE_PATH }}
+        retention-days: 5
+
+      # Create a new release and upload the package to the release
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.PACKAGE_PATH }}
+        tag_name: ${{ steps.version.outputs.version }}

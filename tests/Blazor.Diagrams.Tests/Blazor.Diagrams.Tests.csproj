@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
 	  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\src\Blazor.Diagrams\sgKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +14,7 @@
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
-	<PackageReference Include="Moq" Version="[4.18.4]" />
+    <PackageReference Include="Moq" Version="[4.18.4]" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
+    <ProjectReference Include="..\..\src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
   </ItemGroup>
 
 </Project>

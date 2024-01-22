@@ -1,25 +1,17 @@
-﻿using Blazor.Diagrams.Components.Controls;
-using Blazor.Diagrams.Core.Controls.Default;
-using Blazor.Diagrams.Core.Positions.Resizing;
-using Bunit;
-using Moq;
-using Xunit;
+﻿namespace Blazor.Diagrams.Tests.Components.Controls;
 
-namespace Blazor.Diagrams.Tests.Components.Controls
+public class ResizeControlWidgetTests
 {
-	public class ResizeControlWidgetTests
+    [Fact]
+    public void ShouldRenderDiv()
     {
-        [Fact]
-        public void ShouldRenderDiv()
-        {
-            using var ctx = new TestContext();
-            var providerMock = Mock.Of<ResizerProvider>();
- 
-            var cut = ctx.RenderComponent<ResizeControlWidget>(parameters =>
-                parameters.Add(w => w.Control, new ResizeControl(providerMock))
-            );
+        using var ctx = new TestContext();
+        var providerMock = Mock.Of<ResizerProvider>();
 
-            cut.MarkupMatches("<div class=\"default-node-resizer\" />");
-        }
+        var cut = ctx.RenderComponent<ResizeControlWidget>(parameters =>
+            parameters.Add(w => w.Control, new ResizeControl(providerMock))
+        );
+
+        cut.MarkupMatches("<div class=\"default-node-resizer\" />");
     }
 }

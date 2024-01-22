@@ -1,11 +1,4 @@
-﻿using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Behaviors;
-using Blazor.Diagrams.Core.Events;
-using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
-using FluentAssertions;
-using System.Linq;
-using Xunit;
+﻿using System.Linq;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors;
 
@@ -441,6 +434,29 @@ public class DragNewLinkBehaviorTests
 
         // Assert
         targetAttachedTriggers.Should().Be(1);
+    }
+
+    [Fact]
+    public void Behavior_ShouldNotCreateLinkWithSinglePortAnchorSource_WhenMouseDownOnPort()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+        var node = new NodeModel(position: new Point(100, 50));
+        var port = node.AddPort(new PortModel(node)
+        {
+            Initialized = true,
+            Position = new Point(110, 60),
+            Size = new Size(10, 20),
+            Enabled = false
+        });
+
+        // Act
+        diagram.TriggerPointerDown(port,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        diagram.Links.Count.Should().Be(0);
     }
 
     [Fact]

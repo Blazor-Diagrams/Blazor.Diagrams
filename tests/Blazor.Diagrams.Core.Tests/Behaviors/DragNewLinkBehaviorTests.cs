@@ -1,4 +1,11 @@
-﻿using System.Linq;
+﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
+using FluentAssertions;
+using System.Linq;
+using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Behaviors;
 

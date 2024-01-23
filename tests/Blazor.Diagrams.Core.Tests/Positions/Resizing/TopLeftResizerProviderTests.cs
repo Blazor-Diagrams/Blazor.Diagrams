@@ -1,4 +1,13 @@
-﻿namespace Blazor.Diagrams.Core.Tests.Positions.Resizing;
+﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Controls.Default;
+using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Positions.Resizing;
+using FluentAssertions;
+using Xunit;
+
+namespace Blazor.Diagrams.Core.Tests.Positions.Resizing;
 
 public class TopLeftResizerProviderTests
 {

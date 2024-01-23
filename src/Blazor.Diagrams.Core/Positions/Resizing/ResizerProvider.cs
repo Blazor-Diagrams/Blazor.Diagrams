@@ -18,13 +18,19 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
         private double _totalMovedY = 0;
         private Diagram? _diagram;
 
+        ///<summary> Controls the X-Axis position of the resizer control in relation to the node outline </summary>
         abstract public double WidthOffset { get; }
+        ///<summary> Controls the Y-Axis position of the resizer control in relation to the node outline </summary>
         abstract public double HeightOffset { get; }
+        ///<summary> Factors in the width of the node when calculating the position of the resizer control </summary>
         abstract public bool ShouldUseWidth { get; }
+        ///<summary> Factors in the height of the node when calculating the position of the resizer control </summary>
         abstract public bool ShouldUseHeight { get; }
         abstract public bool ShouldChangeXPositionOnResize { get; }
         abstract public bool ShouldChangeYPositionOnResize { get; }
+        ///<summary> Controls whether the width should be modified on Node resizing </summary>
         abstract public bool ShouldAddTotalMovedX { get; }
+        ///<summary> Controls whether the height should be modified on Node resizing </summary>
         abstract public bool ShouldAddTotalMovedY { get; }
 
         virtual public Point? GetPosition(Model model)

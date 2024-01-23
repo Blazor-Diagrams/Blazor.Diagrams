@@ -1,4 +1,11 @@
-﻿namespace Blazor.Diagrams.Tests.Components.Controls;
+﻿using Blazor.Diagrams.Components.Controls;
+using Blazor.Diagrams.Core.Controls.Default;
+using Blazor.Diagrams.Core.Positions.Resizing;
+using Bunit;
+using Moq;
+using Xunit;
+
+namespace Blazor.Diagrams.Tests.Components.Controls;
 
 public class ResizeControlWidgetTests
 {

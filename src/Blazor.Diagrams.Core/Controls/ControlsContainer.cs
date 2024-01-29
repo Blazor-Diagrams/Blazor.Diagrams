@@ -16,7 +16,11 @@ public class ControlsContainer : IReadOnlyList<Control>
     {
         Model = model;
         Type = type;
-    }
+		if (type == ControlsType.AlwaysOn)
+		{
+			Visible = true;
+	    }
+	}
 
     public Model Model { get; }
     public ControlsType Type { get; set; }

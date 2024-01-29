@@ -1,7 +1,7 @@
 ﻿namespace Blazor.Diagrams.Core.Tests.Controls
 {
-	public class ControlsContainerTests
-	{
+    public class ControlsContainerTests
+    {
 
-	}
+    }
 }

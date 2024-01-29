@@ -4,5 +4,5 @@ public enum ControlsType
 {
     OnHover,
     OnSelection,
-	AlwaysOn
+    AlwaysO
 }

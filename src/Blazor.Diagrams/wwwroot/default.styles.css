@@ -133,6 +133,7 @@ g.diagram-group.default.selected > rect {
     background-color: #f5f5f5;
     border: 1px solid #6e9fd4;
     position: absolute;
+    transform: translate(-2.5px, -2.5px);
 }
 
 .default-node-resizer.bottomright {

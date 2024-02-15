@@ -106,7 +106,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         var newSize = new Size(width, height);
         if (newSize.Equals(_size) == true || Size == null)
             return;
-        var oldSize = Size;
+        var oldSize = new Size(Size.Width, Size.Height);
 
         Size = newSize;
         UpdatePortPositions(oldSize.Width, oldSize.Height, newSize.Width, newSize.Height);
@@ -172,11 +172,33 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     {
         foreach (var port in _ports)
         {
-            double relativeX = port.Position.X - (oldWidth);
-            double relativeY = port.Position.Y - (oldHeight / 2);
-
-            port.Position = new Point(port.Alignment == PortAlignment.Left ? port.Position.X : relativeX + (newWidth), relativeY + (newHeight / 2));
-
+            switch (port.Alignment)
+            {
+                case PortAlignment.Top:
+                    port.Position = new Point(port.Position.X - (oldWidth / 2) + (newWidth / 2), Position.Y);
+                    break;
+                case PortAlignment.TopRight:
+                    port.Position = new Point(port.Position.X - (oldWidth) + (newWidth), port.Position.Y);
+                    break;
+                case PortAlignment.TopLeft:
+                    port.Position = new Point(port.Position.X, port.Position.Y);
+                    break;
+                case PortAlignment.Right:
+                    port.Position = new Point(port.Position.X - (oldWidth) + (newWidth), port.Position.Y - (oldHeight / 2) + (newHeight / 2));
+                    break;
+                case PortAlignment.Left:
+                    port.Position = new Point(port.Position.X, port.Position.Y - (oldHeight / 2) + (newHeight / 2));
+                    break;
+                case PortAlignment.Bottom:
+                    port.Position = new Point(port.Position.X - (oldWidth / 2) + (newWidth / 2), port.Position.Y - (oldHeight) + (newHeight));
+                    break;
+                case PortAlignment.BottomRight:
+                    port.Position = new Point(port.Position.X - (oldWidth) + (newWidth), port.Position.Y - (oldHeight) + (newHeight));
+                    break;
+                case PortAlignment.BottomLeft:
+                    port.Position = new Point(port.Position.X, port.Position.Y - (oldHeight) + (newHeight));
+                    break;
+            }
             port.RefreshLinks();
         }
     }

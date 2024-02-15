@@ -20,9 +20,9 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
 
         abstract public bool ShouldChangeXPositionOnResize { get; }
         abstract public bool ShouldChangeYPositionOnResize { get; }
-        ///<summary> Controls whether the width should be modified on Node resizing </summary>
+        ///<summary> Controls whether the totalMovedX should be added or subtracted </summary>
         abstract public bool ShouldAddTotalMovedX { get; }
-        ///<summary> Controls whether the height should be modified on Node resizing </summary>
+        ///<summary> Controls whether the totalMovedY should be added or subtracted </summary>
         abstract public bool ShouldAddTotalMovedY { get; }
 
         abstract public Point? GetPosition(Model model);

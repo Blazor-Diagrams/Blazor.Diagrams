@@ -28,18 +28,14 @@ namespace Blazor.Diagrams.Core.Tests.Positions.Ports
             var newX = 200;
             var newY = 300;
 
-            var deltaX = newX - node.Position.X;
-            var deltaY = newY - node.Position.Y;
-
-            var expected = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
-
             //Act
             node.SetPosition(newX, newY);
 
             //Assert
-            Assert.Equal(expected.X, port.Position.X);
-            Assert.Equal(expected.Y, port.Position.Y);
+            Assert.Equal(200, port.Position.X);
+            Assert.Equal(300, port.Position.Y);
         }
+
 
         [Theory]
         [InlineData(PortAlignment.Top)]

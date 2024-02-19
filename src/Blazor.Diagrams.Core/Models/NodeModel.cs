@@ -158,6 +158,9 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
 
     public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
 
+    /// <summary>
+    /// Updates port position based on the deltaX and deltaY when the node is moved
+    /// </summary>
     private void UpdatePortPositions(double deltaX, double deltaY)
     {
         // Save some JS calls and update ports directly here
@@ -168,6 +171,9 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         }
     }
 
+    /// <summary>
+    /// Updates the position of the ports by calculating the difference between the old and new size when the node is resized
+    /// </summary>
     private void UpdatePortPositions(double oldWidth, double oldHeight, double newWidth, double newHeight)
     {
         var deltaX = newWidth - oldWidth;

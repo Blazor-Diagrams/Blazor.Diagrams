@@ -1,7 +1,7 @@
-using System;
-using System.Text;
 using Blazor.Diagrams.Core.Extensions;
 using Microsoft.AspNetCore.Components;
+using System;
+using System.Text;
 
 namespace Blazor.Diagrams.Components.Widgets;
 
@@ -11,7 +11,7 @@ public partial class GridWidget : IDisposable
     private double _scaledSize;
     private double _posX;
     private double _posY;
-    
+
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
     [Parameter] public double Size { get; set; } = 20;
     [Parameter] public double ZoomThreshold { get; set; } = 0;
@@ -36,6 +36,11 @@ public partial class GridWidget : IDisposable
         _posY = BlazorDiagram.Pan.Y;
         _scaledSize = Size * BlazorDiagram.Zoom;
         _visible = BlazorDiagram.Zoom > ZoomThreshold;
+    }
+
+    private void RefreshPosition(double deltaX, double deltaY)
+    {
+        RefreshPosition();
     }
 
     private void RefreshPosition()
@@ -67,7 +72,7 @@ public partial class GridWidget : IDisposable
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        
+
         return sb.ToString();
     }
 }

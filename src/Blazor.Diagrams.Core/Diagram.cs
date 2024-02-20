@@ -1,16 +1,16 @@
 ﻿using Blazor.Diagrams.Core.Behaviors;
+using Blazor.Diagrams.Core.Behaviors.Base;
+using Blazor.Diagrams.Core.Controls;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
 using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Blazor.Diagrams.Core.Options;
-using Blazor.Diagrams.Core.Controls;
-using Blazor.Diagrams.Core.Behaviors.Base;
 
 [assembly: InternalsVisibleTo("Blazor.Diagrams, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b19ccf452d560c78a01faeff3ea2dd095ebc2b24abb6ce02394e44ecc5fad730037d475c0678cbfc201a727462866c8148fe30e0171816b7569e0d0e74f01d741cd84dfde651f0d817a74e1121566b66759566601eceaf504566c83a9c1fd9b574c48652f0e183919f951e5dd39085964a6bb4bb1edf3c15226acab7d73bf7cf")]
 [assembly: InternalsVisibleTo("Blazor.Diagrams.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b19ccf452d560c78a01faeff3ea2dd095ebc2b24abb6ce02394e44ecc5fad730037d475c0678cbfc201a727462866c8148fe30e0171816b7569e0d0e74f01d741cd84dfde651f0d817a74e1121566b66759566601eceaf504566c83a9c1fd9b574c48652f0e183919f951e5dd39085964a6bb4bb1edf3c15226acab7d73bf7cf")]
@@ -33,7 +33,7 @@ public abstract class Diagram
     public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
     public event Action<SelectableModel>? SelectionChanged;
-    public event Action? PanChanged;
+    public event Action<double, double>? PanChanged;
     public event Action? ZoomChanged;
     public event Action? ContainerChanged;
     public event Action? Changed;
@@ -182,16 +182,16 @@ public abstract class Diagram
         RegisterBehavior(new SelectionBoxBehavior(this));
     }
 
-	public void RegisterBehavior(Behavior behavior)
-	{
-		var type = behavior.GetType();
-		if (_behaviors.ContainsKey(type))
-			throw new Exception($"Behavior '{type.Name}' already registered");
+    public void RegisterBehavior(Behavior behavior)
+    {
+        var type = behavior.GetType();
+        if (_behaviors.ContainsKey(type))
+            throw new Exception($"Behavior '{type.Name}' already registered");
 
-		_behaviors.Add(type, behavior);
-	}
+        _behaviors.Add(type, behavior);
+    }
 
-	public T? GetBehavior<T>() where T : Behavior
+    public T? GetBehavior<T>() where T : Behavior
     {
         var type = typeof(T);
         return (T?)(_behaviors.ContainsKey(type) ? _behaviors[type] : null);
@@ -238,15 +238,18 @@ public abstract class Diagram
 
     public void SetPan(double x, double y)
     {
+        var oldPanX = Pan.X;
+        var oldPanY = Pan.Y;
+
         Pan = new Point(x, y);
-        PanChanged?.Invoke();
+        PanChanged?.Invoke(oldPanX - Pan.X, oldPanY - Pan.Y);
         Refresh();
     }
 
     public void UpdatePan(double deltaX, double deltaY)
     {
         Pan = Pan.Add(deltaX, deltaY);
-        PanChanged?.Invoke();
+        PanChanged?.Invoke(-deltaX, -deltaY);
         Refresh();
     }
 
@@ -358,7 +361,7 @@ public abstract class Diagram
     public void RefreshOrders(bool refresh = true)
     {
         _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
-        
+
         if (refresh)
         {
             Refresh();

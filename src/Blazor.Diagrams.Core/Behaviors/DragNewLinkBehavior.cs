@@ -1,10 +1,10 @@
-﻿using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Base;
-using Blazor.Diagrams.Core.Events;
-using System.Linq;
-using Blazor.Diagrams.Core.Anchors;
+﻿using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Behaviors.Base;
+using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
+using System.Linq;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
@@ -13,12 +13,15 @@ public class DragNewLinkBehavior : Behavior
     private PositionAnchor? _targetPositionAnchor;
 
     public BaseLinkModel? OngoingLink { get; private set; }
+    private double? _lastClientX;
+    private double? _lastClientY;
 
     public DragNewLinkBehavior(Diagram diagram) : base(diagram)
     {
         Diagram.PointerDown += OnPointerDown;
         Diagram.PointerMove += OnPointerMove;
         Diagram.PointerUp += OnPointerUp;
+        Diagram.PanChanged += OnPanChanged;
     }
 
     public void StartFrom(ILinkable source, double clientX, double clientY)
@@ -67,14 +70,35 @@ public class DragNewLinkBehavior : Behavior
             OngoingLink.SetTarget(_targetPositionAnchor);
             Diagram.Links.Add(OngoingLink);
         }
+        _lastClientX = e.ClientX;
+        _lastClientY = e.ClientY;
     }
 
     private void OnPointerMove(Model? model, MouseEventArgs e)
     {
-        if (OngoingLink == null || model != null)
+        if (OngoingLink == null || model != null || _lastClientX == null || _lastClientY == null)
             return;
 
-        _targetPositionAnchor!.SetPosition(CalculateTargetPosition(e.ClientX, e.ClientY));
+        _lastClientX = e.ClientX;
+        _lastClientY = e.ClientY;
+
+        UpdateLinkPosition((double)_lastClientX, (double)_lastClientY);
+    }
+
+    private void OnPanChanged(double deltaX, double deltaY)
+    {
+        if (OngoingLink == null || _lastClientX == null || _lastClientY == null)
+            return;
+
+        UpdateLinkPosition((double)_lastClientX, (double)_lastClientY);
+    }
+
+    private void UpdateLinkPosition(double clientX, double clientY)
+    {
+        if (OngoingLink == null)
+            return;
+
+        _targetPositionAnchor!.SetPosition(CalculateTargetPosition(clientX, clientY));
 
         if (Diagram.Options.Links.EnableSnapping)
         {
@@ -119,6 +143,8 @@ public class DragNewLinkBehavior : Behavior
         }
 
         OngoingLink = null;
+        _lastClientX = null;
+        _lastClientY = null;
     }
 
     private Point CalculateTargetPosition(double clientX, double clientY)
@@ -168,5 +194,6 @@ public class DragNewLinkBehavior : Behavior
         Diagram.PointerDown -= OnPointerDown;
         Diagram.PointerMove -= OnPointerMove;
         Diagram.PointerUp -= OnPointerUp;
+        Diagram.PanChanged -= OnPanChanged;
     }
 }

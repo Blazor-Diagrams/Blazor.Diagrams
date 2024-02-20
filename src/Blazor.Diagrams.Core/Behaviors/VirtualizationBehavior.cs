@@ -12,11 +12,16 @@ public class VirtualizationBehavior : Behavior
         Diagram.ContainerChanged += CheckVisibility;
     }
 
+    private void CheckVisibility(double deltaX, double deltaY)
+    {
+        CheckVisibility();
+    }
+
     private void CheckVisibility()
     {
         if (!Diagram.Options.Virtualization.Enabled)
             return;
-        
+
         if (Diagram.Container == null)
             return;
 
@@ -49,11 +54,11 @@ public class VirtualizationBehavior : Behavior
     {
         if (model is not IHasBounds ihb)
             return;
-        
+
         var bounds = ihb.GetBounds();
         if (bounds == null)
             return;
-        
+
         var left = bounds.Left * Diagram.Zoom + Diagram.Pan.X;
         var top = bounds.Top * Diagram.Zoom + Diagram.Pan.Y;
         var right = left + bounds.Width * Diagram.Zoom;

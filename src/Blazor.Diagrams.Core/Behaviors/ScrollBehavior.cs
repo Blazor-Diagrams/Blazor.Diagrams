@@ -1,6 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Behaviors.Base;
 using Blazor.Diagrams.Core.Events;
-using Blazor.Diagrams.Core.Options;
 
 namespace Blazor.Diagrams.Core.Behaviors
 {
@@ -16,10 +15,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (Diagram.Container == null || !IsBehaviorEnabled(e))
                 return;
 
-            var x = Diagram.Pan.X - (e.DeltaX / Diagram.Options.Zoom.ScaleFactor);
-            var y = Diagram.Pan.Y - (e.DeltaY / Diagram.Options.Zoom.ScaleFactor);
-
-            Diagram.SetPan(x, y);
+            Diagram.UpdatePan(-e.DeltaX / Diagram.Zoom, -e.DeltaY / Diagram.Zoom);
         }
     }
 }

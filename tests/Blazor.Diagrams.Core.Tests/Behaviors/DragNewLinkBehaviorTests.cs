@@ -1,4 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
@@ -463,5 +464,38 @@ public class DragNewLinkBehaviorTests
 
         // Assert
         diagram.Links.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void Behavior_ShouldUpdateOngoingPosition_WhenPanChanges()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
+        var node = new NodeModel(position: new Point(100, 50));
+        var linkRefreshed = false;
+        var port = node.AddPort(new PortModel(node)
+        {
+            Initialized = true,
+            Position = new Point(100, 50),
+            Size = new Size(10, 20)
+        });
+        diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+
+        // Act
+        diagram.TriggerPointerDown(port,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        var link = diagram.Links.Single();
+        link.Changed += _ => linkRefreshed = true;
+        diagram.TriggerPointerMove(null,
+            new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerWheel(new WheelEventArgs(150, 150, 0, 0, false, false, false, 100, 100, 0, 0));
+
+        // Assert
+        var source = link.Source as SinglePortAnchor;
+        var ongoingPosition = (link.Target as PositionAnchor)!.GetPlainPosition()!;
+        ongoingPosition.X.Should().BeApproximately(expectedValue: 246, 1);
+        ongoingPosition.Y.Should().BeApproximately(expectedValue: 246, 1);
+        linkRefreshed.Should().BeTrue();
     }
 }

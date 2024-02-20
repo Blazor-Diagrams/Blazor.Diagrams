@@ -8,9 +8,9 @@ namespace Blazor.Diagrams.Core.Controls.Default
 {
     public class ResizeControl : ExecutableControl
     {
-        private readonly IResizerProvider _resizeProvider;
+        private readonly ResizerProvider _resizeProvider;
 
-        public ResizeControl(IResizerProvider resizeProvider)
+        public ResizeControl(ResizerProvider resizeProvider)
         {
             _resizeProvider = resizeProvider;
         }
@@ -23,6 +23,7 @@ namespace Blazor.Diagrams.Core.Controls.Default
         {
             _resizeProvider.OnResizeStart(diagram, model, e);
             diagram.PointerMove += _resizeProvider.OnPointerMove;
+            diagram.PanChanged += _resizeProvider.OnPanChanged;
             diagram.PointerUp += _resizeProvider.OnResizeEnd;
             diagram.PointerUp += (_, _) => OnResizeEnd(diagram);
 
@@ -32,6 +33,7 @@ namespace Blazor.Diagrams.Core.Controls.Default
         void OnResizeEnd(Diagram diagram)
         {
             diagram.PointerMove -= _resizeProvider.OnPointerMove;
+            diagram.PanChanged -= _resizeProvider.OnPanChanged;
             diagram.PointerUp -= _resizeProvider.OnResizeEnd;
         }
     }

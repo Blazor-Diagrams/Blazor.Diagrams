@@ -67,4 +67,38 @@ public class PortModel : Model, IHasBounds, IHasShape, ILinkable
     void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
 
     void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
+
+    public void calculateNewPortPosition(double deltaX, double deltaY)
+    {
+        switch (Alignment)
+        {
+            case PortAlignment.Top:
+                Position = new Point(Position.X + deltaX / 2, Position.Y);
+                break;
+            case PortAlignment.TopRight:
+                Position = new Point(Position.X + deltaX, Position.Y);
+                break;
+            case PortAlignment.TopLeft:
+                Position = new Point(Position.X, Position.Y);
+                break;
+            case PortAlignment.Right:
+                Position = new Point(Position.X + deltaX, Position.Y + deltaY / 2);
+                break;
+            case PortAlignment.Left:
+                Position = new Point(Position.X, Position.Y + deltaY / 2);
+                break;
+            case PortAlignment.Bottom:
+                Position = new Point(Position.X + deltaX / 2, Position.Y + deltaY);
+                break;
+            case PortAlignment.BottomRight:
+                Position = new Point(Position.X + deltaX, Position.Y + deltaY);
+                break;
+            case PortAlignment.BottomLeft:
+                Position = new Point(Position.X, Position.Y + deltaY);
+                break;
+            default:
+                Position = new Point(Position.X, Position.Y);
+                break;
+        }
+    }
 }

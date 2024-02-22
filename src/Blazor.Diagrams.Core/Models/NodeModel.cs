@@ -181,7 +181,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
 
         foreach (var port in _ports)
         {
-            port.calculateNewPortPosition(deltaX, deltaY);
+            port.SetPortPositionOnNodeSizeChanged(deltaX, deltaY);
             port.RefreshLinks();
         }
     }

@@ -68,7 +68,7 @@ public class PortModel : Model, IHasBounds, IHasShape, ILinkable
 
     void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
 
-    public void calculateNewPortPosition(double deltaX, double deltaY)
+    public void SetPortPositionOnNodeSizeChanged(double deltaX, double deltaY)
     {
         switch (Alignment)
         {

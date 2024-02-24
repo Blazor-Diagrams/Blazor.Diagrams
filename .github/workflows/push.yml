@@ -24,10 +24,10 @@ jobs:
         run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
 
       - name: Test
-        run: >
-          find "${{ env.NUGET_DIR }}" -type f -iname "*.nupkg"|while read file
+        run: >-
+          for i in $(find ${{ env.NUGET_DIR }} -type f -name "*.nupkg");
           do
-          echo "$file"
+           echo "File: ${i} \n";
           done
 
       - name: Push Blazor.Diagrams.Core

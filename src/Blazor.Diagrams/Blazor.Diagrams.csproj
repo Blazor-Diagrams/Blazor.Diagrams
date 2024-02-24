@@ -1,53 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <Authors>zHaytam</Authors>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <AssemblyVersion>3.0.1</AssemblyVersion>
-        <FileVersion>3.0.1</FileVersion>
-        <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
-        <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-		<Version>3.0.1</Version>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
-        <PackageId>Z.Blazor.Diagrams</PackageId>
-        <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
-        <Product>Z.Blazor.Diagrams</Product>
-        <PackageIcon>ZBD.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <Authors>zHaytam</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
+    <FileVersion>3.0.2</FileVersion>
+    <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
+    <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
+    <Version>3.0.2</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
+    <PackageId>Z.Blazor.Diagrams</PackageId>
+    <PackageProjectUrl>https://blazor-diagrams.zhaytam.com/</PackageProjectUrl>
+    <Product>Z.Blazor.Diagrams</Product>
+    <PackageIcon>ZBD.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
-    </ItemGroup>
 
-    <ItemGroup>
-        <None Include="..\..\ZBD.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
+  </ItemGroup>
 
-    <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
-        <!-- Test if Excubo.WebCompiler is installed (recommended) -->
-        <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-    </Target>
+  <ItemGroup>
+    <None Include="..\..\ZBD.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
-    <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-        <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
-    </Target>
+  <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
+    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+  </Target>
+
+  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
+  </Target>
 
 </Project>

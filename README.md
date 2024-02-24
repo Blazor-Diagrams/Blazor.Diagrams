@@ -30,7 +30,7 @@ Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams li
 - Multi purpose
 - Touch support
 - SVG layer for links/nodes and HTML layer for nodes for maximum customizability
-- Links between nodes directly or node ports
+- Links between nodes, ports and even other links
 - Link routers, path generators, markers and labels
 - Panning, Zooming and Zooming to fit a set of nodes
 - Multi selection, deletion and region selection
@@ -48,9 +48,7 @@ Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams li
 You can get started very easily & quickly using:
 
 - [Documentation](https://blazor-diagrams.zhaytam.com/)
-- [Quick Start](https://blazor-diagrams.zhaytam.com/quickstart)
-- [Samples](https://blazor-diagrams.zhaytam.com/demos/simple)
-- [Docs/Demos](https://github.com/Blazor-Diagrams/Blazor.Diagrams/tree/master/docs)
+- [Installation](https://blazor-diagrams.zhaytam.com/documentation/installation)
 
 ### Sample project
 

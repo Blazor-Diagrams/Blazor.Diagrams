@@ -23,6 +23,13 @@ jobs:
         working-directory: src/Blazor.Diagrams.Algorithms
         run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
 
+      - name: Test
+        run: >
+          find "${{ env.NUGET_DIR }}" -type f -iname "*.nupkg"|while read file
+          do
+          echo "$file"
+          done
+
       - name: Push Blazor.Diagrams.Core
         run: 'dotnet nuget push ${{ env.NUGET_DIR }}/Z.Blazor.Diagrams.Core.3.0.1.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate'
 

@@ -12,8 +12,8 @@ public static class JSRuntimeExtensions
     {
         try
         {
-			return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
-		}
+            return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
+        }
         catch (TaskCanceledException) 
         { 
             return null;

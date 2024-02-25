@@ -10,7 +10,14 @@ public static class JSRuntimeExtensions
 {
     public static async Task<Rectangle?> GetBoundingClientRect(this IJSRuntime jsRuntime, ElementReference element)
     {
-        return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
+        try
+        {
+            return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
+        }
+        catch (TaskCanceledException) 
+        { 
+            return null;
+        }
     }
 
     public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element,

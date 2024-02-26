@@ -40,6 +40,7 @@
 // Initialize
 var node1Controls = Diagram.Controls.AddFor(Node1); // OnSelection default
 var node2Controls = Diagram.Controls.AddFor(Node2, ControlsType.OnHover);
+var node3Controls = Diagram.Controls.AddFor(Node2, ControlsType.AlwaysOn);  // Control always visible
 
 // Add
 node1Controls.Add(new SomeControl());

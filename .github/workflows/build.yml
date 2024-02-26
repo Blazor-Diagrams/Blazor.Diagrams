@@ -34,14 +34,10 @@ jobs:
       if: matrix.configuration == 'Debug'
       run: dotnet test --no-build
 
-    - name: Pack
-      if: matrix.configuration == 'Release'
-      run: dotnet pack --configuration ${{ matrix.configuration }} -o packages --no-build
-
     - name: Upload packages
       if: matrix.configuration == 'Release'
       uses: actions/upload-artifact@v3
       with:
-        name: packages
-        path: packages/
+        name: package
+        path: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
         retention-days: 5

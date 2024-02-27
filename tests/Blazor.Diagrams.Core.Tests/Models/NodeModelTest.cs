@@ -17,7 +17,6 @@ namespace Blazor.Diagrams.Core.Tests.Models
             var port = new PortModel(node, PortAlignment.BottomLeft, new Point(50, 50));
             node.AddPort(port);
 
-
             var newX = 200;
             var newY = 300;
 

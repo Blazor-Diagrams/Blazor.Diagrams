@@ -1,6 +1,9 @@
-﻿using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Components;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Bunit;
 using Xunit;
+
 
 namespace Blazor.Diagrams.Core.Tests.Models
 {
@@ -17,13 +20,20 @@ namespace Blazor.Diagrams.Core.Tests.Models
         [InlineData(PortAlignment.Right)]
         public void UpdatePortOnSetPosition(PortAlignment alignment)
         {
+
+            using var ctx = new TestContext();
+
             //Arrange
             var diagram = new TestDiagram();
             diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
             var node = new NodeModel(position: new Point(100, 100));
             node.Size = new Size(100, 100);
 
-            var port = node.AddPort(alignment);
+            var port = new PortModel(node, alignment);
+            node.AddPort(port);
+
+            var cut = ctx.RenderComponent<NodeWidget>(parameters => parameters
+                       .Add(n => n.Node, node).AddCascadingValue(diagram));
 
             var newX = 200;
             var newY = 300;

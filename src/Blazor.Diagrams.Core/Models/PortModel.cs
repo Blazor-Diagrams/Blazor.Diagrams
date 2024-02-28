@@ -68,33 +68,33 @@ public class PortModel : Model, IHasBounds, IHasShape, ILinkable
 
     void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
 
-    public virtual void SetPortPositionOnNodeSizeChanged(double deltaX, double deltaY)
+    public virtual void SetPortPositionOnNodeSizeChanged(double deltaWidth, double deltaHeight)
     {
         switch (Alignment)
         {
             case PortAlignment.Top:
-                Position = new Point(Position.X + deltaX / 2, Position.Y);
+                Position = new Point(Position.X + deltaWidth / 2, Position.Y);
                 break;
             case PortAlignment.TopRight:
-                Position = new Point(Position.X + deltaX, Position.Y);
+                Position = new Point(Position.X + deltaWidth, Position.Y);
                 break;
             case PortAlignment.TopLeft:
                 Position = new Point(Position.X, Position.Y);
                 break;
             case PortAlignment.Right:
-                Position = new Point(Position.X + deltaX, Position.Y + deltaY / 2);
+                Position = new Point(Position.X + deltaWidth, Position.Y + deltaHeight / 2);
                 break;
             case PortAlignment.Left:
-                Position = new Point(Position.X, Position.Y + deltaY / 2);
+                Position = new Point(Position.X, Position.Y + deltaHeight / 2);
                 break;
             case PortAlignment.Bottom:
-                Position = new Point(Position.X + deltaX / 2, Position.Y + deltaY);
+                Position = new Point(Position.X + deltaWidth / 2, Position.Y + deltaHeight);
                 break;
             case PortAlignment.BottomRight:
-                Position = new Point(Position.X + deltaX, Position.Y + deltaY);
+                Position = new Point(Position.X + deltaWidth, Position.Y + deltaHeight);
                 break;
             case PortAlignment.BottomLeft:
-                Position = new Point(Position.X, Position.Y + deltaY);
+                Position = new Point(Position.X, Position.Y + deltaHeight);
                 break;
             default:
                 Position = new Point(Position.X, Position.Y);

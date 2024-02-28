@@ -26,41 +26,8 @@ namespace Blazor.Diagrams.Core.Tests.Models
             port.SetPortPositionOnNodeSizeChanged(100, 100);
 
             // Assert
-            switch (alignment)
-            {
-                case PortAlignment.Top:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.TopRight:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.TopLeft:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.Right:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.Left:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.Bottom:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.BottomRight:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-                case PortAlignment.BottomLeft:
-                    Assert.Equal(expectedXPosition, port.Position.X);
-                    Assert.Equal(expectedYPosition, port.Position.Y);
-                    break;
-            }
+            Assert.Equal(expectedXPosition, port.Position.X);
+            Assert.Equal(expectedYPosition, port.Position.Y);
         }
     }
 }

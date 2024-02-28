@@ -7,15 +7,15 @@ namespace Blazor.Diagrams.Core.Tests.Models
     public class PortModelTest
     {
         [Theory]
-        [InlineData(PortAlignment.Top)]
-        [InlineData(PortAlignment.TopLeft)]
-        [InlineData(PortAlignment.TopRight)]
-        [InlineData(PortAlignment.Bottom)]
-        [InlineData(PortAlignment.BottomLeft)]
-        [InlineData(PortAlignment.BottomRight)]
-        [InlineData(PortAlignment.Left)]
-        [InlineData(PortAlignment.Right)]
-        public void SetPortPositionOnNodeSizeChangedCalculatesCorrectPosition(PortAlignment alignment)
+        [InlineData(PortAlignment.Top, 50, 0)]
+        [InlineData(PortAlignment.TopLeft, 0, 0)]
+        [InlineData(PortAlignment.TopRight, 100, 0)]
+        [InlineData(PortAlignment.Bottom, 50, 100)]
+        [InlineData(PortAlignment.BottomLeft, 0, 100)]
+        [InlineData(PortAlignment.BottomRight, 100, 100)]
+        [InlineData(PortAlignment.Left, 0, 50)]
+        [InlineData(PortAlignment.Right, 100, 50)]
+        public void SetPortPositionOnNodeSizeChangedCalculatesCorrectPosition(PortAlignment alignment, double expectedXPosition, double expectedYPosition)
         {
             // Arrange
             var node = new NodeModel();
@@ -29,36 +29,36 @@ namespace Blazor.Diagrams.Core.Tests.Models
             switch (alignment)
             {
                 case PortAlignment.Top:
-                    Assert.Equal(50, port.Position.X);
-                    Assert.Equal(0, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.TopRight:
-                    Assert.Equal(100, port.Position.X);
-                    Assert.Equal(0, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.TopLeft:
-                    Assert.Equal(0, port.Position.X);
-                    Assert.Equal(0, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.Right:
-                    Assert.Equal(100, port.Position.X);
-                    Assert.Equal(50, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.Left:
-                    Assert.Equal(0, port.Position.X);
-                    Assert.Equal(50, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.Bottom:
-                    Assert.Equal(50, port.Position.X);
-                    Assert.Equal(100, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.BottomRight:
-                    Assert.Equal(100, port.Position.X);
-                    Assert.Equal(100, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
                 case PortAlignment.BottomLeft:
-                    Assert.Equal(0, port.Position.X);
-                    Assert.Equal(100, port.Position.Y);
+                    Assert.Equal(expectedXPosition, port.Position.X);
+                    Assert.Equal(expectedYPosition, port.Position.Y);
                     break;
             }
         }

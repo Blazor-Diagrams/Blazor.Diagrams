@@ -3,7 +3,6 @@ using Blazor.Diagrams.Core.Models;
 using Moq;
 using Xunit;
 
-
 namespace Blazor.Diagrams.Core.Tests.Models
 {
     public class NodeModelTest

@@ -104,12 +104,16 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     public void SetSize(double width, double height)
     {
         var newSize = new Size(width, height);
-        if (newSize.Equals(_size) == true || Size == null)
+        if (newSize.Equals(_size) == true)
             return;
-        var oldSize = new Size(Size.Width, Size.Height);
+
+        Size? oldSize = Size != null ? new Size(Size.Width, Size.Height) : null;
 
         Size = newSize;
-        UpdatePortPositions(oldSize, newSize);
+        if (oldSize != null)
+        {
+            UpdatePortPositions(oldSize, newSize);
+        }
         Refresh();
         RefreshLinks();
         SizeChanging?.Invoke(this);
@@ -176,12 +180,12 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     /// </summary>
     private void UpdatePortPositions(Size oldSize, Size newSize)
     {
-        var deltaX = newSize.Width - oldSize.Width;
-        var deltaY = newSize.Height - oldSize.Height;
+        var deltaWidth = newSize.Width - oldSize.Width;
+        var deltaHeight = newSize.Height - oldSize.Height;
 
         foreach (var port in _ports)
         {
-            port.SetPortPositionOnNodeSizeChanged(deltaX, deltaY);
+            port.SetPortPositionOnNodeSizeChanged(deltaWidth, deltaHeight);
             port.RefreshLinks();
         }
     }

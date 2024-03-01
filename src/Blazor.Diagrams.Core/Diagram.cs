@@ -19,7 +19,7 @@ namespace Blazor.Diagrams.Core;
 
 public abstract class Diagram
 {
-    private readonly Dictionary<Type, Behavior> _behaviors;
+    private readonly Dictionary<Type, IBehavior> _behaviors;
     private readonly List<SelectableModel> _orderedSelectables;
 
     public event Action<Model?, PointerEventArgs>? PointerDown;
@@ -40,7 +40,7 @@ public abstract class Diagram
 
     protected Diagram()
     {
-        _behaviors = new Dictionary<Type, Behavior>();
+        _behaviors = new Dictionary<Type, IBehavior>();
         _orderedSelectables = new List<SelectableModel>();
 
         Nodes = new NodeLayer(this);
@@ -58,7 +58,7 @@ public abstract class Diagram
 
         RegisterBehavior(new SelectionBehavior(this));
         RegisterBehavior(new DragMovablesBehavior(this));
-        RegisterBehavior(new DragNewLinkBehavior(this));
+        RegisterBehavior(new DragNewLinkBehavior(this) as IDragNewLinkBehavior);
         RegisterBehavior(new PanBehavior(this));
         RegisterBehavior(new ZoomBehavior(this));
         RegisterBehavior(new EventsBehavior(this));
@@ -170,22 +170,22 @@ public abstract class Diagram
 
     #region Behaviors
 
-    public void RegisterBehavior(Behavior behavior)
+    public void RegisterBehavior<T>(T behavior) where T : IBehavior
     {
-        var type = behavior.GetType();
+        var type = typeof(T);
         if (_behaviors.ContainsKey(type))
             throw new Exception($"Behavior '{type.Name}' already registered");
 
         _behaviors.Add(type, behavior);
     }
 
-    public T? GetBehavior<T>() where T : Behavior
+    public T? GetBehavior<T>() where T : IBehavior
     {
         var type = typeof(T);
         return (T?)(_behaviors.ContainsKey(type) ? _behaviors[type] : null);
     }
 
-    public void UnregisterBehavior<T>() where T : Behavior
+    public void UnregisterBehavior<T>() where T : IBehavior
     {
         var type = typeof(T);
         if (!_behaviors.ContainsKey(type))
@@ -346,7 +346,7 @@ public abstract class Diagram
     public void RefreshOrders(bool refresh = true)
     {
         _orderedSelectables.Sort((a, b) => a.Order.CompareTo(b.Order));
-        
+
         if (refresh)
         {
             Refresh();

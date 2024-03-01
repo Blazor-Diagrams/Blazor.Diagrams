@@ -46,7 +46,7 @@ public class ArrowHeadControl : ExecutableControl
         if (model is not BaseLinkModel link)
             throw new DiagramsException("ArrowHeadControl only works for models of type BaseLinkModel");
 
-        var dnlb = diagram.GetBehavior<DragNewLinkBehavior>()!;
+        var dnlb = diagram.GetBehavior<IDragNewLinkBehavior>()!;
         if (Source)
         {
             link.SetSource(link.Target);

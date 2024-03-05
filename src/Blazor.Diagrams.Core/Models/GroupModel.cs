@@ -27,13 +27,10 @@ public class GroupModel : NodeModel
     {
         _children.Add(child);
         child.Group = this;
-        child.SizeChanged += OnNodeChanged;
+        child.SizeChanging += OnNodeChanged;
         child.Moving += OnNodeChanged;
 
-        if (UpdateDimensions())
-        {
-            Refresh();
-        }
+        UpdateDimensions();
     }
 
     public void RemoveChild(NodeModel child)
@@ -42,14 +39,10 @@ public class GroupModel : NodeModel
             return;
 
         child.Group = null;
-        child.SizeChanged -= OnNodeChanged;
+        child.SizeChanging -= OnNodeChanged;
         child.Moving -= OnNodeChanged;
 
-        if (UpdateDimensions())
-        {
-            Refresh();
-            RefreshLinks();
-        }
+        UpdateDimensions();
     }
 
     public override void SetPosition(double x, double y)
@@ -83,7 +76,7 @@ public class GroupModel : NodeModel
         foreach (var child in Children)
         {
             child.Group = null;
-            child.SizeChanged -= OnNodeChanged;
+            child.SizeChanging -= OnNodeChanged;
             child.Moving -= OnNodeChanged;
         }
 
@@ -96,7 +89,7 @@ public class GroupModel : NodeModel
         {
             _children.Add(child);
             child.Group = this; 
-            child.SizeChanged += OnNodeChanged;
+            child.SizeChanging += OnNodeChanged;
             child.Moving += OnNodeChanged;
         }
 
@@ -105,10 +98,7 @@ public class GroupModel : NodeModel
 
     private void OnNodeChanged(NodeModel node)
     {
-        if (UpdateDimensions())
-        {
-            Refresh();
-        }
+        UpdateDimensions();
     }
 
     private bool UpdateDimensions()
@@ -128,7 +118,7 @@ public class GroupModel : NodeModel
             TriggerMoving();
         }
 
-        Size = new Size(bounds.Width + Padding * 2, bounds.Height + Padding * 2);
+        SetSize(bounds.Width + Padding * 2, bounds.Height + Padding * 2);
         return true;
     }
 }

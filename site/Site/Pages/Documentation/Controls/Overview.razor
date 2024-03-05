@@ -3,6 +3,7 @@
 @using Blazor.Diagrams.Core.Controls;
 @using Blazor.Diagrams.Core.PathGenerators;
 @using Blazor.Diagrams.Core.Positions;
+@using Blazor.Diagrams.Core.Positions.Resizing;
 @using Blazor.Diagrams.Core.Routers;
 @layout DocumentationLayout
 @inherits DocumentationPage
@@ -135,6 +136,26 @@ Diagram.Controls.AddFor(SomeModel)
 	</CascadingValue>
 </div>
 
+<h3>Resize Control</h3>
+
+<p>
+	The <code>ResizeControl</code> adds a resizer which is a box that when dragged, can resize the node. The resizer position and movement of the node is controlled using a Resizer Provider.<br />
+	There are four <code>ResizerProvider</code>s, one for each corner. Custom resizing behavior can be created by implementing <code>IResizerProvider</code>.
+</p>
+
+<pre><code class="language-cs">
+Diagram.Controls.AddFor(SomeModel).Add(new ResizeControl(new BottomRightResizerProvider()));
+Diagram.Controls.AddFor(SomeModel).Add(new ResizeControl(new BottomLeftResizerProvider()));
+Diagram.Controls.AddFor(SomeModel).Add(new ResizeControl(new TopRightResizerProvider()));
+Diagram.Controls.AddFor(SomeModel).Add(new ResizeControl(new TopLeftResizerProvider()));
+</code></pre>
+
+<div class="diagram-container" style="width: 100%; height: 300px;">
+	<CascadingValue Value="_resizerDiagram" IsFixed="true">
+		<DiagramCanvas></DiagramCanvas>
+	</CascadingValue>
+</div>
+
 <NavigationButtons NextTitle="Customization"
                    NextLink="/documentation/controls-customization" />
 
@@ -143,6 +164,7 @@ Diagram.Controls.AddFor(SomeModel)
 	private BlazorDiagram _rDiagram = new();
 	private BlazorDiagram _ahDiagram = new();
 	private BlazorDiagram _dnlDiagram = new();
+	private BlazorDiagram _resizerDiagram = new();
 
 	protected override void OnInitialized()
 	{
@@ -198,5 +220,18 @@ Diagram.Controls.AddFor(SomeModel)
 		_dnlDiagram.Controls.AddFor(dnlNode2).Add(new DragNewLinkControl(0, 0.5, offsetX: -20));
 		_dnlDiagram.SelectModel(dnlNode1, false);
 		_dnlDiagram.SelectModel(dnlNode2, false);
+
+		// Resize Control
+		var resizeNode1 = _resizerDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
+		var resizeNode2 = _resizerDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		resizeNode1.Title = "Title";
+		resizeNode2.Title = "Title";
+		_resizerDiagram.Controls.AddFor(resizeNode1, ControlsType.OnSelection).Add(new ResizeControl(new BottomRightResizerProvider()));
+		_resizerDiagram.Controls.AddFor(resizeNode1, ControlsType.OnSelection).Add(new ResizeControl(new BottomLeftResizerProvider()));
+		_resizerDiagram.Controls.AddFor(resizeNode1, ControlsType.OnSelection).Add(new ResizeControl(new TopRightResizerProvider()));
+		_resizerDiagram.Controls.AddFor(resizeNode1, ControlsType.OnSelection).Add(new ResizeControl(new TopLeftResizerProvider()));
+		_resizerDiagram.Controls.AddFor(resizeNode2, ControlsType.OnSelection).Add(new ResizeControl(new BottomRightResizerProvider()));
+		_resizerDiagram.SelectModel(resizeNode1, false);
+		_resizerDiagram.SelectModel(resizeNode2, false);
 	}
 }

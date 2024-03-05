@@ -19,7 +19,8 @@ public class BlazorDiagram : Diagram
             [typeof(RemoveControl)] = typeof(RemoveControlWidget),
             [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
             [typeof(DragNewLinkControl)] = typeof(DragNewLinkControlWidget),
-            [typeof(ArrowHeadControl)] = typeof(ArrowHeadControlWidget)
+            [typeof(ArrowHeadControl)] = typeof(ArrowHeadControlWidget),
+            [typeof(ResizeControl)] = typeof(ResizeControlWidget)
         };
 
         Options = options ?? new BlazorDiagramOptions();

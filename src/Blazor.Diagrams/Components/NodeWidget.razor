@@ -1,4 +1,4 @@
-﻿<div class="default-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")">
+﻿<div class="default-node @(Node.Group != null ? "grouped" : "") @(Node.Selected ? "selected" : "")" style=@GenerateStyle()>
     @(Node.Title ?? "Title")
     @foreach (var port in Node.Ports)
     {
@@ -11,4 +11,12 @@
     [Parameter]
     public NodeModel Node { get; set; } = null!;
 
+    private string GenerateStyle()
+    {
+        if (Node.Size is not null)
+        {
+            return $"width: {Node.Size.Width}px; height: {Node.Size.Height}px";
+        }
+        return string.Empty;
+    }
 }

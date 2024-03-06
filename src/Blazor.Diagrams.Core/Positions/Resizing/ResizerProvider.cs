@@ -9,14 +9,14 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
     {
         abstract public string? Class { get; }
 
-        protected Size? _originalSize = null;
-        protected Point? _originalPosition = null;
+        protected Size? _originalSize { get; set; }
+        protected Point? _originalPosition { get; set; }
         private double? _lastClientX;
         private double? _lastClientY;
-        protected NodeModel? _nodeModel = null;
+        protected NodeModel? _nodeModel { get; set; }
         private double _totalMovedX = 0;
         private double _totalMovedY = 0;
-        protected Diagram? _diagram;
+        protected Diagram? _diagram { get; set; }
 
         abstract public bool ShouldChangeXPositionOnResize { get; }
         abstract public bool ShouldChangeYPositionOnResize { get; }

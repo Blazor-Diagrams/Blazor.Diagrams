@@ -9,14 +9,14 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
     {
         abstract public string? Class { get; }
 
-        private Size? _originalSize = null;
-        private Point? _originalPosition = null;
+        protected Size? _originalSize { get; set; }
+        protected Point? _originalPosition { get; set; }
         private double? _lastClientX;
         private double? _lastClientY;
-        private NodeModel? _nodeModel = null;
+        protected NodeModel? _nodeModel { get; set; }
         private double _totalMovedX = 0;
         private double _totalMovedY = 0;
-        private Diagram? _diagram;
+        protected Diagram? _diagram { get; set; }
 
         abstract public bool ShouldChangeXPositionOnResize { get; }
         abstract public bool ShouldChangeYPositionOnResize { get; }
@@ -27,7 +27,7 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
 
         abstract public Point? GetPosition(Model model);
 
-        virtual public void ResizeNode(double deltaX, double deltaY)
+        virtual public (Size size, Point position) CalculateNewSizeAndPosition(double deltaX, double deltaY)
         {
             _totalMovedX += deltaX;
             _totalMovedY += deltaY;
@@ -49,8 +49,13 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
                 positionY = _nodeModel.Position.Y;
             }
 
-            _nodeModel.SetPosition(positionX, positionY);
-            _nodeModel.SetSize(width, height);
+            return (new Size(width, height), new Point(positionX, positionY));
+        }
+
+        virtual public void SetSizeAndPosition(Size size, Point position)
+        {
+            _nodeModel!.SetPosition(position.X, position.Y);
+            _nodeModel.SetSize(size.Width, size.Height);
         }
 
         virtual public void OnResizeStart(Diagram diagram, Model model, PointerEventArgs e)
@@ -79,14 +84,16 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             _lastClientX = e.ClientX;
             _lastClientY = e.ClientY;
 
-            ResizeNode(deltaX, deltaY);
+            var result = CalculateNewSizeAndPosition(deltaX, deltaY);
+            SetSizeAndPosition(result.size, result.position);
         }
 
         virtual public void OnPanChanged(double deltaX, double deltaY)
         {
             if (_nodeModel is null) return;
 
-            ResizeNode(deltaX, deltaY);
+            var result = CalculateNewSizeAndPosition(deltaX, deltaY);
+            SetSizeAndPosition(result.size, result.position);
         }
 
         virtual public void OnResizeEnd(Model? model, PointerEventArgs args)

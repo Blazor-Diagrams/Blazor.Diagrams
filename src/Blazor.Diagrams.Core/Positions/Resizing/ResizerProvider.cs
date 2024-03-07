@@ -11,8 +11,8 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
 
         protected Size? OriginalSize { get; set; }
         protected Point? OriginalPosition { get; set; }
-        protected double? LastClientX;
-        protected double? LastClientY;
+        protected double? LastClientX { get; set; }
+        protected double? LastClientY { get; set; }
         protected NodeModel? NodeModel { get; set; }
         protected Diagram? Diagram { get; set; }
         private double _totalMovedX = 0;

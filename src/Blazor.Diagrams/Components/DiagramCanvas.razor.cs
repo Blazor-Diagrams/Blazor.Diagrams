@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
@@ -8,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components;
 
-public partial class DiagramCanvas : IDisposable
+public partial class DiagramCanvas : IAsyncDisposable
 {
     private DotNetObjectReference<DiagramCanvas>? _reference;
     private bool _shouldRender;
@@ -27,15 +28,23 @@ public partial class DiagramCanvas : IDisposable
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
-    public void Dispose()
+    private IJSObjectReference? module;
+
+    public async ValueTask DisposeAsync()
     {
         BlazorDiagram.Changed -= OnDiagramChanged;
 
         if (_reference == null)
+        {
             return;
+        }
 
         if (elementReference.Id != null)
-            _ = JSRuntime.UnobserveResizes(elementReference);
+            await JSRuntime.UnobserveResizes(elementReference);
+        if(module is not null)
+        {
+            await module.DisposeAsync();
+        }
 
         _reference.Dispose();
     }
@@ -60,8 +69,10 @@ public partial class DiagramCanvas : IDisposable
 
         if (firstRender)
         {
-            BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
-            await JSRuntime.ObserveResizes(elementReference, _reference!);
+            module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import","./_content/Z.Blazor.Diagrams/Components/DiagramCanvas.razor.js");
+            BlazorDiagram.SetContainer(await module.GetBoundingClientRect(elementReference));
+
+            await module.ObserveResizes(elementReference, _reference!);
         }
     }
 

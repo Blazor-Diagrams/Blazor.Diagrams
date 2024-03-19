@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Blazor.Diagrams.Core.Geometry;
+﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Extensions;
 using Blazor.Diagrams.Models;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,13 +11,14 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components.Renderers;
 
-public class PortRenderer : ComponentBase, IDisposable
+public class PortRenderer : ComponentBase, IAsyncDisposable
 {
     private ElementReference _element;
     private bool _isParentSvg;
     private bool _shouldRefreshPort;
     private bool _shouldRender = true;
     private bool _updatingDimensions;
+    private IJSObjectReference? _module;
 
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
     [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
@@ -28,8 +27,12 @@ public class PortRenderer : ComponentBase, IDisposable
     [Parameter] public string? Style { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
+        if (_module != null)
+        {
+            await _module.DisposeAsync();
+        }
         Port.Changed -= OnPortChanged;
         Port.VisibilityChanged -= OnPortChanged;
     }
@@ -62,7 +65,7 @@ public class PortRenderer : ComponentBase, IDisposable
     {
         if (!Port.Visible)
             return;
-        
+
         builder.OpenElement(0, _isParentSvg ? "g" : "div");
         builder.AddAttribute(1, "style", Style);
         builder.AddAttribute(2, "class",
@@ -80,6 +83,10 @@ public class PortRenderer : ComponentBase, IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
+        }
         if (!Port.Initialized)
         {
             await UpdateDimensions();
@@ -123,11 +130,14 @@ public class PortRenderer : ComponentBase, IDisposable
         _updatingDimensions = true;
         var zoom = BlazorDiagram.Zoom;
         var pan = BlazorDiagram.Pan;
-        var rect = await JSRuntime.GetBoundingClientRect(_element);
 
+        _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
+
+        var rect = await _module.GetBoundingClientRect(_element);
         Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);
         Port.Position = new Point((rect.Left - BlazorDiagram.Container.Left - pan.X) / zoom,
             (rect.Top - BlazorDiagram.Container.Top - pan.Y) / zoom);
+
 
         Port.Initialized = true;
         _updatingDimensions = false;

@@ -1,58 +1,65 @@
-var s = {
-    canvases: {},
-    tracked: {},
-    getBoundingClientRect: el => {
-        return el.getBoundingClientRect();
-    },
-    mo: new MutationObserver(() => {
-        for (id in s.canvases) {
-            const canvas = s.canvases[id];
-            const lastBounds = canvas.lastBounds;
-            const bounds = canvas.elem.getBoundingClientRect();
-            if (lastBounds.left !== bounds.left || lastBounds.top !== bounds.top || lastBounds.width !== bounds.width ||
-                lastBounds.height !== bounds.height) {
-                canvas.lastBounds = bounds;
-                canvas.ref.invokeMethodAsync('OnResize', bounds);
-            }
+let boundListener = {};
+let isObservingResize = false;
+
+const mo = new MutationObserver(() => {
+    for (const id in boundListener) {
+        const canvas = boundListener[id];
+        const lastBounds = canvas.lastBounds;
+        const bounds = canvas.elem.getBoundingClientRect();
+        if (lastBounds.left !== bounds.left ||
+            lastBounds.top !== bounds.top ||
+            lastBounds.width !== bounds.width ||
+            lastBounds.height !== bounds.height) {
+            updateBounds(canvas);
         }
-    }),
-    ro: new ResizeObserver(entries => {
-        for (const entry of entries) {
-            let id = Array.from(entry.target.attributes).find(e => e.name.startsWith('_bl')).name.substring(4);
-            let element = s.tracked[id];
-            if (element) {
-                element.ref.invokeMethodAsync('OnResize', entry.target.getBoundingClientRect());
-            }
-        }
-    }),
-    observe: (element, ref, id) => {
-        if (!element) return;
-        s.ro.observe(element);
-        s.tracked[id] = {
-            ref: ref
-        };
-        if (element.classList.contains("diagram-canvas")) {
-            s.canvases[id] = {
-                elem: element,
-                ref: ref,
-                lastBounds: element.getBoundingClientRect()
-            };
-        }
-    },
-    unobserve: (element, id) => {
+    }
+})
+
+const ro = new ResizeObserver(entries => {
+    for (const entry of entries) {
+        let id = Array.from(entry.target.attributes).find(e => e.name.startsWith('_bl')).name.substring(4);
+        let element = boundListener[id];
         if (element) {
-            s.ro.unobserve(element);
+            updateBounds(element);
         }
-        delete s.tracked[id];
-        delete s.canvases[id];
     }
-};
-window.ZBlazorDiagrams = s;
-window.addEventListener('scroll', () => {
-    for (id in s.canvases) {
-        const canvas = s.canvases[id];
-        canvas.lastBounds = canvas.elem.getBoundingClientRect();
-        canvas.ref.invokeMethodAsync('OnResize', canvas.lastBounds);
+})
+
+export function getBoundingClientRect(el) {
+    return el.getBoundingClientRect();
+}
+
+function updateBounds(canvas) {
+
+    canvas.lastBounds = canvas.elem.getBoundingClientRect();
+    canvas.ref.invokeMethodAsync('OnResize', canvas.lastBounds)
+}
+
+export function observe(element, ref, id) {
+    if (isObservingResize === false) {
+        mo.observe(document.body, { childList: true, subtree: true });
+        window.addEventListener('scroll', () => {
+            for (id in boundListener) {
+                const canvas = boundListener[id];
+                updateBounds(canvas)
+            }
+        })
+
+        isObservingResize = true;
     }
-});
-s.mo.observe(document.body, {childList: true, subtree: true});
+
+    if (!element) return;
+    ro.observe(element);
+    boundListener[id] = {
+        elem: element,
+        ref: ref,
+        lastBounds: element.getBoundingClientRect()
+    };
+}
+
+export function unobserve(element, id) {
+    if (element) {
+        ro.unobserve(element);
+    }
+    delete boundListener[id];
+}

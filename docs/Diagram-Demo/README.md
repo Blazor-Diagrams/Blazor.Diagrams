@@ -18,7 +18,6 @@ This is a minimal example of intergration into a _Blazor_ app.
 
 <body>
   <!-- in the body element -->
-  <script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
   
   <!-- ... -->
 <body>

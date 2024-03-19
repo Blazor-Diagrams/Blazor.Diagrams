@@ -28,7 +28,7 @@ public partial class DiagramCanvas : IAsyncDisposable
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
-    private IJSObjectReference? module;
+    private IJSObjectReference? _module;
 
     public async ValueTask DisposeAsync()
     {
@@ -38,12 +38,11 @@ public partial class DiagramCanvas : IAsyncDisposable
         {
             return;
         }
-
-        if (elementReference.Id != null)
-            await JSRuntime.UnobserveResizes(elementReference);
-        if(module is not null)
+        if (elementReference.Id != null && _module is not null)
+            await _module.UnobserveResizes(elementReference);
+        if(_module is not null)
         {
-            await module.DisposeAsync();
+            await _module.DisposeAsync();
         }
 
         _reference.Dispose();
@@ -69,10 +68,10 @@ public partial class DiagramCanvas : IAsyncDisposable
 
         if (firstRender)
         {
-            module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import","./_content/Z.Blazor.Diagrams/Components/DiagramCanvas.razor.js");
-            BlazorDiagram.SetContainer(await module.GetBoundingClientRect(elementReference));
+            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import","./_content/Z.Blazor.Diagrams/script.js");
+            BlazorDiagram.SetContainer(await _module.GetBoundingClientRect(elementReference));
 
-            await module.ObserveResizes(elementReference, _reference!);
+            await _module.ObserveResizes(elementReference, _reference!);
         }
     }
 

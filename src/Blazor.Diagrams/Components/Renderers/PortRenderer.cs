@@ -85,7 +85,7 @@ public class PortRenderer : ComponentBase, IAsyncDisposable
     {
         if (firstRender)
         {
-            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.js");
+            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
         }
         if (!Port.Initialized)
         {
@@ -131,7 +131,7 @@ public class PortRenderer : ComponentBase, IAsyncDisposable
         var zoom = BlazorDiagram.Zoom;
         var pan = BlazorDiagram.Pan;
 
-        _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.js");
+        _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
 
         var rect = await _module.GetBoundingClientRect(_element);
         Port.Size = new Size(rect.Width / zoom, rect.Height / zoom);

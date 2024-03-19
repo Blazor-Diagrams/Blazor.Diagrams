@@ -68,7 +68,7 @@ public partial class DiagramCanvas : IAsyncDisposable
 
         if (firstRender)
         {
-            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import","./_content/Z.Blazor.Diagrams/script.js");
+            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import","./_content/Z.Blazor.Diagrams/script.min.js");
             BlazorDiagram.SetContainer(await _module.GetBoundingClientRect(elementReference));
 
             await _module.ObserveResizes(elementReference, _reference!);

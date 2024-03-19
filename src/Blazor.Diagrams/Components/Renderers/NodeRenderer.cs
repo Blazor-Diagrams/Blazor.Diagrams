@@ -139,7 +139,7 @@ public class NodeRenderer : ComponentBase
     {
         if (firstRender)
         {
-            _module ??= await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.js");
+            _module ??= await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
         }
 
         if (firstRender || _becameVisible)

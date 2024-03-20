@@ -8,7 +8,7 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components;
 
-public partial class DiagramCanvas : IDisposable
+public partial class DiagramCanvas : IAsyncDisposable
 {
     private DotNetObjectReference<DiagramCanvas>? _reference;
     private bool _shouldRender;
@@ -28,7 +28,7 @@ public partial class DiagramCanvas : IDisposable
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         BlazorDiagram.Changed -= OnDiagramChanged;
 
@@ -36,7 +36,7 @@ public partial class DiagramCanvas : IDisposable
             return;
 
         if (elementReference.Id != null)
-            _ = JSRuntime.UnobserveResizes(elementReference);
+            await JSRuntime.UnobserveResizes(elementReference);
 
         _reference.Dispose();
     }

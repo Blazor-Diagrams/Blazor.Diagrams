@@ -14,8 +14,8 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
     public event Action<BaseLinkModel, Anchor, Anchor>? TargetChanged;
     public event Action<BaseLinkModel>? TargetAttached;
-    public event Action<BaseLinkModel, LinkVertexModel> VertexAdded;
-    public event Action<BaseLinkModel, LinkVertexModel> VertexRemoved;
+    public event Action<BaseLinkModel, LinkVertexModel>? VertexAdded;
+    public event Action<BaseLinkModel, LinkVertexModel>? VertexRemoved;
 
     protected BaseLinkModel(Anchor source, Anchor target)
     {

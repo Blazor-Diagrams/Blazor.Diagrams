@@ -27,21 +27,31 @@ public partial class LinkWidget
             builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
             builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
             builder.AddAttribute(10, "onpointerdown", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.PointerEventArgs>(this, e => OnPointerDown(e, index)));
-            builder.AddEventStopPropagationAttribute(11, "onpointerdown", Link.Segmentable);
+            builder.AddAttribute(10, "ondblclick", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, e => OnPointerDoubleClick(e, index)));
+			builder.AddEventStopPropagationAttribute(11, "onpointerdown", Link.Segmentable);
             builder.CloseElement();
         };
     }
 
-    private void OnPointerDown(PointerEventArgs e, int index)
-    {
-        if (!Link.Segmentable)
-            return;
+	private void OnPointerDown(PointerEventArgs e, int index)
+	{
+		if (!Link.Segmentable || Link.DoubleClickToSegment)
+			return;
 
-        var vertex = CreateVertex(e.ClientX, e.ClientY, index);
-        BlazorDiagram.TriggerPointerDown(vertex, e.ToCore());
-    }
+		var vertex = CreateVertex(e.ClientX, e.ClientY, index);
+		BlazorDiagram.TriggerPointerDown(vertex, e.ToCore());
+	}
 
-    private void OnMouseEnter(MouseEventArgs e)
+	private void OnPointerDoubleClick(MouseEventArgs e, int index)
+	{
+		if (!Link.Segmentable || !Link.DoubleClickToSegment)
+			return;
+
+		var vertex = CreateVertex(e.ClientX, e.ClientY, index);
+		BlazorDiagram.TriggerPointerDoubleClick(vertex, e.ToCore());
+	}
+
+	private void OnMouseEnter(MouseEventArgs e)
     {
         _hovered = true;
     }
@@ -54,9 +64,7 @@ public partial class LinkWidget
     private LinkVertexModel CreateVertex(double clientX, double clientY, int index)
     {
         var rPt = BlazorDiagram.GetRelativeMousePoint(clientX, clientY);
-        var vertex = new LinkVertexModel(Link, rPt);
-        Link.Vertices.Insert(index, vertex);
-        Link.Refresh();
+        var vertex = Link.InsertVertex(rPt, index);
         return vertex;
     }
 }

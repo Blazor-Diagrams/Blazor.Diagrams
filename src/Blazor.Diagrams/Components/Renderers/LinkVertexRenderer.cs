@@ -89,7 +89,6 @@ public class LinkVertexRenderer : ComponentBase, IDisposable
 
     private void OnDoubleClick(MouseEventArgs e)
     {
-        Vertex.Parent.Vertices.Remove(Vertex);
-        Vertex.Parent.Refresh();
+        Vertex.Parent.RemoveVertex(Vertex);
     }
 }

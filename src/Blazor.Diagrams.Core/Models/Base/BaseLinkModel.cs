@@ -82,16 +82,16 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
         VertexAdded?.Invoke(this, vex);
         Refresh();
         return vex;
-	}
+    }
 
-	public void RemoveVertex(LinkVertexModel vertex)
-	{
+    public void RemoveVertex(LinkVertexModel vertex)
+    {
         Vertices.Remove(vertex);
-		VertexRemoved?.Invoke(this, vertex);
-		Refresh();
-	}
+        VertexRemoved?.Invoke(this, vertex);
+        Refresh();
+    }
 
-	public void SetSource(Anchor anchor)
+    public void SetSource(Anchor anchor)
     {
         ArgumentNullException.ThrowIfNull(anchor, nameof(anchor));
 

@@ -71,6 +71,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
         var vertex = new LinkVertexModel(this, position);
         Vertices.Add(vertex);
         VertexAdded?.Invoke(this, vertex);
+        Refresh();
         return vertex;
     }
 
@@ -87,7 +88,6 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
 	{
         Vertices.Remove(vertex);
 		VertexRemoved?.Invoke(this, vertex);
-
 		Refresh();
 	}
 

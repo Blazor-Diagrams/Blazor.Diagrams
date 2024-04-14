@@ -30,7 +30,7 @@ public partial class LinkWidget
             builder.AddAttribute(10, "ondblclick", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, e => OnPointerDoubleClick(e, index)));
             builder.AddEventStopPropagationAttribute(11, "onpointerdown", Link.Segmentable && !Link.DoubleClickToSegment);
             builder.AddEventStopPropagationAttribute(11, "ondblclick", Link.Segmentable && Link.DoubleClickToSegment);
-			builder.CloseElement();
+            builder.CloseElement();
         };
     }
 

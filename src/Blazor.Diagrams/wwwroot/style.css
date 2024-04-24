@@ -80,6 +80,8 @@
 .diagram-link foreignObject.diagram-link-label {
     overflow: visible;
     pointer-events: none;
+    width: 1px;
+    height: 1px;
 }
 
 div.diagram-control {

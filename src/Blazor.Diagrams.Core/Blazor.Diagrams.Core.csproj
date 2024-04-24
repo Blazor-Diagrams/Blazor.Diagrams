@@ -18,16 +18,16 @@
 		<AssemblyOriginatorKeyFile>..\Blazor.Diagrams\sgKey.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\ZBD.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ZBD.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="SvgPathProperties" Version="1.1.2" />

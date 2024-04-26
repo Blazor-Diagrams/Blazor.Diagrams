@@ -30,7 +30,7 @@ public static class ReflectionUtils
 
             var typeName = FormatPropertyType(property.PropertyType);
             var @default = propertyValue?.ToString();
-            var description = property.GetCustomAttribute<DescriptionAttribute>().Description;
+            var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description;
             yield return new PossibleOption(name, typeName, @default, description);
         }
     }

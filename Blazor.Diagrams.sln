@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE32E278-A887-454E-987D-FFE9E37169FE}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Core", "src\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj", "{1A70B637-9EF8-4C25-970E-A681DEC9061C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{DA819127-3EF6-4EB9-A2DA-BC056B284A50}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wasm", "samples\Wasm\Wasm.csproj", "{A43942BD-FDA0-4E3D-8115-BBE9D0D75DE3}"
 EndProject
@@ -23,16 +29,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
 		CHANGELOG.md = CHANGELOG.md
+		Directory.Packages.props = Directory.Packages.props
 		.github\workflows\main.yml = .github\workflows\main.yml
 		.github\workflows\push.yml = .github\workflows\push.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CEEAE4C2-CE68-4FC3-9E0F-D4781B91F7F4}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Diagrams.Core.Tests", "tests\Blazor.Diagrams.Core.Tests\Blazor.Diagrams.Core.Tests.csproj", "{36B4DCCD-45AB-4338-9224-DDAF386A23A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A9FC9B20-A9F1-4066-8B59-83BD26D3B1C8}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Directory.Build.props = docs\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diagram-Demo", "docs\Diagram-Demo\Diagram-Demo.csproj", "{5F423724-5319-4DCE-B9F2-8B2D7E1FDC17}"
 EndProject

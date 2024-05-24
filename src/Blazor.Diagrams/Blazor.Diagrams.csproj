@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <Authors>zHaytam, WiseTech Global</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,36 +18,41 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.25" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.25" />
-        <PackageReference Include="Brutal.Dev.StrongNameSigner" Version="3.3.3" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+        <PackageReference Include="SvgPathProperties" />
+        <PackageReference Include="Brutal.Dev.StrongNameSigner" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <None Include="..\..\ZBD.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
+  </ItemGroup>
 
-    <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
-        <!-- Test if Excubo.WebCompiler is installed (recommended) -->
-        <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-    </Target>
+  <ItemGroup>
+    <None Include="..\..\ZBD.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
-    <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-        <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
-    </Target>
+  <Target Name="TestWebCompiler" AfterTargets="BeforeBuild">
+    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+  </Target>
+
+  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
+  </Target>
 
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetBinariesForPackage</TargetsForTfmSpecificBuildOutput>

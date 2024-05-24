@@ -2,14 +2,8 @@
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Options;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazor.Diagrams.Core.Tests.Controls

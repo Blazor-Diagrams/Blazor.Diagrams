@@ -5,4 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
+  <Import Project="..\build\Version.props" />
 </Project>

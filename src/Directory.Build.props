@@ -5,4 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
+  <!-- Group for properties specific to our WTG fork -->
+  <PropertyGroup>
+    <Import Project="build\Version.props" />
+  </PropertyGroup>
 </Project>

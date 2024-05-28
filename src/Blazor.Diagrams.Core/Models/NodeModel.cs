@@ -17,6 +17,8 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     public event Action<NodeModel>? SizeChanged;
     public event Action<NodeModel>? Moving;
 
+    internal NodeModel? ParentNode;
+
     public NodeModel(Point? position = null) : base(position)
     {
     }
@@ -190,7 +192,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         }
     }
 
-    protected void TriggerMoving()
+    internal void TriggerMoving()
     {
         Moving?.Invoke(this);
     }
@@ -198,4 +200,32 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
 
     void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
+
+    internal List<NodeModel> GetAllChildNodes()
+    {
+        var allChildren = new List<NodeModel>();
+        foreach (var child in childMovableNodes)
+        {
+            allChildren.Add(child);
+            if (child is NodeModel jobChild)
+            {
+                allChildren.AddRange(jobChild.GetAllChildNodes());
+            }
+        }
+        return allChildren;
+    }
+
+    internal void AddChildNode(NodeModel child)
+    {
+        child.ParentNode = this;
+        childMovableNodes.Add(child);
+    }
+
+    internal void RemoveChildNode(NodeModel child)
+    {
+        childMovableNodes.Remove(child);
+        child.ParentNode = null;
+    }
+
+    internal List<NodeModel> childMovableNodes = new List<NodeModel>();
 }

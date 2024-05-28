@@ -3,6 +3,9 @@ name: Create release
 on:
   push:
     branches: [ master ]
+## add these two lines:
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 env:

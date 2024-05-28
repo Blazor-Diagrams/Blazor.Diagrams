@@ -20,17 +20,16 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
-        <PackageReference Include="SvgPathProperties" />
-        <PackageReference Include="Brutal.Dev.StrongNameSigner" PrivateAssets="All"/>
+        <PacakgeReference Include="Brutal.Dev.StrongNameSigner" PrivateAssets="All" />
+        <!-- Reference the SvgPathProperties that we already strong name signed -->
+        <Reference Include="SvgPathProperties" PrivateAssets="All">
+          <HintPath>..\..\packages\svgpathproperties\1.1.2\lib\netstandard2.0\SvgPathProperties.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" PrivateAssets="All"/>
     </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Blazor.Diagrams.Core\Blazor.Diagrams.Core.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\ZBD.png">

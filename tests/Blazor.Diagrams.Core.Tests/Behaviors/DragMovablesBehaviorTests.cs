@@ -31,10 +31,10 @@ public class DragMovablesBehaviorTests
     }
 
     [Theory]
-    [InlineData(false, 0, 0, 45, 45)]
-    [InlineData(true, 0, 0, 35, 35)]
-    [InlineData(false, 3, 3, 45, 45)]
-    [InlineData(true, 3, 3, 50, 50)]
+    [InlineData(false, 0, 0, 40, 40)]
+    [InlineData(true, 0, 0, 35, 20)]
+    [InlineData(false, 3, 3, 43, 43)]
+    [InlineData(true, 3, 3, 50, 20)]
     public void Behavior_SnapToGrid_ShouldCallSetPosition(bool gridSnapToCenter, double initialX, double initialY, double deltaX, double deltaY)
     {
         // Arrange
@@ -160,5 +160,32 @@ public class DragMovablesBehaviorTests
 
         // Assert
         nodeMock.Verify(n => n.SetPosition(100, 100), Times.Once);
+    }
+
+    [Fact]
+    public void Behavior_ShouldCallSetPosition_WhenNodeWithChildDragged()
+    {
+        // Arrange
+        var diagram = new TestDiagram();
+        var parentNodeMock = new Mock<NodeModel>(Point.Zero);
+        var childNodeMock = new Mock<NodeModel>(new Point(50, 50));
+        var parentNode = diagram.Nodes.Add(parentNodeMock.Object);
+        parentNode.Size = new Size(300, 300);
+        var childNode = diagram.Nodes.Add(childNodeMock.Object);
+        childNode.Size = new Size(150, 150);
+
+        parentNode.AddChildNode(childNode);
+
+        diagram.SelectModel(parentNode, false);
+
+        // Act
+        diagram.TriggerPointerDown(parentNode,
+            new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+        diagram.TriggerPointerMove(null,
+            new PointerEventArgs(150, 150, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+
+        // Assert
+        parentNodeMock.Verify(n => n.SetPosition(50, 50), Times.Once);
+        childNodeMock.Verify(n => n.SetPosition(50, 50), Times.Once);
     }
 }

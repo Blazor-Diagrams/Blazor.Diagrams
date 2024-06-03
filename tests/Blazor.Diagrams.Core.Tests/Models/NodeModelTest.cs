@@ -1,5 +1,6 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -48,6 +49,37 @@ namespace Blazor.Diagrams.Core.Tests.Models
 
             // Assert
             portMock.Verify(m => m.SetPortPositionOnNodeSizeChanged(deltaX, deltaY), Times.Once);
+        }
+
+        [Fact]
+        public void TestNodesChildFunctionalities()
+        {
+            var parentNodeModel = new NodeModel(new Point(100, 100)) { Size = new Size(600, 700) };
+            var childNodeModel1 = new NodeModel(new Point(150, 150)) { Size = new Size(150, 150) };
+            var childNodeModel2 = new NodeModel(new Point(350, 150)) { Size = new Size(150, 150) };
+
+            parentNodeModel.AddChildNode(childNodeModel1);
+            parentNodeModel.AddChildNode(childNodeModel2);
+
+
+            var childNodes = parentNodeModel.GetAllChildNodes();
+            var parentNode = childNodeModel1.GetParentNode();
+
+            parentNode.Should().Be(parentNodeModel);
+
+            Assert.Equal(2, childNodes.Count);
+            childNodes[0].Should().Be(childNodeModel1);
+            childNodes[1].Should().Be(childNodeModel2);
+
+            parentNodeModel.RemoveChildNode(childNodeModel1);
+
+            childNodes = parentNodeModel.GetAllChildNodes();
+            Assert.Single(childNodes);
+            childNodes[0].Should().Be(childNodeModel2);
+
+            parentNodeModel.ClearChildNodes();
+            childNodes = parentNodeModel.GetAllChildNodes();
+            Assert.Empty(childNodes);
         }
     }
 }

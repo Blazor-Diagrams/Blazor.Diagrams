@@ -1,17 +1,18 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Blazor.Diagrams.Core.Models;
 
-public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
+public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable, IHasChild, IHasParent
 {
     private readonly List<PortModel> _ports = new();
     private readonly List<BaseLinkModel> _links = new();
+    private readonly List<NodeModel> _childNodes = new();
+
     private Size? _size;
     public Size MinimumDimensions { get; set; } = new Size(0, 0);
+
+    private NodeModel? _parent;
 
     public event Action<NodeModel>? SizeChanging;
     public event Action<NodeModel>? SizeChanged;
@@ -190,7 +191,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         }
     }
 
-    protected void TriggerMoving()
+    public void TriggerMoving()
     {
         Moving?.Invoke(this);
     }
@@ -198,4 +199,40 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     void ILinkable.AddLink(BaseLinkModel link) => _links.Add(link);
 
     void ILinkable.RemoveLink(BaseLinkModel link) => _links.Remove(link);
+
+    public List<NodeModel> GetAllChildNodes()
+    {
+        var allChildren = new List<NodeModel>();
+        foreach (var child in _childNodes)
+        {
+            allChildren.Add(child);
+            if (child is NodeModel childNodeModel)
+            {
+                allChildren.AddRange(childNodeModel.GetAllChildNodes());
+            }
+        }
+        return allChildren;
+    }
+
+    public void AddChildNode(NodeModel child)
+    {
+        child._parent = this;
+        _childNodes.Add(child);
+    }
+
+    public void RemoveChildNode(NodeModel child)
+    {
+        child._parent = null;
+        _childNodes.Remove(child);
+    }
+
+    public void ClearChildNodes()
+    {
+        _childNodes.Clear();
+    }
+
+    public NodeModel GetParentNode()
+    {
+        return _parent!;
+    }
 }

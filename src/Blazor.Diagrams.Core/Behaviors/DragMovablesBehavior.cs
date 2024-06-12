@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
-public class DragMovablesBehavior : DragBehavior
+public class DragMovablesBehavior : Behavior
 {
     private readonly Dictionary<MovableModel, Point> _initialPositions;
     protected double? _lastClientX;

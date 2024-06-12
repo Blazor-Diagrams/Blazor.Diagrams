@@ -8,25 +8,22 @@ using System.Collections.Generic;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
-public class DragMovablesBehavior : Behavior
+public class DragMovablesBehavior : DragBehavior
 {
     private readonly Dictionary<MovableModel, Point> _initialPositions;
-    private double? _lastClientX;
-    private double? _lastClientY;
-    private bool _moved;
-    private double _totalMovedX = 0;
-    private double _totalMovedY = 0;
+    protected double? _lastClientX;
+    protected double? _lastClientY;
+    protected bool _moved;
+    protected double _totalMovedX = 0;
+    protected double _totalMovedY = 0;
 
     public DragMovablesBehavior(Diagram diagram) : base(diagram)
     {
         _initialPositions = new Dictionary<MovableModel, Point>();
-        Diagram.PointerDown += OnPointerDown;
-        Diagram.PointerMove += OnPointerMove;
-        Diagram.PointerUp += OnPointerUp;
         Diagram.PanChanged += OnPanChanged;
     }
 
-    private void OnPointerDown(Model? model, PointerEventArgs e)
+    protected override void OnPointerDown(Model? model, PointerEventArgs e)
     {
         if (model is not MovableModel)
             return;
@@ -56,7 +53,7 @@ public class DragMovablesBehavior : Behavior
         _moved = false;
     }
 
-    private void OnPointerMove(Model? model, PointerEventArgs e)
+    protected override void OnPointerMove(Model? model, PointerEventArgs e)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
@@ -68,13 +65,13 @@ public class DragMovablesBehavior : Behavior
         _totalMovedX += deltaX;
         _totalMovedY += deltaY;
 
-        MoveNodes(model, _totalMovedX, _totalMovedY);
+        MoveNodes(_totalMovedX, _totalMovedY);
 
         _lastClientX = e.ClientX;
         _lastClientY = e.ClientY;
 
     }
-    public void OnPanChanged(double deltaX, double deltaY)
+    protected virtual void OnPanChanged(double deltaX, double deltaY)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
@@ -84,10 +81,10 @@ public class DragMovablesBehavior : Behavior
         _totalMovedX += deltaX;
         _totalMovedY += deltaY;
 
-        MoveNodes(null, _totalMovedX, _totalMovedY);
+        MoveNodes(_totalMovedX, _totalMovedY);
     }
 
-    private void MoveNodes(Model? model, double deltaX, double deltaY)
+    protected virtual void MoveNodes(double deltaX, double deltaY)
     {
         foreach (var (movable, initialPosition) in _initialPositions)
         {
@@ -104,7 +101,7 @@ public class DragMovablesBehavior : Behavior
         }
     }
 
-    private void OnPointerUp(Model? model, PointerEventArgs e)
+    protected override void OnPointerUp(Model? model, PointerEventArgs e)
     {
         if (_initialPositions.Count == 0)
             return;

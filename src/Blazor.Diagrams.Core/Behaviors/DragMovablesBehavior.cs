@@ -132,9 +132,6 @@ public class DragMovablesBehavior : DragBehavior
     public override void Dispose()
     {
         _initialPositions.Clear();
-        Diagram.PointerDown -= OnPointerDown;
-        Diagram.PointerMove -= OnPointerMove;
-        Diagram.PointerUp -= OnPointerUp;
         Diagram.PanChanged -= OnPanChanged;
     }
 }

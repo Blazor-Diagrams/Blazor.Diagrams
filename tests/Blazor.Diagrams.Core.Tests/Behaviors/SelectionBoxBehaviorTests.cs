@@ -37,6 +37,38 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             Assert.Equal(50, lastBounds.Height);
             Assert.Equal(100, lastBounds.Top);
             Assert.Equal(100, lastBounds.Left);
+        }        
+        
+        [Fact]
+        public void Behavior_WhenBehaviorEnabled_ShouldUpdateSelectionBoundsOnScroll()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
+            bool boundsChangedEventInvoked = false;
+            Rectangle? lastBounds = null;
+            selectionBoxBehavior.SelectionBoundsChanged += (_, newBounds) =>
+            {
+                boundsChangedEventInvoked = true;
+                lastBounds = newBounds;
+            };
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100,0,0,false,true,false,200,150,0,0));
+
+            // Assert
+            Assert.True(boundsChangedEventInvoked);
+            Assert.Equal(200, lastBounds!.Width);
+            Assert.Equal(150, lastBounds.Height);
+            Assert.Equal(-50, lastBounds.Top);
+            Assert.Equal(-100, lastBounds.Left);
         }
 
         [Fact]

@@ -12,6 +12,9 @@ namespace Blazor.Diagrams.Core.Behaviors
         private Point? _initialClientPoint;
 
         public event EventHandler<Rectangle?>? SelectionBoundsChanged;
+        private double? _lastClientX;
+        private double? _lastClientY;
+        private Point? _initialPan;
 
         public SelectionBoxBehavior(Diagram diagram)
             : base(diagram)
@@ -19,6 +22,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.PointerDown += OnPointerDown;
             Diagram.PointerMove += OnPointerMove;
             Diagram.PointerUp += OnPointerUp;
+            Diagram.PanChanged += OnPanChanged;
         }
 
         public override void Dispose()
@@ -26,6 +30,7 @@ namespace Blazor.Diagrams.Core.Behaviors
             Diagram.PointerDown -= OnPointerDown;
             Diagram.PointerMove -= OnPointerMove;
             Diagram.PointerUp -= OnPointerUp;
+            Diagram.PanChanged -= OnPanChanged;
         }
 
         protected override void OnPointerDown(Model? model, PointerEventArgs e)
@@ -34,6 +39,9 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
 
             _initialClientPoint = new Point(e.ClientX, e.ClientY);
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+            _initialPan = Diagram.Pan;
         }
 
         protected override void OnPointerMove(Model? model, PointerEventArgs e)
@@ -41,7 +49,10 @@ namespace Blazor.Diagrams.Core.Behaviors
             if (_initialClientPoint == null)
                 return;
 
-            UpdateSelectionBox(e);
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+
+            UpdateSelectionBox(e.ClientX, e.ClientY);
 
             var start = Diagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
             var end = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
@@ -61,10 +72,10 @@ namespace Blazor.Diagrams.Core.Behaviors
             }
         }
 
-        void UpdateSelectionBox(MouseEventArgs e)
+        void UpdateSelectionBox(double clientX, double clientY)
         {
-            var start = Diagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
-            var end = Diagram.GetRelativePoint(e.ClientX, e.ClientY);
+            var start = Diagram.GetRelativePoint(_initialClientPoint!.X + Diagram.Pan.X - _initialPan.X, _initialClientPoint.Y + Diagram.Pan.Y - _initialPan.Y);
+            var end = Diagram.GetRelativePoint(clientX, clientY);
             var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
             SelectionBoundsChanged?.Invoke(this, new Rectangle(sX, sY, eX, eY));
@@ -74,6 +85,17 @@ namespace Blazor.Diagrams.Core.Behaviors
         {
             _initialClientPoint = null;
             SelectionBoundsChanged?.Invoke(this, null);
+            _lastClientX = null;
+            _lastClientY = null;
+            _initialPan = null;
+        }
+
+        public void OnPanChanged(double deltaX, double deltaY)
+        {
+            if (_initialClientPoint == null || _lastClientX == null || _lastClientY == null)
+                return;
+
+            UpdateSelectionBox((double) _lastClientX, (double) _lastClientY);
         }
     }
 }

@@ -53,28 +53,17 @@ namespace Blazor.Diagrams.Core.Behaviors
             _lastClientY = e.ClientY;
 
             UpdateSelectionBox(e.ClientX, e.ClientY);
-
-            var start = Diagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
-            var end = Diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
-            var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-            var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-            var bounds = new Rectangle(sX, sY, eX, eY);
-
-            foreach (var node in Diagram.Nodes)
-            {
-                var nodeBounds = node.GetBounds();
-                if (nodeBounds == null)
-                    continue;
-
-                if (bounds.Overlap(nodeBounds))
-                    Diagram.SelectModel(node, false);
-                else if (node.Selected) Diagram.UnselectModel(node);
-            }
+            SelectNodesInBounds(e.ClientX, e.ClientY);
         }
 
         void UpdateSelectionBox(double clientX, double clientY)
         {
-            var start = Diagram.GetRelativePoint(_initialClientPoint!.X + Diagram.Pan.X - _initialPan.X, _initialClientPoint.Y + Diagram.Pan.Y - _initialPan.Y);
+            if(_initialClientPoint == null || _initialPan == null)
+            {
+                return;
+            }
+
+            var start = Diagram.GetRelativePoint(_initialClientPoint.X + Diagram.Pan.X - _initialPan.X, _initialClientPoint.Y + Diagram.Pan.Y - _initialPan.Y);
             var end = Diagram.GetRelativePoint(clientX, clientY);
             var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
@@ -96,6 +85,31 @@ namespace Blazor.Diagrams.Core.Behaviors
                 return;
 
             UpdateSelectionBox((double) _lastClientX, (double) _lastClientY);
+            SelectNodesInBounds((double) _lastClientX, (double) _lastClientY);
+        }
+
+        void SelectNodesInBounds(double clientX, double clientY)
+        {
+            if(_initialClientPoint == null || _initialPan == null)
+            {
+                return;
+            }
+
+            var start = Diagram.GetRelativeMousePoint(_initialClientPoint.X + Diagram.Pan.X - _initialPan.X, _initialClientPoint.Y + Diagram.Pan.Y - _initialPan.Y);
+            var end = Diagram.GetRelativeMousePoint(clientX, clientY);
+            var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
+            var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+            var bounds = new Rectangle(sX, sY, eX, eY);
+
+            foreach (var node in Diagram.Nodes)
+            {
+                var nodeBounds = node.GetBounds();
+                if (nodeBounds == null)
+                    continue;
+                if (bounds.Overlap(nodeBounds))
+                    Diagram.SelectModel(node, false);
+                else if (node.Selected) Diagram.UnselectModel(node);
+            }
         }
     }
 }

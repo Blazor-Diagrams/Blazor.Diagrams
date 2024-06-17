@@ -41,12 +41,20 @@ namespace Blazor.Diagrams.Core.Positions.Resizing
             if (width < NodeModel!.MinimumDimensions.Width)
             {
                 width = NodeModel.MinimumDimensions.Width;
-                positionX = NodeModel.Position.X;
+
+                if (ShouldChangeXPositionOnResize)
+                {
+                    positionX = OriginalPosition.X + OriginalSize.Width - NodeModel.MinimumDimensions.Width;
+                }
             }
             if (height < NodeModel.MinimumDimensions.Height)
             {
                 height = NodeModel.MinimumDimensions.Height;
-                positionY = NodeModel.Position.Y;
+
+                if (ShouldChangeYPositionOnResize)
+                {
+                    positionY = OriginalPosition.Y + OriginalSize.Height - NodeModel.MinimumDimensions.Height;
+                }
             }
 
             return (new Size(width, height), new Point(positionX, positionY));

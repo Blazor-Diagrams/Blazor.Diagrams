@@ -80,7 +80,8 @@ public class TopRightResizerProviderTests
         var diagram = new TestDiagram();
         diagram.SetContainer(new Rectangle(0, 0, 1000, 400));
         var node = new NodeModel(position: new Point(0, 0));
-        node.Size = new Size(100, 200);
+        node.Size = new Size(300, 300);
+        node.MinimumDimensions = new Size(50, 100);
         var control = new ResizeControl(new TopRightResizerProvider());
         diagram.Controls.AddFor(node).Add(control);
         diagram.SelectModel(node, false);
@@ -88,22 +89,22 @@ public class TopRightResizerProviderTests
         // before resize
         node.Position.X.Should().Be(0);
         node.Position.Y.Should().Be(0);
-        node.Size.Width.Should().Be(100);
-        node.Size.Height.Should().Be(200);
+        node.Size.Width.Should().Be(300);
+        node.Size.Height.Should().Be(300);
 
         // resize
-        var eventArgs = new PointerEventArgs(0, 0, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
+        var eventArgs = new PointerEventArgs(300, 0, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
         control.OnPointerDown(diagram, node, eventArgs);
-        eventArgs = new PointerEventArgs(-99, 199, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
+        eventArgs = new PointerEventArgs(150, 150, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
         diagram.TriggerPointerMove(null, eventArgs);
-        eventArgs = new PointerEventArgs(-300, 300, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
+        eventArgs = new PointerEventArgs(-100, 400, 0, 0, false, false, false, 1, 1, 1, 1, 1, 1, "arrow", true);
         diagram.TriggerPointerMove(null, eventArgs);
 
         // after resize
         node.Position.X.Should().Be(0);
-        node.Position.Y.Should().Be(199);
-        node.Size.Width.Should().Be(0);
-        node.Size.Height.Should().Be(0);
+        node.Position.Y.Should().Be(200);
+        node.Size.Width.Should().Be(50);
+        node.Size.Height.Should().Be(100);
     }
 
     [Fact]

@@ -37,8 +37,8 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             Assert.Equal(50, lastBounds.Height);
             Assert.Equal(100, lastBounds.Top);
             Assert.Equal(100, lastBounds.Left);
-        }        
-        
+        }
+
         [Fact]
         public void Behavior_WhenBehaviorEnabled_ShouldUpdateSelectionBoundsOnScroll()
         {
@@ -61,7 +61,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
             // Act
             diagram.TriggerPointerDown(null,
                 new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
-            diagram.TriggerWheel(new WheelEventArgs(100, 100,0,0,false,true,false,200,150,0,0));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 150, 0, 0));
 
             // Assert
             Assert.True(boundsChangedEventInvoked);
@@ -132,6 +132,37 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
+        public void Behavior_WithBoundsChangedDelegate_ShouldSelectNodesInsideAreaWhenScrolling()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
+            selectionBoxBehavior.SelectionBoundsChanged += (_, _) => { };
+
+            var node = new NodeModel()
+            {
+                Size = new Size(100, 100),
+                Position = new Point(150, 150)
+            };
+            diagram.Nodes.Add(node);
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
+
+            // Assert
+            Assert.True(node.Selected);
+
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, -200, -200, 0, 0));
+
+            Assert.False(node.Selected);
+        }
+
+        [Fact]
         public void Behavior_WithoutBoundsChangedDelegate_ShouldNotSelectNodesInsideArea()
         {
             // Arrange
@@ -157,6 +188,35 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             diagram.TriggerPointerMove(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            Assert.False(node.Selected);
+        }
+
+        [Fact]
+        public void Behavior_WithoutBoundsChangedDelegate_ShouldNotSelectNodesInsideAreaWhenScrolling()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var node = new NodeModel()
+            {
+                Size = new Size(100, 100),
+                Position = new Point(150, 150)
+            };
+            diagram.Nodes.Add(node);
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
+
+
+            // Assert
+            Assert.False(node.Selected);
+
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, -200, -200, 0, 0));
+
             Assert.False(node.Selected);
         }
     }

@@ -136,7 +136,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new TestDiagram();
-            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
             diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
@@ -151,7 +153,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Act
             diagram.TriggerPointerDown(null,
-                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
 
             // Assert
@@ -196,7 +198,9 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         {
             // Arrange
             var diagram = new TestDiagram();
-            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
             diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
 
             var node = new NodeModel()
@@ -208,7 +212,7 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             // Act
             diagram.TriggerPointerDown(null,
-                new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
             diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
 
 

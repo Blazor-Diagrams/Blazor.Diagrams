@@ -40,6 +40,38 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
+        public void Behavior_WhenBehaviorEnabled_ShouldUpdateSelectionBoundsOnScroll()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
+            bool boundsChangedEventInvoked = false;
+            Rectangle? lastBounds = null;
+            selectionBoxBehavior.SelectionBoundsChanged += (_, newBounds) =>
+            {
+                boundsChangedEventInvoked = true;
+                lastBounds = newBounds;
+            };
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 150, 0, 0));
+
+            // Assert
+            Assert.True(boundsChangedEventInvoked);
+            Assert.Equal(200, lastBounds!.Width);
+            Assert.Equal(150, lastBounds.Height);
+            Assert.Equal(-50, lastBounds.Top);
+            Assert.Equal(-100, lastBounds.Left);
+        }
+
+        [Fact]
         public void Behavior_WhenBehaviorDisabled_ShouldNotUpdateSelectionBounds()
         {
             // Arrange
@@ -100,6 +132,39 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
         }
 
         [Fact]
+        public void Behavior_WithBoundsChangedDelegate_ShouldSelectNodesInsideAreaWhenScrolling()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var selectionBoxBehavior = diagram.GetBehavior<SelectionBoxBehavior>()!;
+            selectionBoxBehavior.SelectionBoundsChanged += (_, _) => { };
+
+            var node = new NodeModel()
+            {
+                Size = new Size(100, 100),
+                Position = new Point(150, 150)
+            };
+            diagram.Nodes.Add(node);
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
+
+            // Assert
+            Assert.True(node.Selected);
+
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, -200, -200, 0, 0));
+
+            Assert.False(node.Selected);
+        }
+
+        [Fact]
         public void Behavior_WithoutBoundsChangedDelegate_ShouldNotSelectNodesInsideArea()
         {
             // Arrange
@@ -125,6 +190,37 @@ namespace Blazor.Diagrams.Core.Tests.Behaviors
 
             diagram.TriggerPointerMove(null,
                 new PointerEventArgs(100, 100, 0, 0, false, false, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            Assert.False(node.Selected);
+        }
+
+        [Fact]
+        public void Behavior_WithoutBoundsChangedDelegate_ShouldNotSelectNodesInsideAreaWhenScrolling()
+        {
+            // Arrange
+            var diagram = new TestDiagram();
+            diagram.BehaviorOptions.DiagramDragBehavior = diagram.GetBehavior<PanBehavior>();
+            diagram.BehaviorOptions.DiagramShiftDragBehavior = diagram.GetBehavior<SelectionBoxBehavior>();
+            diagram.BehaviorOptions.DiagramWheelBehavior = diagram.GetBehavior<ScrollBehavior>();
+            diagram.SetContainer(new Rectangle(Point.Zero, new Size(100, 100)));
+
+            var node = new NodeModel()
+            {
+                Size = new Size(100, 100),
+                Position = new Point(150, 150)
+            };
+            diagram.Nodes.Add(node);
+
+            // Act
+            diagram.TriggerPointerDown(null,
+                new PointerEventArgs(100, 100, 0, 0, false, true, false, 0, 0, 0, 0, 0, 0, string.Empty, true));
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, 200, 200, 0, 0));
+
+
+            // Assert
+            Assert.False(node.Selected);
+
+            diagram.TriggerWheel(new WheelEventArgs(100, 100, 0, 0, false, true, false, -200, -200, 0, 0));
+
             Assert.False(node.Selected);
         }
     }

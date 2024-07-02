@@ -224,6 +224,9 @@ Diagram.Controls.AddFor(SomeModel).Add(new ResizeControl(new TopLeftResizerProvi
 		// Resize Control
 		var resizeNode1 = _resizerDiagram.Nodes.Add(new NodeModel(new Point(100, 100)));
 		var resizeNode2 = _resizerDiagram.Nodes.Add(new NodeModel(new Point(500, 150)));
+		var resizeNode1Port = resizeNode1.AddPort(PortAlignment.Right);
+		var resizeNode2Port = resizeNode2.AddPort(PortAlignment.Left);
+		_resizerDiagram.Links.Add(new LinkModel(resizeNode1Port, resizeNode2Port));
 		resizeNode1.Title = "Title";
 		resizeNode2.Title = "Title";
 		_resizerDiagram.Controls.AddFor(resizeNode1, ControlsType.OnSelection).Add(new ResizeControl(new BottomRightResizerProvider()));

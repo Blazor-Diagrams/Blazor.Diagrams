@@ -5,12 +5,17 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
-
+using DiagramPoint = Blazor.Diagrams.Core.Geometry.Point;
 namespace Blazor.Diagrams.Core.Behaviors;
 
 public class DragMovablesBehavior : DragBehavior
 {
-    private readonly Dictionary<MovableModel, Point> _initialPositions;
+    public record NodeMoveablePositions(Point position)
+    {
+        public Dictionary<NodeModel, DiagramPoint> ChildPositions { get; } = new();
+    }
+
+    protected readonly Dictionary<NodeModel, NodeMoveablePositions> _initialPositions;
     protected double? _lastClientX;
     protected double? _lastClientY;
     protected bool _moved;
@@ -19,19 +24,22 @@ public class DragMovablesBehavior : DragBehavior
 
     public DragMovablesBehavior(Diagram diagram) : base(diagram)
     {
-        _initialPositions = new Dictionary<MovableModel, Point>();
+        _initialPositions = new Dictionary<NodeModel, NodeMoveablePositions>();
         Diagram.PanChanged += OnPanChanged;
     }
 
     protected override void OnPointerDown(Model? model, PointerEventArgs e)
     {
-        if (model is not MovableModel)
+        if (model is null)
             return;
 
+        ResetPan();
+
         _initialPositions.Clear();
+
         foreach (var sm in Diagram.GetSelectedModels())
         {
-            if (sm is not MovableModel movable || movable.Locked)
+            if (sm is not NodeModel movable || movable.Locked)
                 continue;
 
             // Special case: groups without auto size on
@@ -45,7 +53,7 @@ public class DragMovablesBehavior : DragBehavior
                     movable.Position.Y + (n.Size?.Height ?? 0) / 2);
             }
 
-            _initialPositions.Add(movable, position);
+            _initialPositions.Add(movable, new NodeMoveablePositions(position));
         }
 
         _lastClientX = e.ClientX;
@@ -58,7 +66,6 @@ public class DragMovablesBehavior : DragBehavior
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
 
-        _moved = true;
         var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
         var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
@@ -67,29 +74,31 @@ public class DragMovablesBehavior : DragBehavior
 
         MoveNodes(_totalMovedX, _totalMovedY);
 
+        _moved = true;
         _lastClientX = e.ClientX;
         _lastClientY = e.ClientY;
 
     }
+
     protected virtual void OnPanChanged(double deltaX, double deltaY)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
 
-        _moved = true;
-
-        _totalMovedX += deltaX;
-        _totalMovedY += deltaY;
+        _totalMovedX += deltaX / Diagram.Zoom;
+        _totalMovedY += deltaY / Diagram.Zoom;
 
         MoveNodes(_totalMovedX, _totalMovedY);
+
+        _moved = true;
     }
 
     protected virtual void MoveNodes(double deltaX, double deltaY)
     {
         foreach (var (movable, initialPosition) in _initialPositions)
         {
-            var ndx = ApplyGridSize(deltaX + initialPosition.X);
-            var ndy = ApplyGridSize(deltaY + initialPosition.Y);
+            var ndx = ApplyGridSize(deltaX + initialPosition.position.X);
+            var ndy = ApplyGridSize(deltaY + initialPosition.position.Y);
             if (Diagram.Options.GridSnapToCenter && movable is NodeModel node)
             {
                 node.SetPosition(ndx - (node.Size?.Width ?? 0) / 2, ndy - (node.Size?.Height ?? 0) / 2);
@@ -103,21 +112,12 @@ public class DragMovablesBehavior : DragBehavior
 
     protected override void OnPointerUp(Model? model, PointerEventArgs e)
     {
-        if (_initialPositions.Count == 0)
-            return;
-
-        if (_moved)
-        {
-            foreach (var (movable, _) in _initialPositions)
-            {
-                movable.TriggerMoved();
-            }
-        }
         _initialPositions.Clear();
         _totalMovedX = 0;
         _totalMovedY = 0;
         _lastClientX = null;
         _lastClientY = null;
+        _moved = false;
     }
 
     private double ApplyGridSize(double n)
@@ -127,6 +127,11 @@ public class DragMovablesBehavior : DragBehavior
 
         var gridSize = Diagram.Options.GridSize.Value;
         return gridSize * Math.Floor((n + gridSize / 2.0) / gridSize);
+    }
+
+    void ResetPan()
+    {
+        Diagram.SetPan(0, 0);
     }
 
     public override void Dispose()

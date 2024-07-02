@@ -112,6 +112,17 @@ public class DragMovablesBehavior : DragBehavior
 
     protected override void OnPointerUp(Model? model, PointerEventArgs e)
     {
+        if (_initialPositions.Count == 0)
+            return;
+
+        if (_moved)
+        {
+            foreach (var (movable, _) in _initialPositions)
+            {
+                movable.TriggerMoved();
+            }
+        }
+
         _initialPositions.Clear();
         _totalMovedX = 0;
         _totalMovedY = 0;

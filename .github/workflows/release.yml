@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  PACKAGE_PATH: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
+  NUGET_DIR: '${{ github.workspace }}/nuget'
 
 jobs:
   publish-pkg:
@@ -18,38 +18,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: Extract Version
-    #   id: version
-    #   uses: battila7/get-version-action@v2
+      - name: Pack Blazor.Diagrams.Core
+        working-directory: src/Blazor.Diagrams.Core
+        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
 
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Pack Blazor.Diagrams
+        working-directory: src/Blazor.Diagrams
+        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: |
-            6.0.x
-            3.1.x
-
-    - name: Install dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-
-    - name: Create NuGet Packages
-      run: dotnet pack --no-restore --no-build --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ github.sha }}
-
-    # Upload package as an atrifact to the GitHub action
-    - name: Upload packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: package
-        path: ${{ env.PACKAGE_PATH }}
-        retention-days: 5
-
-    # - name: Publish NuGet Package to NuGet Gallery
-    #   run: |
-    #     nuget setapikey ${{ secrets.NUGET_API_KEY }}
-    #     nuget push bin/WTG.Z.Blazor.Diagrams.${{ steps.tag_name.outputs.result }}.nupkg -Source https://api.nuget.org/v3/index.json
+      - name: Pack Blazor.Diagrams.Algorithms
+        working-directory: src/Blazor.Diagrams.Algorithms
+        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'

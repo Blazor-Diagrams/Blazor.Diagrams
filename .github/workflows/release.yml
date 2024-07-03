@@ -35,8 +35,11 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
     - name: Create NuGet Packages
-      run: dotnet pack --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ github.sha }}
+      run: dotnet pack --no-restore --no-build --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ github.sha }}
 
     # Upload package as an atrifact to the GitHub action
     - name: Upload packages

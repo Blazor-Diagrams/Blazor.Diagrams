@@ -18,14 +18,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Pack Blazor.Diagrams.Core
-        working-directory: src/Blazor.Diagrams.Core
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
+      - uses: actions/checkout@v3
 
-      - name: Pack Blazor.Diagrams
-        working-directory: src/Blazor.Diagrams
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+              6.0.x
+              3.1.x
 
-      - name: Pack Blazor.Diagrams.Algorithms
-        working-directory: src/Blazor.Diagrams.Algorithms
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
+          retention-days: 5

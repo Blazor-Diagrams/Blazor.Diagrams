@@ -36,6 +36,12 @@ jobs:
             6.0.x
             3.1.x
 
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release
+
     - name: Create NuGet Packages
       run: dotnet pack --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ steps.tag_name.outputs.result }}
 

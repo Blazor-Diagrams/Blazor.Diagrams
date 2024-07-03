@@ -33,16 +33,8 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
-      - name: Pack Blazor.Diagrams.Core
-        working-directory: src/Blazor.Diagrams.Core
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
-
       - name: Pack Blazor.Diagrams
         working-directory: src/Blazor.Diagrams
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
-
-      - name: Pack Blazor.Diagrams.Algorithms
-        working-directory: src/Blazor.Diagrams.Algorithms
         run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release --output ${{ env.NUGET_DIR }}'
 
       - name: Push

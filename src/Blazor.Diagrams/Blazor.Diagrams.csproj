@@ -15,7 +15,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>sgKey.snk</AssemblyOriginatorKeyFile>
-        <NuspecFile>../../WTG.Z.Blazor.Diagrams.nuspec</NuspecFile>
+        <!-- <NuspecFile>../../WTG.Z.Blazor.Diagrams.nuspec</NuspecFile> -->
     </PropertyGroup>
 
     <ItemGroup>

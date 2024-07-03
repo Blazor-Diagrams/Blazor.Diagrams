@@ -1,8 +1,9 @@
 name: Create release
+
 # On push to master branch. i.e. when we merge a PR.
 on:
   push:
-    branches: [ master ]
+    branches: [ master, VFL/WI00764279/NCN-Diagrams-Move-WTG.Blazor.Diagrams-to-nuget.org ]
     tags:
       - "*"
   workflow_dispatch:
@@ -35,15 +36,8 @@ jobs:
             6.0.x
             3.1.x
 
-    - name: Install dependencies
-      run: dotnet restore
-
-    # Pacakge is created on build
-    - name: Build
-      run: dotnet build --configuration Release
-
     - name: Create NuGet Packages
-      run: dotnet pack src --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ steps.tag_name.outputs.result }}
+      run: dotnet pack --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ steps.tag_name.outputs.result }}
 
     # Upload package as an atrifact to the GitHub action
     - name: Upload packages
@@ -53,7 +47,7 @@ jobs:
         path: ${{ env.PACKAGE_PATH }}
         retention-days: 5
 
-    - name: Publish NuGet Package to NuGet Gallery
-      run: |
-        nuget setapikey ${{ secrets.NUGET_API_KEY }}
-        nuget push bin/WTG.Z.Blazor.Diagrams.${{ steps.tag_name.outputs.result }}.nupkg -Source https://api.nuget.org/v3/index.json
+    # - name: Publish NuGet Package to NuGet Gallery
+    #   run: |
+    #     nuget setapikey ${{ secrets.NUGET_API_KEY }}
+    #     nuget push bin/WTG.Z.Blazor.Diagrams.${{ steps.tag_name.outputs.result }}.nupkg -Source https://api.nuget.org/v3/index.json

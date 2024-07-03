@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>WTG.Analyzers</id>
+        <version>$version$</version>
+        <authors>$company$</authors>
+        <owners>$company$</owners>
+        <license type="file">LICENSE</license>
+        <projectUrl>https://github.com/WiseTechGlobal/Blazor.Diagrams</projectUrl>
+        <description>Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams
+            library for Blazor (both Server Side and WASM). It was first inspired by the popular
+            React library react-diagrams, but then evolved into something much bigger. ZBD can be
+            used to make advanced diagrams with a custom design. Even the behavior of the library is
+            "hackable" and can be changed to suit your needs.</description>
+        <copyright>$copyright$</copyright>
+        <repository type="git" url="https://github.com/WiseTechGlobal/Blazor.Diagrams"
+            commit="$commitid$" />
+        <!-- <icon>images\icon.png</icon> -->
+        <developmentDependency>true</developmentDependency>
+    </metadata>
+
+    <files>
+        <!-- Binaries -->
+        <file src="bin\netstandard2.0\WTG.Analyzers.dll" target="analyzers\dotnet\cs" />
+        <file src="bin\netstandard2.0\WTG.Analyzers.Utils.dll" target="analyzers\dotnet\cs" />
+
+        <!-- MSBuild Properties and Targets -->
+        <file src="src\WTG.Analyzers\build\WTG.Analyzers.props" target="build\" />
+        <file src="src\WTG.Analyzers\build\WarnAll.editorconfig" target="build\" />
+
+        <!-- Other -->
+        <file src="LICENSE" target="" />
+        <!-- <file src="icon.png" target="images" /> -->
+    </files>
+</package>

@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: Extract Version
       id: version
-      uses: battila/get-version-action@v2
+      uses: battila7/get-version-action@v2
 
     - name: Checkout
       uses: actions/checkout@v3

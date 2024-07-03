@@ -18,12 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Extract Version
-      id: version
-      uses: battila7/get-version-action@v2
-
-    - run: echo ${{ steps.version.outputs.version }}
-    - run: echo ${{ steps.version.outputs.version-without-v }}
+    # - name: Extract Version
+    #   id: version
+    #   uses: battila7/get-version-action@v2
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -42,7 +39,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Create NuGet Packages
-      run: dotnet pack --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ steps.version.outputs.version-without-v }}
+      run: dotnet pack --configuration Release /p:CommitID=${{ github.sha }} /p:TagVersion=${{ github.sha }}
 
     # Upload package as an atrifact to the GitHub action
     - name: Upload packages

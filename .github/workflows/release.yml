@@ -33,6 +33,12 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
+      - name: Pack
+        run: dotnet nuget pack
+
+      - name: Create NuGet Packages
+        run: dotnet pack src --configuration Release
+
       - name: Upload packages
         uses: actions/upload-artifact@v3
         with:

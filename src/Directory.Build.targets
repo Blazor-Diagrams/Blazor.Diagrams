@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NuspecFile)' != ''">
+    <IsPackable>true</IsPackable>
+    <NuspecProperties>
+      id=$(PackageId);
+      version=$(ShortVersion)$(VersionSuffix);
+      company=$(Company);
+      copyright=$(Copyright);
+      commitid=$(CommitID);
+    </NuspecProperties>
+  </PropertyGroup>
+</Project>

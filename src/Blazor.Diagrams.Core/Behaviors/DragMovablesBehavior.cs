@@ -24,16 +24,15 @@ public class DragMovablesBehavior : DragBehavior
 
     protected override void OnPointerDown(Model? model, PointerEventArgs e)
     {
-        if (model is null)
+        if (model is not MovableModel)
             return;
 
         ResetPan();
 
         _initialPositions.Clear();
-
         foreach (var sm in Diagram.GetSelectedModels())
         {
-            if (sm is not NodeModel movable || movable.Locked)
+            if (sm is not MovableModel movable || movable.Locked)
                 continue;
 
             // Special case: groups without auto size on
@@ -116,7 +115,6 @@ public class DragMovablesBehavior : DragBehavior
                 movable.TriggerMoved();
             }
         }
-
         _initialPositions.Clear();
         _totalMovedX = 0;
         _totalMovedY = 0;

@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build - ${{ matrix.configuration }}
-  
+
     strategy:
       matrix:
         configuration: [ Debug, Release ]
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-  
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v3
       with:

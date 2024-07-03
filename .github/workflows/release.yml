@@ -22,6 +22,9 @@ jobs:
       id: version
       uses: battila7/get-version-action@v2
 
+    - run: echo ${{ steps.version.outputs.version }}
+    - run: echo ${{ steps.version.outputs.version-without-v }}
+
     - name: Checkout
       uses: actions/checkout@v3
 

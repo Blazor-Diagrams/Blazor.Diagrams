@@ -18,12 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: GitHub Tag Name example
-        run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Get Version
         id: version
@@ -44,7 +40,7 @@ jobs:
 
       - name: Pack Blazor.Diagrams
         working-directory: src/Blazor.Diagrams
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }}--output ${{ env.NUGET_DIR }}'
+        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.NUGET_DIR }}'
 
       - name: Push
         run: >-

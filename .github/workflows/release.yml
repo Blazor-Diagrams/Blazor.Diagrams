@@ -40,11 +40,9 @@ jobs:
 
       - name: Pack Blazor.Diagrams
         working-directory: src/Blazor.Diagrams
-        run: 'dotnet pack -p:GeneratePackageOnBuild=false --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.NUGET_DIR }}'
+        run: 'dotnet pack --no-restore --no-build -p:GeneratePackageOnBuild=false --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.NUGET_DIR }}'
 
-      - name: Push
-        run: >-
-          for i in $(find ${{ env.NUGET_DIR }} -type f -name "*.nupkg");
-          do
-           echo "File: ${i} \n";
-          done
+      - name: Push NuGet Package to NuGet Gallery
+        run: |
+          nuget setapikey ${{ secrets.NUGET_API_KEY }}
+          nuget push bin/WTG.Analyzers.${{ steps.version.outputs.version-without-v }}.nupkg -Source https://api.nuget.org/v3/index.json

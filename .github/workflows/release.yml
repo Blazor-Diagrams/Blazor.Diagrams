@@ -45,4 +45,4 @@ jobs:
       - name: Push NuGet Package to NuGet Gallery
         run: |
           nuget setapikey ${{ secrets.NUGET_API_KEY }}
-          nuget push bin/WTG.Analyzers.${{ steps.version.outputs.version-without-v }}.nupkg -Source https://api.nuget.org/v3/index.json
+          nuget push ${{ env.NUGET_DIR }}/WTG.Z.Blazor.Diagrams.${{ steps.version.outputs.version-without-v }}.nupkg -Source https://api.nuget.org/v3/index.json

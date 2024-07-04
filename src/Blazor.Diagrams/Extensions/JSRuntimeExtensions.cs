@@ -30,4 +30,9 @@ public static class JSRuntimeExtensions
     {
         await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.unobserve", element, element.Id);
     }
+
+    public static async Task AddDefaultPreventingHandler(this IJSRuntime jsRuntime, ElementReference element)
+    {
+        await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.addDefaultPreventingHandler", element, "wheel");
+    }
 }

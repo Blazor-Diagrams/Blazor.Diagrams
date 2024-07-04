@@ -114,6 +114,20 @@ Diagram.UnregisterBehavior&lt;SelectionBehavior&gt;();
 Diagram.RegisterBehavior(new MySelectionBehavior(Diagram));
 </code></pre>
 
+<h2>Using Different Behaviors</h2>
+
+You can use the following ways to add different behaviors to the diagram.
+
+<h3>Scroll Behavior</h3>
+
+<p>To scroll the diagram using the mouse wheel you can register the Scroll Behavior.</p>
+
+<pre><code class="language-cs">
+Diagram.UnregisterBehavior&lt;WheelBehavior&gt;();
+Diagram.RegisterBehavior(new ScrollBehavior(Diagram));
+</code></pre>
+
+
 <NavigationButtons PreviousLink="/documentation/diagram"
                    PreviousTitle="Overview"
                    NextTitle="Ordering"

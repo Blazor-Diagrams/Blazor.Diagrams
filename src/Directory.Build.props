@@ -4,20 +4,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-
-    <!--
-      - The major and minor versions should match the Roslyn API version,
-      - and the major/minor/build versions should match the NuGet package version (NuGet is x.y.z only)
-      - Revision should be incremented whenever you want to publish a new version.
-      -->
-    <ShortVersion Condition=" '$(TagVersion)' == '' ">3.7.2</ShortVersion>
-    <ShortVersion Condition=" '$(TagVersion)' != '' ">$(TagVersion.Split('-', 2)[0])</ShortVersion>
-    <VersionSuffix Condition=" '$(TagVersion)' != '' ">
-      $(TagVersion.Substring($(ShortVersion.Length)))</VersionSuffix>
-
-    <Version Condition=" '$(Version)' == '' and '$(GITHUB_RUN_NUMBER)' != ''">
-      $(ShortVersion).$(GITHUB_RUN_NUMBER)</Version>
-    <Version Condition=" '$(Version)' == '' and '$(GITHUB_RUN_NUMBER)' == ''">$(ShortVersion).0</Version>
   </PropertyGroup>
 
   <Import Project="..\build\Version.props" />

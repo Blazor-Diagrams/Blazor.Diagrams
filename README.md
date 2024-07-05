@@ -58,9 +58,16 @@ Repository: https://github.com/Blazor-Diagrams/Blazor.DatabaseDesigner
 
 ### Contributing
 
-All kinds of contributions are welcome!  
+All kinds of contributions are welcome!
 If you're interested in helping, please create an issue or comment on an existing one to explain what you will be doing. This is because multiple people can be working on the same problem.
 
 ## Feedback
 
 If you find a bug or you want to see a functionality in this library, feel free to open an issue.
+
+## Deployment
+
+This project is hosted on NuGet. Merges to master will trigger a release action that will
+- Build WTG.Z.Blazor.Diagrams
+- Host this on Github as a release
+- Push it to the WTG.Z.Blazor.Diagrams NuGet Gallery

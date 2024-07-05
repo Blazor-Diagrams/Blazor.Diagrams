@@ -3,7 +3,7 @@ name: Create release
 # On push to master branch. i.e. when we merge a PR.
 on:
   push:
-    branches: [ master, VFL/WI00764279/NCN-Diagrams-Move-WTG.Blazor.Diagrams-to-nuget.org ]
+    branches: [ master ]
     tags:
       - "v*"
   workflow_dispatch:

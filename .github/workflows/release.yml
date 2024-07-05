@@ -3,46 +3,69 @@ name: Create release
 # On push to master branch. i.e. when we merge a PR.
 on:
   push:
-    branches: [ master ]
+    branches: [ master, VFL/WI00764279/NCN-Diagrams-Move-WTG.Blazor.Diagrams-to-nuget.org ]
     tags:
       - "v*"
   workflow_dispatch:
 
 env:
-  NUGET_DIR: '${{ github.workspace }}/nuget'
+  PACKAGE_PATH: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
 
 jobs:
-  publish-pkg:
+  release:
     name: Build - Release
 
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
 
-      - name: Get Version
-        id: version
-        uses: battila7/get-version-action@v2
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-              6.0.x
-              3.1.x
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+            6.0.x
+            3.1.x
 
-      - name: Install dependencies
-        run: dotnet restore
+      # Finds the latest release and increases the version
+    - name: Get next version
+      uses: reecetech/version-increment@2023.9.3
+      id: version
+      with:
+        scheme: semver
+        increment: patch
 
-      - name: Build
-        run: dotnet build --configuration Release
+    - name: Install version tool
+      run: dotnet tool install dotnetCampus.TagToVersion -g --version 1.0.11
 
-      - name: Pack Blazor.Diagrams
-        working-directory: src/Blazor.Diagrams
-        run: 'dotnet pack --no-restore --no-build -p:GeneratePackageOnBuild=false --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.NUGET_DIR }}'
+      # Writes the new version number to build/Version.props
+    - name: Set version
+      run: dotnet TagToVersion -t ${{ steps.version.outputs.version }}
 
-      - name: Push NuGet Package to NuGet Gallery
-        run: |
-          nuget setapikey ${{ secrets.NUGET_API_KEY }}
-          nuget push ${{ env.NUGET_DIR }}/WTG.Z.Blazor.Diagrams.${{ steps.version.outputs.version-without-v }}.nupkg -Source https://api.nuget.org/v3/index.json
+    - name: Install dependencies
+      run: dotnet restore
+
+      # Pacakge is created on build
+    - name: Build
+      run: dotnet build --configuration Release
+
+      # Upload package as an atrifact to the GitHub action
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: package
+        path: ${{ env.PACKAGE_PATH }}
+        retention-days: 5
+
+      # Create a new release and upload the package to the release
+    # - name: Release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     files: ${{ env.PACKAGE_PATH }}
+    #     tag_name: ${{ steps.version.outputs.version }}
+
+    # - name: Push NuGet Package to NuGet Gallery
+    #   run: |
+    #     nuget setapikey ${{ secrets.NUGET_API_KEY }}
+    #     nuget push ${{ env.PACKAGE_PATH }} -Source https://api.nuget.org/v3/index.json

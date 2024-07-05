@@ -67,5 +67,5 @@ If you find a bug or you want to see a functionality in this library, feel free 
 
 This project is hosted on NuGet. Merges to master will trigger a release action that will
 - Build WTG.Z.Blazor.Diagrams
-- Host this on Github as a release
+- Host the package on Github as a release
 - Push it to the WTG.Z.Blazor.Diagrams NuGet Gallery

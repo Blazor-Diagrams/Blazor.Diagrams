@@ -27,8 +27,6 @@ public class DragMovablesBehavior : DragBehavior
         if (model is not MovableModel)
             return;
 
-        ResetPan();
-
         _initialPositions.Clear();
         foreach (var sm in Diagram.GetSelectedModels())
         {
@@ -72,7 +70,7 @@ public class DragMovablesBehavior : DragBehavior
         _lastClientY = e.ClientY;
 
     }
-    
+
     protected virtual void OnPanChanged(double deltaX, double deltaY)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
@@ -130,11 +128,6 @@ public class DragMovablesBehavior : DragBehavior
 
         var gridSize = Diagram.Options.GridSize.Value;
         return gridSize * Math.Floor((n + gridSize / 2.0) / gridSize);
-    }
-
-    void ResetPan()
-    {
-        Diagram.SetPan(0, 0);
     }
 
     public override void Dispose()

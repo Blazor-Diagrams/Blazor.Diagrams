@@ -2,13 +2,13 @@
 
 ![](ZBD.png)
 
-Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was first inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams), but then evolved into something much bigger. ZBD can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. 
+Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was first inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams), but then evolved into something much bigger. ZBD can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs.
+
+WTG.Z.Blazor.Diagarms is a fork of Z.Blazor.Diagrams with new features and bug fixes first targeting WiseTech Global products.
 
 | NuGet Package                | Version                                                                                                                                  | Download                                                                                                                                  |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Z.Blazor.Diagrams.Core       | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core)             | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Core.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Core)             |
-| Z.Blazor.Diagrams            | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams)                       |
-| Z.Blazor.Diagrams.Algorithms | [![NuGet](https://img.shields.io/nuget/v/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) | [![Nuget](https://img.shields.io/nuget/dt/Z.Blazor.Diagrams.Algorithms.svg)](https://www.nuget.org/packages/Z.Blazor.Diagrams.Algorithms) |
+| WTG.Z.Blazor.Diagrams            | [![NuGet](https://img.shields.io/nuget/v/WTG.Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/WTG.Z.Blazor.Diagrams)                       | [![Nuget](https://img.shields.io/nuget/dt/WTG.Z.Blazor.Diagrams.svg)](https://www.nuget.org/packages/WTG.Z.Blazor.Diagrams)                       |
 
 | Badges     |                                                                                                                                                    |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -58,9 +58,16 @@ Repository: https://github.com/Blazor-Diagrams/Blazor.DatabaseDesigner
 
 ### Contributing
 
-All kinds of contributions are welcome!  
+All kinds of contributions are welcome!
 If you're interested in helping, please create an issue or comment on an existing one to explain what you will be doing. This is because multiple people can be working on the same problem.
 
 ## Feedback
 
 If you find a bug or you want to see a functionality in this library, feel free to open an issue.
+
+## Deployment
+
+This project is hosted on NuGet. Merges to master will trigger a release action that will
+- Build WTG.Z.Blazor.Diagrams
+- Host the package on Github as a release
+- Push it to the WTG.Z.Blazor.Diagrams NuGet Gallery

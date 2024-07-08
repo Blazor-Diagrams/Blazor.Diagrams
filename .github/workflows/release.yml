@@ -1,4 +1,5 @@
 name: Create release
+
 # On push to master branch. i.e. when we merge a PR.
 on:
   push:
@@ -9,20 +10,20 @@ env:
   PACKAGE_PATH: /home/runner/work/Blazor.Diagrams/Blazor.Diagrams/src/Blazor.Diagrams/bin/Release/*.nupkg
 
 jobs:
-  build:
+  release:
     name: Build - Release
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-  
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: |
-            6.0.x
-            3.1.x
-      
+        dotnet-version: '6.0.x'
+
       # Finds the latest release and increases the version
     - name: Get next version
       uses: reecetech/version-increment@2023.9.3
@@ -59,3 +60,8 @@ jobs:
       with:
         files: ${{ env.PACKAGE_PATH }}
         tag_name: ${{ steps.version.outputs.version }}
+
+    - name: Push NuGet Package to NuGet Gallery
+      run: |
+        nuget setapikey ${{ secrets.NUGET_API_KEY }}
+        nuget push ${{ env.PACKAGE_PATH }} -Source https://api.nuget.org/v3/index.json

@@ -5,6 +5,7 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using System;
 using System.Collections.Generic;
+
 namespace Blazor.Diagrams.Core.Behaviors;
 
 public class DragMovablesBehavior : DragBehavior

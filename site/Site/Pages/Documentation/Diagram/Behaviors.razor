@@ -120,11 +120,10 @@ You can use the following ways to add different behaviors to the diagram.
 
 <h3>Scroll Behavior</h3>
 
-<p>To scroll the diagram using the mouse wheel you can register the Scroll Behavior.</p>
+<p>To scroll the diagram using the mouse wheel use ScrollBehavior.</p>
 
 <pre><code class="language-cs">
-Diagram.UnregisterBehavior&lt;WheelBehavior&gt;();
-Diagram.RegisterBehavior(new ScrollBehavior(Diagram));
+_diagram.BehaviorOptions.DiagramWheelBehavior = _diagram.GetBehavior&lt;ScrollBehavior&gt;();
 </code></pre>
 
 

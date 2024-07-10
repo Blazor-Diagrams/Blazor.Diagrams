@@ -65,7 +65,7 @@ public partial class DiagramCanvas : IAsyncDisposable
         {
             BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
             await JSRuntime.ObserveResizes(elementReference, _reference!);
-            if (BlazorDiagram.GetBehavior<ScrollBehavior>() != null)
+            if (BlazorDiagram.BehaviorOptions.DiagramWheelBehavior is ScrollBehavior)
             {
                 await JSRuntime.AddDefaultPreventingForWheelHandler(elementReference);
             }

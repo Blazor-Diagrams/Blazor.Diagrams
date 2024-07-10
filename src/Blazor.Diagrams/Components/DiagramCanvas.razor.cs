@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -62,7 +63,10 @@ public partial class DiagramCanvas : IDisposable
         {
             BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
             await JSRuntime.ObserveResizes(elementReference, _reference!);
-            await JSRuntime.AddDefaultPreventingHandler(elementReference);
+            if (BlazorDiagram.GetBehavior<ScrollBehavior>() != null)
+            {
+                await JSRuntime.AddDefaultPreventingForWheelHandler(elementReference);
+            }
         }
     }
 
@@ -100,7 +104,7 @@ public partial class DiagramCanvas : IDisposable
         BlazorDiagram.TriggerKeyDown(e.ToCore());
     }
 
-    private async void OnWheel(WheelEventArgs e)
+    private void OnWheel(WheelEventArgs e)
     {
         BlazorDiagram.TriggerWheel(e.ToCore());
     }

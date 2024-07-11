@@ -10,7 +10,7 @@ namespace Blazor.Diagrams.Core.Behaviors;
 
 public class DragMovablesBehavior : DragBehavior
 {
-    private readonly Dictionary<MovableModel, Point> _initialPositions;
+    protected readonly Dictionary<MovableModel, Point> _initialPositions;
     protected double? _lastClientX;
     protected double? _lastClientY;
     protected bool _moved;
@@ -58,7 +58,6 @@ public class DragMovablesBehavior : DragBehavior
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
 
-        _moved = true;
         var deltaX = (e.ClientX - _lastClientX.Value) / Diagram.Zoom;
         var deltaY = (e.ClientY - _lastClientY.Value) / Diagram.Zoom;
 
@@ -67,21 +66,23 @@ public class DragMovablesBehavior : DragBehavior
 
         MoveNodes(_totalMovedX, _totalMovedY);
 
+        _moved = true;
         _lastClientX = e.ClientX;
         _lastClientY = e.ClientY;
 
     }
+
     protected virtual void OnPanChanged(double deltaX, double deltaY)
     {
         if (_initialPositions.Count == 0 || _lastClientX == null || _lastClientY == null)
             return;
 
-        _moved = true;
-
-        _totalMovedX += deltaX;
-        _totalMovedY += deltaY;
+        _totalMovedX += deltaX / Diagram.Zoom;
+        _totalMovedY += deltaY / Diagram.Zoom;
 
         MoveNodes(_totalMovedX, _totalMovedY);
+
+        _moved = true;
     }
 
     protected virtual void MoveNodes(double deltaX, double deltaY)
@@ -118,6 +119,7 @@ public class DragMovablesBehavior : DragBehavior
         _totalMovedY = 0;
         _lastClientX = null;
         _lastClientY = null;
+        _moved = false;
     }
 
     private double ApplyGridSize(double n)

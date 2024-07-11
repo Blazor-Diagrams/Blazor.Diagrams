@@ -114,13 +114,14 @@ Diagram.UnregisterBehavior&lt;SelectionBehavior&gt;();
 Diagram.RegisterBehavior(new MySelectionBehavior(Diagram));
 </code></pre>
 
-<h2>Using Different Behaviors</h2>
+<h2>Configure behaviors for different actions on input</h2>
 
-You can use the following ways to add different behaviors to the diagram.
+You can configure a behavior to perform different actions for an input. Such as scrolling a diagram on mouse wheel instead of zooming in and out.
+This can be done using the <code>BehaviorOptions</code>. See the below example.
 
-<h3>Scroll Behavior</h3>
+<h3>Scrolling a diagram on mouse wheel</h3>
 
-<p>To scroll the diagram using the mouse wheel use ScrollBehavior.</p>
+<p>To scroll a diagram using the mouse wheel set the <code>DiagramWheelBehavior</code> property of <code>BehaviorOptions</code> to use <code>ScrollBehavior</code>.</p>
 
 <pre><code class="language-cs">
 _diagram.BehaviorOptions.DiagramWheelBehavior = _diagram.GetBehavior&lt;ScrollBehavior&gt;();

@@ -55,11 +55,11 @@ jobs:
         retention-days: 5
 
       # Create a new release and upload the package to the release
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: ${{ env.PACKAGE_PATH }}
-        tag_name: ${{ steps.version.outputs.version }}
+    # - name: Release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     files: ${{ env.PACKAGE_PATH }}
+    #     tag_name: ${{ steps.version.outputs.version }}
 
     - name: Push NuGet Package to NuGet Gallery
       run: |

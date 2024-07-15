@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -64,6 +65,10 @@ public partial class DiagramCanvas : IAsyncDisposable
         {
             BlazorDiagram.SetContainer(await JSRuntime.GetBoundingClientRect(elementReference));
             await JSRuntime.ObserveResizes(elementReference, _reference!);
+            if (BlazorDiagram.BehaviorOptions.DiagramWheelBehavior is ScrollBehavior)
+            {
+                await JSRuntime.AddDefaultPreventingForWheelHandler(elementReference);
+            }
         }
     }
 

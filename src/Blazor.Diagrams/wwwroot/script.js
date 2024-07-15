@@ -45,6 +45,9 @@ var s = {
         }
         delete s.tracked[id];
         delete s.canvases[id];
+    },
+    addDefaultPreventingHandler: (element, eventName) => {
+        element.addEventListener(eventName, e => e.preventDefault(), { passive: false });
     }
 };
 window.ZBlazorDiagrams = s;

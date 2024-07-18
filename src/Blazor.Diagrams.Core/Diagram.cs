@@ -58,25 +58,25 @@ public abstract class Diagram
         Links.Removed += OnSelectableRemoved;
         Groups.Removed += OnSelectableRemoved;
 
-            RegisterDefaultBehaviors();
+        RegisterDefaultBehaviors();
 
-            BehaviorOptions.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
-            BehaviorOptions.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
-            BehaviorOptions.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
-        }
+        BehaviorOptions.DiagramDragBehavior ??= GetBehavior<PanBehavior>();
+        BehaviorOptions.DiagramShiftDragBehavior ??= GetBehavior<SelectionBoxBehavior>();
+        BehaviorOptions.DiagramWheelBehavior ??= GetBehavior<ZoomBehavior>();
+    }
 
-        public abstract DiagramOptions Options { get; }
-        public DiagramBehaviorOptions BehaviorOptions { get; }
-        public NodeLayer Nodes { get; }
-        public LinkLayer Links { get; }
-        public GroupLayer Groups { get; }
-        public ControlsLayer Controls { get; }
-        public Rectangle? Container { get; private set; }
-        public Point Pan { get; private set; } = Point.Zero;
-        public double Zoom { get; private set; } = 1;
-        public bool SuspendRefresh { get; set; }
-        public bool SuspendSorting { get; set; }
-        public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
+    public abstract DiagramOptions Options { get; }
+    public DiagramBehaviorOptions BehaviorOptions { get; }
+    public NodeLayer Nodes { get; }
+    public LinkLayer Links { get; }
+    public GroupLayer Groups { get; }
+    public ControlsLayer Controls { get; }
+    public Rectangle? Container { get; private set; }
+    public Point Pan { get; private set; } = Point.Zero;
+    public double Zoom { get; private set; } = 1;
+    public bool SuspendRefresh { get; set; }
+    public bool SuspendSorting { get; set; }
+    public IReadOnlyList<SelectableModel> OrderedSelectables => _orderedSelectables;
 
     public void Refresh()
     {
@@ -417,5 +417,4 @@ public abstract class Diagram
     public void TriggerPointerDoubleClick(Model? model, PointerEventArgs e) => PointerDoubleClick?.Invoke(model, e);
 
         #endregion
-    }
 }

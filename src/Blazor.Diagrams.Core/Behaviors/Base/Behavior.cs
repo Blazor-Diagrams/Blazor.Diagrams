@@ -9,7 +9,8 @@ namespace Blazor.Diagrams.Core.Behaviors.Base
             Diagram = diagram;
         }
 
-    protected Diagram Diagram { get; }
+        protected Diagram Diagram { get; }
 
-    public abstract void Dispose();
+        public abstract void Dispose();
+    }
 }

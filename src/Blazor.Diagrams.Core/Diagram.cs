@@ -44,11 +44,11 @@ public abstract class Diagram
         _behaviors = new Dictionary<Type, Behavior>();
         _orderedSelectables = new List<SelectableModel>();
 
-            Nodes = new NodeLayer(this);
-            Links = new LinkLayer(this);
-            Groups = new GroupLayer(this);
-            Controls = new ControlsLayer();
-            BehaviorOptions = new DiagramBehaviorOptions();
+        Nodes = new NodeLayer(this);
+        Links = new LinkLayer(this);
+        Groups = new GroupLayer(this);
+        Controls = new ControlsLayer();
+        BehaviorOptions = new DiagramBehaviorOptions();
 
         Nodes.Added += OnSelectableAdded;
         Links.Added += OnSelectableAdded;
@@ -169,26 +169,26 @@ public abstract class Diagram
 
     #region Behaviors
 
-        void RegisterDefaultBehaviors()
-        {
-            RegisterBehavior(new SelectionBehavior(this));
-            RegisterBehavior(new DragMovablesBehavior(this));
-            RegisterBehavior(new DragNewLinkBehavior(this));
-            RegisterBehavior(new PanBehavior(this));
-            RegisterBehavior(new ZoomBehavior(this));
-            RegisterBehavior(new EventsBehavior(this));
-            RegisterBehavior(new KeyboardShortcutsBehavior(this));
-            RegisterBehavior(new ControlsBehavior(this));
-            RegisterBehavior(new VirtualizationBehavior(this));
-            RegisterBehavior(new ScrollBehavior(this));
-            RegisterBehavior(new SelectionBoxBehavior(this));
-        }
+    void RegisterDefaultBehaviors()
+    {
+        RegisterBehavior(new SelectionBehavior(this));
+        RegisterBehavior(new DragMovablesBehavior(this));
+        RegisterBehavior(new DragNewLinkBehavior(this));
+        RegisterBehavior(new PanBehavior(this));
+        RegisterBehavior(new ZoomBehavior(this));
+        RegisterBehavior(new EventsBehavior(this));
+        RegisterBehavior(new KeyboardShortcutsBehavior(this));
+        RegisterBehavior(new ControlsBehavior(this));
+        RegisterBehavior(new VirtualizationBehavior(this));
+        RegisterBehavior(new ScrollBehavior(this));
+        RegisterBehavior(new SelectionBoxBehavior(this));
+    }
 
-        public void RegisterBehavior(Behavior behavior)
-        {
-            var type = behavior.GetType();
-            if (_behaviors.ContainsKey(type))
-                throw new Exception($"Behavior '{type.Name}' already registered");
+    public void RegisterBehavior(Behavior behavior)
+    {
+        var type = behavior.GetType();
+        if (_behaviors.ContainsKey(type))
+            throw new Exception($"Behavior '{type.Name}' already registered");
 
         _behaviors.Add(type, behavior);
     }

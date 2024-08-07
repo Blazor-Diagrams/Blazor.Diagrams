@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Blazor.Diagrams.Core.Extensions;
@@ -14,13 +15,14 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components.Renderers;
 
-public class NodeRenderer : ComponentBase, IDisposable
+public class NodeRenderer : ComponentBase, IAsyncDisposable
 {
     private bool _becameVisible;
     private ElementReference _element;
     private bool _isSvg;
     private DotNetObjectReference<NodeRenderer>? _reference;
     private bool _shouldRender;
+    private IJSObjectReference? _module;
 
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
@@ -28,14 +30,18 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         Node.Changed -= OnNodeChanged;
         Node.VisibilityChanged -= OnVisibilityChanged;
 
+
         if (_element.Id != null && !Node.ControlledSize)
         {
-            _ = JsRuntime.UnobserveResizes(_element);
+            if(_module is not null)
+            {
+                await  _module.UnobserveResizes(_element);
+            }
         }
 
         _reference?.Dispose();
@@ -60,6 +66,8 @@ public class NodeRenderer : ComponentBase, IDisposable
         Node.RefreshLinks();
         Node.ReinitializePorts();
     }
+
+
 
     protected override void OnInitialized()
     {
@@ -129,13 +137,18 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            _module ??= await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Z.Blazor.Diagrams/script.min.js");
+        }
+
         if (firstRender || _becameVisible)
         {
             _becameVisible = false;
 
-            if (!Node.ControlledSize)
+            if (!Node.ControlledSize && _module is not null)
             {
-                await JsRuntime.ObserveResizes(_element, _reference!);
+                await _module.ObserveResizes(_element, _reference!);
             }
         }
     }

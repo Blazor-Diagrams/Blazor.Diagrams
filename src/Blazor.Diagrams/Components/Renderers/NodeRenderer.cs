@@ -15,7 +15,7 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components.Renderers;
 
-public class NodeRenderer : ComponentBase
+public class NodeRenderer : ComponentBase, IAsyncDisposable
 {
     private bool _becameVisible;
     private ElementReference _element;

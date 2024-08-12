@@ -1,4 +1,5 @@
 ﻿using System;
+using Blazor.Diagrams.Core.Behaviors;
 using Blazor.Diagrams.Core.Events;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
@@ -8,9 +9,8 @@ namespace Blazor.Diagrams.Components.Widgets;
 
 public partial class SelectionBoxWidget : IDisposable
 {
-    private Point? _initialClientPoint;
-    private Size? _selectionBoxSize; // Todo: remove unneeded instantiations
-    private Point? _selectionBoxTopLeft; // Todo: remove unneeded instantiations
+    private Rectangle? _selectionBounds;
+    private SelectionBoxBehavior? _selectionBoxBehavior;
 
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
@@ -18,74 +18,30 @@ public partial class SelectionBoxWidget : IDisposable
 
     public void Dispose()
     {
-        BlazorDiagram.PointerDown -= OnPointerDown;
-        BlazorDiagram.PointerMove -= OnPointerMove;
-        BlazorDiagram.PointerUp -= OnPointerUp;
+        if (_selectionBoxBehavior is not null)
+        {
+            _selectionBoxBehavior.SelectionBoundsChanged -= SelectionBoundsChanged;
+        }
     }
 
     protected override void OnInitialized()
     {
-        BlazorDiagram.PointerDown += OnPointerDown;
-        BlazorDiagram.PointerMove += OnPointerMove;
-        BlazorDiagram.PointerUp += OnPointerUp;
+        _selectionBoxBehavior = BlazorDiagram.GetBehavior<SelectionBoxBehavior>();
+        if (_selectionBoxBehavior is not null)
+        {
+            _selectionBoxBehavior.SelectionBoundsChanged += SelectionBoundsChanged;
+        }
+    }
+
+    void SelectionBoundsChanged(object? sender, Rectangle? bounds)
+    {
+        _selectionBounds = bounds;
+        InvokeAsync(StateHasChanged);
     }
 
     private string GenerateStyle()
     {
         return FormattableString.Invariant(
-            $"position: absolute; background: {Background}; top: {_selectionBoxTopLeft!.Y}px; left: {_selectionBoxTopLeft.X}px; width: {_selectionBoxSize!.Width}px; height: {_selectionBoxSize.Height}px;");
-    }
-
-    private void OnPointerDown(Model? model, MouseEventArgs e)
-    {
-        if (model != null || !e.ShiftKey)
-            return;
-
-        _initialClientPoint = new Point(e.ClientX, e.ClientY);
-    }
-
-    private void OnPointerMove(Model? model, MouseEventArgs e)
-    {
-        if (_initialClientPoint == null)
-            return;
-
-        SetSelectionBoxInformation(e);
-
-        var start = BlazorDiagram.GetRelativeMousePoint(_initialClientPoint.X, _initialClientPoint.Y);
-        var end = BlazorDiagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
-        var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-        var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-        var bounds = new Rectangle(sX, sY, eX, eY);
-
-        foreach (var node in BlazorDiagram.Nodes)
-        {
-            var nodeBounds = node.GetBounds();
-            if (nodeBounds == null)
-                continue;
-
-            if (bounds.Overlap(nodeBounds))
-                BlazorDiagram.SelectModel(node, false);
-            else if (node.Selected) BlazorDiagram.UnselectModel(node);
-        }
-
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void SetSelectionBoxInformation(MouseEventArgs e)
-    {
-        var start = BlazorDiagram.GetRelativePoint(_initialClientPoint!.X, _initialClientPoint.Y);
-        var end = BlazorDiagram.GetRelativePoint(e.ClientX, e.ClientY);
-        var (sX, sY) = (Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-        var (eX, eY) = (Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-        _selectionBoxTopLeft = new Point(sX, sY);
-        _selectionBoxSize = new Size(eX - sX, eY - sY);
-    }
-
-    private void OnPointerUp(Model? model, MouseEventArgs e)
-    {
-        _initialClientPoint = null;
-        _selectionBoxTopLeft = null;
-        _selectionBoxSize = null;
-        InvokeAsync(StateHasChanged);
+            $"position: absolute; background: {Background}; top: {_selectionBounds!.Top}px; left: {_selectionBounds.Left}px; width: {_selectionBounds.Width}px; height: {_selectionBounds.Height}px;");
     }
 }

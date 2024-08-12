@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
 using System.Diagnostics;
+using Blazor.Diagrams.Core.Behaviors.Base;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 

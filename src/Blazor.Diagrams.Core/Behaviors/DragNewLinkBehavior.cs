@@ -4,6 +4,7 @@ using Blazor.Diagrams.Core.Events;
 using System.Linq;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Behaviors.Base;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 

@@ -1,66 +1,43 @@
 ﻿using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
+using Blazor.Diagrams.Core.Behaviors.Base;
 
-namespace Blazor.Diagrams.Core.Behaviors;
-
-public class PanBehavior : Behavior
+namespace Blazor.Diagrams.Core.Behaviors
 {
-    private Point? _initialPan;
-    private double _lastClientX;
-    private double _lastClientY;
-
-    public PanBehavior(Diagram diagram) : base(diagram)
+    public class PanBehavior : DragBehavior
     {
-        Diagram.PointerDown += OnPointerDown;
-        Diagram.PointerMove += OnPointerMove;
-        Diagram.PointerUp += OnPointerUp;
-    }
+        private Point? _initialPan;
+        private double _lastClientX;
+        private double _lastClientY;
 
-    private void OnPointerDown(Model? model, PointerEventArgs e)
-    {
-        if (e.Button != (int)MouseEventButton.Left)
-            return;
+        public PanBehavior(Diagram diagram) : base(diagram)
+        {
+        }
 
-        Start(model, e.ClientX, e.ClientY, e.ShiftKey);
-    }
+        protected override void OnPointerDown(Model? model, PointerEventArgs e)
+        {
+            if (e.Button != (int)MouseEventButton.Left || model != null || !Diagram.Options.AllowPanning || !IsBehaviorEnabled(e))
+                return;
 
-    private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
+            _initialPan = Diagram.Pan;
+            _lastClientX = e.ClientX;
+            _lastClientY = e.ClientY;
+        }
 
-    private void OnPointerUp(Model? model, PointerEventArgs e) => End();
+        protected override void OnPointerMove(Model? model, PointerEventArgs e)
+        {
+            if (_initialPan == null)
+                return;
 
-    private void Start(Model? model, double clientX, double clientY, bool shiftKey)
-    {
-        if (!Diagram.Options.AllowPanning || model != null || shiftKey)
-            return;
+            var deltaX = e.ClientX - _lastClientX - (Diagram.Pan.X - _initialPan.X);
+            var deltaY = e.ClientY - _lastClientY - (Diagram.Pan.Y - _initialPan.Y);
+            Diagram.UpdatePan(deltaX, deltaY);
+        }
 
-        _initialPan = Diagram.Pan;
-        _lastClientX = clientX;
-        _lastClientY = clientY;
-    }
-
-    private void Move(double clientX, double clientY)
-    {
-        if (!Diagram.Options.AllowPanning || _initialPan == null)
-            return;
-
-        var deltaX = clientX - _lastClientX - (Diagram.Pan.X - _initialPan.X);
-        var deltaY = clientY - _lastClientY - (Diagram.Pan.Y - _initialPan.Y);
-        Diagram.UpdatePan(deltaX, deltaY);
-    }
-
-    private void End()
-    {
-        if (!Diagram.Options.AllowPanning)
-            return;
-
-        _initialPan = null;
-    }
-
-    public override void Dispose()
-    {
-        Diagram.PointerDown -= OnPointerDown;
-        Diagram.PointerMove -= OnPointerMove;
-        Diagram.PointerUp -= OnPointerUp;
+        protected override void OnPointerUp(Model? model, PointerEventArgs e)
+        {
+            _initialPan = null;
+        }
     }
 }

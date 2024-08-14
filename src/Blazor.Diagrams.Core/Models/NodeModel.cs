@@ -11,7 +11,9 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
     private readonly List<PortModel> _ports = new();
     private readonly List<BaseLinkModel> _links = new();
     private Size? _size;
+    public Size MinimumDimensions { get; set; } = new Size(0, 0);
 
+    public event Action<NodeModel>? SizeChanging;
     public event Action<NodeModel>? SizeChanged;
     public event Action<NodeModel>? Moving;
 
@@ -28,11 +30,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         get => _size;
         set
         {
-            if (value?.Equals(_size) == true)
-                return;
-
             _size = value;
-            SizeChanged?.Invoke(this);
         }
     }
     public bool ControlledSize { get; init; }
@@ -103,6 +101,29 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
         Moving?.Invoke(this);
     }
 
+    public void SetSize(double width, double height)
+    {
+        var newSize = new Size(width, height);
+        if (newSize.Equals(_size) == true)
+            return;
+
+        Size? oldSize = Size != null ? new Size(Size.Width, Size.Height) : null;
+
+        Size = newSize;
+        if (oldSize != null)
+        {
+            UpdatePortPositions(oldSize, newSize);
+        }
+        Refresh();
+        RefreshLinks();
+        SizeChanging?.Invoke(this);
+    }
+
+    public void TriggerSizeChanged()
+    {
+        SizeChanged?.Invoke(this);
+    }
+
     public virtual void UpdatePositionSilently(double deltaX, double deltaY)
     {
         base.SetPosition(Position.X + deltaX, Position.Y + deltaY);
@@ -141,12 +162,30 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
 
     public virtual bool CanAttachTo(ILinkable other) => other is not PortModel && other is not BaseLinkModel;
 
+    /// <summary>
+    /// Updates port positions when node position changes.
+    /// </summary>
     private void UpdatePortPositions(double deltaX, double deltaY)
     {
         // Save some JS calls and update ports directly here
         foreach (var port in _ports)
         {
             port.Position = new Point(port.Position.X + deltaX, port.Position.Y + deltaY);
+            port.RefreshLinks();
+        }
+    }
+
+    /// <summary>
+    /// Updates port positions when node size changes.
+    /// </summary>
+    private void UpdatePortPositions(Size oldSize, Size newSize)
+    {
+        var deltaWidth = newSize.Width - oldSize.Width;
+        var deltaHeight = newSize.Height - oldSize.Height;
+
+        foreach (var port in _ports)
+        {
+            port.SetPortPositionOnNodeSizeChanged(deltaWidth, deltaHeight);
             port.RefreshLinks();
         }
     }

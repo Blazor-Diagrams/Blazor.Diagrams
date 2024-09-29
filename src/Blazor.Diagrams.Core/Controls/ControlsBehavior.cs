@@ -5,57 +5,49 @@ namespace Blazor.Diagrams.Core.Controls;
 
 public class ControlsBehavior : Behavior
 {
-    public ControlsBehavior(Diagram diagram) : base(diagram)
-    {
-        Diagram.PointerEnter += OnPointerEnter;
-        Diagram.PointerLeave += OnPointerLeave;
-        Diagram.SelectionChanged += OnSelectionChanged;
-    }
+	public ControlsBehavior(Diagram diagram) : base(diagram)
+	{
+		Diagram.PointerEnter += OnPointerEnter;
+		Diagram.PointerLeave += OnPointerLeave;
+		Diagram.SelectionChanged += OnSelectionChanged;
+	}
 
-    private void OnSelectionChanged(SelectableModel model)
-    {
-        var controls = Diagram.Controls.GetFor(model);
-        if (controls is not { Type: ControlsType.OnSelection })
-            return;
+	private void OnSelectionChanged(SelectableModel model)
+	{
+		var controls = Diagram.Controls.GetFor(model, ControlsType.OnSelection);
+		if (controls is null)
+			return;
 
-        if (model.Selected)
-        {
-            controls.Show();
-        }
-        else
-        {
-            controls.Hide();
-        }
-    }
+		if (model.Selected)
+		{
+			controls.Show();
+		}
+		else
+		{
+			controls.Hide();
+		}
+	}
 
-    private void OnPointerEnter(Model? model, PointerEventArgs e)
-    {
-        if (model == null)
-            return;
-        
-        var controls = Diagram.Controls.GetFor(model);
-        if (controls is not { Type: ControlsType.OnHover })
-            return;
-        
-        controls.Show();
-    }
+	private void OnPointerEnter(Model? model, PointerEventArgs e)
+	{
+		if (model == null)
+			return;
 
-    private void OnPointerLeave(Model? model, PointerEventArgs e)
-    {
-        if (model == null)
-            return;
-        
-        var controls = Diagram.Controls.GetFor(model);
-        if (controls is not { Type: ControlsType.OnHover })
-            return;
-        
-        controls.Hide();
-    }
+		Diagram.Controls.GetFor(model, ControlsType.OnHover)?.Show();
+	}
 
-    public override void Dispose()
-    {
-        Diagram.PointerEnter -= OnPointerEnter;
-        Diagram.PointerLeave -= OnPointerLeave;
-        Diagram.SelectionChanged -= OnSelectionChanged;
-    }
+	private void OnPointerLeave(Model? model, PointerEventArgs e)
+	{
+		if (model == null)
+			return;
+
+		Diagram.Controls.GetFor(model, ControlsType.OnHover)?.Hide();
+	}
+
+	public override void Dispose()
+	{
+		Diagram.PointerEnter -= OnPointerEnter;
+		Diagram.PointerLeave -= OnPointerLeave;
+		Diagram.SelectionChanged -= OnSelectionChanged;
+	}
 }

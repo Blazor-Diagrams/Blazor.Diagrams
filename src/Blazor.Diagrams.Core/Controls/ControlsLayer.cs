@@ -1,62 +1,89 @@
-using System;
-using System.Collections.Generic;
 using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Controls;
 
 public class ControlsLayer
 {
-    private readonly Dictionary<Model, ControlsContainer> _containers;
+	private readonly Dictionary<(Model Model, ControlsType Type), ControlsContainer> _containers = new();
 
-    public event Action<Model>? ChangeCaused;
+	public event Action<Model>? ChangeCaused;
 
-    public ControlsLayer()
-    {
-        _containers = new Dictionary<Model, ControlsContainer>();
-    }
+	public IEnumerable<Model> Models => _containers.Keys.Select(key => key.Model);
+	public IEnumerable<(Model Model, ControlsType Type)> ContainersKeys => _containers.Keys;
 
-    public IReadOnlyCollection<Model> Models => _containers.Keys;
+	public ControlsContainer AddFor(Model model, ControlsType type = ControlsType.OnSelection)
+	{
+		var key = (model, type);
+		if (_containers.TryGetValue(key, out ControlsContainer? container))
+			return container;
 
-    public ControlsContainer AddFor(Model model, ControlsType type = ControlsType.OnSelection)
-    {
-        if (_containers.ContainsKey(model))
-            return _containers[model];
-        
-        var container = new ControlsContainer(model, type);
-        container.VisibilityChanged += OnVisibilityChanged;
-        container.ControlsChanged += RefreshIfVisible;
-        model.Changed += RefreshIfVisible;
-        _containers.Add(model, container);
-        return container;
-    }
+		container = new(model, type);
+		container.VisibilityChanged += OnVisibilityChanged;
+		container.ControlsChanged += RefreshIfVisible;
+		model.Changed += RefreshIfVisible;
 
-    public ControlsContainer? GetFor(Model model)
-    {
-        return _containers.TryGetValue(model, out var container) ? container : null;
-    }
+		_containers.Add(key, container);
 
-    public bool RemoveFor(Model model)
-    {
-        if (!_containers.TryGetValue(model, out var container))
-            return false;
-        
-        container.VisibilityChanged -= OnVisibilityChanged;
-        container.ControlsChanged -= RefreshIfVisible;
-        model.Changed -= RefreshIfVisible;
-        _containers.Remove(model);
-        ChangeCaused?.Invoke(model);
-        return true;
-    }
+		return container;
+	}
 
-    public bool AreVisibleFor(Model model) => GetFor(model)?.Visible ?? false;
+	public ControlsContainer? GetFor(Model model, ControlsType type)
+	{
+		if (_containers.TryGetValue((model, type), out ControlsContainer? container))
+			return container;
 
-    private void RefreshIfVisible(Model cause)
-    {
-        if (!AreVisibleFor(cause))
-            return;
-        
-        ChangeCaused?.Invoke(cause);
-    }
+		return null;
+	}
 
-    private void OnVisibilityChanged(Model cause) => ChangeCaused?.Invoke(cause);
+	public bool RemoveFor(Model model, ControlsType type)
+	{
+		var key = (model, type);
+		if (!_containers.TryGetValue(key, out var container))
+			return false;
+
+		container.VisibilityChanged -= OnVisibilityChanged;
+		container.ControlsChanged -= RefreshIfVisible;
+		model.Changed -= RefreshIfVisible;
+		_containers.Remove(key);
+		ChangeCaused?.Invoke(model);
+		return true;
+	}
+
+	public bool RemoveFor(Model model)
+	{
+		bool removed = false;
+		foreach (ControlsType type in (ControlsType[])Enum.GetValues(typeof(ControlsType)))
+		{
+			var key = (model, type);
+			if (_containers.TryGetValue(key, out var container))
+			{
+				container.VisibilityChanged -= OnVisibilityChanged;
+				container.ControlsChanged -= RefreshIfVisible;
+				model.Changed -= RefreshIfVisible;
+				_containers.Remove(key);
+				ChangeCaused?.Invoke(model);
+				removed = true;
+			}
+
+		}
+
+		return removed;
+	}
+
+	public bool AreVisibleFor(Model model, ControlsType type) => GetFor(model, type)?.Visible ?? false;
+
+	private void RefreshIfVisible(Model cause)
+	{
+		foreach (ControlsType type in (ControlsType[])Enum.GetValues(typeof(ControlsType)))
+		{
+			if (AreVisibleFor(cause, type))
+			{
+				ChangeCaused?.Invoke(cause);
+				return;
+			}
+		}
+
+	}
+
+	private void OnVisibilityChanged(Model cause) => ChangeCaused?.Invoke(cause);
 }

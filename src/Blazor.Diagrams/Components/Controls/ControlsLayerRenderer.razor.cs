@@ -26,7 +26,7 @@ public partial class ControlsLayerRenderer : IDisposable
     protected override void OnInitialized()
     {
         BlazorDiagram.Controls.ChangeCaused += OnControlsChangeCaused;
-    }
+	}
 
     protected override bool ShouldRender()
     {

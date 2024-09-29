@@ -1,33 +1,33 @@
-@foreach (var model in BlazorDiagram.Controls.Models)
+@foreach (var key in BlazorDiagram.Controls.ContainersKeys)
 {
-    var controls = BlazorDiagram.Controls.GetFor(model)!;
-    if (!controls.Visible || controls.Count == 0)
-        continue;
+	var controls = BlazorDiagram.Controls.GetFor(key.Model, key.Type)!;
+	if (!controls.Visible || controls.Count == 0)
+		continue;
 
-    if (Svg && model.IsSvg())
-    {
-        <g class="controls" data-model-type="@model.GetType().Name" data-model-id="@model.Id">
-            @foreach (var control in controls)
-            {
-                var position = control.GetPosition(model);
-                if (position == null)
-                    continue;
+	if (Svg && key.Model.IsSvg())
+	{
+		<g class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id">
+			@foreach (var control in controls)
+			{
+				var position = control.GetPosition(key.Model);
+				if (position == null)
+					continue;
 
-                @RenderControl(model, control, position, true)
-            }
-        </g>
-    }
-    else if (!Svg && !model.IsSvg())
-    {
-        <div class="controls" data-model-type="@model.GetType().Name" data-model-id="@model.Id">
-            @foreach (var control in controls)
-            {
-                var position = control.GetPosition(model);
-                if (position == null)
-                    continue;
+				@RenderControl(key.Model, control, position, true)
+			}
+		</g>
+	}
+	else if (!Svg && !key.Model.IsSvg())
+	{
+		<div class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id">
+			@foreach (var control in controls)
+			{
+				var position = control.GetPosition(key.Model);
+				if (position == null)
+					continue;
 
-                @RenderControl(model, control, position, false)
-            }
-        </div>
-    }
+				@RenderControl(key.Model, control, position, false)
+			}
+		</div>
+	}
 }

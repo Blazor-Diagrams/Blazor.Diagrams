@@ -29,10 +29,9 @@ public class ControlsLayer
 
     public ControlsContainer? GetFor(Model model, ControlsType type)
     {
-        if (_containers.TryGetValue((model, type), out ControlsContainer? container))
-            return container;
+        _containers.TryGetValue((model, type), out ControlsContainer? container);
 
-        return null;
+        return container;
     }
 
     /// <summary>

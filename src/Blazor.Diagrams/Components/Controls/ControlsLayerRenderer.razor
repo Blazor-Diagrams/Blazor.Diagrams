@@ -6,7 +6,7 @@
 
 	if (Svg && key.Model.IsSvg())
 	{
-		<g class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id">
+		<g class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id" @key="key">
 			@foreach (var control in controls)
 			{
 				var position = control.GetPosition(key.Model);
@@ -19,7 +19,7 @@
 	}
 	else if (!Svg && !key.Model.IsSvg())
 	{
-		<div class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id">
+		<div class="controls" data-model-type="@key.Model.GetType().Name" data-model-id="@key.Model.Id" @key="key">
 			@foreach (var control in controls)
 			{
 				var position = control.GetPosition(key.Model);

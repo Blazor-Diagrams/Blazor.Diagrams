@@ -47,38 +47,36 @@ public partial class ControlsLayerRenderer : IDisposable
     }
 
     private RenderFragment RenderControl(Model model, Control control, Point position, bool svg)
-    {
-        var componentType = BlazorDiagram.GetComponent(control.GetType());
-        if (componentType == null)
-            throw new BlazorDiagramsException(
-                $"A component couldn't be found for the user action {control.GetType().Name}");
+	{
+		var componentType = BlazorDiagram.GetComponent(control.GetType()) ?? throw new BlazorDiagramsException($"A component couldn't be found for the user action {control.GetType().Name}");
 
-        return builder =>
-        {
-            builder.OpenElement(0, svg ? "g" : "div");
-            builder.AddAttribute(1, "class",
-                $"{(control is ExecutableControl ? "executable " : "")}diagram-control {control.GetType().Name}");
-            if (svg)
-                builder.AddAttribute(2, "transform",
-                    $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");
-            else
-                builder.AddAttribute(2, "style",
-                    $"top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px");
+		return builder =>
+		{
+			var index = 0;
+			builder.OpenElement(index, svg ? "g" : "div");
+			builder.AddAttribute(++index, "class", $"{(control is ExecutableControl ? "executable " : "")}diagram-control {control.GetType().Name}");
+			if (svg)
+			{
+				builder.AddAttribute(++index, "transform", $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");
+			}
+			else
+			{
+				builder.AddAttribute(++index, "style", $"top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px");
+			}
 
-            if (control is ExecutableControl ec)
-            {
-                builder.AddAttribute(3, "onpointerdown",
-                    EventCallback.Factory.Create<PointerEventArgs>(this, e => OnPointerDown(e, model, ec)));
-                builder.AddEventStopPropagationAttribute(4, "onpointerdown", true);
-            }
+			if (control is ExecutableControl ec)
+			{
+				builder.AddAttribute(++index, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, e => OnPointerDown(e, model, ec)));
+				builder.AddEventStopPropagationAttribute(++index, "onpointerdown", true);
+			}
 
-            builder.OpenComponent(5, componentType);
-            builder.AddAttribute(6, "Control", control);
-            builder.AddAttribute(7, "Model", model);
-            builder.CloseComponent();
-            builder.CloseElement();
-        };
-    }
+			builder.OpenComponent(++index, componentType);
+			builder.AddAttribute(++index, "Control", control);
+			builder.AddAttribute(++index, "Model", model);
+			builder.CloseComponent();
+			builder.CloseElement();
+		};
+	}
 
     private async Task OnPointerDown(PointerEventArgs e, Model model, ExecutableControl control)
     {

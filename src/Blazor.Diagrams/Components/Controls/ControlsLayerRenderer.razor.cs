@@ -52,27 +52,26 @@ public partial class ControlsLayerRenderer : IDisposable
 
 		return builder =>
 		{
-			var index = 0;
-			builder.OpenElement(index, svg ? "g" : "div");
-			builder.AddAttribute(++index, "class", $"{(control is ExecutableControl ? "executable " : "")}diagram-control {control.GetType().Name}");
+			builder.OpenElement(0, svg ? "g" : "div");
+			builder.AddAttribute(1, "class", $"{(control is ExecutableControl ? "executable " : "")}diagram-control {control.GetType().Name}");
 			if (svg)
 			{
-				builder.AddAttribute(++index, "transform", $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");
+				builder.AddAttribute(2, "transform", $"translate({position.X.ToInvariantString()} {position.Y.ToInvariantString()})");
 			}
 			else
 			{
-				builder.AddAttribute(++index, "style", $"top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px");
+				builder.AddAttribute(3, "style", $"top: {position.Y.ToInvariantString()}px; left: {position.X.ToInvariantString()}px");
 			}
 
 			if (control is ExecutableControl ec)
 			{
-				builder.AddAttribute(++index, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, e => OnPointerDown(e, model, ec)));
-				builder.AddEventStopPropagationAttribute(++index, "onpointerdown", true);
+				builder.AddAttribute(4, "onpointerdown", EventCallback.Factory.Create<PointerEventArgs>(this, e => OnPointerDown(e, model, ec)));
+				builder.AddEventStopPropagationAttribute(5, "onpointerdown", true);
 			}
 
-			builder.OpenComponent(++index, componentType);
-			builder.AddAttribute(++index, "Control", control);
-			builder.AddAttribute(++index, "Model", model);
+			builder.OpenComponent(6, componentType);
+			builder.AddAttribute(7, "Control", control);
+			builder.AddAttribute(8, "Model", model);
 			builder.CloseComponent();
 			builder.CloseElement();
 		};

@@ -28,8 +28,8 @@ public partial class LinkWidget
             builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
             builder.AddAttribute(10, "onpointerdown", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.PointerEventArgs>(this, e => OnPointerDown(e, index)));
             builder.AddAttribute(11, "ondblclick", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, e => OnPointerDoubleClick(e, index)));
-            builder.AddEventStopPropagationAttribute(11, "onpointerdown", Link.Segmentable && !Link.DoubleClickToSegment);
-            builder.AddEventStopPropagationAttribute(12, "ondblclick", Link.Segmentable && Link.DoubleClickToSegment);
+            builder.AddEventStopPropagationAttribute(12, "onpointerdown", Link.Segmentable && !Link.DoubleClickToSegment);
+            builder.AddEventStopPropagationAttribute(13, "ondblclick", Link.Segmentable && Link.DoubleClickToSegment);
             builder.CloseElement();
         };
     }

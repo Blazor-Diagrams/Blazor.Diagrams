@@ -14,6 +14,8 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public event Action<BaseLinkModel, Anchor, Anchor>? SourceChanged;
     public event Action<BaseLinkModel, Anchor, Anchor>? TargetChanged;
     public event Action<BaseLinkModel>? TargetAttached;
+    public event Action<BaseLinkModel, LinkVertexModel>? VertexAdded;
+    public event Action<BaseLinkModel, LinkVertexModel>? VertexRemoved;
 
     protected BaseLinkModel(Anchor source, Anchor target)
     {
@@ -38,6 +40,7 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public LinkMarker? SourceMarker { get; set; }
     public LinkMarker? TargetMarker { get; set; }
     public bool Segmentable { get; set; } = false;
+    public bool DoubleClickToSegment { get; set; } = false;
     public List<LinkVertexModel> Vertices { get; } = new();
     public List<LinkLabelModel> Labels { get; } = new();
     public IReadOnlyList<BaseLinkModel> Links => _links;
@@ -67,7 +70,25 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     {
         var vertex = new LinkVertexModel(this, position);
         Vertices.Add(vertex);
+        VertexAdded?.Invoke(this, vertex);
+        Refresh();
         return vertex;
+    }
+
+    public LinkVertexModel InsertVertex(Point? position, int index)
+    {
+        var vex = new LinkVertexModel(this, position);
+        Vertices.Insert(index, vex);
+        VertexAdded?.Invoke(this, vex);
+        Refresh();
+        return vex;
+    }
+
+    public void RemoveVertex(LinkVertexModel vertex)
+    {
+        Vertices.Remove(vertex);
+        VertexRemoved?.Invoke(this, vertex);
+        Refresh();
     }
 
     public void SetSource(Anchor anchor)

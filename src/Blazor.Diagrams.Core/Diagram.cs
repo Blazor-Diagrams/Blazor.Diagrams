@@ -4,9 +4,6 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Layers;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Blazor.Diagrams.Core.Options;
 using Blazor.Diagrams.Core.Controls;
@@ -38,7 +35,7 @@ public abstract class Diagram
     public event Action? ContainerChanged;
     public event Action? Changed;
 
-    protected Diagram()
+    protected Diagram(bool registerDefaultBehaviors = true)
     {
         _behaviors = new Dictionary<Type, Behavior>();
         _orderedSelectables = new List<SelectableModel>();
@@ -55,6 +52,9 @@ public abstract class Diagram
         Nodes.Removed += OnSelectableRemoved;
         Links.Removed += OnSelectableRemoved;
         Groups.Removed += OnSelectableRemoved;
+
+        if (!registerDefaultBehaviors)
+            return;
 
         RegisterBehavior(new SelectionBehavior(this));
         RegisterBehavior(new DragMovablesBehavior(this));

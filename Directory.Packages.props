@@ -5,7 +5,7 @@
 		<PackageVersion Include="System.Net.Http.Json" Version="9.0.0" />
 		<PackageVersion Include="GraphShape" Version="1.2.1" />
 		<PackageVersion Include="MatBlazor" Version="2.10.0" />
-		<PackageVersion Include="bunit" Version="1.25.3" />
+		<PackageVersion Include="bunit" Version="1.36.0" />
 		<PackageVersion Include="FluentAssertions" Version="6.12.0" />
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageVersion Include="xunit" Version="2.6.3" />

@@ -8,9 +8,14 @@ on:
 
 jobs:
   build:
+    name: Deploy Site to GitHub Pages
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9'
 
     - name: Publish app
       run: cd site/Site && dotnet publish -c Release

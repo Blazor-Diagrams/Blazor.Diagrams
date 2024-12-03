@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	h1 {
+		@apply text-3xl font-extrabold my-4;
+	}
+
+	h2 {
+		@apply text-2xl font-bold my-4;
+	}
+
+	h3 {
+		@apply text-xl font-bold my-4;
+	}
+
+	table {
+		@apply border-collapse table-auto w-full my-4;
+	}
+
+	tr {
+		@apply border-b;
+	}
+
+	td, th {
+		@apply px-6 py-4 text-left;
+	}
+}
+
+#blazor-error-ui {
+	background: lightyellow;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+
+	#blazor-error-ui .dismiss {
+		cursor: pointer;
+		position: absolute;
+		right: 0.75rem;
+		top: 0.5rem;
+	}
+
+#header {
+	box-shadow: 0 1px 2px 0 #eee;
+}
+
+#docs-sidebar {
+	box-shadow: 1px 0 2px 0 #eee;
+}
+
+#header img {
+	margin-bottom: 6px;
+}
+
+.bg-main {
+	background-color: #40BABD;
+}
+
+.text-main {
+	color: #40BABD;
+}
+
+.bg-color1 {
+	background-color: #A0B15B;
+}
+
+.bg-color2 {
+	background-color: #DC9A7A;
+}
+
+.bg-color3 {
+	background-color: #9EA5E3;
+}
+
+.outline-color1 {
+	box-shadow: 0px 0px 0px 2px #A0B15B inset;
+}
+
+.outline-color2 {
+	box-shadow: 0px 0px 0px 2px #DC9A7A inset;
+}
+
+.outline-color3 {
+	box-shadow: 0px 0px 0px 2px #9EA5E3 inset;
+}
+
+.outline-color1-darker {
+	box-shadow: 0px 0px 0px 2px #515a2b inset;
+}
+
+.outline-color2-darker {
+	box-shadow: 0px 0px 0px 2px #874423 inset;
+}
+
+.outline-color3-darker {
+	box-shadow: 0px 0px 0px 2px #2b3595 inset;
+}
+
+.diagram-link-label > div {
+	display: inline-block;
+	color: #000000;
+	font-size: 0.875rem;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	white-space: nowrap;
+	background-color: white;
+}
+
+.filename {
+	background: #f5f2f0;
+	margin-bottom: -0.5rem;
+	margin-top: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid #999;
+	font-size: 16px;
+}

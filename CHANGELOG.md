@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Diagram (3.0.0) - 2024-02-24
+## Diagrams (3.0.3) - 2024-12-03
+
+### Added
+
+- Support for .NET 9 (thanks to @[PanayiotisTheodosiou](https://github.com/PanayiotisTheodosiou))
+- `registerDefaultBehaviors` argument to `BlazorDiagram` constructor, it's `true` by default and can be disabled if you want to control what behaviors are added and their order.
+
+### Removed
+
+- gzip versions of assets, it was causing an issue with .NET 9
+
+## Diagram (3.0.2) - 2024-02-24
 
 ### Added
 

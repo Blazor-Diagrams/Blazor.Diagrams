@@ -4,11 +4,11 @@
     <Nullable>enable</Nullable>
     <Authors>zHaytam</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>3.0.2</AssemblyVersion>
-    <FileVersion>3.0.2</FileVersion>
+    <AssemblyVersion>3.0.3</AssemblyVersion>
+    <FileVersion>3.0.3</FileVersion>
     <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
     <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>blazor diagrams diagramming svg drag</PackageTags>
     <PackageId>Z.Blazor.Diagrams</PackageId>
@@ -47,7 +47,7 @@
   </Target>
 
   <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
+    <Exec Command="webcompiler --zip disable -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
   </Target>
 
 </Project>

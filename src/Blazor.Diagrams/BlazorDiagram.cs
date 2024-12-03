@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Blazor.Diagrams.Components.Controls;
+﻿using Blazor.Diagrams.Components.Controls;
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models.Base;
@@ -12,7 +10,7 @@ public class BlazorDiagram : Diagram
 {
     private readonly Dictionary<Type, Type> _componentsMapping;
 
-    public BlazorDiagram(BlazorDiagramOptions? options = null)
+    public BlazorDiagram(BlazorDiagramOptions? options = null, bool registerDefaultBehaviors = true) : base(registerDefaultBehaviors)
     {
         _componentsMapping = new Dictionary<Type, Type>
         {

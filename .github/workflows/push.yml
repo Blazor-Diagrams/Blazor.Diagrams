@@ -7,9 +7,14 @@ on:
 
 jobs:
   build:
+    name: Push packages to NuGet
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9'
   
       - name: Pack Blazor.Diagrams.Core
         working-directory: src/Blazor.Diagrams.Core

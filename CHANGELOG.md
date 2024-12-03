@@ -12,9 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for .NET 9 (thanks to @[PanayiotisTheodosiou](https://github.com/PanayiotisTheodosiou))
 - `registerDefaultBehaviors` argument to `BlazorDiagram` constructor, it's `true` by default and can be disabled if you want to control what behaviors are added and their order.
 
+### Fixed
+
+- Exception thrown when `node.Visible` was `false` from the creation and the library was trying to observe its resizes when the element won't exist (fixes #476).
+
 ### Removed
 
-- gzip versions of assets, it was causing an issue with .NET 9
+- gzip versions of assets, it was causing an issue with .NET 9 (fixes #471, thanks a lot @[robertmclaws](https://github.com/robertmclaws))
 
 ## Diagram (3.0.2) - 2024-02-24
 

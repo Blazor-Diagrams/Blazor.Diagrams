@@ -22,8 +22,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="Brutal.Dev.StrongNameSigner" PrivateAssets="All" />
         <!-- Reference the SvgPathProperties that we already strong name signed -->
-        <Reference Include="SvgPathProperties" PrivateAssets="All">
-        </Reference>
+        <Reference Include="SvgPathProperties" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>

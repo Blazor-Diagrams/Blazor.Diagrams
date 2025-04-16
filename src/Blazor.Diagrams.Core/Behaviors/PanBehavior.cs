@@ -6,9 +6,8 @@ namespace Blazor.Diagrams.Core.Behaviors;
 
 public class PanBehavior : Behavior
 {
-    private Point? _initialPan;
-    private double _lastClientX;
-    private double _lastClientY;
+    private readonly Dictionary<long, Point> _activePointers = new();
+    private CenterCircle? _lastPointerCircle;
 
     public PanBehavior(Diagram diagram) : base(diagram)
     {
@@ -22,40 +21,68 @@ public class PanBehavior : Behavior
         if (e.Button != (int)MouseEventButton.Left)
             return;
 
-        Start(model, e.ClientX, e.ClientY, e.ShiftKey);
+        Start(model, e.Client, e.ShiftKey, e.PointerId);
     }
 
-    private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.ClientX, e.ClientY);
+    private void OnPointerMove(Model? model, PointerEventArgs e) => Move(e.Client, e.PointerId);
 
-    private void OnPointerUp(Model? model, PointerEventArgs e) => End();
+    private void OnPointerUp(Model? model, PointerEventArgs e) => End(e.PointerId);
 
-    private void Start(Model? model, double clientX, double clientY, bool shiftKey)
+    private void Start(Model? model, Point client, bool shiftKey, long pointerId)
     {
-        if (!Diagram.Options.AllowPanning || model != null || shiftKey)
+        if (model != null || shiftKey)
             return;
 
-        _initialPan = Diagram.Pan;
-        _lastClientX = clientX;
-        _lastClientY = clientY;
+        _activePointers[pointerId] = client;
+
+        PointersChanged();
     }
 
-    private void Move(double clientX, double clientY)
+    private void Move(Point client, long pointerId)
     {
-        if (!Diagram.Options.AllowPanning || _initialPan == null)
+        if (_lastPointerCircle == null)
             return;
 
-        var deltaX = clientX - _lastClientX - (Diagram.Pan.X - _initialPan.X);
-        var deltaY = clientY - _lastClientY - (Diagram.Pan.Y - _initialPan.Y);
-        Diagram.UpdatePan(deltaX, deltaY);
-    }
-
-    private void End()
-    {
-        if (!Diagram.Options.AllowPanning)
+        if (_activePointers.ContainsKey(pointerId) is false)
             return;
 
-        _initialPan = null;
+        _activePointers[pointerId] = client;
+
+        var newPointerCircle = GetCurrentPointerCircle();
+
+        var zoomFactor = _lastPointerCircle.Value.Radius == 0 ? 1 : newPointerCircle.Radius / _lastPointerCircle.Value.Radius;
+        var deltaPan = newPointerCircle.Origin - _lastPointerCircle.Value.Origin;
+
+        Diagram.Batch(() =>
+        {
+            if (Diagram.Options.Zoom.Enabled)
+                Diagram.SetZoom(Diagram.Zoom * zoomFactor, zoomClientOrigin: newPointerCircle.Origin);
+            if (Diagram.Options.AllowPanning)
+                Diagram.UpdatePan(deltaPan.X, deltaPan.Y);
+        });
+
+        _lastPointerCircle = newPointerCircle;
     }
+
+    private void End(long pointerId)
+    {
+        _activePointers.Remove(pointerId);
+
+        if (_activePointers.Count is 0)
+            _lastPointerCircle = null;
+        else
+            PointersChanged();
+    }
+
+    private CenterCircle GetCurrentPointerCircle()
+    {
+        var centroid = Point.CalculateCentroid(_activePointers.Values) ?? Point.Zero;
+        var radius = _activePointers.Values.Average(p => p.DistanceTo(centroid));
+        return new(centroid, radius);
+    }
+
+    private void PointersChanged() =>
+        _lastPointerCircle = GetCurrentPointerCircle();
 
     public override void Dispose()
     {
@@ -63,4 +90,6 @@ public class PanBehavior : Behavior
         Diagram.PointerMove -= OnPointerMove;
         Diagram.PointerUp -= OnPointerUp;
     }
+
+    private record struct CenterCircle(Point Origin, double Radius);
 }

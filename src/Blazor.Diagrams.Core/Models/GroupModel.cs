@@ -95,7 +95,7 @@ public class GroupModel : NodeModel
         foreach (var child in children)
         {
             _children.Add(child);
-            child.Group = this; 
+            child.Group = this;
             child.SizeChanged += OnNodeChanged;
             child.Moving += OnNodeChanged;
         }
@@ -111,7 +111,7 @@ public class GroupModel : NodeModel
         }
     }
 
-    private bool UpdateDimensions()
+    public virtual bool UpdateDimensions()
     {
         if (Children.Count == 0)
             return true;

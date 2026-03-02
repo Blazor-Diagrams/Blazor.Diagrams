@@ -1,0 +1,205 @@
+@import '_content/Z.Blazor.Diagrams/Z.Blazor.Diagrams.ezdqu7jd9f.bundle.scp.css';
+
+/* /Components/Documentation/MyDiagram.razor.rz.scp.css */
+.diagram-container[b-d5983lvpho] {
+	width: 100%;
+	height: 400px;
+	border: 1px solid black;
+}
+/* /Components/Documentation/Nodes/AddTwoNumbersWidget.razor.rz.scp.css */
+div[b-6dba4kgoq9] {
+    width: 230px;
+    outline: 1px solid black;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+    div > h5[b-6dba4kgoq9] {
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    div > input[type=number][b-6dba4kgoq9] {
+        padding: 3px;
+        border-radius: 3px;
+        border: 1px solid black;
+        margin-bottom: 8px;
+    }
+
+[b-6dba4kgoq9] .diagram-port {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background-color: black;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    [b-6dba4kgoq9] .diagram-port.top {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        top: -10px;
+    }
+
+    [b-6dba4kgoq9] .diagram-port.bottom {
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        bottom: -30px;
+    }
+/* /Components/Documentation/Nodes/ArithmeticContainerWidget.razor.rz.scp.css */
+.arithmetic-container[b-8n2lkq4wyt] {
+    width: 100%;
+    height: 100%;
+    border: 2px dashed black;
+}
+
+    .arithmetic-container .title[b-8n2lkq4wyt] {
+        position: absolute;
+        right: 0;
+        padding: 8px;
+        text-align: right;
+        border-left: 2px dashed black;
+        border-bottom: 2px dashed black;
+    }
+
+[b-8n2lkq4wyt] .diagram-port {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background-color: black;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    [b-8n2lkq4wyt] .diagram-port.top {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        top: -10px;
+    }
+
+    [b-8n2lkq4wyt] .diagram-port.bottom {
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        bottom: -30px;
+    }
+/* /Components/Documentation/Nodes/GingerbreadWidget.razor.rz.scp.css */
+.gingerbread .body[b-v2f3mg7kf1] {
+    fill: #cd803d;
+}
+
+.gingerbread .eye[b-v2f3mg7kf1] {
+    fill: white;
+}
+
+.gingerbread .mouth[b-v2f3mg7kf1] {
+    fill: none;
+    stroke: white;
+    stroke-width: 2px;
+}
+
+.gingerbread .limb[b-v2f3mg7kf1] {
+    stroke: #cd803d;
+    stroke-width: 35px;
+    stroke-linecap: round;
+}
+
+.gingerbread .hand[b-v2f3mg7kf1] {
+    fill: #cd803d;
+}
+
+    .gingerbread .hand:hover[b-v2f3mg7kf1] {
+        fill: #75441a;
+    }
+/* /Components/Landing/LandingShowcaseDiagram.razor.rz.scp.css */
+[b-ltyhyemv0j] g.diagram-link path:not(.selection-helper) {
+    stroke-dasharray: 5;
+    animation: dash-b-ltyhyemv0j .5s linear infinite;
+}
+
+@keyframes dash-b-ltyhyemv0j {
+    to {
+        stroke-dashoffset: -10;
+    }
+}
+/* /Pages/Documentation/Controls/Customization.razor.rz.scp.css */
+.diagram-container[b-g1qzdps6yg] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Controls/Overview.razor.rz.scp.css */
+.diagram-container[b-grmq5n0guq] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Diagram/Api.razor.rz.scp.css */
+tr td:first-child[b-ph29jzwque] {
+	font-weight: 600;
+}
+/* /Pages/Documentation/Groups/Customization.razor.rz.scp.css */
+.diagram-container[b-d26836f57s] {
+	width: 100%;
+	height: 650px;
+	border: 1px solid black;
+}
+/* /Pages/Documentation/Groups/SvgCustomization.razor.rz.scp.css */
+.diagram-container[b-j4129tciem] {
+	width: 100%;
+	height: 650px;
+	border: 1px solid black;
+}
+/* /Pages/Documentation/Links/Anchors.razor.rz.scp.css */
+.diagram-container[b-w4ungaik4c] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Links/Markers.razor.rz.scp.css */
+.diagram-container[b-71cvpos6zy] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Links/PathGenerators.razor.rz.scp.css */
+.diagram-container[b-p8y3u5d3iy] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Links/Routers.razor.rz.scp.css */
+.diagram-container[b-jj7nvn0ohh] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Links/Vertices.razor.rz.scp.css */
+.diagram-container[b-f74qyosye9] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Nodes/Customization.razor.rz.scp.css */
+.diagram-container[b-u0f4eg3htl] {
+	width: 100%;
+	height: 400px;
+	border: 1px solid black;
+}
+/* /Pages/Documentation/Nodes/SvgCustomization.razor.rz.scp.css */
+.diagram-container[b-o61ynfnohd] {
+	width: 100%;
+	height: 400px;
+	border: 1px solid black;
+	user-select: none;
+}
+/* /Pages/Documentation/Widgets/Grid.razor.rz.scp.css */
+.diagram-container[b-di20f877u5] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Widgets/Navigator.razor.rz.scp.css */
+.diagram-container[b-sjai2yeky0] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Pages/Documentation/Widgets/SelectionBox.razor.rz.scp.css */
+.diagram-container[b-tol9ek6bbb] {
+    border: 1px solid black;
+    caret-color: transparent;
+}
+/* /Shared/DocumentationLayout.razor.rz.scp.css */
+/* /Shared/LandingLayout.razor.rz.scp.css */

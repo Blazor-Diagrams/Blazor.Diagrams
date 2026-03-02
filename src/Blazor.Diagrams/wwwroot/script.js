@@ -1,12 +1,12 @@
-var s = {
+var zBlazorDiagramsInternalObject = {
     canvases: {},
     tracked: {},
     getBoundingClientRect: el => {
         return el.getBoundingClientRect();
     },
     mo: new MutationObserver(() => {
-        for (id in s.canvases) {
-            const canvas = s.canvases[id];
+        for (id in zBlazorDiagramsInternalObject.canvases) {
+            const canvas = zBlazorDiagramsInternalObject.canvases[id];
             const lastBounds = canvas.lastBounds;
             const bounds = canvas.elem.getBoundingClientRect();
             if (lastBounds.left !== bounds.left || lastBounds.top !== bounds.top || lastBounds.width !== bounds.width ||
@@ -19,7 +19,7 @@ var s = {
     ro: new ResizeObserver(entries => {
         for (const entry of entries) {
             let id = Array.from(entry.target.attributes).find(e => e.name.startsWith('_bl')).name.substring(4);
-            let element = s.tracked[id];
+            let element = zBlazorDiagramsInternalObject.tracked[id];
             if (element) {
                 element.ref.invokeMethodAsync('OnResize', entry.target.getBoundingClientRect());
             }
@@ -27,12 +27,12 @@ var s = {
     }),
     observe: (element, ref, id) => {
         if (!element) return;
-        s.ro.observe(element);
-        s.tracked[id] = {
+        zBlazorDiagramsInternalObject.ro.observe(element);
+        zBlazorDiagramsInternalObject.tracked[id] = {
             ref: ref
         };
         if (element.classList.contains("diagram-canvas")) {
-            s.canvases[id] = {
+            zBlazorDiagramsInternalObject.canvases[id] = {
                 elem: element,
                 ref: ref,
                 lastBounds: element.getBoundingClientRect()
@@ -41,18 +41,18 @@ var s = {
     },
     unobserve: (element, id) => {
         if (element) {
-            s.ro.unobserve(element);
+            zBlazorDiagramsInternalObject.ro.unobserve(element);
         }
-        delete s.tracked[id];
-        delete s.canvases[id];
+        delete zBlazorDiagramsInternalObject.tracked[id];
+        delete zBlazorDiagramsInternalObject.canvases[id];
     }
 };
-window.ZBlazorDiagrams = s;
+window.ZBlazorDiagrams = zBlazorDiagramsInternalObject;
 window.addEventListener('scroll', () => {
-    for (id in s.canvases) {
-        const canvas = s.canvases[id];
+    for (id in zBlazorDiagramsInternalObject.canvases) {
+        const canvas = zBlazorDiagramsInternalObject.canvases[id];
         canvas.lastBounds = canvas.elem.getBoundingClientRect();
         canvas.ref.invokeMethodAsync('OnResize', canvas.lastBounds);
     }
 });
-s.mo.observe(document.body, {childList: true, subtree: true});
+zBlazorDiagramsInternalObject.mo.observe(document.body, {childList: true, subtree: true});

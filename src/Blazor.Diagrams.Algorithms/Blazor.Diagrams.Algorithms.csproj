@@ -5,10 +5,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>zHaytam</Authors>
     <Description>Algorithms for Z.Blazor.Diagrams</Description>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
-    <FileVersion>3.0.4</FileVersion>
+    <AssemblyVersion>3.0.4.1</AssemblyVersion>
+    <FileVersion>3.0.4.1</FileVersion>
     <RepositoryUrl>https://github.com/zHaytam/Blazor.Diagrams</RepositoryUrl>
-    <Version>3.0.4</Version>
+    <Version>3.0.4.1</Version>
     <PackageId>Z.Blazor.Diagrams.Algorithms</PackageId>
     <PackageTags>blazor diagrams diagramming svg drag algorithms layouts</PackageTags>
     <Product>Z.Blazor.Diagrams.Algorithms</Product>

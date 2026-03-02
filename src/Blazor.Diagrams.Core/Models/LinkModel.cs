@@ -23,5 +23,11 @@ public class LinkModel : BaseLinkModel
 
     public string? Color { get; set; }
     public string? SelectedColor { get; set; }
+
+    /// <summary>
+    /// Set a value equal to values accepted by SVG's 'stroke-dasharray' attribute.
+    /// For example '5,5' will result in patter where the line is drawn for 5px and not drawn for another 5px.
+    /// </summary>
+    public string? DashPattern { get; set; }
     public double Width { get; set; } = 2;
 }

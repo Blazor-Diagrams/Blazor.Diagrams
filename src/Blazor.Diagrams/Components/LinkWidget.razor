@@ -10,10 +10,17 @@
     var d = result.FullPath.ToString();
 }
 
+@{
+	var extraPathAttributes = new Dictionary<string, object>();
+	if (!string.IsNullOrEmpty(Link.DashPattern))
+		extraPathAttributes["stroke-dasharray"] = Link.DashPattern;
+}
+
 <path d="@d"
       stroke-width="@Link.Width.ToInvariantString()"
       fill="none"
-      stroke="@color" />
+      stroke="@color" 
+      @attributes="extraPathAttributes"/>
 
 @if (dnlb?.OngoingLink == null || dnlb.OngoingLink != Link)
 {

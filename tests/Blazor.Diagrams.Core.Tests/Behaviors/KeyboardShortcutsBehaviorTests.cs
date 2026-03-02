@@ -37,6 +37,19 @@ public class KeyboardShortcutsBehaviorTests
     }
 
     [Fact]
+    public void RemoveAll_ShouldRemoveAllShortcuts()
+    {
+        var diagram = new TestDiagram();
+        var ksb = diagram.GetBehavior<KeyboardShortcutsBehavior>()!;
+        
+        ksb.GetShortcuts().Length.Should().Be(2);
+        
+        ksb.RemoveAllShortcuts();
+
+        ksb.GetShortcuts().Length.Should().Be(0);
+    }
+
+    [Fact]
     public void Behavior_ShouldDoNothing_WhenRemoved()
     {
         // Arrange

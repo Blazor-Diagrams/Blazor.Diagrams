@@ -251,6 +251,42 @@ public abstract class Diagram
         Refresh();
     }
 
+    /// <summary>
+    /// Changes the zoom level with a given origin
+    /// </summary>
+    /// <param name="newZoom">New zoom</param>
+    /// <param name="zoomClientOrigin">The origin of the zoom. Where it will expand/contract from</param>
+    public void SetZoom(double newZoom, Point zoomClientOrigin)
+    {
+        if(Container is null)
+        {
+            SetZoom(newZoom);
+            return;
+        }
+
+        newZoom = Math.Clamp(newZoom, Options.Zoom.Minimum, Options.Zoom.Maximum);
+        var oldZoom = Zoom;
+
+        // Other algorithms (based only on the changes in the zoom) don't work for our case
+        // This solution is taken as is from react-diagrams (ZoomCanvasAction)
+        var clientWidth = Container.Width;
+        var clientHeight = Container.Height;
+        var widthDiff = clientWidth * newZoom - clientWidth * oldZoom;
+        var heightDiff = clientHeight * newZoom - clientHeight * oldZoom;
+        var clientX = zoomClientOrigin.X - Container.Left;
+        var clientY = zoomClientOrigin.Y - Container.Top;
+        var xFactor = (clientX - Pan.X) / oldZoom / clientWidth;
+        var yFactor = (clientY - Pan.Y) / oldZoom / clientHeight;
+        var newPanX = Pan.X - widthDiff * xFactor;
+        var newPanY = Pan.Y - heightDiff * yFactor;
+
+        Batch(() =>
+        {
+            SetPan(newPanX, newPanY);
+            SetZoom(newZoom);
+        });
+    }
+
     public void SetContainer(Rectangle newRect)
     {
         if (newRect.Equals(Container))

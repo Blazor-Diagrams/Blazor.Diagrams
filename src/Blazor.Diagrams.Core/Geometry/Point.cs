@@ -59,4 +59,27 @@ public record Point
         x = X;
         y = Y;
     }
+
+    /// <summary>
+    /// Calculates the centroid of a set of points.
+    /// </summary>
+    /// <param name="points">The collection of points</param>
+    /// <returns>A <see cref="Point"/> instance with the centroid coordinates or <see langword="null"/> if there were no points.</returns>
+    public static Point? CalculateCentroid(IEnumerable<Point> points)
+    {
+        double sumX = 0, sumY = 0;
+        var count = 0;
+
+        foreach (var point in points)
+        {
+            sumX += point.X;
+            sumY += point.Y;
+            count++;
+        }
+
+        if (count is 0)
+            return null;
+
+        return new Point(sumX / count, sumY / count);
+    }
 }

@@ -29,6 +29,8 @@ public partial class NavigatorWidget : IDisposable
     [Parameter] public string NodeColor { get; set; } = "#40babd";
     [Parameter] public string GroupColor { get; set; } = "#9fd0d1";
     [Parameter] public string ViewStrokeColor { get; set; } = "#40babd";
+    [Parameter] public string ViewFillColor { get; set; } = "#9fd0d1";
+    [Parameter] public double ViewFillOpacity { get; set; } = 0;
     [Parameter] public int ViewStrokeWidth { get; set; } = 4;
     [Parameter] public string? Class { get; set; }
     [Parameter] public string? Style { get; set; }

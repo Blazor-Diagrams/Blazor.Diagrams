@@ -3,5 +3,6 @@ namespace Blazor.Diagrams.Core.Controls;
 public enum ControlsType
 {
     OnHover,
-    OnSelection
+    OnSelection,
+    AlwaysOn
 }

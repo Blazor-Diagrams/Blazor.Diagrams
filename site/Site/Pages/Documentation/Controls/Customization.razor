@@ -156,6 +156,7 @@ public class AlertControl : ExecutableControl
         cNode2.Title = "Hover on me";
         _cDiagram.Controls.AddFor(cNode1, ControlsType.OnSelection).Add(new NodeInformationControl());
         _cDiagram.Controls.AddFor(cNode2, ControlsType.OnHover).Add(new NodeInformationControl());
+        _cDiagram.Controls.AddFor(cNode2, ControlsType.AlwaysOn).Add(new NodeInformationControl());
         _cDiagram.SelectModel(cNode1, false);
 
         // Executable Control

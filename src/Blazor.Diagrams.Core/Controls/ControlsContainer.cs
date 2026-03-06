@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Blazor.Diagrams.Core.Models.Base;
 
 namespace Blazor.Diagrams.Core.Controls;
@@ -16,17 +14,19 @@ public class ControlsContainer : IReadOnlyList<Control>
     {
         Model = model;
         Type = type;
+
+        Visible = type == ControlsType.AlwaysOn;
     }
 
     public Model Model { get; }
-    public ControlsType Type { get; set; }
+    public ControlsType Type { get; init; }
     public bool Visible { get; private set; }
 
     public void Show()
     {
         if (Visible)
             return;
-        
+
         Visible = true;
         VisibilityChanged?.Invoke(Model);
     }
@@ -35,7 +35,7 @@ public class ControlsContainer : IReadOnlyList<Control>
     {
         if (!Visible)
             return;
-        
+
         Visible = false;
         VisibilityChanged?.Invoke(Model);
     }

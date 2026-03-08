@@ -1,0 +1,19 @@
+@page "/nodes/overflow"
+@layout DemoLayout
+@inherits OverflowNodeComponent
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Overflow/Scrollable Nodes";
+        LayoutData.Info = "Nodes can contain scrollable content. Use <code>ConsumeWheel</code> to prevent internal scrolling from zooming the diagram.";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Value="BlazorDiagram">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

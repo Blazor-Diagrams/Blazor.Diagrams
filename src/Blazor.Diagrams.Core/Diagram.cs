@@ -25,7 +25,7 @@ public abstract class Diagram
     public event Action<Model?, PointerEventArgs>? PointerEnter;
     public event Action<Model?, PointerEventArgs>? PointerLeave;
     public event Action<KeyboardEventArgs>? KeyDown;
-    public event Action<WheelEventArgs>? Wheel;
+    public event Action<Model?, WheelEventArgs>? Wheel;
     public event Action<Model?, PointerEventArgs>? PointerClick;
     public event Action<Model?, PointerEventArgs>? PointerDoubleClick;
 
@@ -396,7 +396,7 @@ public abstract class Diagram
 
     public void TriggerKeyDown(KeyboardEventArgs e) => KeyDown?.Invoke(e);
 
-    public void TriggerWheel(WheelEventArgs e) => Wheel?.Invoke(e);
+    public void TriggerWheel(Model? model, WheelEventArgs e) => Wheel?.Invoke(model, e);
 
     public void TriggerPointerClick(Model? model, PointerEventArgs e) => PointerClick?.Invoke(model, e);
 

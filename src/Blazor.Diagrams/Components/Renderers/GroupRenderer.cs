@@ -115,18 +115,20 @@ public class GroupRenderer : ComponentBase, IDisposable
         builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
         builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
         builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
+        builder.AddAttribute(10, "onwheel", EventCallback.Factory.Create<WheelEventArgs>(this, OnWheel));
+        builder.AddEventStopPropagationAttribute(11, "onwheel", true);
 
         if (_isSvg)
         {
-            builder.OpenElement(10, "rect");
-            builder.AddAttribute(11, "width", Group.Size!.Width);
-            builder.AddAttribute(12, "height", Group.Size.Height);
-            builder.AddAttribute(13, "fill", "none");
+            builder.OpenElement(12, "rect");
+            builder.AddAttribute(13, "width", Group.Size!.Width);
+            builder.AddAttribute(14, "height", Group.Size.Height);
+            builder.AddAttribute(15, "fill", "none");
             builder.CloseElement();
         }
 
-        builder.OpenComponent(14, componentType);
-        builder.AddAttribute(15, "Group", Group);
+        builder.OpenComponent(16, componentType);
+        builder.AddAttribute(17, "Group", Group);
         builder.CloseComponent();
         builder.CloseElement();
     }
@@ -149,5 +151,11 @@ public class GroupRenderer : ComponentBase, IDisposable
     private void OnMouseLeave(MouseEventArgs e)
     {
         BlazorDiagram.TriggerPointerLeave(Group, e.ToCore());
+    }
+
+    private void OnWheel(WheelEventArgs e)
+    {
+        if (Group.InterceptWheel) return;
+        BlazorDiagram.TriggerWheel(Group, e.ToCore());
     }
 }

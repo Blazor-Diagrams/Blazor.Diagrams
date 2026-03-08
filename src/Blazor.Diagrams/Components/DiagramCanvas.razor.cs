@@ -117,7 +117,7 @@ public partial class DiagramCanvas : IAsyncDisposable
 
     private void OnWheel(WheelEventArgs e)
     {
-        BlazorDiagram.TriggerWheel(e.ToCore());
+        BlazorDiagram.TriggerWheel(null, e.ToCore());
     }
 
     private void OnDiagramChanged()

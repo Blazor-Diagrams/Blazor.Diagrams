@@ -1,0 +1,19 @@
+@page "/demos/issue-574"
+@layout DemoLayout
+@inherits Issue574Component
+@inject LayoutData LayoutData
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        LayoutData.Title = "Issue 574 - Scroll Problem";
+        LayoutData.Info = "Demonstrating the issue where scrolling inside a node also zooms the diagram.";
+        LayoutData.DataChanged();
+    }
+}
+
+<CascadingValue Value="BlazorDiagram">
+    <DiagramCanvas></DiagramCanvas>
+</CascadingValue>

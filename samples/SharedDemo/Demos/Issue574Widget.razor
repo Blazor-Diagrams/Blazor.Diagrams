@@ -1,0 +1,47 @@
+@using Blazor.Diagrams.Components
+<div class="custom-node @(Node.Selected ? "selected" : "")" style="background: white; border: 1px solid black; padding: 10px; width: 200px;">
+    <h5 style="margin-top: 0;">Scroll Issue Node</h5>
+    <p>Try scrolling the list below:</p>
+    <div style="height: 100px; overflow-y: auto; border: 1px solid #ccc; background: #f9f9f9;">
+        @for (int i = 1; i <= 20; i++)
+        {
+            <div style="padding: 5px; border-bottom: 1px solid #eee;">Item @i</div>
+        }
+    </div>
+    <div style="margin-top: 10px;">
+        <p>With StopPropagation:</p>
+        <div @onwheel:stopPropagation style="height: 100px; overflow-y: auto; border: 1px solid #ccc; background: #e9f9e9;">
+            @for (int i = 1; i <= 20; i++)
+            {
+                <div style="padding: 5px; border-bottom: 1px solid #eee;">Item @i (Safe)</div>
+            }
+        </div>
+    </div>
+    
+    <div style="margin-top: 10px;">
+        <p>With ConsumeWheel=true:</p>
+        <div style="height: 100px; overflow-y: auto; border: 1px solid #ccc; background: #e9e9f9;">
+            @for (int i = 1; i <= 20; i++)
+            {
+                <div style="padding: 5px; border-bottom: 1px solid #eee;">Item @i (ConsumeWheel)</div>
+            }
+        </div>
+        <button @onclick="ToggleConsumeWheel" class="btn btn-sm btn-info mt-1">Toggle ConsumeWheel (@Node.ConsumeWheel)</button>
+    </div>
+
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer @key="port" Port="port"></PortRenderer>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public NodeModel Node { get; set; } = null!;
+
+    private void ToggleConsumeWheel()
+    {
+        Node.ConsumeWheel = !Node.ConsumeWheel;
+        Node.Refresh();
+    }
+}

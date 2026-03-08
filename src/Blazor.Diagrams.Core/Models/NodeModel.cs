@@ -39,6 +39,7 @@ public class NodeModel : MovableModel, IHasBounds, IHasShape, ILinkable
 
     public GroupModel? Group { get; internal set; }
     public string? Title { get; set; }
+    public bool ConsumeWheel { get; set; }
 
     public IReadOnlyList<PortModel> Ports => _ports;
     public IReadOnlyList<BaseLinkModel> Links => _links;

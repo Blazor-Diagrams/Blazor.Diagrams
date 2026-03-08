@@ -1,9 +1,9 @@
 <div class="diagram-node @(Node.Selected ? "selected" : "")" style="width: 250px; background: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column;">
     <div style="background: #f8f9fa; border-bottom: 1px solid #eee; padding: 8px 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
         <span>@Node.Title</span>
-        <div class="custom-control custom-switch" title="Toggle ConsumeWheel">
-            <input type="checkbox" class="custom-control-input" id="consumeSwitch-@Node.Id" checked="@Node.ConsumeWheel" @onchange="ToggleConsume">
-            <label class="custom-control-label" for="consumeSwitch-@Node.Id" style="font-size: 0.75rem;">Block Zoom</label>
+        <div class="custom-control custom-switch" title="Toggle InterceptWheel">
+            <input type="checkbox" class="custom-control-input" id="interceptSwitch-@Node.Id" checked="@Node.InterceptWheel" @onchange="ToggleIntercept">
+            <label class="custom-control-label" for="interceptSwitch-@Node.Id" style="font-size: 0.75rem;">Block Zoom</label>
         </div>
     </div>
 
@@ -31,9 +31,9 @@
 @code {
     [Parameter] public NodeModel Node { get; set; } = null!;
 
-    private void ToggleConsume()
+    private void ToggleIntercept()
     {
-        Node.ConsumeWheel = !Node.ConsumeWheel;
+        Node.InterceptWheel = !Node.InterceptWheel;
         Node.Refresh();
     }
 }

@@ -18,7 +18,7 @@ public class OverflowNodeComponent : ComponentBase
         var node1 = new NodeModel(new Point(50, 50))
         {
             Title = "Scrollable Node",
-            ConsumeWheel = true // Feature demonstration
+            InterceptWheel = true // Feature demonstration
         };
         node1.AddPort(PortAlignment.Right);
         

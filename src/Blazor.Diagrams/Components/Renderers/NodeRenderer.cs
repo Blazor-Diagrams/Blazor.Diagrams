@@ -197,7 +197,7 @@ public class NodeRenderer : ComponentBase, IDisposable
 
     private void OnWheel(WheelEventArgs e)
     {
-        if (Node.ConsumeWheel) return;
+        if (Node.InterceptWheel) return;
         BlazorDiagram.TriggerWheel(Node, e.ToCore());
     }
 }

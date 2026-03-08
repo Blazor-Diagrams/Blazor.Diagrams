@@ -155,7 +155,7 @@ public class GroupRenderer : ComponentBase, IDisposable
 
     private void OnWheel(WheelEventArgs e)
     {
-        if (Group.ConsumeWheel) return;
+        if (Group.InterceptWheel) return;
         BlazorDiagram.TriggerWheel(Group, e.ToCore());
     }
 }

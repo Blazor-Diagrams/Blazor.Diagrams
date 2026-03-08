@@ -1,6 +1,6 @@
-@page "/demos/issue-574"
+@page "/nodes/overflow"
 @layout DemoLayout
-@inherits Issue574Component
+@inherits OverflowNodeComponent
 @inject LayoutData LayoutData
 
 @code {
@@ -8,8 +8,8 @@
     {
         base.OnInitialized();
 
-        LayoutData.Title = "Issue 574 - Scroll Problem";
-        LayoutData.Info = "Demonstrating the issue where scrolling inside a node also zooms the diagram.";
+        LayoutData.Title = "Overflow/Scrollable Nodes";
+        LayoutData.Info = "Nodes can contain scrollable content. Use <code>ConsumeWheel</code> to prevent internal scrolling from zooming the diagram.";
         LayoutData.DataChanged();
     }
 }

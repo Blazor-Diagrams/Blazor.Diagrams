@@ -15,7 +15,7 @@
     {
         base.OnInitialized();
 
-        LayoutData.OnDataChanged = () => StateHasChanged();
+        LayoutData.OnDataChanged = () => InvokeAsync(StateHasChanged);
     }
 }
 
@@ -45,6 +45,9 @@
                 </li>
                 <li>
                     <a href="nodes/portless-links" class="list-group-item list-group-item-action bg-light">Portless Links</a>
+                </li>
+                <li>
+                    <a href="nodes/overflow" class="list-group-item list-group-item-action bg-light">Overflow/Scroll</a>
                 </li>
             </DemoMenu>
             <DemoMenu Text="Links">

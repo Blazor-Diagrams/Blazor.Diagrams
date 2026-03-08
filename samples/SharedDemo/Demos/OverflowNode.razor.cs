@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace SharedDemo.Demos;
 
-public class Issue574Component : ComponentBase
+public class OverflowNodeComponent : ComponentBase
 {
     protected readonly BlazorDiagram BlazorDiagram = new BlazorDiagram();
 
@@ -13,17 +13,22 @@ public class Issue574Component : ComponentBase
     {
         base.OnInitialized();
 
-        BlazorDiagram.RegisterComponent<NodeModel, Issue574Widget>();
+        BlazorDiagram.RegisterComponent<NodeModel, OverflowNodeWidget>();
 
-        var node1 = new NodeModel(new Point(50, 50));
+        var node1 = new NodeModel(new Point(50, 50))
+        {
+            Title = "Scrollable Node",
+            ConsumeWheel = true // Feature demonstration
+        };
         node1.AddPort(PortAlignment.Right);
         
-        var node2 = new NodeModel(new Point(400, 50))
+        var node2 = new NodeModel(new Point(400, 100))
         {
-            ConsumeWheel = true
+            Title = "Another Node"
         };
         node2.AddPort(PortAlignment.Left);
 
         BlazorDiagram.Nodes.Add(new[] { node1, node2 });
+        BlazorDiagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
     }
 }

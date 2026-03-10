@@ -42,6 +42,8 @@ public abstract class BaseLinkModel : SelectableModel, IHasBounds, ILinkable
     public List<LinkLabelModel> Labels { get; } = new();
     public IReadOnlyList<BaseLinkModel> Links => _links;
 
+    public string Classes { get; set; } = "";
+
     public override void Refresh()
     {
         GeneratePath();

@@ -16,7 +16,7 @@ public abstract class Model
     public event Action<Model>? Changed;
     public event Action<Model>? VisibilityChanged;
 
-    public string Id { get; }
+    public string Id { get; set; }
     public bool Locked { get; set; }
     public bool Visible
     {

@@ -7,7 +7,7 @@ using Blazor.Diagrams.Core.Geometry;
 
 namespace Blazor.Diagrams.Core.Behaviors;
 
-public class DragNewLinkBehavior : Behavior
+public class DragNewLinkBehavior : Behavior, IDragNewLinkBehavior
 {
     private PositionAnchor? _targetPositionAnchor;
 

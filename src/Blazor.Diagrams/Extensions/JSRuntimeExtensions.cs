@@ -18,11 +18,12 @@ public static class JSRuntimeExtensions
     {
         try
         {
+
             await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.observe", element, reference, element.Id);
         }
-        catch (ObjectDisposedException)
+        catch (Exception ex) when (ex is ObjectDisposedException || ex is JSException)
         {
-            // Ignore, DotNetObjectReference was likely disposed
+            // Ignore, element/reference was likely disposed
         }
     }
 

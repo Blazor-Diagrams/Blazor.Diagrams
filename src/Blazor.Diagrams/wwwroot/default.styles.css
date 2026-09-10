@@ -127,4 +127,31 @@ g.diagram-group.default.selected > rect {
     transform: translate(-50%, -50%);
 }
 
+
+.default-note {
+    padding: 8px 12px;
+    background-color: #fff8b8;
+    border: 1px solid #e8dc7a;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    max-width: 250px;
+    font-size: 14px;
+    cursor: move;
+}
+
+.default-note.selected {
+    border: 1px solid #6e9fd4;
+}
+
+.default-note textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    font: inherit;
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+}
+
 /*# sourceMappingURL=wwwroot\default.styles.css.map */

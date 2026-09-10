@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- `NoteModel` and `NoteWidget`: free-floating, movable text notes on the diagram. Double-click a note to edit its text. Notes can't be linked; register your own component for `NoteModel` to customize the look.
+
 ## Diagrams (3.0.4.1) - 2026-03-02
 
 ### Fixed

@@ -1,6 +1,8 @@
-﻿using Blazor.Diagrams.Components.Controls;
+﻿using Blazor.Diagrams.Components;
+using Blazor.Diagrams.Components.Controls;
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Controls.Default;
+using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Options;
 
@@ -17,7 +19,8 @@ public class BlazorDiagram : Diagram
             [typeof(RemoveControl)] = typeof(RemoveControlWidget),
             [typeof(BoundaryControl)] = typeof(BoundaryControlWidget),
             [typeof(DragNewLinkControl)] = typeof(DragNewLinkControlWidget),
-            [typeof(ArrowHeadControl)] = typeof(ArrowHeadControlWidget)
+            [typeof(ArrowHeadControl)] = typeof(ArrowHeadControlWidget),
+            [typeof(NoteModel)] = typeof(NoteWidget)
         };
 
         Options = options ?? new BlazorDiagramOptions();

@@ -1,0 +1,32 @@
+<div class="default-note @(Node.Selected ? "selected" : "")" @ondblclick="() => _editing = true">
+    @if (_editing)
+    {
+        <textarea @ref="_textarea"
+                  rows="@(Node.Text.Split('\n').Length)"
+                  @bind="Node.Text"
+                  @bind:event="oninput"
+                  @onblur="() => _editing = false"
+                  @onpointerdown:stopPropagation
+                  @onpointerup:stopPropagation
+                  @onpointermove:stopPropagation
+                  @onkeydown:stopPropagation></textarea>
+    }
+    else
+    {
+        @Node.Text
+    }
+</div>
+
+@code {
+    private bool _editing;
+    private ElementReference _textarea;
+
+    [Parameter]
+    public NoteModel Node { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_editing)
+            await _textarea.FocusAsync();
+    }
+}

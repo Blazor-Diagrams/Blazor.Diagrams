@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Target .NET 11 (`net11.0`) with `Microsoft.AspNetCore.Components` 11.x
 
+### Removed
+
+- Out-of-support target frameworks `net6.0` and `net7.0`; the library now targets `net8.0` through `net11.0`
+
 ### Fixed
 
 - `BL0016`: JS interop calls in `JSRuntimeExtensions` now tolerate a disconnected Blazor Server circuit (`JSDisconnectedException`)

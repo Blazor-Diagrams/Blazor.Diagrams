@@ -22,9 +22,10 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            6
-            7
+            8
             9
+            10
+            11
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:

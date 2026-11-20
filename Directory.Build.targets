@@ -1,0 +1,8 @@
+<Project>
+  <!--
+    This repository may be embedded in another repository (for example as a git submodule).
+    MSBuild walks up the directory tree and imports the first Directory.Build.targets it finds,
+    so without this file the targets of the enclosing repository would be applied to these projects.
+    This intentionally empty file stops that search so the library always builds with its own settings.
+  -->
+</Project>

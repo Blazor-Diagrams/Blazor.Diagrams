@@ -10,7 +10,16 @@ public static class JSRuntimeExtensions
 {
     public static async Task<Rectangle> GetBoundingClientRect(this IJSRuntime jsRuntime, ElementReference element)
     {
-        return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
+        try
+        {
+            return await jsRuntime.InvokeAsync<Rectangle>("ZBlazorDiagrams.getBoundingClientRect", element);
+        }
+        catch (JSDisconnectedException)
+        {
+            // The Blazor Server circuit is gone, so the element can no longer be measured or rendered.
+            // An empty rectangle is harmless because the component will not render again.
+            return Rectangle.Zero;
+        }
     }
 
     public static async Task ObserveResizes<T>(this IJSRuntime jsRuntime, ElementReference element,
@@ -28,6 +37,14 @@ public static class JSRuntimeExtensions
 
     public static async Task UnobserveResizes(this IJSRuntime jsRuntime, ElementReference element)
     {
-        await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.unobserve", element, element.Id);
+        try
+        {
+            await jsRuntime.InvokeVoidAsync("ZBlazorDiagrams.unobserve", element, element.Id);
+        }
+        catch (JSDisconnectedException)
+        {
+            // Ignore, the Blazor Server circuit is gone and with it the browser side observer.
+            // This is typically called while disposing, where a disconnected circuit is expected.
+        }
     }
 }

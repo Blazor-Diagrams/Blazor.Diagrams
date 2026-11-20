@@ -6,7 +6,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyVersion>3.0.4.1</AssemblyVersion>
     <FileVersion>3.0.4.1</FileVersion>
-    <RepositoryUrl>https://github.com/Blazor-Diagrams/Blazor.Diagrams</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hjrb/Blazor.Diagrams</RepositoryUrl>
     <Description>A fully customizable and extensible all-purpose diagrams library for Blazor</Description>
     <Version>3.0.4.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

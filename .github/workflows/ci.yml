@@ -1,0 +1,38 @@
+name: Build and test
+
+# This fork (hjrb/Blazor.Diagrams) is maintained independently of upstream.
+# The upstream workflows (SonarCloud analysis, GitHub Pages deployment and publishing to the
+# nuget.org Z.Blazor.Diagrams package id) relied on upstream secrets and were removed.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The library and tests target net8.0 to net11.0; SDK 11 compiles all of them,
+      # the older runtimes are needed to execute the tests for each target framework.
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8
+            9
+            10
+            11
+
+      - name: Build
+        run: |
+          dotnet build src/Blazor.Diagrams/Blazor.Diagrams.csproj --configuration Release
+          dotnet build src/Blazor.Diagrams.Algorithms/Blazor.Diagrams.Algorithms.csproj --configuration Release
+
+      - name: Test
+        run: |
+          dotnet test tests/Blazor.Diagrams.Core.Tests/Blazor.Diagrams.Core.Tests.csproj --configuration Release
+          dotnet test tests/Blazor.Diagrams.Tests/Blazor.Diagrams.Tests.csproj --configuration Release

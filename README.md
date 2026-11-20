@@ -1,5 +1,11 @@
 # Blazor.Diagrams
 
+> **Maintained fork.** This is [hjrb/Blazor.Diagrams](https://github.com/hjrb/Blazor.Diagrams), an independently
+> maintained fork of [Blazor-Diagrams/Blazor.Diagrams](https://github.com/Blazor-Diagrams/Blazor.Diagrams),
+> which is no longer actively maintained. Development happens on the `main` branch; it targets .NET 8 to .NET 11.
+> The fork is consumed from source (for example as a git submodule) and is not published to nuget.org,
+> so the NuGet badges below refer to the upstream packages.
+
 ![](ZBD.png)
 
 Z.Blazor.Diagrams is a fully customizable and extensible all-purpose diagrams library for Blazor (both Server Side and WASM). It was first inspired by the popular React library [react-diagrams](https://github.com/projectstorm/react-diagrams), but then evolved into something much bigger. ZBD can be used to make advanced diagrams with a custom design. Even the behavior of the library is "hackable" and can be changed to suit your needs. 

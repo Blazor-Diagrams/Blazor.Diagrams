@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Diagrams (3.0.5) - 2026-11-21
+
+### Added
+
+- Target .NET 11 (`net11.0`) with `Microsoft.AspNetCore.Components` 11.x
+
+### Removed
+
+- Out-of-support target frameworks `net6.0` and `net7.0`; the library now targets `net8.0` through `net11.0`
+
+### Fixed
+
+- `BL0016`: JS interop calls in `JSRuntimeExtensions` now tolerate a disconnected Blazor Server circuit (`JSDisconnectedException`)
+- Builds are isolated from a `Directory.Build.targets` of an enclosing repository (e.g. when used as a git submodule)
+
 ## Diagrams (3.0.4.1) - 2026-03-02
 
 ### Fixed

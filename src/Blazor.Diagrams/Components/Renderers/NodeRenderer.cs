@@ -124,9 +124,11 @@ public class NodeRenderer : ComponentBase, IDisposable
         builder.AddEventStopPropagationAttribute(7, "onpointerup", true);
         builder.AddAttribute(8, "onmouseenter", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseEnter));
         builder.AddAttribute(9, "onmouseleave", EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseLeave));
-        builder.AddElementReferenceCapture(10, value => _element = value);
-        builder.OpenComponent(11, componentType);
-        builder.AddAttribute(12, "Node", Node);
+        builder.AddAttribute(10, "onwheel", EventCallback.Factory.Create<WheelEventArgs>(this, OnWheel));
+        builder.AddEventStopPropagationAttribute(11, "onwheel", true);
+        builder.AddElementReferenceCapture(12, value => _element = value);
+        builder.OpenComponent(13, componentType);
+        builder.AddAttribute(14, "Node", Node);
         builder.CloseComponent();
 
         builder.CloseElement();
@@ -191,5 +193,11 @@ public class NodeRenderer : ComponentBase, IDisposable
     private void OnMouseLeave(MouseEventArgs e)
     {
         BlazorDiagram.TriggerPointerLeave(Node, e.ToCore());
+    }
+
+    private void OnWheel(WheelEventArgs e)
+    {
+        if (Node.InterceptWheel) return;
+        BlazorDiagram.TriggerWheel(Node, e.ToCore());
     }
 }

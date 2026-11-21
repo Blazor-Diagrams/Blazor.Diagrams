@@ -1,5 +1,5 @@
 ﻿using Blazor.Diagrams.Core.Events;
-
+using Blazor.Diagrams.Core.Models.Base;
 using System;
 
 namespace Blazor.Diagrams.Core.Behaviors;
@@ -11,7 +11,7 @@ public class ZoomBehavior : Behavior
         Diagram.Wheel += Diagram_Wheel;
     }
 
-    private void Diagram_Wheel(WheelEventArgs e)
+    private void Diagram_Wheel(Model? model, WheelEventArgs e)
     {
         if (Diagram.Container == null || e.DeltaY == 0)
             return;

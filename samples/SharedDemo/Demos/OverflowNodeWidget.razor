@@ -1,0 +1,39 @@
+<div class="diagram-node @(Node.Selected ? "selected" : "")" style="width: 250px; background: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column;">
+    <div style="background: #f8f9fa; border-bottom: 1px solid #eee; padding: 8px 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+        <span>@Node.Title</span>
+        <div class="custom-control custom-switch" title="Toggle InterceptWheel">
+            <input type="checkbox" class="custom-control-input" id="interceptSwitch-@Node.Id" checked="@Node.InterceptWheel" @onchange="ToggleIntercept">
+            <label class="custom-control-label" for="interceptSwitch-@Node.Id" style="font-size: 0.75rem;">Block Zoom</label>
+        </div>
+    </div>
+
+    <div style="padding: 12px; flex-grow: 1;">
+        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 8px;">
+            Scroll inside this list. If "Block Zoom" is on, the diagram won't zoom.
+        </p>
+        
+        <div style="height: 150px; overflow-y: auto; border: 1px solid #eee; border-radius: 2px;">
+            @for (int i = 1; i <= 30; i++)
+            {
+                <div style="padding: 6px 10px; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem;">
+                    Option #@i
+                </div>
+            }
+        </div>
+    </div>
+
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer @key="port" Port="port"></PortRenderer>
+    }
+</div>
+
+@code {
+    [Parameter] public NodeModel Node { get; set; } = null!;
+
+    private void ToggleIntercept()
+    {
+        Node.InterceptWheel = !Node.InterceptWheel;
+        Node.Refresh();
+    }
+}

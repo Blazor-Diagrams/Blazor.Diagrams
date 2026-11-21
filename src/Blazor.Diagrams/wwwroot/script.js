@@ -26,7 +26,7 @@ var zBlazorDiagramsInternalObject = {
         }
     }),
     observe: (element, ref, id) => {
-        if (!element) return;
+        if (!(element instanceof Element)) return;
         zBlazorDiagramsInternalObject.ro.observe(element);
         zBlazorDiagramsInternalObject.tracked[id] = {
             ref: ref

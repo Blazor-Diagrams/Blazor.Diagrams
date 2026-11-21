@@ -12,21 +12,20 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Diagrams.Components.Renderers;
 
-public class NodeRenderer : ComponentBase, IDisposable
+public class NodeRenderer : ComponentBase, IAsyncDisposable
 {
     private bool _becameVisible;
     private ElementReference _element;
     private bool _isSvg;
     private DotNetObjectReference<NodeRenderer>? _reference;
     private bool _shouldRender;
-
     [CascadingParameter] public BlazorDiagram BlazorDiagram { get; set; } = null!;
 
     [Parameter] public NodeModel Node { get; set; } = null!;
 
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         try
         {
@@ -35,7 +34,7 @@ public class NodeRenderer : ComponentBase, IDisposable
 
             if (_element.Id != null && !Node.ControlledSize && JsRuntime != null)
             {
-                _ = JsRuntime.UnobserveResizes(_element);
+                await JsRuntime.UnobserveResizes(_element);
             }
 
             _reference?.Dispose();
